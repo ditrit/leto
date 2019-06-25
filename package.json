@@ -1,0 +1,25 @@
+{
+  "name": "amuleto",
+  "version": "0.1.0",
+  "description": "Amuleto is a new generation of tosca orchestrator",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.orness.local:ditrit/amuleto.git"
+  },
+  "keywords": [
+    "orchestrator",
+    "devops",
+    "tosca",
+    "continuous deployment"
+  ],
+  "author": "Xavier Talon",
+  "license": "ISC",
+  "dependencies": {
+    "jasmine": "^3.4.0",
+    "lidy": "file:../lidy"
+  }
+}
