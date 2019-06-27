@@ -1,14 +1,14 @@
 {
-  "name": "amuleto",
+  "name": "leto",
   "version": "0.1.0",
-  "description": "Amuleto is a new generation of tosca orchestrator",
+  "description": "Leto is an enhanced tosca orchestrator",
   "main": "index.js",
   "scripts": {
     "test": "jasmine"
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.orness.local:ditrit/amuleto.git"
+    "url": "git@gitlab.orness.local:ditrit/leto.git"
   },
   "keywords": [
     "orchestrator",
