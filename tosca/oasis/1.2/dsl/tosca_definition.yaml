@@ -1,4 +1,4 @@
-@import_classes:  ./tests/ttypes.js
+@import_classes:  ../classes/classes.js
 
 str->TString:      terminal
 int->TInteger:     terminal
