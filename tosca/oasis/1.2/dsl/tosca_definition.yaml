@@ -69,8 +69,7 @@ value_expression:
     - _dict: { get_operation_output: { _list: [ str, str, str, str ] } }
     - _dict: { get_artifact: { _list: [ str, str, str, bool ], _optional:: 3 } }
 
-imports->TImport:
-  _listOf:
+import->TImport:
     _oneOf:
       - str
       - _nb: 1
@@ -84,6 +83,9 @@ imports->TImport:
               repository: str
               namespace_prefix: str
               namespace_uri: str
+
+imports:
+  _listOf: import
 
 constraint->TConstraint:
   _oneOf:
