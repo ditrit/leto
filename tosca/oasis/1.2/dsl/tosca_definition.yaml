@@ -84,7 +84,7 @@ import->TImport:
               namespace_prefix: str
               namespace_uri: str
 
-imports:
+imports->TList:
   _listOf: import
 
 constraint->TConstraint:

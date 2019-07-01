@@ -11,7 +11,8 @@ const tosca_file = 'tosca/oasis/1.2/normative_types/tosca_types.yaml'
 
 let objs = lidy.parse_file(tosca_file, dsl_def, 'service_template')
 
-console.log(`objs : ${objs}`)
+console.log(`objs : ${objs.toTosca()}`)
 
+console.log(`${objs.doImports()}`)
 
 

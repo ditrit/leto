@@ -3,11 +3,17 @@ class TString extends String {
         super(args)
         this.range = args.range
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TInteger extends Number {
     constructor(args) {
         super(args)
         this.range = args.range
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TFloat  extends Number {
@@ -15,16 +21,25 @@ class TFloat  extends Number {
         super(args)
         this.range = args.range
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TNamespace extends String {
     constructor(args) {
         super(args)
         this.range = args.range
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TRange {
     constructor(args) {
         this.range = args.range
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 
@@ -39,22 +54,25 @@ class TMetadata {
             }
         )
     }
-
-    toString() {
-        let str = `TMetadata`
+    toTosca(imbric=0) {
+        let indent = "\n" + "  ".repeat(imbric)
+        let str = ""
         this.args.forEach(
             function(value, key, map) {
-                str += `
-                ${key}: ${value}`
+                str += `${indent}${key}: ${value.toTosca(imbric + 1)}`
             }
         ) 
         return str
     }
 }
+
 class TUrl extends String {
     constructor(args) {
         super(args)
         this.range = args.range
+    }
+    toTosca(imbric) {
+        return this
     }
 }
 class TSize {
@@ -62,10 +80,16 @@ class TSize {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TTime {
     constructor(args) {
         this.range = args.range
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TFreq {
@@ -73,11 +97,17 @@ class TFreq {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TBitrate {
     constructor(args) {
         this.range = args.range 
 
+    }
+    toTosca(imbric) {
+        return this
     }
 }
 
@@ -93,14 +123,15 @@ class TVersion extends String {
         super(`${major}${minor}${fix}${qualifier}${build}`)
         this.range = range
         this.major = major
+        this.minor = minor
         this.fix   = fix
         this.qualifier = qualifier
         this.build = build
     }
 
-//    toString() {
-//        return `${this.major}${this.minor}${this.fix}${this.qualifier}${this.build}`
-//    }
+    toTosca(imbric=0) {
+        return `${this.major}${this.minor}${this.fix}${this.qualifier}${this.build}`
+    }
 }
 
 class TImport {
@@ -128,19 +159,31 @@ class TImport {
         }
     }
 
-    toString() {
-        let str = 'TImport {'
-        if (this.label) str += `
-        ${this.label}:` 
-        str += `
-        file: ${this.file}`
-        if (this.repository) str += `
-        repository: ${this.repository}`
-        if (this.namespace_prefix) str += `
-        repository: ${this.namespace_prefix}`
-        if (this.namespace_uri) str += `
-        repository: ${this.namespace_uri}`
-        return str + '}'
+    toTosca(imbric=0) {
+        let indent = '\n' + '  '.repeat(imbric)
+        let str = ""
+        if (this.label) str += `${indent}${this.label}:` 
+        str += `${indent}  file: ${this.file}`
+        if (this.repository) str += `${indent}  repository: ${this.repository}`
+        if (this.namespace_prefix) str += `${indent}  namespace_prefix: ${this.namespace_prefix}`
+        if (this.namespace_uri) str += `${indent}  namespace_uri: ${this.namespace_uri}`
+        return str
+    }
+}
+
+class TList extends Array {
+    constructor(args){
+        super(...args)
+        this.range = args.range
+    }
+    toTosca(imbric) {
+        let indent = '\n' + '  '.repeat(imbric)
+        let str = ""
+        this.forEach(
+            function(value) { 
+                str += `${value.toTosca(imbric + 1)}`
+            })
+        return str
     }
 }
 
@@ -149,11 +192,18 @@ class TConstraint {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
+
 class TProperty {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TPropertyAssignment {
@@ -161,11 +211,17 @@ class TPropertyAssignment {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TAttribute {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TAttributeAssignement {
@@ -173,11 +229,17 @@ class TAttributeAssignement {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TInput {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class Toutput {
@@ -185,11 +247,17 @@ class Toutput {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TRepository {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TArtifactDef {
@@ -197,11 +265,17 @@ class TArtifactDef {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TArtifactType {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TImplementation {
@@ -209,11 +283,17 @@ class TImplementation {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TOperationDef {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TOperationDefTemplate {
@@ -221,11 +301,17 @@ class TOperationDefTemplate {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TInterfaceDef {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TInterfaceDefTemplate {
@@ -233,11 +319,17 @@ class TInterfaceDefTemplate {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TCapabilityType {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TCapabilityDef {
@@ -245,11 +337,17 @@ class TCapabilityDef {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TCapabilityAssignment {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TPropertyFilter {
@@ -257,11 +355,17 @@ class TPropertyFilter {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TCapabilityFilter {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TNodeFilter {
@@ -269,11 +373,17 @@ class TNodeFilter {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TRequirementDef {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(imbric=0) {
+        return this
     }
 }
 class TRequirementAssignment {
@@ -281,17 +391,26 @@ class TRequirementAssignment {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TSubstitutionMappings {
     constructor(args) {
         this.range = args.range
 
     }
+    toTosca(imbric=0) {
+        return this
+    }
 }
 class TTopologyTemplate {
     constructor(args) {
         this.range = args.range
 
+    }
+    toTosca(iimbric=0) {
+        return this
     }
 }
 class TServiceTemplate {
@@ -319,14 +438,22 @@ class TServiceTemplate {
     get policy_types() { return this.args.get('policy_types') }
     get topology_template() { return this.args.get('topology_template') }
 
-    toString() {        
-        let str = `TServiceTemplate`
+    toTosca(imbric=0) { 
+        let indent = '\n' + '  '.repeat(imbric)
+        let str = ""
         this.args.forEach(
-            function(value, key, map) {
-                str += (value) ? `
-                ${key}: ${value}` : ''
+            function(value, key, map) { 
+                str += (value) ? `${indent}${key}: ${value.toTosca(imbric + 1)}` : ''
             })
         return str
+    }
+
+    doImports() {
+        let idx=0
+        for (let one_import of this.imports) {
+            idx +=1
+            console.log(`${idx}: ${one_import.file}`)
+        }
     }
 }
 
@@ -334,6 +461,7 @@ const classes = {
     TString,
     TInteger,
     TFloat,
+    TList,
     TNamespace,
     TRange,
     TMetadata,
