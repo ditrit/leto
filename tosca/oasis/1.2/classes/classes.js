@@ -157,6 +157,12 @@ class TImport {
                 }
             })
         }
+
+    }
+
+    parse() {
+        console.log(`parsing de : ${this.file}`)
+        return this.toTosca()
     }
 
     toTosca(imbric=0) {
@@ -417,6 +423,7 @@ class TServiceTemplate {
     constructor(args) {
         this.args = args
         this.range = args.range
+        this.imported=[]
         if ( ! this.args.get('namespace') ) {
             this.args.set('namespace', new TUrl("http://doc.leto.org/tosca"))
         }
@@ -449,11 +456,10 @@ class TServiceTemplate {
     }
 
     doImports() {
-        let idx=0
         for (let one_import of this.imports) {
-            idx +=1
-            console.log(`${idx}: ${one_import.file}`)
+            this.imported.push(one_import.parse())
         }
+        return this.imported
     }
 }
 
