@@ -1,8 +1,9 @@
 @import_classes:  ../classes/classes.js
 
-str->TString:      terminal
-int->TInteger:     terminal
-float->TFloat:     terminal
+str->TString:       terminal
+int->TInteger:      terminal
+float->TFloat:      terminal
+boolean->TBoolean:  terminal
 
 namespace->TNamespace: str
 
@@ -47,7 +48,7 @@ string_value_expresion:
 
 value:
   _oneOf:
-    - str
+    - boolean
     - int
     - float
     - version
@@ -56,6 +57,7 @@ value:
     - bitrate
     - time
     - size
+    - str
 
 value_expression:
   _oneOf:
@@ -63,11 +65,11 @@ value_expression:
     - _dict: { get_input: str }
     - _dict: { get_nodes_of_type: str }
     - _dict: { token: { _list: [ string_value_expression, str, int] } }
-    - _dict: { join: { _list: [ { _listOf: string_value_expression }, str ], _optional:: [2] } }
-    - _dict: { get_property: { _list: [ str, str, str ], _listOf: { _oneOf: [ int, str] }, _optional:: [2,4] } }
-    - _dict: { get_attribute: { _list: [ str, str, str ], _listOf: { _oneOf: [ int, str] } , _optional:: [2,4] } }
+    - _dict: { join: { _list: [ { _listOf: string_value_expression }, str ], _optional: [2] } }
+    - _dict: { get_property: { _list: [ str, str, str ], _listOf: { _oneOf: [ int, str] }, _optional: [2,4] } }
+    - _dict: { get_attribute: { _list: [ str, str, str ], _listOf: { _oneOf: [ int, str] } , _optional: [2,4] } }
     - _dict: { get_operation_output: { _list: [ str, str, str, str ] } }
-    - _dict: { get_artifact: { _list: [ str, str, str, bool ], _optional:: 3 } }
+    - _dict: { get_artifact: { _list: [ str, str, str, boolean ], _optional: [3] } }
 
 import->TImport:
     _oneOf:
@@ -95,7 +97,7 @@ constraint->TConstraint:
     - _dict: { less_than: value }
     - _dict: { less_or_equal: value }
     - _dict: { in_range: range }
-    - _dict: { valid_values: _list }
+    - _dict: { valid_values: list }
     - _dict: { length: int }
     - _dict: { min_length: int }
     - _dict: { max_length: int }
@@ -121,14 +123,14 @@ property->TProperty:
     type: str
     description: description
     constraints: constraints
-    required: bool
+    required: boolean
     default: value
-    status: { _in: [ supported, unsupported, experimental, deprecated, _optional: ] }
+    status: { _in: [ supported, unsupported, experimental, deprecated, optional ] }
     metadata: metadata
     entry_schema: entry_schema 
 
 properties:
-  _dictOf: { str, property }
+  _dictOf: { str: property }
 
 property_assignment->TPropertyAssignment:
   _oneOf:
@@ -139,7 +141,7 @@ property_assignment->TPropertyAssignment:
         value: { _oneOf: [ value_expression, value] }
 
 property_assignments:
-  _dictOf: { str, property_assignment }
+  _dictOf: { str: property_assignment }
 
 attribute->TAttribute:
   _required: [ type ]
@@ -147,11 +149,11 @@ attribute->TAttribute:
     type: str 
     description: description
     default: value
-    status: { _in: [ supported, unsupported, experimental, deprecated, _optional: ] }
+    status: { _in: [ supported, unsupported, experimental, deprecated, optional ] }
     entry_schema: entry_schema 
 
 attributes:
-  _dictOf: { str, attribute }
+  _dictOf: { str: attribute }
 
 attribute_assignment->TAttributeAssignement:
   _oneOf:
@@ -162,7 +164,7 @@ attribute_assignment->TAttributeAssignement:
         value: { _oneOf: [ value_expression, value ] }
 
 attribute_assignments:
-  _dictOf: { str, attribute_assignment }
+  _dictOf: { str: attribute_assignment }
 
 input_parameter->TInput:
   _required: [ type ]
@@ -170,14 +172,14 @@ input_parameter->TInput:
     type: str 
     description: description
     constraints: constraints
-    required: bool
+    required: boolean
     default: value
-    status: { _in: [ supported, unsupported, experimental, deprecated, _optional: ] }
+    status: { _in: [ supported, unsupported, experimental, deprecated, optional ] }
     entry_schema: entry_schema 
     value: { _oneOf: [ value, value_expression ] } 
 
 input_parameters:
-  _dictOf: { str, input_parameter }
+  _dictOf: { str: input_parameter }
 
 input_assignments:
   property_assignments
@@ -188,14 +190,14 @@ output_parameter->Toutput:
     type: str 
     description: description
     constraints: constraints
-    required: bool
+    required: boolean
     default: value
-    status: { _in: [ supported, unsupported, experimental, deprecated, _optional: ]}
+    status: { _in: [ supported, unsupported, experimental, deprecated, optional ]}
     entry_schema: entry_schema 
     value: { _oneOf: [ value, value_expression ] } 
 
 output_parameters:
-  _dictOf: { str, output_parameter }
+  _dictOf: { str: output_parameter }
 
 repository->TRepository:
   _oneOf:
@@ -224,7 +226,7 @@ artifact_def->TArtifactDef:
         deploy_path: str
 
 artifact_defs:
-  _dictOf: { str, artifact_def }
+  _dictOf: { str: artifact_def }
 
 type_common_keys:
   _dict:
@@ -235,19 +237,24 @@ type_common_keys:
 
 artifact_type->TArtifactType:
   _dict:
-    file_ext: str
+    file_ext: { _listOf: str }
     mime_type: str
     properties: properties
   _copy: type_common_keys
 
 artifact_types:
-  _dictOf: { str, artifact_type}
+  _dictOf: { str: artifact_type}
 
-data_type^TDataType:
+
+data_type->TDataType:
   _dict:
     properties: properties
     constraints: constraints
   _copy: type_common_keys
+
+data_types:
+  _dictOf: { str: data_type}
+
 
 implementation->TImplementation:
   _oneOf:
@@ -276,42 +283,44 @@ interface_type->TInterfaceDef:
     str: operation_def
 
 interface_types:
-  _dictOf: { str: interface_def }
+  _dictOf: { str: interface_type }
 
 interface_def->TInterfaceDef:
   _required: [ type ]
   _dict:
-    - type: str
-    - inputs: properties
+    type: str
   _copy: operation_def
 
 interface_defs:
-  _dictOf: { str, interface_def }
+  _dictOf: { str: interface_def }
 
 interface_def_template->TInterfaceDefTemplate:
   _dict: 
-    - inputs: properties
+    inputs: properties
   _copy: operation_def
 
 interface_defs_template:
-  _dictOf: { str, interface_def_template }
+  _dictOf: { str: interface_def_template }
 
 capability_type->TCapabilityType:
   _dict:
-    - properties: properties
-    - attributes: attributes
-    - valid_source_types: { _listOf: str }
+    properties: properties
+    attributes: attributes
+    valid_source_types: { _listOf: str }
   _copy: type_common_keys
+
+capability_types:
+  _dictOf: { str: capability_type }
 
 capability_def->TCapabilityDef:
   _oneOf:
     - _dict:
-        - type: str
-        - description: description
-        - properties: properties
-        - attributes: attributes
-        - valid_source_types: { _listOf: str } 
-        - occurrences: range
+        type: str
+        description: description
+        properties: properties
+        attributes: attributes
+        valid_source_types: { _listOf: str, _optional: [1] } 
+        occurrences: range
     - str
 
 capability_defs:
@@ -319,9 +328,9 @@ capability_defs:
 
 capability_assignment->TCapabilityAssignment:
   _dict:
-    - properties: property_assignments
-    - attributes: attribute_assignments
-      required: true
+    properties: property_assignments
+    attributes: attribute_assignments
+    occurences: range
 
 capability_assignments:
   _dictOf: { str: capability_assignment }
@@ -364,7 +373,7 @@ requirement_def->TRequirementDef:
             capability: str
             description: description
             node: str
-            occurences: range
+            occurrences: range
             relationship:  
                 _oneOf:
                   - str
@@ -420,6 +429,7 @@ workflow_preconditions:
 
 workflow_activities:
   _listOf:
+    _nb: 1
     _dict:
       delegate: str
       set_state: str
@@ -427,20 +437,18 @@ workflow_activities:
       inline: str
 
 workflow_steps:
-  _listOf:
-      _nb: 1
-      _dictOf:
-        str:
-          _dict:
-            target: str
-            target_relationship: str
-            filter: workflow_condition_clause
-            activities: workflow_activities
-            operation_host: str
-            on_succes: 
-              _oneOf: [ str, { _listOf: str } ]
-            on_failure:
-              _oneOf: [ str, { _listOf: str } ]
+  _dictOf:
+    str:
+      _dict:
+        target: str
+        target_relationship: str
+        filter: workflow_condition_clause
+        activities: workflow_activities
+        operation_host: str
+        on_succes: 
+          _oneOf: [ str, { _listOf: str } ]
+        on_failure:
+          _oneOf: [ str, { _listOf: str } ]
 
 workflow_source_weaving:
   _listOf:
@@ -461,41 +469,35 @@ workflow_target_weaving:
       activity: str
 
 declarative_workflow_node_defs:
-  _listOf:
-    _nb: 1
-    _dictOf:
-      str:
-        _dict:
-          description: description
-          metadata: metadata
-          inputs: properties
-          preconditions: workflow_preconditions
-          steps: workflow_steps
+  _dictOf:
+    str:
+      _dict:
+        description: description
+        metadata: metadata
+        inputs: properties
+        preconditions: workflow_preconditions
+        steps: workflow_steps
           
 declarative_workflow_rel_defs:
-  _listOf:
-    _nb: 1
-    _dictOf:
-      str: 
-        _dict:
-          description: description
-          metadata: metadata
-          inputs: properties
-          preconditions: workflow_preconditions
-          source_weaving: workflow_source_weaving
-          target_weaving: workflow_target_weaving
+  _dictOf:
+    str: 
+      _dict:
+        description: description
+        metadata: metadata
+        inputs: properties
+        preconditions: workflow_preconditions
+        source_weaving: workflow_source_weaving
+        target_weaving: workflow_target_weaving
 
 imperative_workflow_defs:
-  _listOf:
-    _nb: 1
-    _dictOf:
-      str: 
-        _dict:
-          description: description
-          metadata: metadata
-          inputs: properties
-          preconditions: workflow_preconditions
-          steps: workflow_steps
+  _dictOf:
+    str: 
+      _dict:
+        description: description
+        metadata: metadata
+        inputs: properties
+        preconditions: workflow_preconditions
+        steps: workflow_steps
 
 node_type:
   _dict:
@@ -508,7 +510,7 @@ node_type:
   _copy: type_common_keys
 
 node_types:
-  _dictOf: { str, node_type }
+  _dictOf: { str: node_type }
 
 node_template:
   _required: [ type|copy ]
@@ -527,7 +529,7 @@ node_template:
     copy: str
 
 node_templates:
-  _dictOf: { str, node_template }
+  _dictOf: { str: node_template }
 
 relationship_type:
   _dict:
@@ -539,7 +541,7 @@ relationship_type:
   _copy: type_common_keys
 
 relationship_types:
-  _dictOf: { str, relationship_type }
+  _dictOf: { str: relationship_type }
 
 relationship_template:
   _required: [ type|copy ]
@@ -553,7 +555,7 @@ relationship_template:
     copy: str
 
 relationship_templates:
-  _dictOf: { str, relationship_template }
+  _dictOf: { str: relationship_template }
 
 group_type:
   _dict:
@@ -577,7 +579,7 @@ group_def:
     interfaces: interface_defs_template
 
 group_defs:
-  _dictOf: { str, group_def }
+  _dictOf: { str: group_def }
 
 trigger_defs:
   _listOf:
@@ -610,7 +612,7 @@ policy_type:
   _copy: type_common_keys
 
 policy_types:
-  _dictOf: { str,  policy_type }
+  _dictOf: { str:  policy_type }
 
 policy_defs:
   _listOf:

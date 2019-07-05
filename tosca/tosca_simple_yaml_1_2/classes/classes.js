@@ -7,6 +7,7 @@ class TString extends String {
         return this
     }
 }
+
 class TInteger extends Number {
     constructor(args) {
         super(args)
@@ -16,6 +17,18 @@ class TInteger extends Number {
         return this
     }
 }
+
+class TBoolean extends Boolean {
+    constructor(args) {
+        super(args)
+        this.range = args.range
+    }
+
+    toTosca(imbric=0) {
+        return this
+    }
+}
+
 class TFloat  extends Number {
     constructor(args) {
         super(args)
@@ -36,6 +49,7 @@ class TNamespace extends String {
 }
 class TRange {
     constructor(args) {
+        this.args = args
         this.range = args.range
     }
     toTosca(imbric=0) {
@@ -54,8 +68,9 @@ class TMetadata {
             }
         )
     }
+
     toTosca(imbric=0) {
-        let indent = "\n" + "  ".repeat(imbric)
+        let indent = '\n' + '  '.repeat(imbric)
         let str = ""
         this.args.forEach(
             function(value, key, map) {
@@ -77,6 +92,7 @@ class TUrl extends String {
 }
 class TSize {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -86,6 +102,7 @@ class TSize {
 }
 class TTime {
     constructor(args) {
+        this.args = args
         this.range = args.range
     }
     toTosca(imbric=0) {
@@ -94,6 +111,7 @@ class TTime {
 }
 class TFreq {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -103,6 +121,7 @@ class TFreq {
 }
 class TBitrate {
     constructor(args) {
+        this.args = args
         this.range = args.range 
 
     }
@@ -121,6 +140,7 @@ class TVersion extends String {
         let qualifier = (version_parts[3]) ? "." + version_parts[3] : ""
         let build = (version_parts[4]) ? "-" + version_parts[4] : ""
         super(`${major}${minor}${fix}${qualifier}${build}`)
+        this.args = args
         this.range = range
         this.major = major
         this.minor = minor
@@ -136,6 +156,7 @@ class TVersion extends String {
 
 class TImport {
     constructor(args) { 
+        this.args = args
         this.range = args.range
         this.label = null
         this.repository = null
@@ -157,12 +178,6 @@ class TImport {
                 }
             })
         }
-
-    }
-
-    parse() {
-        console.log(`parsing de : ${this.file}`)
-        return this.toTosca()
     }
 
     toTosca(imbric=0) {
@@ -177,9 +192,25 @@ class TImport {
     }
 }
 
+class TDataType {
+    constructor(args) {
+        this.args = args
+        this.range = args.range
+
+    }
+    get derived_from() { return this.args.get('derived_from') }
+    get version() { return this.args.get('version') }
+    get metadata() { return this.args.get('metadata') }
+    get description() { return this.args.get('description') }
+    toTosca(imbric=0) {
+        return this
+    }    
+}
+
 class TList extends Array {
     constructor(args){
         super(...args)
+        this.args = args
         this.range = args.range
     }
     toTosca(imbric) {
@@ -195,6 +226,7 @@ class TList extends Array {
 
 class TConstraint {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -205,6 +237,7 @@ class TConstraint {
 
 class TProperty {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -214,6 +247,7 @@ class TProperty {
 }
 class TPropertyAssignment {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -223,6 +257,7 @@ class TPropertyAssignment {
 }
 class TAttribute {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -232,6 +267,7 @@ class TAttribute {
 }
 class TAttributeAssignement {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -241,6 +277,7 @@ class TAttributeAssignement {
 }
 class TInput {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -250,6 +287,7 @@ class TInput {
 }
 class Toutput {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -259,6 +297,7 @@ class Toutput {
 }
 class TRepository {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -268,6 +307,7 @@ class TRepository {
 }
 class TArtifactDef {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -278,14 +318,24 @@ class TArtifactDef {
 class TArtifactType {
     constructor(args) {
         this.range = args.range
-
+        this.args = args
     }
+
+    get properties() { return this.args.get('properties') }
+    get mime_type() { return this.args.get('mime_type') }
+    get file_ext() { return this.args.get('file_ext') }
+    get derived_from() { return this.args.get('derived_from') }
+    get version() { return this.args.get('version') }
+    get metadata() { return this.args.get('metadata') }
+    get description() { return this.args.get('description') }
+    
     toTosca(imbric=0) {
         return this
     }
 }
 class TImplementation {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -295,6 +345,7 @@ class TImplementation {
 }
 class TOperationDef {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -304,6 +355,7 @@ class TOperationDef {
 }
 class TOperationDefTemplate {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -313,6 +365,7 @@ class TOperationDefTemplate {
 }
 class TInterfaceDef {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -322,6 +375,7 @@ class TInterfaceDef {
 }
 class TInterfaceDefTemplate {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -331,15 +385,21 @@ class TInterfaceDefTemplate {
 }
 class TCapabilityType {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
+    get derived_from() { return this.args.get('derived_from') }
+    get version() { return this.args.get('version') }
+    get metadata() { return this.args.get('metadata') }
+    get description() { return this.args.get('description') }
     toTosca(imbric=0) {
         return this
     }
 }
 class TCapabilityDef {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -349,6 +409,7 @@ class TCapabilityDef {
 }
 class TCapabilityAssignment {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -358,6 +419,7 @@ class TCapabilityAssignment {
 }
 class TPropertyFilter {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -367,6 +429,7 @@ class TPropertyFilter {
 }
 class TCapabilityFilter {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -376,6 +439,7 @@ class TCapabilityFilter {
 }
 class TNodeFilter {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -385,6 +449,7 @@ class TNodeFilter {
 }
 class TRequirementDef {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -394,6 +459,7 @@ class TRequirementDef {
 }
 class TRequirementAssignment {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -403,6 +469,7 @@ class TRequirementAssignment {
 }
 class TSubstitutionMappings {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -412,6 +479,7 @@ class TSubstitutionMappings {
 }
 class TTopologyTemplate {
     constructor(args) {
+        this.args = args
         this.range = args.range
 
     }
@@ -419,6 +487,7 @@ class TTopologyTemplate {
         return this
     }
 }
+
 class TServiceTemplate {
     constructor(args) {
         this.args = args
@@ -454,18 +523,12 @@ class TServiceTemplate {
             })
         return str
     }
-
-    doImports() {
-        for (let one_import of this.imports) {
-            this.imported.push(one_import.parse())
-        }
-        return this.imported
-    }
 }
 
 const classes = {
     TString,
     TInteger,
+    TBoolean,
     TFloat,
     TList,
     TNamespace,
@@ -488,6 +551,7 @@ const classes = {
     TRepository,
     TArtifactDef,
     TArtifactType,
+    TDataType,
     TImplementation,
     TOperationDef,
     TOperationDefTemplate,

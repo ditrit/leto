@@ -73,7 +73,7 @@ node_types:
     capabilities:
       host:
         type: tosca.capabilities.Compute
-        valid_source_types: []
+        valid_source_types: [ ]
   
   
   #section: 5.9.3 tosca.nodes.Compute
