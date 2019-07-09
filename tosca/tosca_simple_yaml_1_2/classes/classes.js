@@ -192,21 +192,6 @@ class TImport {
     }
 }
 
-class TDataType {
-    constructor(args) {
-        this.args = args
-        this.range = args.range
-
-    }
-    get derived_from() { return this.args.get('derived_from') }
-    get version() { return this.args.get('version') }
-    get metadata() { return this.args.get('metadata') }
-    get description() { return this.args.get('description') }
-    toTosca(imbric=0) {
-        return this
-    }    
-}
-
 class TList extends Array {
     constructor(args){
         super(...args)
@@ -315,24 +300,130 @@ class TArtifactDef {
         return this
     }
 }
-class TArtifactType {
+
+
+class TEntity {
     constructor(args) {
-        this.range = args.range
         this.args = args
+        this.range = args.range
+
+    }
+
+    get derived_from() { return this.args.get('derived_from') }
+    get version() { return this.args.get('version') }
+    get metadata() { return this.args.get('metadata') }
+    get description() { return this.args.get('description') }
+
+    set namespace(uri) { this.args._namespace = uri }
+    get namespace() { return this.args._namespace }
+    set alias(alias) { this.args._alias = alias }
+    get alias() { return this.args._alias }
+    set name(name) { this.args._name = name }
+
+    get name() { return this.args._name}
+    get type_uri() { return `${this.args._namespace}/${this.args._name}`}
+    get type_longname() { return `${this.args._alias}/${this.args._name}`}
+
+    toTosca(imbric=0) {
+        return this
+    }    
+}
+
+class TDataType extends TEntity{
+    constructor(args) {
+        super(args)
+    }
+
+    get properties() { return this.args.get('properties') }
+    get constraints() { return this.args.get('constraints') }
+
+}
+
+class TArtifactType extends TEntity {
+    constructor(args) {
+        super(args)
     }
 
     get properties() { return this.args.get('properties') }
     get mime_type() { return this.args.get('mime_type') }
     get file_ext() { return this.args.get('file_ext') }
-    get derived_from() { return this.args.get('derived_from') }
-    get version() { return this.args.get('version') }
-    get metadata() { return this.args.get('metadata') }
-    get description() { return this.args.get('description') }
     
-    toTosca(imbric=0) {
-        return this
+}
+
+class TCapabilityType extends TEntity {
+    constructor(args) {
+        super(args)
+    }
+
+    get properties() { return this.args.get('properties') }
+    get attributes() { return this.args.get('attributes') }
+    get valid_source_types() { return this.args.get('valid_source_types') }
+    get occurences() { return this.args.get('occurrences') }
+}
+
+class TNodeType extends TEntity {
+    constructor(args) {
+        super(args)
+    }
+
+    get properties()   { return this.args.get('properties') }
+    get attributes()   { return this.args.get('attributes') }
+    get occurences()   { return this.args.get('occurrences') }
+    get capabilities() { return this.args.get('capabilities') }
+    get requirements() { return this.args.get('requirements') }
+    get interfaces()   { return this.args.get('interfaces') }
+    get workflows()    { return this.args.get('workflows') }
+}
+
+class TRelationshipType extends TEntity {
+    constructor(args) {
+        super(args)
+    }
+
+    get properties()   { return this.args.get('properties') }
+    get attributes()   { return this.args.get('attributes') }
+    get interfaces()   { return this.args.get('interfaces') }
+    get workflows()    { return this.args.get('workflows') }
+    get valid_target_types() { return this.args.get('valid_target_types') }
+}
+
+class TGroupType extends TEntity {
+    constructor(args) {
+        super(args)
+    }
+
+    get properties()   { return this.args.get('properties') }
+    get capabilities() { return this.args.get('capabilities') }
+    get requirements() { return this.args.get('requirements') }
+    get interfaces()   { return this.args.get('interfaces') }
+    get members()      { return this.args.get('members')}
+}
+
+class TPolicyType extends TEntity {
+    constructor(args) {
+        super(args)
+    }
+
+    get properties()   { return this.args.get('properties') }
+    get target() { return this.args.get('target') }
+    get triggers() { return this.args.get('triggers') }
+}
+
+
+class TInterfaceType extends TEntity {
+    constructor(args) {
+        super(args)
+    }
+
+    get properties() { return this.args.get('properties') }
+    getOperation(name) { 
+        if (this.args.has(name))
+            return this.args.get(name) 
+        else return null
     }
 }
+
+
 class TImplementation {
     constructor(args) {
         this.args = args
@@ -379,20 +470,6 @@ class TInterfaceDefTemplate {
         this.range = args.range
 
     }
-    toTosca(imbric=0) {
-        return this
-    }
-}
-class TCapabilityType {
-    constructor(args) {
-        this.args = args
-        this.range = args.range
-
-    }
-    get derived_from() { return this.args.get('derived_from') }
-    get version() { return this.args.get('version') }
-    get metadata() { return this.args.get('metadata') }
-    get description() { return this.args.get('description') }
     toTosca(imbric=0) {
         return this
     }
@@ -550,14 +627,11 @@ const classes = {
     Toutput,
     TRepository,
     TArtifactDef,
-    TArtifactType,
-    TDataType,
     TImplementation,
     TOperationDef,
     TOperationDefTemplate,
     TInterfaceDef,
     TInterfaceDefTemplate,
-    TCapabilityType,
     TCapabilityDef,
     TCapabilityAssignment,
     TPropertyFilter,
@@ -567,7 +641,16 @@ const classes = {
     TRequirementAssignment,
     TSubstitutionMappings,
     TTopologyTemplate,
-    TServiceTemplate
+    TServiceTemplate,
+
+    TDataType,
+    TArtifactType,
+    TCapabilityType,
+    TInterfaceType,
+    TNodeType,
+    TRelationshipType,
+    TGroupType,
+    TPolicyType
 }
 
 module.exports = classes
