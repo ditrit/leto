@@ -1,4 +1,3 @@
-@import_classes:  ../classes/classes.js
 
 str->TString:       terminal
 int->TInteger:      terminal

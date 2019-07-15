@@ -314,16 +314,6 @@ class TEntity {
     get metadata() { return this.args.get('metadata') }
     get description() { return this.args.get('description') }
 
-    set namespace(uri) { this.args._namespace = uri }
-    get namespace() { return this.args._namespace }
-    set alias(alias) { this.args._alias = alias }
-    get alias() { return this.args._alias }
-    set name(name) { this.args._name = name }
-
-    get name() { return this.args._name}
-    get type_uri() { return `${this.args._namespace}/${this.args._name}`}
-    get type_longname() { return `${this.args._alias}/${this.args._name}`}
-
     toTosca(imbric=0) {
         return this
     }    
@@ -553,6 +543,7 @@ class TSubstitutionMappings {
         return this
     }
 }
+
 class TTopologyTemplate {
     constructor(args) {
         this.args = args
@@ -564,21 +555,6 @@ class TTopologyTemplate {
     }
 }
 
-class TEntityIdx {
-    constructor(tosca_type_list, namespace) {
-        this.short = tosca_type_list
-        this.aliased = new Map()
-        this.full = new Map()
-        if (this.short) {
-            for (let [k, v] of this.short.entries()) { this.full.set([`${namespace}/${k}`, v ]) }
-        }
-    }
-
-    get(name) {
-        return this.short.get(name) || this.aliased.get(name) || this.full.get(name)
-    }
-}
-
 class TServiceTemplate {
     constructor(args) {
         this.args = args
@@ -587,10 +563,16 @@ class TServiceTemplate {
         if ( ! this.args.get('namespace') ) {
             this.args.set('namespace', new TUrl("http://doc.leto.org/tosca"))
         }
-        const tosca_entity_names = ['artifact_types', 'data_types', 'capability_types', 'interface_types', 'relationship_types', 'node_types', 'group_types', 'policy_types']
-        this.entities = {}
-        for (const entity_name of tosca_entity_names ) {
-            this.entities[entity_name] = new TEntityIdx( this.args.get(entity_name), this.namespace )
+        this.tosca_entity_types = ['artifact_types', 'data_types', 'capability_types', 'interface_types', 'relationship_types', 'node_types', 'group_types', 'policy_types']
+        const tosca_entities = new Map(this.tosca_entity_types.map( tosca_entity_type => [ tosca_entity_type, this.args.get(tosca_entity_type) ] ))
+        const empty_entities = new Map(this.tosca_entity_types.map( tosca_entity_type => [ tosca_entity_type, new Map() ] ))
+        const namespace = this.args.get('namespace').toString()
+        this.by_namespace = { null: tosca_entities }
+        this.by_namespace[namespace] = tosca_entities
+        this.by_alias = { null: tosca_entities }
+
+        for (const entity_type of this.tosca_entity_types ) {
+            tosca_entities.set(entity_type, this.args.get(entity_type))
         }
     }
 
@@ -600,15 +582,16 @@ class TServiceTemplate {
     get metadata() { return this.args.get('metadata') }
     get repositories() { return this.args.get('repositories') }
     get imports() { return this.args.get('imports') }
-    get artifact_types() { return this.entities.artifact_types }
-    get data_types() { return this.entities.data_types }
-    get capability_types() { return this.entities.capability_types }
-    get interface_types() { return this.entities.interface_types }
-    get relationship_types() { return this.entities.relationship_types }
-    get node_types() { return this.entities.node_types }
-    get group_types() { return this.entities.group_types }
-    get policy_types() { return this.entities.policy_types }
+    get artifact_types() { return this.args.get('artifact_types') }
+    get data_types() { return this.args.get('data_types') }
+    get capability_types() { return this.args.get('capability_types') }
+    get interface_types() { return this.args.get('interface_types') }
+    get relationship_types() { return this.args.get('relationship_types') }
+    get node_types() { return this.args.get('node_types') }
+    get group_types() { return this.args.get('group_types') }
+    get policy_types() { return this.args.get('policy_types') }
     get topology_template() { return this.args.get('topology_template') }
+
 
     toTosca(imbric=0) { 
         let indent = '\n' + '  '.repeat(imbric)

@@ -1,0 +1,15 @@
+tosca_simple_yaml_2_0:
+        uri:    http://docs.oasis-open.org/tosca/ns/simple/yaml/2.0
+        alias:  tosca_simple_yaml_2_0
+        prefix: tosca
+
+tosca_simple_yaml_1_2:
+        uri:    http://docs.oasis-open.org/tosca/ns/simple/yaml/1.2
+        alias:  tosca_simple_yaml_1_2
+        prefix: tosca
+
+tosca_simple_yaml_1_0:
+        uri:    http://docs.oasis-open.org/tosca/ns/simple/yaml/1.0
+        alias:  tosca_simple_yaml_1_0
+        prefix: tosca
+

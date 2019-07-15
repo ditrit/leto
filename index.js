@@ -16,11 +16,14 @@ function parse_src(tosca_file) {
     // parse tosca definition file
     info = lidy.parse_dsl_def(info, dsl_def_file)
 
+    // import tosca classes
+    // info = lidy.import_classes(info, './tosca/classes/classes.js')
+    info.classes = require('./tosca/classes/classes.js')
+
     // parse source - second step (dsl parsing)
     info = lidy.parse_src_dsl(info, 'service_template')
 
-
-    // parse recursive imports
+    // parse imports recursively
     if (info.nodes && info.nodes.imports) {
         for (const imported of info.nodes.imports) {
             let file_path = (imported.file.startsWith('/') ? imported.file : `${path_src}/${imported.file}`)
