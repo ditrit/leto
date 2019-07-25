@@ -1,5 +1,5 @@
 class TString extends String {
-    constructor(args) {
+    constructor(args, info) {
         super(args)
         this.range = args.range
     }
@@ -9,7 +9,7 @@ class TString extends String {
 }
 
 class TInteger extends Number {
-    constructor(args) {
+    constructor(args, info) {
         super(args)
         this.range = args.range
     }
@@ -19,7 +19,7 @@ class TInteger extends Number {
 }
 
 class TBoolean extends Boolean {
-    constructor(args) {
+    constructor(args, info) {
         super(args)
         this.range = args.range
     }
@@ -30,7 +30,7 @@ class TBoolean extends Boolean {
 }
 
 class TFloat  extends Number {
-    constructor(args) {
+    constructor(args, info) {
         super(args)
         this.range = args.range
     }
@@ -39,7 +39,7 @@ class TFloat  extends Number {
     }
 }
 class TNamespace extends String {
-    constructor(args) {
+    constructor(args, info) {
         super(args)
         this.range = args.range
     }
@@ -48,7 +48,7 @@ class TNamespace extends String {
     }
 }
 class TRange {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
     }
@@ -58,7 +58,7 @@ class TRange {
 }
 
 class TMetadata {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
         let metadata = this
@@ -82,7 +82,7 @@ class TMetadata {
 }
 
 class TUrl extends String {
-    constructor(args) {
+    constructor(args, info) {
         super(args)
         this.range = args.range
     }
@@ -91,7 +91,7 @@ class TUrl extends String {
     }
 }
 class TSize {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -101,7 +101,7 @@ class TSize {
     }
 }
 class TTime {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
     }
@@ -110,7 +110,7 @@ class TTime {
     }
 }
 class TFreq {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -120,7 +120,7 @@ class TFreq {
     }
 }
 class TBitrate {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range 
 
@@ -131,7 +131,7 @@ class TBitrate {
 }
 
 class TVersion extends String {
-    constructor(args) {
+    constructor(args, info) {
         let range = args.range
         let version_parts = args.split(/\.|-/)
         let major = version_parts[0] || 0
@@ -155,7 +155,7 @@ class TVersion extends String {
 }
 
 class TImport {
-    constructor(args) { 
+    constructor(args, info) { 
         this.args = args
         this.range = args.range
         this.label = null
@@ -193,7 +193,7 @@ class TImport {
 }
 
 class TList extends Array {
-    constructor(args){
+    constructor(args, info){
         super(...args)
         this.args = args
         this.range = args.range
@@ -210,7 +210,7 @@ class TList extends Array {
 }
 
 class TConstraint {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -221,7 +221,7 @@ class TConstraint {
 }
 
 class TProperty {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -231,7 +231,7 @@ class TProperty {
     }
 }
 class TPropertyAssignment {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -241,7 +241,7 @@ class TPropertyAssignment {
     }
 }
 class TAttribute {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -251,7 +251,7 @@ class TAttribute {
     }
 }
 class TAttributeAssignement {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -261,7 +261,7 @@ class TAttributeAssignement {
     }
 }
 class TInput {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -271,7 +271,7 @@ class TInput {
     }
 }
 class Toutput {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -281,7 +281,7 @@ class Toutput {
     }
 }
 class TRepository {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -291,7 +291,7 @@ class TRepository {
     }
 }
 class TArtifactDef {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -303,7 +303,7 @@ class TArtifactDef {
 
 
 class TEntity {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -320,8 +320,8 @@ class TEntity {
 }
 
 class TDataType extends TEntity{
-    constructor(args) {
-        super(args)
+    constructor(args, info) {
+        super(args, info)
         this.category = 'datatypes'
     }
 
@@ -331,8 +331,8 @@ class TDataType extends TEntity{
 }
 
 class TArtifactType extends TEntity {
-    constructor(args) {
-        super(args)
+    constructor(args, info) {
+        super(args, info)
         this.category = 'artifacts'
     }
 
@@ -343,8 +343,8 @@ class TArtifactType extends TEntity {
 }
 
 class TCapabilityType extends TEntity {
-    constructor(args) {
-        super(args)
+    constructor(args, info) {
+        super(args, info)
         this.category = 'capabilities'
     }
 
@@ -355,8 +355,8 @@ class TCapabilityType extends TEntity {
 }
 
 class TNodeType extends TEntity {
-    constructor(args) {
-        super(args)
+    constructor(args, info) {
+        super(args, info)
         this.category = 'nodes'
     }
 
@@ -370,8 +370,8 @@ class TNodeType extends TEntity {
 }
 
 class TRelationshipType extends TEntity {
-    constructor(args) {
-        super(args)
+    constructor(args, info) {
+        super(args, info)
         this.category = 'relationships'
     }
 
@@ -383,8 +383,8 @@ class TRelationshipType extends TEntity {
 }
 
 class TGroupType extends TEntity {
-    constructor(args) {
-        super(args)
+    constructor(args, info) {
+        super(args, info)
         this.category = 'groups'
     }
 
@@ -396,8 +396,8 @@ class TGroupType extends TEntity {
 }
 
 class TPolicyType extends TEntity {
-    constructor(args) {
-        super(args)
+    constructor(args, info) {
+        super(args, info)
         this.category = 'policies'
     }
 
@@ -408,8 +408,8 @@ class TPolicyType extends TEntity {
 
 
 class TInterfaceType extends TEntity {
-    constructor(args) {
-        super(args)
+    constructor(args, info) {
+        super(args, info)
         this.category = 'interfaces'
     }
 
@@ -422,7 +422,7 @@ class TInterfaceType extends TEntity {
 }
 
 class TImplementation {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -432,7 +432,7 @@ class TImplementation {
     }
 }
 class TOperationDef {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -442,7 +442,7 @@ class TOperationDef {
     }
 }
 class TOperationDefTemplate {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -452,7 +452,7 @@ class TOperationDefTemplate {
     }
 }
 class TInterfaceDef {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -462,7 +462,7 @@ class TInterfaceDef {
     }
 }
 class TInterfaceDefTemplate {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -472,7 +472,7 @@ class TInterfaceDefTemplate {
     }
 }
 class TCapabilityDef {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -482,7 +482,7 @@ class TCapabilityDef {
     }
 }
 class TCapabilityAssignment {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -502,7 +502,7 @@ class TPropertyFilter {
     }
 }
 class TCapabilityFilter {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -512,7 +512,7 @@ class TCapabilityFilter {
     }
 }
 class TNodeFilter {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -522,7 +522,7 @@ class TNodeFilter {
     }
 }
 class TRequirementDef {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -532,7 +532,7 @@ class TRequirementDef {
     }
 }
 class TRequirementAssignment {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -542,7 +542,7 @@ class TRequirementAssignment {
     }
 }
 class TSubstitutionMappings {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -553,7 +553,7 @@ class TSubstitutionMappings {
 }
 
 class TTopologyTemplate {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
 
@@ -590,26 +590,29 @@ class TTypes {
         this.default_namespace = tnamespace
     }
 
-    set(tname, ttype, tnamespace=null) {
+    set(tname, tentity, tnamespace=null) {
         const namespace = (tnamespace) ? tnamespace : this.default_namespace
-        if (ttype instanceof TEntity) {
-            const exists = this.entities.get(tname)
+        if (tentity instanceof TEntity) {
+            let exists = this.entities.get(tname)
             if (exists) {
-                const category = ttype.category
+                const category = tentity.category
                 if (exists.find( ele => ele.category == category && ele.namespace == namespace )) 
                     throw(`Error : a ${category} '${tname}' already exists for the namespace '${(namespace) ? namespace : 'default' }'}' `)
             } else {
                 exists = [] 
             }
-            exists.push(new TType(tname, ttype, namespace))
-        } else throw(`Error : '${ttype}' is not a Tosca Entity`)
+            exists.push(new TType(tname, tentity, namespace))
+            this.entities.set(tname, exists)
+        } else 
+            throw(`Error : '${tentity}' is not a Tosca Entity`)
     }
 
     set_prefix(prefix, namespace) {
-        const prefixed_namespace = this.prefixes.get(prefix)
-        if (prefixed_namespace != namespace) 
+        const prefixed_namespace = this.prefixies.get(prefix)
+        if (!prefixed_namespace || ( prefixed_namespace == namespace) )
+            this.prefixies.set(prefix, namespace)
+        else if ( prefixed_namespace != namespace) 
             throw(`Error : the namespace prefix ${prefix} is already used for namespace ${prefixed_namespace}`)
-        if (! prefixed_namespace) this.prefixies.set(prefix, namespace)
     }
 
     import(other, with_namespace, with_prefix) {
@@ -626,11 +629,12 @@ class TTypes {
         imported_entities.forEach(function(imported_ttypes, name, map) {
             let local_ttypes = local_entities.get(name) || []
             for (const ttype of imported_ttypes) {
-                new_type = (ttype.namespace) ? ttype : ttype.with_namespace(new_namespace)
+                let new_type = (ttype.namespace) ? ttype : ttype.with_namespace(new_namespace)
                 local_ttypes.find(ele => ele.equals(new_type)) || local_ttypes.push(new_type)
             }
             local_entities.set(name, local_ttypes)
         })
+        return this
     }
 
     get(id, expected_category=null) {
@@ -677,18 +681,26 @@ class TTypes {
 }
 
 class TServiceTemplate {
-    constructor(args) {
+    constructor(args, info) {
         this.args = args
         this.range = args.range
         this.imported=[]
         this.tosca_entity_types = ['artifact_types', 'data_types', 'capability_types', 'interface_types', 'relationship_types', 'node_types', 'group_types', 'policy_types']
-        const entities = new TTYpes(this.args.get('namespace'))
+        const all_types = new TTypes(this.args.get('namespace'))
+        all_types.set_prefix(info.tosca_prefix, info.tosca_namespace)
         for (const category of this.tosca_entity_types) {
-            this.args.get(category).forEach(function(value, key, map) {
-                entities.set(key, value)
+            let types = this.args.get(category) 
+            types && types.forEach(function(value, id, map) {
+                const id_eles = id.split('.')
+                let namespace = all_types.prefixies.get(id_eles[0])
+                let id_category = id_eles[1]
+                if (namespace && id_category == value.category)
+                    all_types.set(id_eles.slice(2).join('.'), value, namespace)
+                else 
+                    all_types.set(id, value)
             })
         }
-        this.entities = entities
+        this.all_types = all_types
     }
 
     get description() { return this.args.get('description') }

@@ -5,7 +5,7 @@ const classes = require('./tosca/classes/classes.js')
 const tosca_config = lidy.parseYaml(null, './tosca/config.yaml').tree
 
 function parse_src(tosca_file, versions = []) {
-    console.log(`Fichier : ${tosca_file}` )
+    // DEBUG // console.log(`Fichier : ${tosca_file}` )
 
     // currentdir for src file
     let path_src = path.dirname(tosca_file)
@@ -23,8 +23,13 @@ function parse_src(tosca_file, versions = []) {
     // use Tosca classes
     info.classes  = classes
 
+    // tosca_version information
+    info.tosca_prefix =    tosca_config[dsl_version].prefix
+    info.tosca_namespace = tosca_config[dsl_version].uri
+
     // parse source - second step (dsl parsing)
     info = lidy.parse_src_dsl(info, 'service_template')
+
 
     // parse import of normative types 
     if ( ! ( versions.includes(dsl_version) ) ) {
@@ -32,8 +37,8 @@ function parse_src(tosca_file, versions = []) {
             versions.push(dsl_version)
             info.nodes.imported.push( { 
                 service:    parse_src(`tosca/${dsl_version}/normative_types/tosca_types.yaml`, versions).nodes, 
-                namespace:  tosca_config[dsl_version].uri,
-                prefix:     tosca_config[dsl_version].prefix })
+                namespace:  info.tosca_namespace,
+                prefix:     info.tosca_prefix })
         } else throw(`Error : Unknown dsl Tosca version ${dsl_version}`)
     }
 
@@ -44,13 +49,13 @@ function parse_src(tosca_file, versions = []) {
             info.nodes.imported.push( { 
                 service: parse_src(file_path.toString(), versions).nodes, 
                 namespace: imported.namespace_uri, 
-                prefix: imported.namespace_prefix } ) 
+                prefix:    imported.namespace_prefix } ) 
         } 
     }
 
     // import types with namespace management
-    for ( const service of info.nodes.imported ) {
-        info.nodes.entities.import(service.entities)
+    for ( const imported of info.nodes.imported ) {
+        info.nodes.all_types.import(imported.service.all_types, imported.namespace, imported.prefix)
     }
 
     return info
@@ -61,4 +66,5 @@ const tosca_file = 'tests/test.yaml'
 
 // parse 
 info = parse_src(tosca_file)
+//console.log(info.nodes.all_types)
 

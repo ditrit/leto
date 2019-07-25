@@ -274,7 +274,7 @@ operation_def_template->TOperationDefTemplate:
     inputs: input_assignments
     implementation: implementation
 
-interface_type->TInterfaceDef:
+interface_type->TInterfaceType:
   _dict:
     inputs: properties
   _copy: type_common_keys
@@ -498,7 +498,7 @@ imperative_workflow_defs:
         preconditions: workflow_preconditions
         steps: workflow_steps
 
-node_type:
+node_type->TNodeType:
   _dict:
     properties: properties
     attributes: attributes
@@ -530,7 +530,7 @@ node_template:
 node_templates:
   _dictOf: { str: node_template }
 
-relationship_type:
+relationship_type->TRelationshipType:
   _dict:
     properties: properties
     attributes: attributes
@@ -556,7 +556,7 @@ relationship_template:
 relationship_templates:
   _dictOf: { str: relationship_template }
 
-group_type:
+group_type->TGroupType:
   _dict:
     properties: properties
     capabilities: capability_defs
@@ -603,7 +603,7 @@ trigger_defs:
             method: str
             action: { _oneOf: [ str, operation_def ] }
 
-policy_type:
+policy_type->TPolicyType:
   _dict:
     properties: properties
     targets: { _listOf: str }

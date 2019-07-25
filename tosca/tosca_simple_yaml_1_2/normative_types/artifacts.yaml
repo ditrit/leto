@@ -29,7 +29,7 @@ artifact_types:
     derived_from: tosca.artifacts.Deployment
 
   #section: 5.4.3.4 tosca.artifacts.Deployment.Image.VM
-  tosca.artifacts.Deployment.Image:
+  tosca.artifacts.Deployment.Image.VM:
     derived_from: tosca.artifacts.Deployment.Image
     description: Virtual Machine (VM) Image
 
