@@ -26,7 +26,7 @@ function parse_src(tosca_file, versions = []) {
     // parse source - second step (dsl parsing)
     info = lidy.parse_src_dsl(info, 'service_template')
 
-    // import of normative types 
+    // parse import of normative types 
     if ( ! ( versions.includes(dsl_version) ) ) {
         if (dsl_version in tosca_config) {
             versions.push(dsl_version)
@@ -34,11 +34,10 @@ function parse_src(tosca_file, versions = []) {
                 service:    parse_src(`tosca/${dsl_version}/normative_types/tosca_types.yaml`, versions).nodes, 
                 namespace:  tosca_config[dsl_version].uri,
                 prefix:     tosca_config[dsl_version].prefix })
-            let dsl_version_nodes = parse_src(`tosca/${dsl_version}/normative_types/tosca_types.yaml`, versions)
         } else throw(`Error : Unknown dsl Tosca version ${dsl_version}`)
     }
 
-    // explicit imports
+    // parse explicit imports
     if (info.nodes && info.nodes.imports) {
         for (const imported of info.nodes.imports) {
             let file_path = (imported.file.startsWith('/') ? imported.file : `${path_src}/${imported.file}`)
@@ -49,25 +48,10 @@ function parse_src(tosca_file, versions = []) {
         } 
     }
 
-    // namespace management
+    // import types with namespace management
     for ( const service of info.nodes.imported ) {
-        let imported_namespace = service && service.namespace
-        let imported_prefix = service && service.prefix
-        let imported_service = service && service.service
-
-        let local_namespaces    = info.nodes.by_namespace
-        let imported_namespaces = imported_service.by_namespace
-
-        for (const namespace in imported_namespaces) {
-            if (! namespace in local_namespaces) local_namespaces[namespace] = info.nodes.empty_types
-            let local_namespace = local_namespaces[namespace]
-            let imported_namespace = imported_namespaces[namespace]
-            for (const [type_categ, types ] of local_namespace ) {
-                local_namespace.set(type_categ, [ ...types, ...imported_namespace.get(type_categ) ])
-            }
-        }
+        info.nodes.entities.import(service.entities)
     }
-
 
     return info
 }
