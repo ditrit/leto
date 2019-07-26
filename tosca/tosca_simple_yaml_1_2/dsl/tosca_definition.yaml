@@ -26,19 +26,19 @@ url->TUrl:
 
 size: scalar-unit.size
 scalar-unit.size->TSize:
-  _regexp: '([+-] *)?[0-d]+(\.[0-9]+)? (B|kB|KiB|MB|MiB|GB|GiB|TB|TiB)$'
+  _regexp: '((?<sign>[+-]) *)?(?<value>[0-d]+(\.[0-9]+)?) *(?<unit>B|kB|KiB|MB|MiB|GB|GiB|TB|TiB)$'
 
 time: scalar-unit.time
 scalar-unit.time->TTime:
-  _regexp: '([+-] *)?[0-d]+(\.[0-9]+)? (d|h|m|s|ms|us|ns)$'
+  _regexp: '((?<sign>[+-]) *)?(?<value>[0-d]+(\.[0-9]+)?) *(?<unit>d|h|m|s|ms|us|ns)$'
 
 frequency: scalar-unit.frequency
 scalar-unit.frequency->TFreq:
-  _regexp: '([+-] *)?[0-d]+(\.[0-9]+)? (kHz|MHz|GHz)$'
+  _regexp: '((?<sign>[+-]) *)?(?<value>[0-d]+(\.[0-9]+)?) *(?<unit>kHz|MHz|GHz)$'
 
 bitrate: scalar-unit.bitrate
 scalar-unit.bitrate->TBitrate:
-  _regexp: '([+-] *)?[0-d]+(\.[0-9]+)? (bps|Kbps|Kibps|Mbps|Mibps|Gbps|Gibps|Tbps|Tibps|Bps|KBps|KiBps|MBps|MiBps|GBps|GiBps|TBps|TiBps)$'
+  _regexp: '((?<sign>[+-]) *)?(?<value>[0-d]+(\.[0-9]+)?) *(?<unit>bps|Kbps|Kibps|Mbps|Mibps|Gbps|Gibps|Tbps|Tibps|Bps|KBps|KiBps|MBps|MiBps|GBps|GiBps|TBps|TiBps)$'
 
 string_value_expresion:
   _oneOf: 

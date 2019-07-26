@@ -1,4 +1,4 @@
-const path    = require('path')
+const path = require('path')
 const lidy = require('lidy')
 const classes = require('./tosca/classes/classes.js')
 
