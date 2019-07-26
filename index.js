@@ -61,6 +61,27 @@ function parse_src(tosca_file, versions = []) {
     return info
 }
 
+function parse_test(str, keyword ) {
+
+    // parse source - first step (yaml parsing)
+    let info = lidy.parse_src_yaml({}, null, str)
+
+    // extract tosca definition file from source 
+    const dsl_version = 'tosca_simple_yaml_1_2'
+    const dsl_def_file = `tosca/${dsl_version}/dsl/tosca_definition.yaml`
+
+    // parse tosca definition file
+    info = lidy.parse_dsl_def(info, dsl_def_file)
+
+    // use Tosca classes
+    info.classes  = classes
+
+    // parse source - second step (dsl parsing)
+    info = lidy.parse_src_dsl(info, keyword)
+
+    return info
+}
+
 // source file
 const tosca_file = 'tests/test.yaml'
 
@@ -68,3 +89,5 @@ const tosca_file = 'tests/test.yaml'
 info = parse_src(tosca_file)
 //console.log(info.nodes.all_types)
 
+exports.parse_test=parse_test
+exports.parse_src=parse_src
