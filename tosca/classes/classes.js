@@ -100,11 +100,11 @@ class TUrl extends String {
 
 class TScalarUnit {
     constructor(args, info=null) {
-        const fromYaml = (typeof args == 'object') 
+        this.fromYaml = (typeof args == 'object') 
         this.args  = args
-        this.range = (fromYaml) ? args.range : null 
-        this.value = (fromYaml) ? parseFloat(args.parts.value) : Math.abs(args)
-        this.sign  = (fromYaml) ? ( ( args.parts.sign == '-') ? -1 : 1 ) : Math.sign(args)
+        this.range = (this.fromYaml) ? args.range : null 
+        this.value = (this.fromYaml) ? parseFloat(args.parts.value) : Math.abs(args)
+        this.sign  = (this.fromYaml) ? ( ( args.parts.sign == '-') ? -1 : 1 ) : Math.sign(args)
         }
 
     valueOf() { return this.canonic }
@@ -119,8 +119,8 @@ class TScalarUnit {
 class TSize extends TScalarUnit {
     constructor(args, info=null) {
         super(args, info)
-        this.unit  = (fromYaml) ? args.parts.unit  : 'B'
-        this.factor = (fromYaml) ? ({ 'B': 1, 'kB': 1000, 'KiB': 1024, 'MB': 1000000, 'MiB': 1048576, 
+        this.unit  = (this.fromYaml) ? args.parts.unit  : 'B'
+        this.factor = (this.fromYaml) ? ({ 'B': 1, 'kB': 1000, 'KiB': 1024, 'MB': 1000000, 'MiB': 1048576, 
             'GB': 1000000000, 'GiB': 1073741824, 'TB': 1000000000000, 'TiB': 1099511627776
             })[this.unit] : 1
         this.canonic = this.sign * this.value * this.factor
@@ -130,8 +130,8 @@ class TSize extends TScalarUnit {
 class TTime extends TScalarUnit {
     constructor(args, info=null) {
         super(args, info)
-        this.unit  = (fromYaml) ? args.parts.unit  : 's'
-        this.factor = (fromYaml) ? ({ 'd': 86400, 'h': 3600, 'm': 60, 's': 1,  
+        this.unit  = (this.fromYaml) ? args.parts.unit  : 's'
+        this.factor = (this.fromYaml) ? ({ 'd': 86400, 'h': 3600, 'm': 60, 's': 1,  
             'ms': 0.001, 'us': 0.00001, 'ns': 0.000000001
             })[this.unit] : 1
         this.canonic = this.sign * this.value * this.factor
@@ -140,8 +140,8 @@ class TTime extends TScalarUnit {
 class TFreq extends TScalarUnit {
     constructor(args, info=null) {
         super(args, info)
-        this.unit  = (fromYaml) ? args.parts.unit  : 'Hz'
-        this.factor = (fromYaml) ? ({ 'Hz': 1, 'kHz': 1000,  
+        this.unit  = (this.fromYaml) ? args.parts.unit  : 'Hz'
+        this.factor = (this.fromYaml) ? ({ 'Hz': 1, 'kHz': 1000,  
             'MHz': 1000000, 'GHz': 1000000000
             })[this.unit] : 1
         this.canonic = this.sign * this.value * this.factor
@@ -150,8 +150,8 @@ class TFreq extends TScalarUnit {
 class TBitrate extends TScalarUnit {
     constructor(args, info=null) {
         super(args, info)
-        this.unit  = (fromYaml) ? args.parts.unit  : 'bps'
-        this.factor = (fromYaml) ? ({ 'bps': 1, 'Kbps': 1000, 'Kibps': 1024, 'Mbps': 1000000, 'Mibps': 1048576, 
+        this.unit  = (this.fromYaml) ? args.parts.unit  : 'bps'
+        this.factor = (this.fromYaml) ? ({ 'bps': 1, 'Kbps': 1000, 'Kibps': 1024, 'Mbps': 1000000, 'Mibps': 1048576, 
             'Gbps': 1000000000, 'Gibps': 1073741824, 'Tbps': 1000000000000, 'Tibps': 1099511627776,
             'Bps': 8, 'KBps': 8000, 'KiBps': 1024*8, 'MBps': 8000000, 'MiBps': 1048576*8, 
             'GBps': 8000000000, 'GiBps': 1073741824*8, 'TBps': 8000000000000, 'TiBps': 1099511627776*8,
