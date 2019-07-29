@@ -1,15 +1,16 @@
 
-str->TString:       terminal
-int->TInteger:      terminal
-float->TFloat:      terminal
-boolean->TBoolean:  terminal
+str->TString:          terminal
+int->TInteger:         terminal
+float->TFloat:         terminal
+boolean->TBoolean:     terminal
+unbounded->TUnbounded: terminal
 
 namespace->TNamespace: str
 
 description: str
 
 range->TRange:
-  _list: [ _oneOf: [ int, unbounded ], _oneOf: [ int, unbounded ] ]
+  _list: [ _oneOf: [ scalar, unbounded ], _oneOf: [ scalar, unbounded ] ]
 
 metadata->TMetadata: 
   _dict: 
@@ -34,7 +35,7 @@ scalar-unit.time->TTime:
 
 frequency: scalar-unit.frequency
 scalar-unit.frequency->TFreq:
-  _regexp: '((?<sign>[+-]) *)?(?<value>[0-9]+(\.[0-9]+)?) *(?<unit>kHz|MHz|GHz)$'
+  _regexp: '((?<sign>[+-]) *)?(?<value>[0-9]+(\.[0-9]+)?) *(?<unit>Hz|kHz|MHz|GHz)$'
 
 bitrate: scalar-unit.bitrate
 scalar-unit.bitrate->TBitrate:
@@ -44,6 +45,15 @@ string_value_expresion:
   _oneOf: 
     - str
     - value_expression
+
+scalar:
+  _oneOf:
+    - int
+    - float
+    - frequency
+    - bitrate
+    - time
+    - size
 
 value:
   _oneOf:
@@ -57,6 +67,8 @@ value:
     - time
     - size
     - str
+    - list
+    - map
 
 value_expression:
   _oneOf:
@@ -90,7 +102,7 @@ imports->TList:
 
 constraint->TConstraint:
   _oneOf:
-    - _dict: { equal: any }
+    - _dict: { equal: value }
     - _dict: { greater_than: value }
     - _dict: { greater_or_equal: value }
     - _dict: { less_than: value }
@@ -101,9 +113,9 @@ constraint->TConstraint:
     - _dict: { min_length: int }
     - _dict: { max_length: int }
     - _dict: { pattern: str }
-    - _dict: { schema: str }
+    #- _dict: { schema: str }
 
-constraints:
+constraints->TConstraints:
   _listOf: constraint
 
 entry_schema:

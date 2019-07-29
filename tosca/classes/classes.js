@@ -1,12 +1,25 @@
 function _locate(info, range) {
-    let begin = info.index.fromIndex( (range[0] > 1 ) ? range[0] : 0 )
-    let end = info.index.fromIndex( (range[1] > 1 ) ? range[1]  : 0 )
-    let loc_str = ` at ${begin.line}:${begin.col} <-> ${end.line}:${end.col} ${(info.filename) ? 'in ' + info.filename : '' }`
-    return loc_str
+    if (info) {
+        let begin = info.index.fromIndex( (range[0] > 1 ) ? range[0] : 0 )
+        let end = info.index.fromIndex( (range[1] > 1 ) ? range[1]  : 0 )
+        let loc_str = ` at ${begin.line}:${begin.col} <-> ${end.line}:${end.col} ${(info.filename) ? 'in ' + info.filename : '' }`
+        return loc_str
+    } else return ""
 }
 
 class TString extends String {
-    constructor(args, info) {
+    constructor(args, info=null) {
+        super(args)
+        this.range = args.range
+    }
+
+    toTosca(imbric=0) {
+        return this
+    }
+}
+
+class TInteger extends Number {
+    constructor(args, info=null) {
         super(args)
         this.range = args.range
     }
@@ -15,9 +28,9 @@ class TString extends String {
     }
 }
 
-class TInteger extends Number {
-    constructor(args, info) {
-        super(args)
+class TUnbounded extends Number {
+    constructor(args, info=null) {
+        super(Infinity)
         this.range = args.range
     }
     toTosca(imbric=0) {
@@ -26,7 +39,7 @@ class TInteger extends Number {
 }
 
 class TBoolean extends Boolean {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args)
         this.range = args.range
     }
@@ -37,7 +50,7 @@ class TBoolean extends Boolean {
 }
 
 class TFloat  extends Number {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args)
         this.range = args.range
     }
@@ -46,7 +59,7 @@ class TFloat  extends Number {
     }
 }
 class TNamespace extends String {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args)
         this.range = args.range
     }
@@ -55,17 +68,21 @@ class TNamespace extends String {
     }
 }
 class TRange {
-    constructor(args, info) {
+    constructor(args, info=null) {
         this.args = args
         this.range = args.range
+        this.min = args[0]
+        this.max = args[1]
+        if (this.min == Infinity) this.min = -Infinity
     }
+
     toTosca(imbric=0) {
         return this
     }
 }
 
 class TMetadata {
-    constructor(args, info) {
+    constructor(args, info=null) {
         this.args = args
         this.range = args.range
         let metadata = this
@@ -89,7 +106,7 @@ class TMetadata {
 }
 
 class TUrl extends String {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args)
         this.range = args.range
     }
@@ -161,7 +178,7 @@ class TBitrate extends TScalarUnit {
 }
 
 class TVersion extends String {
-    constructor(args, info) {
+    constructor(args, info=null) {
         let range = args.range
         let version_parts = args.split(/\.|-/)
         let major = version_parts[0] || 0
@@ -177,7 +194,14 @@ class TVersion extends String {
         this.fix   = fix
         this.qualifier = qualifier
         this.build = build
+        this.canonic = this.major.toString().padStart(6,' ') 
+               + '.' + this.minor.toString().padStart(6,' ')
+               + '.' + this.fix.toString().padStart(6,' ')
+               + '.' + this.qualifier.padStart(15,' ')
+               + '.' + this.build.toString().padStart(10,' ')
     }
+
+    valueOf() { return this.canonic }
 
     toTosca(imbric=0) {
         return `${this.major}${this.minor}${this.fix}${this.qualifier}${this.build}`
@@ -239,6 +263,24 @@ class TList extends Array {
     }
 }
 
+class TConstraints extends TList {
+    constructor(args, info){
+        super(args)
+        this.args = args
+        this.range = args.range
+        this.args.forEach(
+            function(value) {
+                if (! value instanceof TConstraint ) { throw (`Error : '${value}' is not a constraint in '${args}' ${_locate(info, value.range)}`)}
+            }
+        )
+    }
+
+    eval(constrained_value) {
+        return this.every(x => x.eval(constrained_value) )
+    }
+
+}
+
 class TConstraint {
     constructor(args, info) {
         this.args  = args
@@ -254,6 +296,45 @@ class TConstraint {
               throw(`Error : '${operator}' is not an allowed operator in a constraint`)
     }
 
+    eval(constrained_value) {
+        let constrained = ( typeof constrained_value == 'object' ) ? constrained_value.valueOf() : constrained_value
+        let val = ( typeof this.value == 'object' ) ? this.value.valueOf() : this.value
+
+        try {
+        switch (this.operator) {
+            case 'equal':
+                return constrained == val 
+            case 'greater_than':
+                return constrained > val 
+            case 'greater_or_equal':
+                return constrained >= val 
+            case 'less_than':
+                return constrained < val
+            case 'less_or_equal':
+                return constrained <= val
+            case 'in_range':
+                return constrained >= val.min && constrained <= val.max
+            case 'valid_values':
+                return val.map(x=> x.valueOf()).includes(constrained)
+            case 'length':
+                return constrained.length == val
+            case 'min_length':
+                return constrained.length >= val
+            case 'max_length':
+                return constrained.length <= val
+            case 'pattern':
+                let expr = val
+                let re = new RegExp(expr)
+                return !!re.exec(constrained)
+            case 'schema':
+                // TOBE DONE 'libxmljs' et 'ajv'
+                break;
+            default:
+                throw(`Error : '${operator}' is not an allowed operator in a constraint`)
+        }
+        } catch(e) { throw(`Error : constraint { ${this.operator}: ${this.value} } can not be applied on ${constrained_value}`) }
+    }
+
     toTosca(imbric=0) { 
         let indent = '\n' + '  '.repeat(imbric)
         let str = `${indent}{ ${this.operator}: ${this.value} }`
@@ -261,16 +342,39 @@ class TConstraint {
     }
 }
 
+class TTypeDef {
+    constructor(args, info) {
+        this.args = args
+        this.range = args.range
+        let isMap = args instanceof Map         
+        this.type = (isMap) ? args.get('type') : args
+        if (!this.type) { throw(`Error : No type field found in a Tosca entity ${_locate(info, args.range)}`) }
+        this.description = (isMap) ? this.args.get('description') : null
+        this.constraints = (isMap) ? this.args.get('constraints') : null
+        let entry_schema = (isMap) ? this.args.get('entry_schema') : null
+        if (entry_schema && this.type.valueOf() != 'list' && this.type.valueOf() != 'map' )
+            throw(`Error : schema_entry to be provided only for types 'list' or 'map'  ${_locate(info, args.range)}`)
+        this.entry_schema = (entry_schema) ? new TTypeDef(entry_schema) : null
+    }
+}
+
 class TProperty {
     constructor(args, info) {
         this.args = args
         this.range = args.range
-
+        this.type = new TTypeDef(args)
+        this.description = args.get('description')
+        this.constraints = args.get('constraints')
+        this.required = args.get('required') || false
+        this.default = args.get('default')
+        this.status = args.get('status')
+        this.metadata = args.get('metadata')
     }
     toTosca(imbric=0) {
         return this
     }
 }
+
 class TPropertyAssignment {
     constructor(args, info) {
         this.args = args
@@ -771,12 +875,12 @@ class TServiceTemplate {
     }
 }
 
-
 const classes = {
     TString,
     TInteger,
     TBoolean,
     TFloat,
+    TUnbounded,
     TList,
     TNamespace,
     TRange,
@@ -789,6 +893,8 @@ const classes = {
     TVersion,
     TImport,
     TConstraint,
+    TConstraints,
+    TTypeDef,
     TProperty,
     TPropertyAssignment,
     TAttribute,
@@ -812,7 +918,6 @@ const classes = {
     TSubstitutionMappings,
     TTopologyTemplate,
     TServiceTemplate,
-
     TDataType,
     TArtifactType,
     TCapabilityType,
