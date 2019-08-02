@@ -217,6 +217,9 @@ repository->TRepository:
             token_type: str
             user: str
 
+repositories->TRepositories:
+  _dictOf: { str: output_parameter }
+
 artifact_def->TArtifactDef: 
   _oneOf:
     - str
@@ -232,7 +235,7 @@ artifact_def->TArtifactDef:
         checksum_algorithm: str
         properties: property_assignments
 
-artifact_defs:
+artifact_defs->TArtifactDefs:
   _dictOf: { str: artifact_def }
 
 type_common_keys:
@@ -302,7 +305,7 @@ interface_def->TInterfaceDef:
   _dictOf:
     str: operation_def
 
-interface_defs:
+interface_defs->TInterfaceDefs:
   _dictOf: { str: interface_def }
 
 interface_def_template->TInterfaceDefTemplate:
@@ -311,7 +314,7 @@ interface_def_template->TInterfaceDefTemplate:
   _dictOf:
     str: operation_def
 
-interface_defs_template:
+interface_defs_template->TInterfaceDefsTemplate:
   _dictOf: { str: interface_def_template }
 
 capability_type->TCapabilityType:
@@ -321,7 +324,7 @@ capability_type->TCapabilityType:
     valid_source_types: { _listOf: str }
   _copy: type_common_keys
 
-capability_types:
+capability_types->TCapabilityTypes:
   _dictOf: { str: capability_type }
 
 capability_def->TCapabilityDef:
@@ -335,7 +338,7 @@ capability_def->TCapabilityDef:
         occurrences: range
     - str
 
-capability_defs:
+capability_defs->TCapabilityDefs:
   _dictOf: { str: capability_def }
 
 capability_assignment->TCapabilityAssignment:
@@ -344,7 +347,7 @@ capability_assignment->TCapabilityAssignment:
     attributes: attribute_assignments
     occurences: range
 
-capability_assignments:
+capability_assignments->TCapabilityAssignments:
   _dictOf: { str: capability_assignment }
 
 property_filter->TPropertyFilter:
@@ -397,7 +400,7 @@ requirement_def->TRequirementDef:
             relationship: relationship_def
 
 
-requirement_defs:
+requirement_defs->TRequirementDefs:
   _listOf:
     requirement_def
 
@@ -435,7 +438,7 @@ requirement_assignment_relationship->TRequirementAssignment:
               occurrences: range
               node_filter: node_filter
 
-requirement_assignments:
+requirement_assignments->TRequirementAssignments:
   _listOf:
     requirement_assignment
 
@@ -560,7 +563,7 @@ node_type->TNodeType:
 node_types->TNodeTypes:
   _dictOf: { str: node_type }
 
-node_template:
+node_template->TNodeTemplate:
   _required: [ type|copy ]
   _dict: 
     type: str
@@ -576,7 +579,7 @@ node_template:
     node_filter: node_filter
     copy: str
 
-node_templates:
+node_templates->TNodeTemplates:
   _dictOf: { str: node_template }
 
 relationship_type->TRelationshipType:
@@ -591,7 +594,7 @@ relationship_type->TRelationshipType:
 relationship_types->TRelationshipTypes:
   _dictOf: { str: relationship_type }
 
-relationship_template:
+relationship_template->TRelationshipTemplate:
   _required: [ type|copy ]
   _dict:
     type: str
@@ -602,7 +605,7 @@ relationship_template:
     interfaces: inteface_defs_template
     copy: str
 
-relationship_templates:
+relationship_templates->TRelationshipTemplates:
   _dictOf: { str: relationship_template }
 
 group_type->TGroupType:
@@ -662,6 +665,10 @@ trigger_def->TTriggerDef:
         method: str
         action: { _oneOf: [ str, operation_def ] }
 
+trigger_defs->TTriggerDefs:
+  _listof: trigger_def
+
+
 policy_type->TPolicyType:
   _dict:
     properties: properties
@@ -686,63 +693,78 @@ policy_def->TPolicyDef:
         targets: { _listOf: str }
         triggers: trigger_defs
 
-properties_mapping:
+properties_mapping->TPropertiesMapping:
   _dictOf:
-    str:
-      _oneOf:
-        - value
-        - value_expression
-        - _listOf: { str }
-          max: 3
-        - _nb: 1
-          _dict:
-            mapping: 
-              _oneOf: [ str, { max: 3, _listOf: str } ]
-            value: 
-              _oneOf: [ value, value_expression ]
+    str: property_mapping
 
-attributes_mapping:
+property_mapping->TPropertyMapping:
+  _oneOf:
+    - value
+    - value_expression
+    - _listOf: { str }
+      max: 3
+    - _nb: 1
+      _dict:
+        mapping: 
+          _oneOf: [ str, { max: 3, _listOf: str } ]
+        value: 
+          _oneOf: [ value, value_expression ]
+
+attributes_mapping->TAttributesMapping:
   _dictOf:
-    str:
-      _oneOf:
-        - value
-        - value_expression
-        - _listOf: { str }
-          max: 3
-        - _nb: 1
-          _dict:
-            mapping: 
-              _oneOf: [ str, { max: 3, _listOf: str } ]
-            value: 
-              _oneOf: [ value, value_expression ]
+    str: attribute_mapping
 
-capabilities_mapping:
+attribute_mapping->TAttributeMapping:
+  _oneOf:
+    - value
+    - value_expression
+    - _listOf: { str }
+      max: 3
+    - _nb: 1
+      _dict:
+        mapping: 
+          _oneOf: [ str, { max: 3, _listOf: str } ]
+        value: 
+          _oneOf: [ value, value_expression ]
+
+capabilities_mapping->TCapabilitiesMapping:
+  _dictOf: 
+    str: capability_mapping
+
+capability_mapping->TCapabilityMapping:
+  _oneOf:
+    - { _listOf: str, max: 2 }
+    - _dict:
+        mapping: { _oneOf: [ str, {_listOf: str, nb: 2 } ] }
+        properties: property_assignments
+        attributes: attribute_assignments
+
+requirements_mapping->TRequirementsMapping:
   _dictOf:
-    str:
-      _oneOf:
-        - { _listOf: str, max: 2 }
-        - _dict:
-            mapping: { _oneOf: [ str, {_listOf: str, max: 3 } ] }
-            properties: property_assignments
-            attributes: attribute_assignments
+    str: requirement_mapping
 
-requirements_mapping:
-  _dictOf:
-    str:
-      _oneOf:
-        - { _listOf: str, max: 2 }
-        - _dict:
-            mapping: { _oneOf: [ str, {_listOf: str, max: 3 } ] }
-            properties: property_assignments
-            attributes: attribute_assignments
+requirement_mapping->TRequirementMapping:
+  _oneOf:
+    - { _listOf: str, max: 2 }
+    - _dict:
+        mapping: { _oneOf: [ str, {_listOf: str, max: 3 } ] }
+        properties: property_assignments
+        attributes: attribute_assignments
 
-interfaces_mapping:
-  _dictOf: { str: {_dict: { idDefinition: str } } }
+interfaces_mapping->TInterfacesMapping:
+  _dictOf: 
+    str: interface_mapping
+
+interface_mapping->TInterfaceMapping:
+  _nb: 1
+  _dictOf: 
+    str: str
 
 substitution_mappings->TSubstitutionMappings:
   _required: [ node_type ]
   _dict:
     node_type: str
+    substitution_filter: node_filter
     properties: properties_mapping
     capabilities: capabilities_mapping
     requirements: requirements_mapping

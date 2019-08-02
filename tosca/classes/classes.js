@@ -11,10 +11,7 @@ class TString extends String {
     constructor(args, info=null) {
         super(args)
         this.range = args.range
-    }
-
-    toTosca(imbric=0) {
-        return this
+        this.info = info
     }
 }
 
@@ -22,9 +19,7 @@ class TInteger extends Number {
     constructor(args, info=null) {
         super(args)
         this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+        this.info = info
     }
 }
 
@@ -32,9 +27,7 @@ class TUnbounded extends Number {
     constructor(args, info=null) {
         super(Infinity)
         this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+        this.info = info
     }
 }
 
@@ -42,10 +35,7 @@ class TBoolean extends Boolean {
     constructor(args, info=null) {
         super(args)
         this.range = args.range
-    }
-
-    toTosca(imbric=0) {
-        return this
+        this.info = info
     }
 }
 
@@ -53,38 +43,46 @@ class TFloat  extends Number {
     constructor(args, info=null) {
         super(args)
         this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+        this.info = info
     }
 }
 class TNamespace extends String {
     constructor(args, info=null) {
         super(args)
         this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+        this.info = info
     }
 }
-class TRange {
+
+class TRoot {
     constructor(args, info=null) {
         this.args = args
         this.range = args.range
+        this.info = info
+        this.argsIsMap = args instanceof Map 
+    }
+
+    set_member( member_name, from_val=this.args, is_map=this.argsIsMap ) {
+        this[member_name] = (is_map) ? from_val.get(member_name) : null
+    }
+
+    set_members( member_names, from_val=this.args, is_map=this.argsIsMap ) {
+        member_names.forEach( member_name => this.set_member(member_name, from_val, is_map))
+    }
+}
+
+class TRange extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.min = args[0]
         this.max = args[1]
         if (this.min == Infinity) this.min = -Infinity
     }
-
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TMetadata {
+class TMetadata extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
+        super(args, info)
         let metadata = this
         args.forEach(
             function(value, key, map) {
@@ -92,45 +90,26 @@ class TMetadata {
             }
         )
     }
-
-    toTosca(imbric=0) {
-        let indent = '\n' + '  '.repeat(imbric)
-        let str = ""
-        this.args.forEach(
-            function(value, key, map) {
-                str += `${indent}${key}: ${value.toTosca(imbric + 1)}`
-            }
-        ) 
-        return str
-    }
 }
 
 class TUrl extends String {
     constructor(args, info=null) {
         super(args)
         this.range = args.range
-    }
-    toTosca(imbric) {
-        return this
+        this.info = info
     }
 }
 
-class TScalarUnit {
+class TScalarUnit extends TRoot {
     constructor(args, info=null) {
+        super(args, info)
         this.fromYaml = (typeof args == 'object') 
-        this.args  = args
         this.range = (this.fromYaml) ? args.range : null 
         this.value = (this.fromYaml) ? parseFloat(args.parts.value) : Math.abs(args)
         this.sign  = (this.fromYaml) ? ( ( args.parts.sign == '-') ? -1 : 1 ) : Math.sign(args)
         }
 
     valueOf() { return this.canonic }
-
-    toTosca(imbric=0) {
-        let indent = '\n' + '  '.repeat(imbric)
-        let str = `${indent}${this.sign}${this.value} ${this.unit}`
-        return str
-    }
 }
 
 class TSize extends TScalarUnit {
@@ -188,6 +167,7 @@ class TVersion extends String {
         let build = (version_parts[4]) ? "-" + version_parts[4] : ""
         super(`${major}${minor}${fix}${qualifier}${build}`)
         this.args = args
+        this.info = info
         this.range = range
         this.major = major
         this.minor = minor
@@ -202,16 +182,11 @@ class TVersion extends String {
     }
 
     valueOf() { return this.canonic }
-
-    toTosca(imbric=0) {
-        return `${this.major}${this.minor}${this.fix}${this.qualifier}${this.build}`
-    }
 }
 
-class TImport {
-    constructor(args, info) { 
-        this.args = args
-        this.range = args.range
+class TImport extends TRoot {
+    constructor(args, info=null) { 
+        super(args, info)
         this.label = null
         this.repository = null
         this.namespace_prefix = null
@@ -233,17 +208,6 @@ class TImport {
             })
         }
     }
-
-    toTosca(imbric=0) {
-        let indent = '\n' + '  '.repeat(imbric)
-        let str = ""
-        if (this.label) str += `${indent}${this.label}:` 
-        str += `${indent}  file: ${this.file}`
-        if (this.repository) str += `${indent}  repository: ${this.repository}`
-        if (this.namespace_prefix) str += `${indent}  namespace_prefix: ${this.namespace_prefix}`
-        if (this.namespace_uri) str += `${indent}  namespace_uri: ${this.namespace_uri}`
-        return str
-    }
 }
 
 class TList extends Array {
@@ -253,35 +217,20 @@ class TList extends Array {
         this.range = args.range
         this.info = info
     }
-    toTosca(imbric) {
-        let indent = '\n' + '  '.repeat(imbric)
-        let str = ""
-        this.forEach(
-            function(value) { 
-                str += `${value.toTosca(imbric + 1)}`
-            })
-        return str
-    }
 }
 
 class TMap extends Map {
-    constructor(args, info){
+    constructor(args, info=null){
         super(args)
         this.args = args
         this.range = args.range
-    }
-
-    toTosca(imbric) {
-        let indent = '\n' + '  '.repeat(imbric)
-        let str = ""
-        return str
+        this.info = info
     }
 }
 
-class TValueExpression {
-    constructor(args, info) { 
-        this.args = args
-        this.range = args.range
+class TValueExpression extends TRoot {
+    constructor(args, info=null) { 
+        super(args, info)
         let iter = args.entries()
         let [ operator, value ] = iter.next().value
         this.keyword = keyword
@@ -348,17 +297,15 @@ class TConstraints extends TList {
             }
         )
     }
-
     eval(constrained_value) {
-        return this.every(x => x.eval(constrained_value) )
+        return this.every( x => x.eval(constrained_value) )
     }
 
 }
 
-class TConstraint {
-    constructor(args, info) {
-        this.args  = args
-        this.range = args.range
+class TConstraint extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let iter = args.entries()
         let [ operator, value ] = iter.next().value
         this.operator = operator
@@ -408,18 +355,11 @@ class TConstraint {
         }
         } catch(e) { throw(`Error : constraint { ${this.operator}: ${this.value} } can not be applied on ${constrained_value}`) }
     }
-
-    toTosca(imbric=0) { 
-        let indent = '\n' + '  '.repeat(imbric)
-        let str = `${indent}{ ${this.operator}: ${this.value} }`
-        return str
-    }
 }
 
-class TTypeDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TTypeDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let isMap = args instanceof Map         
         this.type = (isMap) ? args.get('type') : args
         if (!this.type) { throw(`Error : No type field found in a Tosca entity ${_locate(info, args.range)}`) }
@@ -436,23 +376,18 @@ class TTypeDef {
     }
 }
 
-class TParameterAssignment {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TParameterAssignment extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let isMap = args instanceof Map
         this.value = (isMap) ? args.get('value') : args
         this.description = (isMap) ? args.get('description') : null
     }
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TProperty {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TProperty extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.type = new TTypeDef(args)
         this.description = args.get('description')
         this.constraints = args.get('constraints')
@@ -460,71 +395,47 @@ class TProperty {
         this.default = args.get('default')
         this.status = args.get('status')
         this.metadata = args.get('metadata')
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
 class TProperties extends TMap {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
 class TPropertyAssignments extends TMap {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+    constructor(args, info=null) {
+        super(args,  info)
     }
 }
 
-class TAttribute {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TAttribute extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.type = new TTypeDef(args)
         this.description = args.get('description')
         this.default = args.get('default')
         this.status = args.get('status')
         this.metadata = args.get('metadata')
     }
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
 class TAttributes extends TMap {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
 class TAttributeAssignements extends TMap {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-class TInput {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TInput extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.type = new TTypeDef(args)
         this.description = args.get('description')
         this.constraints = args.get('constraints')
@@ -532,37 +443,23 @@ class TInput {
         this.default = args.get('default')
         this.status = args.get('status')
         this.value = args.get('value')
-    }
-
-    toTosca(imbric=0) {
-        return this
     }
 }
 
 class TInputs extends TMap {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 class TInputAssignements extends TMap {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-
-class Toutput {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class Toutput extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.type = new TTypeDef(args)
         this.description = args.get('description')
         this.constraints = args.get('constraints')
@@ -571,25 +468,17 @@ class Toutput {
         this.status = args.get('status')
         this.value = args.get('value')
     }
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
 class TOutputs extends TMap {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-    }
-    toTosca(imbric=0) {
-        return this
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-class TCredential {
+class TCredential extends TRoot {
     constructor(args, info = null) {
-        this.args = args
-        this.range = args.range
+        super(args, info)
         if (args instanceof Map) {
           this.token = args.get('token')
           this.protocol = args.get('protocol')
@@ -597,30 +486,28 @@ class TCredential {
           this.user = args.get('user')
         } else return null
     }
-
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TRepository {
+class TRepository extends TRoot {
     constructor(args, info = null) {
-        this.args = args
-        this.range = args.range
+        super(args, info)
         let isMap = args instanceof Map         
         this.url = (isMap) ? args.get('url') : args
         if (!this.type) { throw(`Error : No type field found in a Tosca entity ${_locate(info, args.range)}`) }
         this.credential = new TCredential(args)
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TRepositories extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-class TArtifactDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+
+class TArtifactDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let isMap = args instanceof Map
         this.file = (isMap) ? args.file : args
         this.type = (isMap) ? args.type : null
@@ -631,28 +518,36 @@ class TArtifactDef {
         this.checksum_algorithm = (isMap) ? args.checksum_algorithm : null
         this.properties = (isMap) ? args.properties : null
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TArtifactDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-class TEntity {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+
+class TEntity extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.derived_from = args.get('derived_from')
         this.version = args.get('version')
         this.metadata = args.get('metadata')
         this.description = args.get('description')
     }
 
-    toTosca(imbric=0) {
-        return this
-    }    
+    derives(all_ttypes) {
+        if (!this.derived_from) this.parent = true 
+        if (this.parent) return
+        let parent_entity = all_ttypes.get(this.derived_from, this.category)
+        parent_entity.derives(all_types)
+        this.parent = parent_entity
+        this.update_from_parent()
+    }
 }
 
 class TDataType extends TEntity{
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
         this.category = 'datatypes'
         this.properties = args.get('properties')
@@ -665,22 +560,20 @@ class TDataType extends TEntity{
             throw(`Error : 'key_schema' field is only allowed for data_types derived from 'map' ${_locate(info, args.range)}`) }
     }
 
-    toTosca(imbric=0) {
-        return this
-    }    
+    update_from_parent() {
+        this.properties.derives(this.parent.properties)
+        this.constraints.derives(this.parent.constraints)
+    }
 }
 
 class TDataTypes extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
 class TArtifactType extends TEntity {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
         this.category = 'artifacts'
         this.properties = this.args.get('properties')
@@ -688,22 +581,19 @@ class TArtifactType extends TEntity {
         this.file_ext = this.args.get('file_ext')
     }
 
-    toTosca(imbric=0) {
-        return this
-    }    
+    update_from_parent() {
+        this.properties.derives(this.parent.properties)
+    }
 }
 
 class TArtifactTypes extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
 class TCapabilityType extends TEntity {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
         this.category = 'capabilities'
         this.properties =  this.args.get('properties')
@@ -711,86 +601,79 @@ class TCapabilityType extends TEntity {
         this.valid_source_types =  this.args.get('valid_source_types')
     }
 
-    toTosca(imbric=0) {
-        return this
-    }    
+    update_from_parent() {
+        this.properties.derives(this.parent.properties)
+        this.attributes.derives(this.parent.attributes)
+    }
 }
 
 class TCapabilityTypes extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
 
 class TInterfaceType extends TEntity {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
         this.category = 'interfaces'
         this.properties = args.get('properties')
-        this.operations = {}
+        let operations = {}
         args.forEach(function(value, key, map){ 
             if (! (['derived_from', 'version', 'metadata', 'description', 'properties'].includes(key)) )
-                this.operations[key] = value
+                operations[key] = value
          })
+        this.operations = operations
+    }
+    update_from_parent() {
+        this.properties.derives(this.parent.properties)
+        let local = this.operations
+        this.operations = {}
+        let ope_name 
+        for (ope_name in local) 
+            this.operations[ope_name]=local[ope_name]
+        for (ope_name in this.parent.operations) 
+            this.operations[ope_name]=this.parent.operations[ope_name]
     }
 }
 
 class TInterfaceTypes extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
 
-class TImplementation {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TImplementation extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let isMap = args instanceof Map
         this.primary = (isMap) ? args.get('primary') : args
         this.dependencies = (isMap) ? args.get('dependencies') : null
     }
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TOperationDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TOperationDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.description = args.get('description')
         this.inputs = args.get('inputs')
         this.implementation = args.get('implementation')
     }
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TOperationDefTemplate {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TOperationDefTemplate extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.description = args.get('description')
         this.inputs = args.get('inputs')
         this.implementation = args.get('implementation')
     }
-    toTosca(imbric=0) {
-        return this
-    }
 }
-class TInterfaceDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TInterfaceDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.type = args.get('type')
         this.inputs = args.get('inputs')
         this.operations = {}
@@ -799,14 +682,17 @@ class TInterfaceDef {
                 this.operations[key] = value
          })
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TInterfaceDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
-class TInterfaceDefTemplate {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+
+class TInterfaceDefTemplate extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.inputs = args.get('inputs')
         this.operations = {}
         args.forEach(function(value, key, map){ 
@@ -814,14 +700,17 @@ class TInterfaceDefTemplate {
                 this.operations[key] = value
          })
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TInterfaceDefsTemplate extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
-class TCapabilityDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+
+class TCapabilityDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let isMap = args instanceof Map
         this.type = (isMap) ? args.get('type') : args
         this.description = (isMap) ? args.get('description') : null
@@ -830,28 +719,33 @@ class TCapabilityDef {
         this.valid_source_types = (isMap) ? args.get('valid_source_types') : null
         this.occurrences = (isMap) ? args.get('occurrences') || new TRange( [ 1, Infinity ]) : null
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TCapabilityDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-class TCapabilityAssignment {
+
+class TCapabilityAssignment extends TRoot {
     constructor(args, info = null) {
-        this.args = args
-        this.range = args.range
+        super(args, info)
         this.properties = args.get('properties')
         this.attributes = args.get('attributes')
         this.occurrences = args.get('occurrences')
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TCapabilityAssignments extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-class TPropertyFilter {
+class TPropertyFilter extends TRoot {
     constructor(args, info = null) {
-        this.args = args
-        this.range = args.range
+        super(args, info)
         let [ name, def ] = args.entries().next().value
         this.name = name
         if ( def instanceof Array )
@@ -863,84 +757,58 @@ class TPropertyFilter {
     apply(args) {
         return []
     }
-
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TPropertiesFilter extends Array {
+class TPropertiesFilter extends TList {
     constructor(args, info = null) {
-        super(...args)
-        this.args = args
-        this.range = args.range
+        super(args, info)
     }
 
     apply(args) {
         return []
     }
-
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TCapabilityFilter {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TCapabilityFilter extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let [ name, def ] = args.entries().next().value
         this.name = name
         // because of the grammar, 'def' has only one key : 'propertties'
         this.properties = def.values().next().value
     }
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TCapabilitiesFilter extends Array {
+class TCapabilitiesFilter extends TList {
     constructor(args, info = null) {
-        super(...args)
-        this.args = args
-        this.range = args.range
+        super(args, info)
     }
 
     apply(args) {
         return []
     }
-
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TNodeFilter {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TNodeFilter extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.properties = args.get('properties')
         this.capabilities = args.get('capabilities')
     }
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
-class TRelationshipDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TRelationshipDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let isMap = def instanceof Map
         this.type = (isMap) ? args.get('type') : args
         this.interfaces = (isMap) ? args.get('interfaces') : null
     }
 }
  
-class TRelationshipAssignment {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TRelationshipAssignment extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let isMap = def instanceof Map
         this.type = (isMap) ? args.get('type') : args
         this.properties = (isMap) ? args.get('properties') : null
@@ -948,10 +816,9 @@ class TRelationshipAssignment {
     }
 }
 
-class TRequirementDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TRequirementDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let [ name, def ] = args.entries().next().value
         this.name = name
         let isMap = def instanceof Map
@@ -961,15 +828,17 @@ class TRequirementDef {
         this.occurrences = (isMap) ? def.get('occurrences') : null
         this.relationship = (isMap) ? def.get('relationship') : null
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TRequirementDefs extends TList {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-class TRequirementAssignment {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TRequirementAssignment extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let [ name, def ] = args.entries().next().valueoperator = 
         this.name = name
         let isMap = def instanceof Map
@@ -979,16 +848,18 @@ class TRequirementAssignment {
         this.range = (isMap) ? def.get('range') : null
         this.node_filter = (isMap) ? def.get('node_filter') : null
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TRequirementAssignments extends TList {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-class TWorkflowConditionOperator {
+
+class TWorkflowConditionOperator extends TRoot {
     constructor(args, info=null) {
-        this.args  = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         let [ operator, clause] = args.entries().next().value
         this.operator = (['and', 'not', 'or', 'assert'].includes(operator)) ? operator : 'filter'
         this.clause = clause
@@ -1014,11 +885,9 @@ class TWorkflowConditionOperator {
     }
 }
 
-class TWorkflowConditionClause extends Array {
+class TWorkflowConditionClause extends TList {
     constructor(args, info=null) {
-        super(...args, info)
-        this.args  = args
-        this.range = args.range
+        super(args, info)
     }
 
     eval(entity) {
@@ -1026,11 +895,9 @@ class TWorkflowConditionClause extends Array {
     }
 }
 
-class TWorkflowPrecondition {
+class TWorkflowPrecondition extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         this.target = args.get('target')
         this.target_relationship = args.get('target_relationship')
         this.condition = args.get('condition')
@@ -1039,16 +906,14 @@ class TWorkflowPrecondition {
 
 class TWorkflowPreconditions extends TList {
     constructor(args, info=null) {
-        super(args)
+        super(args, info)
     }
 
 }
 
-class TWorkflowActivity {
+class TWorkflowActivity extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         this.delegate = args.get('delegate')
         this.set_state = args.get('set_state')
         this.call_operation = args.get('call_operation')
@@ -1058,15 +923,13 @@ class TWorkflowActivity {
 
 class TWorkflowActivities extends TList {
     constructor(args, info=null) {
-        super(args)
+        super(args, info)
     }
 }
 
 class TWorkflowStep extends TMap {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+    constructor(args, info=null) {
+        super(args, info)
         this.target = args.get('target')
         this.target_relationship = args.get('target_relationship')
         this.filter = args.get('filter')
@@ -1077,25 +940,17 @@ class TWorkflowStep extends TMap {
         this.on_failure = args.get('on_failure')
         this.on_failure = (this.on_failure instanceof Array) ? this.on_failure : [ this.on_failure ] 
     }
-    toTosca(imbric=0) {
-        return this
-    }
 }
 
 class TWorkflowSteps extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
-class TWorkflowSourceWeaving {
+class TWorkflowSourceWeaving extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         this.after = args.get('after')
         this.before = args.get('before')
         this.wait_target = args.get('wait_target')
@@ -1104,19 +959,14 @@ class TWorkflowSourceWeaving {
 }
 
 class TWorkflowSourceWeavingList extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
-class TWorkflowTargetWeaving {
+class TWorkflowTargetWeaving extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         this.after = args.get('after')
         this.before = args.get('before')
         this.wait_source = args.get('wait_source')
@@ -1125,19 +975,14 @@ class TWorkflowTargetWeaving {
 }
 
 class TWorkflowTargetWeavingList extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
-class TDeclarativeWorkflowNodeDef {
+class TDeclarativeWorkflowNodeDef extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         this.description = args.get('description')
         this.metadata = args.get('metadata')
         this.inputs = args.get('inputs')
@@ -1147,19 +992,14 @@ class TDeclarativeWorkflowNodeDef {
 }
 
 class TDeclarativeWorkflowNodeDefs extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
-class TDeclarativeWorkflowRelDef {
+class TDeclarativeWorkflowRelDef extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         this.description = args.get('description')
         this.metadata = args.get('metadata')
         this.inputs = args.get('inputs')
@@ -1170,19 +1010,14 @@ class TDeclarativeWorkflowRelDef {
 }
 
 class TDeclarativeWorkflowRelDefs extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
-class TImperativeWorkflowDef {
+class TImperativeWorkflowDef extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         this.description = args.get('description')
         this.metadata = args.get('metadata')
         this.inputs = args.get('inputs')
@@ -1192,16 +1027,13 @@ class TImperativeWorkflowDef {
 }
 
 class TImperativeWorkflowDefs extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
 class TNodeType extends TEntity {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
         this.category = 'nodes'
         this.properties = this.args.get('properties')
@@ -1211,19 +1043,49 @@ class TNodeType extends TEntity {
         this.interfaces = this.args.get('interfaces')
         this.workflows = this.args.get('workflows')
     }
+
+    update_from_parent() {
+        this.properties.derives(this.parent.properties)
+        this.attributes.derives(this.parent.attributes)
+        this.capabilities.derives(this.parent.capabilities)
+        this.requirements.derives(this.parent.requirements)
+        this.interfaces.derives(this.parent.interfaces)
+        this.workflows.derives(this.parent.workflows)
+    }
 }
 
 class TNodeTypes extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TNodeTemplate extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.type = args.get('type')
+        this.metadata = args.get('metadata')
+        this.description = args.get('description')
+        this.directives = args.get('directives')
+        this.properties = args.get('properties')
+        this.attributes = args.get('attributes')
+        this.capabilities = args.get('capabilities')
+        this.requirements = args.get('requirements')
+        this.interfaces = args.get('interfaces')
+        this.artifacts = args.get('artifacts')
+        this.node_filter = args.get('node_filter')
+        this.copy = args.get('copy')
+    }
+}
+
+class TNodeTemplates extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
 class TRelationshipType extends TEntity {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
         this.category = 'relationships'
         this.properties = this.args.get('properties')
@@ -1233,19 +1095,43 @@ class TRelationshipType extends TEntity {
         this.valid_target_types = this.args.get('valid_target_types')
     
     }
+    
+    update_from_parent() {
+        this.properties.derives(this.parent.properties)
+        this.attributes.derives(this.parent.attributes)
+        this.interfaces.derives(this.parent.interfaces)
+        this.workflows.derives(this.parent.workflows)
+    }
 }
 
 class TRelationshipTypes extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
+class TRelationshipTemplate extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.type = args.get('type')
+        this.metadata = args.get('metadata')
+        this.description = args.get('description')
+        this.properties = args.get('properties')
+        this.attributes = args.get('attributes')
+        this.interfaces = args.get('interfaces')
+        this.copy = args.get('copy')
+    }
+}
+
+class TRelationshipTemplates extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+
 class TGroupType extends TEntity {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
         this.category = 'groups'
         this.properties = this.args.get('properties')
@@ -1255,22 +1141,25 @@ class TGroupType extends TEntity {
         this.members = this.args.get('members')
     }
 
+    update_from_parent() {
+        this.properties.derives(this.parent.properties)
+        this.capabilities.derives(this.parent.capabilities)
+        this.requirements.derives(this.parent.requirements)
+        this.interfaces.derives(this.parent.interfaces)
+        this.members.derives(this.parent.members)
+    }
+
 }
 
 class TGroupTypes extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
-class TGroupDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+class TGroupDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.type = args.get('type')
         this.description = this.args.get('description')
         this.properties = this.args.get('properties')
@@ -1280,40 +1169,31 @@ class TGroupDef {
 }
 
 class TGroupDefs extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
-class TEvent {
+class TEvent extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         let isMap = args instanceof Map
         this.type = (isMap) ? args.entries().next().value : args
     }
 }
 
-class TTargetFilter {
+class TTargetFilter extends TRoot {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super(args, info)
         this.node = args.get('node')
         this.requirement = args.get('requirement')
         this.capability = args.get('capability')
     }
 }
 
-class TTriggerDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+class TTriggerDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let [ name, def ] = args.entries().next().value
         this.name = name
         this.description = def.get('description')
@@ -1330,38 +1210,36 @@ class TTriggerDef {
 }
 
 class TTriggerDefs extends TList {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
 class TPolicyType extends TEntity {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
         this.category = 'policies'
         this.properties = this.args.get('properties')
         this.target = this.args.get('target')
         this.triggers = this.args.get('triggers')
     }
+
+    update_from_parent() {
+        this.properties.derives(this.parent.properties)
+        this.triggers.derives(this.parent.triggers)
+    }
+
 }
 
 class TPolicyTypes extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
-    }
-    toTosca(imbric=0) {
-        return this
     }
 }
 
-class TPolicyDef {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+class TPolicyDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         let [ name, def ] = args.entries().next().value
         this.name = name
         this.type = def.get('type')
@@ -1373,34 +1251,130 @@ class TPolicyDef {
 }
 
 class TPolicyDefs extends TMap {
-    constructor(args, info) {
+    constructor(args, info=null) {
         super(args, info)
     }
-    toTosca(imbric=0) {
-        return this
+}
+
+class TPropertyMapping extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let mapping = (args instanceof Map && args.get('mapping')) || args 
+        if (mapping instanceof Array) {
+            switch (args.length) {
+                case 1:
+                    this.input_name = mapping[0]
+                    break;
+                case 2: 
+                    this.node_template_name = mapping[0]
+                    this.node_template_property = mapping[1]
+                    break;
+                case 3:
+                    this.node_template_name = mapping[0]
+                    this.node_template_cap_or_req = mapping[1]
+                    this.node_template_property = mapping[2]
+                    break;
+                }
+        }
+        this.value = (args instanceof Map && args.get('value')) || args
     }
 }
 
-
-class TSubstitutionMappings {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-
-    }
-    toTosca(imbric=0) {
-        return this
+class TPropertiesMapping extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
 }
 
-class TTopologyTemplate {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
-
+class TAttributeMapping extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let mapping = (args instanceof Map && args.get('mapping')) || args 
+        if (mapping instanceof Array) {
+            switch (args.length) {
+                case 1:
+                    this.input_name = mapping[0]
+                    break;
+                case 2: 
+                    this.node_template_name = mapping[0]
+                    this.node_template_property = mapping[1]
+                    break;
+                case 3:
+                    this.node_template_name = mapping[0]
+                    this.node_template_cap_or_req = mapping[1]
+                    this.node_template_property = mapping[2]
+                    break;
+                }
+        }
+        this.value = (args instanceof Map && args.get('value')) || args
     }
-    toTosca(iimbric=0) {
-        return this
+}
+
+class TAttributesMapping extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TCapabilityMapping extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let isMap = args instanceof Map
+        this.mapping = (isMap) ? args.get('mapping') : args 
+        this.node_template_name = this.mapping && this.mapping[0] 
+        this.capability_name = this.mapping && this.mapping[1]
+        this.properties = (isMap) ? args.get('properties') : null
+        this.attributes = (isMap) ? args.get('attributes') : null
+    }
+}
+
+class TCapabilitiesMapping extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TRequirementMapping extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let isMap = args instanceof Map
+        this.mapping = (isMap) ? args.get('mapping') : args 
+        this.node_template_name = this.mapping && this.mapping[0] 
+        this.requirement_name = this.mapping && this.mapping[1]
+        this.properties = (isMap) ? args.get('properties') : null
+        this.attributes = (isMap) ? args.get('attributes') : null
+    }
+}
+
+class TRequirementsMapping extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TInterfaceMapping extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        [ this.operation_name, this.workflow_name ] = args.entries().next().value
+    }
+}
+
+class TInterfacesMapping extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TSubstitutionMappings extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.node_type = args.get('node_type')
+        this.substitution_filter = args.get('substitution_filter')
+        this.properties = args.get('properties')
+        this.attributes = args.get('attributes')
+        this.capabilities = args.get('capabilities')
+        this.requirements = args.get('requirements')
+        this.interfaces = args.get('interfaces')
     }
 }
 
@@ -1422,6 +1396,7 @@ class TType {
     equals(other) {
         return this.type === other.type && this.namespace == other.namespace && this.name == other.name
     }
+
 }
 
 class TTypes {
@@ -1505,6 +1480,12 @@ class TTypes {
         }
     }
 
+    derives() {
+        this.entities.forEach(function (entity, name, map) {
+            entity.type.derives(this)
+        })
+    }
+
     toTosca(imbric=0) { 
         let indent = '\n' + '  '.repeat(imbric)
         let str = ""
@@ -1521,10 +1502,25 @@ class TTypes {
 
 }
 
-class TServiceTemplate {
-    constructor(args, info) {
-        this.args = args
-        this.range = args.range
+class TTopologyTemplate extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.imported=[]
+        this.description = args.get('description')
+        this.inputs = args.get('inputs')
+        this.outputs = args.get('outputs')
+        this.node_templates = args.get('node_templates')
+        this.relationship_templates = args.get('relationship_templates')
+        this.groups = args.get('groups')
+        this.policies = args.get('policies')
+        this.substitution_mappings = args.get('substitution_mappings')
+        this.workflows = args.get('workflows')
+    }
+}
+
+class TServiceTemplate extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
         this.imported=[]
         this.tosca_entity_types = ['artifact_types', 'data_types', 'capability_types', 'interface_types', 'relationship_types', 'node_types', 'group_types', 'policy_types']
         const all_types = new TTypes(this.args.get('namespace'))
@@ -1559,16 +1555,6 @@ class TServiceTemplate {
     get group_types() { return this.args.get('group_types') }
     get policy_types() { return this.args.get('policy_types') }
     get topology_template() { return this.args.get('topology_template') }
-
-    toTosca(imbric=0) { 
-        let indent = '\n' + '  '.repeat(imbric)
-        let str = ""
-        this.args.forEach(
-            function(value, key, map) { 
-                str += (value) ? `${indent}${key}: ${value.toTosca(imbric + 1)}` : ''
-            })
-        return str
-    }
 }
 
 const classes = {
@@ -1606,14 +1592,20 @@ const classes = {
     TOutputs,
     TCredential,
     TRepository,
+    TRepositories,
     TArtifactDef,
+    TArtifactDefs,
     TImplementation,
     TOperationDef,
     TOperationDefTemplate,
     TInterfaceDef,
+    TInterfaceDefs,
     TInterfaceDefTemplate,
+    TInterfaceDefsTemplate,
     TCapabilityDef,
+    TCapabilityDefs,
     TCapabilityAssignment,
+    TCapabilityAssignments,
     TPropertyFilter,
     TPropertiesFilter,
     TCapabilityFilter,
@@ -1622,10 +1614,9 @@ const classes = {
     TRelationshipAssignment,
     TRelationshipDef,
     TRequirementDef,
+    TRequirementDefs,
     TRequirementAssignment,
-    TSubstitutionMappings,
-    TTopologyTemplate,
-    TServiceTemplate,
+    TRequirementAssignments,
     TDataType,
     TDataTypes,
     TArtifactType,
@@ -1654,8 +1645,12 @@ const classes = {
     TImperativeWorkflowDef,
     TNodeType,
     TNodeTypes,
+    TNodeTemplate,
+    TNodeTemplates,
     TRelationshipType,
     TRelationshipTypes,
+    TRelationshipTemplate,
+    TRelationshipTemplates,
     TGroupType,
     TGroupTypes,
     TGroupDef,
@@ -1667,11 +1662,21 @@ const classes = {
     TPolicyType,
     TPolicyDef,
     TPolicyDefs,
-    TPolicyTypes
+    TPolicyTypes,
+    TPropertyMapping,
+    TPropertiesMapping,
+    TAttributeMapping,
+    TAttributesMapping,
+    TCapabilityMapping,
+    TCapabilitiesMapping,
+    TRequirementMapping,
+    TRequirementsMapping,
+    TInterfaceMapping,
+    TInterfacesMapping,
+    TSubstitutionMappings,
+    TTopologyTemplate,
+    TServiceTemplate
 }
 
 Object.freeze(classes)
-
 module.exports = classes
-
-
