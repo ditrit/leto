@@ -86,29 +86,8 @@ function parse_test(str, keyword ) {
 const tosca_file = 'tests/test.yaml'
 
 // parse 
-//info = parse_src(tosca_file)
-//console.log(info.nodes.all_types)
-/*let prop = parse_src(`
-//description: un type 'complexe' en exemple
-required: true
-default: { un: [ 1, 2 ] }
-status: supported
-metadata:
-  complex: 'true'
-  version: '2'
-type: map
-entry_schema:
-  type: list
-  entry_schema: 
-    type: integer`, 'property')
-
-console.log(prop)
-*/
-
-let nodes  = parse_test('{equal: 4}', 'constraint').nodes
-let res = nodes.eval(4)
-console.log(res)
-
+let res = parse_src(tosca_file)
+console.log(res.nodes.all_types)
 
 exports.parse_test=parse_test
 exports.parse_src=parse_src
