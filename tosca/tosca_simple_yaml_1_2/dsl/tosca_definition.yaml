@@ -4,6 +4,8 @@ int->TInteger:         terminal
 float->TFloat:         terminal
 boolean->TBoolean:     terminal
 unbounded->TUnbounded: terminal
+timestamp->TTimestamp: terminal
+null->TNull:           terminal
 
 namespace->TNamespace: str
 
@@ -54,6 +56,7 @@ scalar:
     - bitrate
     - time
     - size
+    - timestamp
 
 value:
   _oneOf:
@@ -66,9 +69,11 @@ value:
     - bitrate
     - time
     - size
+    - timestamp
     - str
     - list
     - map
+    - null
 
 value_expression->TValueExpression:
   _oneOf:

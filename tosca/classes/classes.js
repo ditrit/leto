@@ -46,11 +46,32 @@ class TFloat  extends Number {
         this.info = info
     }
 }
+
+class TTimestamp extends Date {
+    constructor(args, info=null) {
+        super(args)
+        this.range = args.range
+        this.info = info
+    }
+}
+
 class TNamespace extends String {
     constructor(args, info=null) {
         super(args)
         this.range = args.range
         this.info = info
+    }
+}
+
+class TNull {
+    constructor(args, info=null) {
+        this.args = args
+        this.range = args.range
+        this.info = info
+    }
+
+    valueOf() {
+        return null
     }
 }
 
@@ -1341,12 +1362,12 @@ class TTypes {
             case 'boolean': 
             case 'tag:yaml.org,2002:bool':
                 return TBoolean 
-//            case 'timestamp': 
-//            case 'tag:yaml.org,2002:timestamp':
-//                return TTimestamp
-//            case 'null':
-//            case 'tag:yaml.org,2002:null':
-//                return TNull
+            case 'timestamp': 
+            case 'tag:yaml.org,2002:timestamp':
+                return TTimestamp
+            case 'null':
+            case 'tag:yaml.org,2002:null':
+                return TNull
             case 'version':
             case 'tosca:version':
                 return TVersion
@@ -1463,7 +1484,7 @@ class TServiceTemplate extends TRoot {
 }
 
 const classes = {
-    TString, TInteger, TBoolean, TFloat, TUnbounded, TRange, TVersion, TList, TMap,
+    TString, TInteger, TBoolean, TFloat, TTimestamp, TNull, TUnbounded, TRange, TVersion, TList, TMap,
     TNamespace, TMetadata, TUrl, TSize, TTime, TFreq, TBitrate, TValueExpression,
     TImport, TConstraint, TConstraints, TTypeDef, TParameterAssignment,
     TProperty, TProperties, TPropertyAssignments, TAttribute, TAttributes, TAttributeAssignements,
