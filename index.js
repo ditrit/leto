@@ -91,7 +91,6 @@ const tosca_file = 'tests/test.yaml'
 // parse 
 let res = parse_src(tosca_file)
 let alltypes = res.nodes.all_types
-let webserver = alltypes.get('WebServer')
 console.log(webserver)
 
 exports.parse_test=parse_test

@@ -513,8 +513,6 @@ class TEntity extends TRoot {
     derives(all_ttypes) {
         if (!this.derived_from || (this.derived_from.valueOf() == 'tosca.entity.Root')) this.parent = true 
         if (this.parent) return
-        if (this.derived_from.valueOf() == 'tosca.nodes.SoftwareComponent') 
-            console.log('derived_from SoftwareComponent !')
         let parent_entity = all_ttypes.get(this.derived_from, this.category)
         if (parent_entity instanceof TEntity) parent_entity.derives(all_ttypes)
         this.parent = parent_entity
