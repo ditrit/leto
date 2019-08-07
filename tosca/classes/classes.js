@@ -237,7 +237,6 @@ class TMap extends Map {
     set_members( member_names, options={} ) {
         member_names.forEach( member_name => this.set_member(member_name, options))
     }
-
 }
 
 class TValueExpression extends TRoot {
@@ -512,12 +511,25 @@ class TEntity extends TRoot {
     }
 
     derives(all_ttypes) {
-        if (!this.derived_from) this.parent = true 
+        if (!this.derived_from || (this.derived_from.valueOf() == 'tosca.entity.Root')) this.parent = true 
         if (this.parent) return
+        if (this.derived_from.valueOf() == 'tosca.nodes.SoftwareComponent') 
+            console.log('derived_from SoftwareComponent !')
         let parent_entity = all_ttypes.get(this.derived_from, this.category)
-        parent_entity.derives(all_types)
+        if (parent_entity instanceof TEntity) parent_entity.derives(all_ttypes)
         this.parent = parent_entity
-        this.update_from_parent()
+        this.derives_from_parent()
+    }
+
+    derives_member_from_parent(member) {
+        let this_member = this[member]
+        let parent_member = this.parent[member]
+        let classname = (this_member && this_member.constructor.name) || (parent_member && parent_member.constructor.name)
+        let isMap = (this_member || parent_member) instanceof TMap
+        if (classname)
+            this[member] = 
+                (isMap)  ? new this.info.classes[classname]([...(this_member||[]) , ...(parent_member||[])])
+                         : new this.info.classes[classname]([...(this_member||[]) , ...(parent_member||[])])
     }
 }
 
@@ -532,9 +544,9 @@ class TDataType extends TEntity{
             throw(`Error : 'key_schema' field is only allowed for data_types derived from 'map' ${_locate(info, args.range)}`) }
     }
 
-    update_from_parent() {
-        this.properties.derives(this.parent.properties)
-        this.constraints.derives(this.parent.constraints)
+    derives_from_parent() {
+        this.derives_member_from_parent('properties')
+        this.derives_member_from_parent('constraints')
     }
 }
 
@@ -551,8 +563,8 @@ class TArtifactType extends TEntity {
         this.set_members(['properties', 'mime_type', 'file_ext'])
     }
 
-    update_from_parent() {
-        this.properties.derives(this.parent.properties)
+    derives_from_parent() {
+        this.derives_member_from_parent('properties')
     }
 }
 
@@ -569,9 +581,9 @@ class TCapabilityType extends TEntity {
         this.set_members(['properties', 'attributes', 'valid_source_types'])
     }
 
-    update_from_parent() {
-        this.properties.derives(this.parent.properties)
-        this.attributes.derives(this.parent.attributes)
+    derives_from_parent() {
+        this.derives_member_from_parent('properties')
+        this.derives_member_from_parent('attributes')
     }
 }
 
@@ -594,8 +606,9 @@ class TInterfaceType extends TEntity {
          })
         this.operations = operations
     }
-    update_from_parent() {
-        this.properties.derives(this.parent.properties)
+
+    derives_from_parent() {
+        this.derives_member_from_parent('properties')
         let local = this.operations
         this.operations = {}
         let ope_name 
@@ -959,13 +972,13 @@ class TNodeType extends TEntity {
                         'requirements', 'interfaces', 'workflows' ])
     }
 
-    update_from_parent() {
-        this.properties.derives(this.parent.properties)
-        this.attributes.derives(this.parent.attributes)
-        this.capabilities.derives(this.parent.capabilities)
-        this.requirements.derives(this.parent.requirements)
-        this.interfaces.derives(this.parent.interfaces)
-        this.workflows.derives(this.parent.workflows)
+    derives_from_parent() {
+        this.derives_member_from_parent('properties')
+        this.derives_member_from_parent('attributes')
+        this.derives_member_from_parent('capabilities')
+        this.derives_member_from_parent('requirements')
+        this.derives_member_from_parent('interfaces')
+        this.derives_member_from_parent('workflows')
     }
 }
 
@@ -997,12 +1010,12 @@ class TRelationshipType extends TEntity {
         this.set_members(['properties', 'attributes', 'interfaces', 'workflows', 'valid_target_types'])
     
     }
-    
-    update_from_parent() {
-        this.properties.derives(this.parent.properties)
-        this.attributes.derives(this.parent.attributes)
-        this.interfaces.derives(this.parent.interfaces)
-        this.workflows.derives(this.parent.workflows)
+
+    derives_from_parent() {
+        this.derives_member_from_parent('properties')
+        this.derives_member_from_parent('attributes')
+        this.derives_member_from_parent('interfaces')
+        this.derives_member_from_parent('workflows')
     }
 }
 
@@ -1033,12 +1046,12 @@ class TGroupType extends TEntity {
         this.set_members(['properties', 'capabilities', 'requirements', 'interfaces', 'members'])
     }
 
-    update_from_parent() {
-        this.properties.derives(this.parent.properties)
-        this.capabilities.derives(this.parent.capabilities)
-        this.requirements.derives(this.parent.requirements)
-        this.interfaces.derives(this.parent.interfaces)
-        this.members.derives(this.parent.members)
+    derives_from_parent() {
+        this.derives_member_from_parent('properties')
+        this.derives_member_from_parent('capabilities')
+        this.derives_member_from_parent('requirements')
+        this.derives_member_from_parent('interfaces')
+        this.derives_member_from_parent('members')
     }
 
 }
@@ -1097,12 +1110,13 @@ class TTriggerDefs extends TList {
 class TPolicyType extends TEntity {
     constructor(args, info=null) {
         super(args, info)
+        this.category = 'policies'
         this.set_members([ 'policies', 'properties', 'target', 'triggers'])
     }
 
-    update_from_parent() {
-        this.properties.derives(this.parent.properties)
-        this.triggers.derives(this.parent.triggers)
+    derives_from_parent() {
+        this.derives_member_from_parent('properties')
+        this.derives_member_from_parent('triggers')
     }
 
 }
@@ -1316,35 +1330,86 @@ class TTypes {
     }
 
     get(id, expected_category=null) {
+        switch (id.valueOf()) {
+            case 'string':
+            case 'tag:yaml.org,2002:str':
+                return  TString
+            case 'integer': 
+            case 'tag:yaml.org,2002:int':
+                return TInteger
+            case 'float': 
+            case 'tag:yaml.org,2002:float':
+                return TFloat
+            case 'boolean': 
+            case 'tag:yaml.org,2002:bool':
+                return TBoolean 
+//            case 'timestamp': 
+//            case 'tag:yaml.org,2002:timestamp':
+//                return TTimestamp
+//            case 'null':
+//            case 'tag:yaml.org,2002:null':
+//                return TNull
+            case 'version':
+            case 'tosca:version':
+                return TVersion
+            case 'range':
+            case 'tosca:range':
+                return TRange
+            case 'list':
+            case 'tosca:list':
+                return TList
+            case 'map':
+            case 'tosca:map':
+                return TMap
+            case 'size':
+            case 'tosca:size':
+                return TSize
+            case 'time':
+            case 'tosca:time':
+                return TTime
+            case 'frequency':
+            case 'tosca:frequency':
+                return TFreq
+            case 'bitrate':
+            case 'tosca:bitrate':
+                return TBitrate
+        }
         const id_eles = id.split('.')
         const default_namespace = this.default_namespace
         let found = null
-        if (id_eles > 2) {
+        if (id_eles.length > 2) {
             const prefix = id_eles[0]
             const category = id_eles[1]
             const typename = id_eles.slice(2).join('.')
             const namespace = this.prefixies.get(prefix)
             const types = this.entities.get(typename)
-            found = (types) ? types.find( ele => ele.category == category && ele.namespace == namespace ) : null
-            if ( expected_category && (expected_category != category) ) found = null
+            found = (types) ? types.filter( ele => ele.category == category && ele.namespace == namespace ) : null
+            if ( expected_category && (expected_category != category) )
+                throw(`Error : provided identifier ${id} is incompatible with expected category ${expected_category}`)
+            if (found && found.length == 1 ) return found[0].type
+            if (found && found.length == 0) throw(`Error : ${(expected_category) ? expected_category : ''} type found for id ${id}`)
         }
         if (!found) {
-            found = this.entities.get(typename)
-            if (!found) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id}`)
-            if (found.length == 1) return found[0]
+            found = this.entities.get(id)
+            if (!found) 
+                throw(`Error : no type found for id ${id}`)
+            if (found.length == 1) return found[0].type
             found = found.filter( e => e.category == expected_category )
-            if (found.length == 1) return found[0]
+            if (found.length == 1) return found[0].type
             if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id}`)
             found = found.filter( e => e.namespace == default_namespace )
-            if (found.length == 1) return found[0]
+            if (found.length == 1) return found[0].type
             if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id}`)
-            throw(`Error : several ${(expected_category) ? expected_category : ''} types found for id ${id}`)
         }
+        throw(`Error : several ${(expected_category) ? expected_category : ''} types found for id ${id}`)
     }
 
     derives() {
-        this.entities.forEach(function (entity, name, map) {
-            entity.type.derives(this)
+        let all_types = this
+        this.entities.forEach(function (entities_by_name, name, map) {
+            entities_by_name.forEach(function( entity) {
+                entity.type.derives(all_types)
+            })
         })
     }
 

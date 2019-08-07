@@ -58,6 +58,9 @@ function parse_src(tosca_file, versions = []) {
         info.nodes.all_types.import(imported.service.all_types, imported.namespace, imported.prefix)
     }
 
+    // types derivation (properties, attributes, interfaces, ...)
+    info.nodes.all_types.derives()
+
     return info
 }
 
@@ -87,7 +90,9 @@ const tosca_file = 'tests/test.yaml'
 
 // parse 
 let res = parse_src(tosca_file)
-console.log(res.nodes.all_types)
+let alltypes = res.nodes.all_types
+let webserver = alltypes.get('WebServer')
+console.log(webserver)
 
 exports.parse_test=parse_test
 exports.parse_src=parse_src
