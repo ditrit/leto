@@ -1,3 +1,4 @@
+// Locate error in source file
 function _locate(info, range) {
     if (info) {
         let begin = info.index.fromIndex( (range[0] > 1 ) ? range[0] : 0 )
@@ -6,6 +7,295 @@ function _locate(info, range) {
         return loc_str
     } else return ""
 }
+
+// Root class for tosca objects
+class TRoot {
+    constructor(args, info=null) {
+        this.args = args
+        this.range = args.range
+        this.info = info
+        this.argsIsMap = args instanceof Map 
+    }
+
+    set_member( member_name, options={} ) {
+        let from = options.from || this.args
+        let default_val = options.default || null
+        let is_map = from instanceof Map
+        this[member_name] = (is_map) ? from.get(member_name) : default_val
+    }
+
+    set_members( member_names, options={} ) {
+        member_names.forEach( member_name => this.set_member(member_name, options))
+    }
+
+}
+
+// Parent of all parameters (inputs, outputs, properties, attributes)
+class TParameter extends TRoot {
+    constructor(args, info) {
+        super(args, info)
+        info.parameters.push(this)
+    }
+
+    resolve_names() {
+        this.type.resolve_names(this.info.nodes.all_types)
+    }
+}
+
+// Parent of all Tosca Definitions
+class TDefinition extends TRoot {
+    constructor(args, info) {
+        super(args, info)
+        info.definitions.push(this)
+    }
+
+    resolve_names() {
+    }
+
+}
+
+// Parent of all Tosca Types 
+class TEntity extends TRoot {
+    constructor(args, info) {
+        super(args, info)
+        this.set_members([ 'derived_from', 'version', 'metadata', 'description' ])
+    }
+
+    derives(all_ttypes) {
+        if (!this.derived_from || (this.derived_from.valueOf() == 'tosca.entity.Root')) this.parent = true 
+        if (this.parent) return
+        let parent_entity = all_ttypes.get(this.derived_from, this.category)
+        if (parent_entity instanceof TEntity) parent_entity.derives(all_ttypes)
+        this.parent = parent_entity
+        this.derives_from_parent()
+    }
+
+    derives_member_from_parent(member) {
+        let this_member = this[member]
+        let parent_member = this.parent[member]
+        let classname = (this_member && this_member.constructor.name) || (parent_member && parent_member.constructor.name)
+        let isMap = (this_member || parent_member) instanceof TMap
+        if (classname)
+            this[member] = 
+                (isMap)  ? new this.info.classes[classname]([...(this_member||[]) , ...(parent_member||[])])
+                         : new this.info.classes[classname]([...(this_member||[]) , ...(parent_member||[])])
+    }
+}
+
+
+/////////////////////////////////////////////////////////
+// Tosca Types management  
+
+// Tosca DataType type definition (simple and complex types)
+class TTypeDef extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['type', 'description', 'constraints', 'entry_schema', 'key_schema'])
+        if (!this.type) { throw(`Error : No type field found in a Tosca entity ${_locate(info, args.range)}`) }
+        if (this.entry_schema && this.type.valueOf() != 'list' && this.type.valueOf() != 'map' )
+            throw(`Error : schema_entry to be provided only for types 'list' or 'map'  ${_locate(info, args.range)}`)
+        this.entry_schema = (this.entry_schema) ? new TTypeDef(this.entry_schema) : null
+        if (this.key_schema && this.type.valueOf() != 'map' )
+            throw(`Error : key_schema to be provided only for types 'map'  ${_locate(info, args.range)}`)
+        this.key_schema = (this.key_schema) ? new TTypeDef(this.key_schema) : null
+    }
+
+    resolve_names(all_types) {
+        if (this.typeclass) return
+        if (this.entry_schema instanceof TTypeDef) this.entry_schema.resolve_names(all_types)
+        if (this.key_schema instanceof TTypeDef) this.key_schema.resolve_names(all_types)
+        this.typeclass = all_types.get(this.type, 'datatypes')
+    }
+
+}
+
+// Associate tosca types with alias and namespaces 
+class TType {
+    constructor(tname, ttype, namespace) {
+        this.category = ttype.category
+        this.type = ttype
+        this.name = tname
+        this.namespace = namespace
+    }
+
+    with_namespace(namespace = null) {
+        if (this.namespace == namespace) return this
+        if (this.namespace && namespace)
+            throw(`Error : can not import a type changing explicit namespace`)
+        return new TType(this.name, this.type, namespace)
+    }
+
+    equals(other) {
+        return this.type === other.type && this.namespace == other.namespace && this.name == other.name
+    }
+}
+
+// Manage aliases and namespaces for all tosca types 
+class TTypes {
+    constructor(tnamespace) {
+        this.entities = new Map()
+        this.prefixies = new Map()
+        this.default_namespace = tnamespace
+    }
+
+    set(tname, tentity, tnamespace=null) {
+        const namespace = (tnamespace) ? tnamespace : this.default_namespace
+        if (tentity instanceof TEntity) {
+            let exists = this.entities.get(tname)
+            if (exists) {
+                const category = tentity.category
+                if (exists.find( ele => ele.category == category && ele.namespace == namespace )) 
+                    throw(`Error : a ${category} '${tname}' already exists for the namespace '${(namespace) ? namespace : 'default' }'}' `)
+            } else {
+                exists = [] 
+            }
+            exists.push(new TType(tname, tentity, namespace))
+            this.entities.set(tname, exists)
+        } else 
+            throw(`Error : '${tentity}' is not a Tosca Entity`)
+    }
+
+    set_prefix(prefix, namespace) {
+        const prefixed_namespace = this.prefixies.get(prefix)
+        if (!prefixed_namespace || ( prefixed_namespace == namespace) )
+            this.prefixies.set(prefix, namespace)
+        else if ( prefixed_namespace != namespace) 
+            throw(`Error : the namespace prefix ${prefix} is already used for namespace ${prefixed_namespace}`)
+    }
+
+    import(other, with_namespace, with_prefix) {
+        const local_entities = this.entities
+        const imported_entities = other.entities
+        let new_namespace = imported_entities.default_namesapce || with_namespace
+
+        if (imported_entities.default_namespace && with_namespace && (imported_entities.default_namespace != with_namespace))
+            throw(`Error : explicitly defined namespace can not be changed during import`)
+        if (with_prefix) {
+            if (! new_namespace) throw(`Error : namespace prefix can not be applied to a not named namespace`)
+            this.set_prefix(with_prefix, new_namespace)
+        }
+        imported_entities.forEach(function(imported_ttypes, name, map) {
+            let local_ttypes = local_entities.get(name) || []
+            for (const ttype of imported_ttypes) {
+                let new_type = (ttype.namespace) ? ttype : ttype.with_namespace(new_namespace)
+                local_ttypes.find(ele => ele.equals(new_type)) || local_ttypes.push(new_type)
+            }
+            local_entities.set(name, local_ttypes)
+        })
+        return this
+    }
+
+    get(id, expected_category=null) {
+        switch (id.valueOf()) {
+            case 'string':
+            case 'tag:yaml.org,2002:str':
+                return  TString
+            case 'integer': 
+            case 'tag:yaml.org,2002:int':
+                return TInteger
+            case 'float': 
+            case 'tag:yaml.org,2002:float':
+                return TFloat
+            case 'boolean': 
+            case 'tag:yaml.org,2002:bool':
+                return TBoolean 
+            case 'timestamp': 
+            case 'tag:yaml.org,2002:timestamp':
+                return TTimestamp
+            case 'null':
+            case 'tag:yaml.org,2002:null':
+                return TNull
+            case 'version':
+            case 'tosca:version':
+                return TVersion
+            case 'range':
+            case 'tosca:range':
+                return TRange
+            case 'list':
+            case 'tosca:list':
+                return TList
+            case 'map':
+            case 'tosca:map':
+                return TMap
+            case 'size':
+            case 'scalar-unit.size':
+            case 'tosca:size':
+                return TSize
+            case 'time':
+            case 'scalar-unit.time':
+            case 'tosca:time':
+                return TTime
+            case 'frequency':
+            case 'scalar-unit.frequency':
+            case 'tosca:frequency':
+                return TFreq
+            case 'bitrate':
+            case 'scalar-unit.bitrate':
+            case 'tosca:bitrate':
+                return TBitrate
+        }
+        const id_eles = id.split('.')
+        const default_namespace = this.default_namespace
+        let found = null
+        if (id_eles.length > 2) {
+            const prefix = id_eles[0]
+            const category = id_eles[1]
+            const typename = id_eles.slice(2).join('.')
+            const namespace = this.prefixies.get(prefix)
+            const types = this.entities.get(typename)
+            found = (types) ? types.filter( ele => ele.category == category && ele.namespace == namespace ) : null
+            if ( expected_category && (expected_category != category) )
+                throw(`Error : provided identifier ${id} is incompatible with expected category ${expected_category}`)
+            if (found && found.length == 1 ) return found[0].type
+            if (found && found.length == 0) throw(`Error : ${(expected_category) ? expected_category : ''} type found for id ${id}`)
+        }
+        if (!found) {
+            found = this.entities.get(id.valueOf())
+            if (!found) found = this.entities.get(id.valueOf())
+            if (!found) {
+                let entries_found = [...this.entities].filter( x => x[0].endsWith(`.${id}`) )
+                found = [].concat(entries_found.map(x => x[1]))
+            }
+            if (!found) throw(`Error : no type found for id ${id} ${_locate(id.info, id.range)}`)
+            if (found.length == 1) return found[0].type
+            found = found.filter( e => e.category == expected_category )
+            if (found.length == 1) return found[0].type
+            if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id}`)
+            found = found.filter( e => e.namespace == default_namespace )
+            if (found.length == 1) return found[0].type
+            if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id}`)
+        }
+        throw(`Error : several ${(expected_category) ? expected_category : ''} types found for id ${id}`)
+    }
+
+    resolve_names() {
+        let all_types = this
+        this.entities.forEach(function (entities_by_name, name, map) {
+            entities_by_name.forEach(function( entity) {
+                entity.type.derives(all_types)
+            })
+        })
+    }
+
+    toTosca(imbric=0) { 
+        let indent = '\n' + '  '.repeat(imbric)
+        let str = ""
+        this.entities.forEach(
+            function(values, key, map) { 
+                if (values) {
+                    for (value of values) {
+                        str += `${indent}name: ${value.name}, namespace: ${value.namespace}, prefix: ${value.prefix}`
+                    }
+                }
+            })
+        return str
+    }
+
+}
+
+/////////////////////////////////////////////////////////
+// Atomic types
+//
 
 class TString extends String {
     constructor(args, info=null) {
@@ -75,44 +365,12 @@ class TNull {
     }
 }
 
-class TRoot {
-    constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
-        this.argsIsMap = args instanceof Map 
-    }
-
-    set_member( member_name, options={} ) {
-        let from = options.from || this.args
-        let default_val = options.default || null
-        let is_map = from instanceof Map
-        this[member_name] = (is_map) ? from.get(member_name) : default_val
-    }
-
-    set_members( member_names, options={} ) {
-        member_names.forEach( member_name => this.set_member(member_name, options))
-    }
-}
-
 class TRange extends TRoot {
     constructor(args, info=null) {
         super(args, info)
         this.min = args[0]
         this.max = args[1]
         if (this.min == Infinity) this.min = -Infinity
-    }
-}
-
-class TMetadata extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        let metadata = this
-        args.forEach(
-            function(value, key, map) {
-                metadata[key] = value
-            }
-        )
     }
 }
 
@@ -208,30 +466,6 @@ class TVersion extends String {
     valueOf() { return this.canonic }
 }
 
-class TImport extends TRoot {
-    constructor(args, info=null) { 
-        super(args, info)
-        this.label = null
-        this.repository = null
-        this.namespace_prefix = null
-        this.namespace_uri = null
-        let cthis = this
-        if (args instanceof TString) {
-            cthis.file = args
-        } else if (args instanceof Map) {
-            args.forEach( function(val, key, map) {
-                cthis.label = key
-                if (val instanceof TString) {
-                    cthis.file = val
-                } else if (val instanceof Map) {
-                    this.set_members(['file', 'repository', 
-                        'namespace_prefix', 'namespace_uri'], {from_val: cthis} )
-                }
-            })
-        }
-    }
-}
-
 class TList extends Array {
     constructor(args, info=null){
         super(...args)
@@ -260,6 +494,7 @@ class TMap extends Map {
     }
 }
 
+// Tosca expressions
 class TValueExpression extends TRoot {
     constructor(args, info=null) { 
         super(args, info)
@@ -319,6 +554,38 @@ class TValueExpression extends TRoot {
     }
 
 }
+
+/////////////////////////////////////////////////////////
+// Utils
+
+// Service template import
+class TImport extends TRoot {
+    constructor(args, info=null) { 
+        super(args, info)
+        this.label = null
+        this.repository = null
+        this.namespace_prefix = null
+        this.namespace_uri = null
+        let cthis = this
+        if (args instanceof TString) {
+            cthis.file = args
+        } else if (args instanceof Map) {
+            args.forEach( function(val, key, map) {
+                cthis.label = key
+                if (val instanceof TString) {
+                    cthis.file = val
+                } else if (val instanceof Map) {
+                    this.set_members(['file', 'repository', 
+                        'namespace_prefix', 'namespace_uri'], {from_val: cthis} )
+                }
+            })
+        }
+    }
+}
+
+
+
+// Tosca constraints
 
 class TConstraints extends TList {
     constructor(args, info=null){
@@ -389,29 +656,11 @@ class TConstraint extends TRoot {
     }
 }
 
-class TTypeDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['type', 'description', 'constraints', 'entry_schema', 'key_schema'])
-        if (!this.type) { throw(`Error : No type field found in a Tosca entity ${_locate(info, args.range)}`) }
-        if (this.entry_schema && this.type.valueOf() != 'list' && this.type.valueOf() != 'map' )
-            throw(`Error : schema_entry to be provided only for types 'list' or 'map'  ${_locate(info, args.range)}`)
-        this.entry_schema = (this.entry_schema) ? new TTypeDef(this.entry_schema) : null
-        if (this.key_schema && this.type.valueOf() != 'map' )
-            throw(`Error : key_schema to be provided only for types 'map'  ${_locate(info, args.range)}`)
-        this.key_schema = (this.key_schema) ? new TTypeDef(this.key_schema) : null
-    }
-}
 
-class TParameterAssignment extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_member('value', { default: args } )
-        this.set_member('description')
-    }
-}
+// Tosca Parameters
 
-class TProperty extends TRoot {
+
+class TProperty extends TParameter {
     constructor(args, info=null) {
         super(args, info)
         this.type = new TTypeDef(args)
@@ -426,13 +675,8 @@ class TProperties extends TMap {
     }
 }
 
-class TPropertyAssignments extends TMap {
-    constructor(args, info=null) {
-        super(args,  info)
-    }
-}
 
-class TAttribute extends TRoot {
+class TAttribute extends TParameter {
     constructor(args, info=null) {
         super(args, info)
         this.type = new TTypeDef(args)
@@ -452,7 +696,7 @@ class TAttributeAssignements extends TMap {
     }
 }
 
-class TInput extends TRoot {
+class TInput extends TParameter {
     constructor(args, info=null) {
         super(args, info)
         this.type = new TTypeDef(args)
@@ -472,7 +716,7 @@ class TInputAssignements extends TMap {
     }
 }
 
-class Toutput extends TRoot {
+class Toutput extends TParameter {
     constructor(args, info=null) {
         super(args, info)
         this.type = new TTypeDef(args)
@@ -487,35 +731,20 @@ class TOutputs extends TMap {
     }
 }
 
-class TCredential extends TRoot {
-    constructor(args, info = null) {
-        super(args, info)
-        this.set_members(['token', 'protocol', 'token_type', 'user'])
-    }
-}
+/////////////////////////////////////////////////////////
+// Tosca definitions
 
-class TRepository extends TRoot {
-    constructor(args, info = null) {
-        super(args, info)
-        this.set_member('url', { default: args })
-        this.set_member('description')
-        this.set_member('credential')
-        this.credential = (this.credential) ? new TCredential(this.credential) : null
-    }
-}
-
-class TRepositories extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-
-class TArtifactDef extends TRoot {
-    constructor(args, info=null) {
+class TArtifactDef extends TDefinition {
+    constructor(args, info) {
         super(args, info)
         this.set_members(['file', 'type', 'repository','deploy_path',
             'version', 'checksum', 'checksum_algorithm', 'properties'])
+    }
+
+    resolve_names() {
+        if (this.typeclass) return
+        this.typeclass = info.nodes.all_ttypes.get(this.class, 'artifacts')
+        // TODO: repository
     }
 }
 
@@ -525,32 +754,213 @@ class TArtifactDefs extends TMap {
     }
 }
 
-class TEntity extends TRoot {
+class TRelationshipDef extends TDefinition {
     constructor(args, info=null) {
         super(args, info)
-        this.set_members([ 'derived_from', 'version', 'metadata', 'description' ])
+        this.set_member('type', { default: args})
+        this.set_member('interfaces')
     }
 
-    derives(all_ttypes) {
-        if (!this.derived_from || (this.derived_from.valueOf() == 'tosca.entity.Root')) this.parent = true 
-        if (this.parent) return
-        let parent_entity = all_ttypes.get(this.derived_from, this.category)
-        if (parent_entity instanceof TEntity) parent_entity.derives(all_ttypes)
-        this.parent = parent_entity
-        this.derives_from_parent()
+    resolve_names() {
+        if (this.typeclass) return
+        this.typeclass = info.nodes.all_ttypes.get(this.class, 'artifacts')
+        // TODO: repository
     }
 
-    derives_member_from_parent(member) {
-        let this_member = this[member]
-        let parent_member = this.parent[member]
-        let classname = (this_member && this_member.constructor.name) || (parent_member && parent_member.constructor.name)
-        let isMap = (this_member || parent_member) instanceof TMap
-        if (classname)
-            this[member] = 
-                (isMap)  ? new this.info.classes[classname]([...(this_member||[]) , ...(parent_member||[])])
-                         : new this.info.classes[classname]([...(this_member||[]) , ...(parent_member||[])])
+}
+
+class TRequirementDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        let [ name, def ] = args.entries().next().value
+        this.name = name
+        let isMap = def instanceof Map
+        this.set_member('capability', { from: def, default: def} )
+        this.set_members(['description', 'node', 'occurrences', "relationship"])
     }
 }
+
+class TRequirementDefs extends TList {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TDeclarativeWorkflowRelDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['description', 'metadata', 'inputs', 'preconditions', 
+            'source_weaving', 'target_weaving'])
+    }
+}
+
+class TDeclarativeWorkflowRelDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TImperativeWorkflowDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['description', 'metadata', 'inputs', 'preconditions', 'steps'])
+    }
+}
+
+class TImperativeWorkflowDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TOperationDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['description', 'inputs', 'implementation' ])
+    }
+}
+
+class TOperationDefTemplate extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['description', 'inputs', 'implementation' ])
+    }
+}
+class TInterfaceDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['type', 'inputs'])
+        this.operations = {}
+        args.forEach(function(value, key, map){ 
+            if (! (['type', 'inputs'].includes(key)) )
+                this.operations[key] = value
+         })
+    }
+}
+
+class TInterfaceDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TInterfaceDefTemplate extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_member('inputs')
+        this.operations = {}
+        args.forEach(function(value, key, map){ 
+            if (! (['inputs'].includes(key)) )
+                this.operations[key] = value
+         })
+    }
+}
+
+class TInterfaceDefsTemplate extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TImplementation extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let isMap = args instanceof Map
+        this.set_member('primary', {default: args} )
+        this.set_members('dependencies')
+    }
+}
+
+class TCapabilityDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['type', 'description', 'properties', 'attributes', 
+                'valid_source_types'])
+        this.set_member('occurrences', {default: new TRange( [ 1, Infinity ]) })
+    }
+}
+
+class TCapabilityDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TDeclarativeWorkflowNodeDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['description', 'metadata', 'inputs', 'preconditions', 'steps'])
+    }
+}
+
+class TDeclarativeWorkflowNodeDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TGroupDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['type', 'description', 'properties', 'interfaces', 'members'])
+    }
+}
+
+class TGroupDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TTriggerDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        let [ name, def ] = args.entries().next().value
+        this.name = name
+        this.set_members(['description', 'event', 'schedule', 'target_filter', 'condition',
+                          'period', 'evaluations', 'method', 'action' ])
+        this.condition = (this.condition instanceof TConstraint) ? this.condition : this.condition.values().next().value
+    }
+}
+
+class TTriggerDefs extends TList {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TTargetFilter extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['node', 'requirement', 'capability'])
+    }
+}
+
+class TEvent extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let isMap = args instanceof Map
+        this.type = (isMap) ? args.entries().next().value : args
+    }
+}
+
+class TPolicyDef extends TDefinition {
+    constructor(args, info=null) {
+        super(args, info)
+        let [ name, def ] = args.entries().next().value
+        this.name = name
+        this.set_members(['type', 'description', 'properties', 'targets', 'triggers'], {from: def})
+    }
+}
+
+class TPolicyDefs extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+/////////////////////////////////////////////////////////
+// Tosca entity types
 
 class TDataType extends TEntity{
     constructor(args, info=null) {
@@ -585,6 +995,7 @@ class TArtifactType extends TEntity {
     derives_from_parent() {
         this.derives_member_from_parent('properties')
     }
+
 }
 
 class TArtifactTypes extends TMap {
@@ -604,6 +1015,7 @@ class TCapabilityType extends TEntity {
         this.derives_member_from_parent('properties')
         this.derives_member_from_parent('attributes')
     }
+
 }
 
 class TCapabilityTypes extends TMap {
@@ -636,348 +1048,10 @@ class TInterfaceType extends TEntity {
         for (ope_name in this.parent.operations) 
             this.operations[ope_name]=this.parent.operations[ope_name]
     }
+
 }
 
 class TInterfaceTypes extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-
-class TImplementation extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        let isMap = args instanceof Map
-        this.set_member('primary', {default: args} )
-        this.set_members('dependencies')
-    }
-}
-
-class TOperationDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['description', 'inputs', 'implementation' ])
-    }
-}
-
-class TOperationDefTemplate extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['description', 'inputs', 'implementation' ])
-    }
-}
-class TInterfaceDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['type', 'inputs'])
-        this.operations = {}
-        args.forEach(function(value, key, map){ 
-            if (! (['type', 'inputs'].includes(key)) )
-                this.operations[key] = value
-         })
-    }
-}
-
-class TInterfaceDefs extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TInterfaceDefTemplate extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_member('inputs')
-        this.operations = {}
-        args.forEach(function(value, key, map){ 
-            if (! (['inputs'].includes(key)) )
-                this.operations[key] = value
-         })
-    }
-}
-
-class TInterfaceDefsTemplate extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TCapabilityDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['type', 'description', 'properties', 'attributes', 
-                'valid_source_types'])
-        this.set_member('occurrences', {default: new TRange( [ 1, Infinity ]) })
-    }
-}
-
-class TCapabilityDefs extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-
-class TCapabilityAssignment extends TRoot {
-    constructor(args, info = null) {
-        super(args, info)
-        this.set_members( ['properties', 'attributes', 'occurrences'] )
-    }
-}
-
-class TCapabilityAssignments extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TPropertyFilter extends TRoot {
-    constructor(args, info = null) {
-        super(args, info)
-        let [ name, def ] = args.entries().next().value
-        this.name = name
-        if ( def instanceof Array )
-            this.filter = def
-        else 
-            this.filter = [ def ]
-    }
-
-    apply(args) {
-        return []
-    }
-}
-
-class TPropertiesFilter extends TList {
-    constructor(args, info = null) {
-        super(args, info)
-    }
-
-    apply(args) {
-        return []
-    }
-}
-
-class TCapabilityFilter extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        let [ name, def ] = args.entries().next().value
-        this.name = name
-        // because of the grammar, 'def' has only one key : 'propertties'
-        this.properties = def.values().next().value
-    }
-}
-
-class TCapabilitiesFilter extends TList {
-    constructor(args, info = null) {
-        super(args, info)
-    }
-
-    apply(args) {
-        return []
-    }
-}
-
-class TNodeFilter extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['properties', 'capabilities'])
-    }
-}
-
-class TRelationshipDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_member('type', { default: args})
-        this.set_member('interfaces')
-    }
-}
- 
-class TRelationshipAssignment extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_member('type', { default: args})
-        this.set_members(['interfaces', 'properties'])
-    }
-}
-
-class TRequirementDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        let [ name, def ] = args.entries().next().value
-        this.name = name
-        let isMap = def instanceof Map
-        this.set_member('capability', { from: def, default: def} )
-        this.set_members(['description', 'node', 'occurrences', "relationship"])
-    }
-}
-
-class TRequirementDefs extends TList {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TRequirementAssignment extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        let [ name, def ] = args.entries().next().valueoperator = 
-        this.name = name
-        let isMap = def instanceof Map
-        this.set_member('node', { from: def, default: def })
-        this.set_members(['relationship', 'capability', 'range', 'node_filter'], { from: def} )
-    }
-}
-
-class TRequirementAssignments extends TList {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-
-class TWorkflowConditionOperator extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        let [ operator, clause] = args.entries().next().value
-        this.operator = (['and', 'not', 'or', 'assert'].includes(operator)) ? operator : 'filter'
-        this.clause = clause
-        this.attribute = (this.operator == 'filter') ? operator : null
-    }
-
-    eval(entity) {
-        switch (operator) {
-            case 'and':
-            case 'assert': 
-                return this.clause.every( value => value.eval(entity) )
-            case 'or': 
-                return this.clause.some( value => value.eval(entity) )
-            case 'not': 
-                return this.clause.some( value => !value.eval(entity) )
-            case 'filter':
-                let attribute_val = entity.get_attribute(this.attribute)
-                let constraints = this.clause
-                return attribute_val && constraints.eval(attribute_val)
-            default:
-                throw (`Error : ${operator} is not an allowed operator in a workflow condition ${_locate(this.info, this.range)}`)
-        }
-    }
-}
-
-class TWorkflowConditionClause extends TList {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-
-    eval(entity) {
-        return this.every( value => value.eval(entity) )
-    }
-}
-
-class TWorkflowPrecondition extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['target', 'target_relationship', 'condition'])
-    }
-}
-
-class TWorkflowPreconditions extends TList {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-
-}
-
-class TWorkflowActivity extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['delegate', 'set_state', 'call_operation','inline'])
-    }
-}
-
-class TWorkflowActivities extends TList {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TWorkflowStep extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['target', 'target_relationship', 'filter',
-                'activities', 'operation_host', 'on_success', 'on_failure'])
-        this.on_success = (this.on_success instanceof Array) ? this.on_success : [ this.on_success ] 
-        this.on_failure = (this.on_failure instanceof Array) ? this.on_failure : [ this.on_failure ] 
-    }
-}
-
-class TWorkflowSteps extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TWorkflowSourceWeaving extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['after', 'before', 'wait_target', 'activity'])
-    }
-}
-
-class TWorkflowSourceWeavingList extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TWorkflowTargetWeaving extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['after', 'before', 'wait_source', 'activity'])
-    }
-}
-
-class TWorkflowTargetWeavingList extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TDeclarativeWorkflowNodeDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['description', 'metadata', 'inputs', 'preconditions', 'steps'])
-    }
-}
-
-class TDeclarativeWorkflowNodeDefs extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TDeclarativeWorkflowRelDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['description', 'metadata', 'inputs', 'preconditions', 
-            'source_weaving', 'target_weaving'])
-    }
-}
-
-class TDeclarativeWorkflowRelDefs extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TImperativeWorkflowDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['description', 'metadata', 'inputs', 'preconditions', 'steps'])
-    }
-}
-
-class TImperativeWorkflowDefs extends TMap {
     constructor(args, info=null) {
         super(args, info)
     }
@@ -1007,21 +1081,6 @@ class TNodeTypes extends TMap {
     }
 }
 
-class TNodeTemplate extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['type', 'metadata', 'description', 'directives',
-                         'properties', 'attributes', 'capabilities', 'requirements',
-                         'interfaces', 'artifacts', 'node_filter', 'copy'])
-    }
-}
-
-class TNodeTemplates extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
 class TRelationshipType extends TEntity {
     constructor(args, info=null) {
         super(args, info)
@@ -1044,20 +1103,6 @@ class TRelationshipTypes extends TMap {
     }
 }
 
-class TRelationshipTemplate extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['type', 'metadata', 'description', 'properties', 'attributes', 'interfaces', 'copy'])
-    }
-}
-
-class TRelationshipTemplates extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-
 class TGroupType extends TEntity {
     constructor(args, info=null) {
         super(args, info)
@@ -1076,51 +1121,6 @@ class TGroupType extends TEntity {
 }
 
 class TGroupTypes extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TGroupDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['type', 'description', 'properties', 'interfaces', 'members'])
-    }
-}
-
-class TGroupDefs extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
-class TEvent extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        let isMap = args instanceof Map
-        this.type = (isMap) ? args.entries().next().value : args
-    }
-}
-
-class TTargetFilter extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_members(['node', 'requirement', 'capability'])
-    }
-}
-
-class TTriggerDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        let [ name, def ] = args.entries().next().value
-        this.name = name
-        this.set_members(['description', 'event', 'schedule', 'target_filter', 'condition',
-                          'period', 'evaluations', 'method', 'action' ])
-        this.condition = (this.condition instanceof TConstraint) ? this.condition : this.condition.values().next().value
-    }
-}
-
-class TTriggerDefs extends TList {
     constructor(args, info=null) {
         super(args, info)
     }
@@ -1146,20 +1146,8 @@ class TPolicyTypes extends TMap {
     }
 }
 
-class TPolicyDef extends TRoot {
-    constructor(args, info=null) {
-        super(args, info)
-        let [ name, def ] = args.entries().next().value
-        this.name = name
-        this.set_members(['type', 'description', 'properties', 'targets', 'triggers'], {from: def})
-    }
-}
-
-class TPolicyDefs extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
+/////////////////////////////////////////////////////////
+// Substitutions mapping
 
 class TPropertyMapping extends TRoot {
     constructor(args, info=null) {
@@ -1273,179 +1261,262 @@ class TSubstitutionMappings extends TRoot {
     }
 }
 
-class TType {
-    constructor(tname, ttype, namespace) {
-        this.category = ttype.category
-        this.type = ttype
-        this.name = tname
-        this.namespace = namespace
+
+
+/////////////////////////////////////////////////////////
+// Assignments
+
+class TParameterAssignment extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_member('value', { default: args } )
+        this.set_member('description')
+    }
+}
+
+class TPropertyAssignments extends TMap {
+    constructor(args, info=null) {
+        super(args,  info)
+    }
+}
+
+
+class TCapabilityAssignment extends TRoot {
+    constructor(args, info = null) {
+        super(args, info)
+        this.set_members( ['properties', 'attributes', 'occurrences'] )
+    }
+}
+
+class TCapabilityAssignments extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+ 
+class TRelationshipAssignment extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_member('type', { default: args})
+        this.set_members(['interfaces', 'properties'])
+    }
+}
+
+
+class TRequirementAssignment extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let [ name, def ] = args.entries().next().valueoperator = 
+        this.name = name
+        let isMap = def instanceof Map
+        this.set_member('node', { from: def, default: def })
+        this.set_members(['relationship', 'capability', 'range', 'node_filter'], { from: def} )
+    }
+}
+
+class TRequirementAssignments extends TList {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+/////////////////////////////////////////////////////////
+// Node filtering
+
+class TPropertyFilter extends TRoot {
+    constructor(args, info = null) {
+        super(args, info)
+        let [ name, def ] = args.entries().next().value
+        this.name = name
+        if ( def instanceof Array )
+            this.filter = def
+        else 
+            this.filter = [ def ]
     }
 
-    with_namespace(namespace = null) {
-        if (this.namespace == namespace) return this
-        if (this.namespace && namespace)
-            throw(`Error : can not import a type changing explicit namespace`)
-        return new TType(this.name, this.type, namespace)
+    apply(args) {
+        return []
+    }
+}
+
+class TPropertiesFilter extends TList {
+    constructor(args, info = null) {
+        super(args, info)
     }
 
-    equals(other) {
-        return this.type === other.type && this.namespace == other.namespace && this.name == other.name
+    apply(args) {
+        return []
+    }
+}
+
+class TCapabilityFilter extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let [ name, def ] = args.entries().next().value
+        this.name = name
+        // because of the grammar, 'def' has only one key : 'propertties'
+        this.properties = def.values().next().value
+    }
+}
+
+class TCapabilitiesFilter extends TList {
+    constructor(args, info = null) {
+        super(args, info)
+    }
+
+    apply(args) {
+        return []
+    }
+}
+
+class TNodeFilter extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['properties', 'capabilities'])
+    }
+}
+
+
+/////////////////////////////////////////////////////////
+// Workflow language
+
+class TWorkflowConditionOperator extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let [ operator, clause] = args.entries().next().value
+        this.operator = (['and', 'not', 'or', 'assert'].includes(operator)) ? operator : 'filter'
+        this.clause = clause
+        this.attribute = (this.operator == 'filter') ? operator : null
+    }
+
+    eval(entity) {
+        switch (operator) {
+            case 'and':
+            case 'assert': 
+                return this.clause.every( value => value.eval(entity) )
+            case 'or': 
+                return this.clause.some( value => value.eval(entity) )
+            case 'not': 
+                return this.clause.some( value => !value.eval(entity) )
+            case 'filter':
+                let attribute_val = entity.get_attribute(this.attribute)
+                let constraints = this.clause
+                return attribute_val && constraints.eval(attribute_val)
+            default:
+                throw (`Error : ${operator} is not an allowed operator in a workflow condition ${_locate(this.info, this.range)}`)
+        }
+    }
+}
+
+class TWorkflowConditionClause extends TList {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+
+    eval(entity) {
+        return this.every( value => value.eval(entity) )
+    }
+}
+
+class TWorkflowPrecondition extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['target', 'target_relationship', 'condition'])
+    }
+}
+
+class TWorkflowPreconditions extends TList {
+    constructor(args, info=null) {
+        super(args, info)
     }
 
 }
 
-class TTypes {
-    constructor(tnamespace) {
-        this.entities = new Map()
-        this.prefixies = new Map()
-        this.default_namespace = tnamespace
+class TWorkflowActivity extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['delegate', 'set_state', 'call_operation','inline'])
     }
+}
 
-    set(tname, tentity, tnamespace=null) {
-        const namespace = (tnamespace) ? tnamespace : this.default_namespace
-        if (tentity instanceof TEntity) {
-            let exists = this.entities.get(tname)
-            if (exists) {
-                const category = tentity.category
-                if (exists.find( ele => ele.category == category && ele.namespace == namespace )) 
-                    throw(`Error : a ${category} '${tname}' already exists for the namespace '${(namespace) ? namespace : 'default' }'}' `)
-            } else {
-                exists = [] 
-            }
-            exists.push(new TType(tname, tentity, namespace))
-            this.entities.set(tname, exists)
-        } else 
-            throw(`Error : '${tentity}' is not a Tosca Entity`)
+class TWorkflowActivities extends TList {
+    constructor(args, info=null) {
+        super(args, info)
     }
+}
 
-    set_prefix(prefix, namespace) {
-        const prefixed_namespace = this.prefixies.get(prefix)
-        if (!prefixed_namespace || ( prefixed_namespace == namespace) )
-            this.prefixies.set(prefix, namespace)
-        else if ( prefixed_namespace != namespace) 
-            throw(`Error : the namespace prefix ${prefix} is already used for namespace ${prefixed_namespace}`)
+class TWorkflowStep extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['target', 'target_relationship', 'filter',
+                'activities', 'operation_host', 'on_success', 'on_failure'])
+        this.on_success = (this.on_success instanceof Array) ? this.on_success : [ this.on_success ] 
+        this.on_failure = (this.on_failure instanceof Array) ? this.on_failure : [ this.on_failure ] 
     }
+}
 
-    import(other, with_namespace, with_prefix) {
-        const local_entities = this.entities
-        const imported_entities = other.entities
-        let new_namespace = imported_entities.default_namesapce || with_namespace
-
-        if (imported_entities.default_namespace && with_namespace && (imported_entities.default_namespace != with_namespace))
-            throw(`Error : explicitly defined namespace can not be changed during import`)
-        if (with_prefix) {
-            if (! new_namespace) throw(`Error : namespace prefix can not be applied to a not named namespace`)
-            this.set_prefix(with_prefix, new_namespace)
-        }
-        imported_entities.forEach(function(imported_ttypes, name, map) {
-            let local_ttypes = local_entities.get(name) || []
-            for (const ttype of imported_ttypes) {
-                let new_type = (ttype.namespace) ? ttype : ttype.with_namespace(new_namespace)
-                local_ttypes.find(ele => ele.equals(new_type)) || local_ttypes.push(new_type)
-            }
-            local_entities.set(name, local_ttypes)
-        })
-        return this
+class TWorkflowSteps extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
+}
 
-    get(id, expected_category=null) {
-        switch (id.valueOf()) {
-            case 'string':
-            case 'tag:yaml.org,2002:str':
-                return  TString
-            case 'integer': 
-            case 'tag:yaml.org,2002:int':
-                return TInteger
-            case 'float': 
-            case 'tag:yaml.org,2002:float':
-                return TFloat
-            case 'boolean': 
-            case 'tag:yaml.org,2002:bool':
-                return TBoolean 
-            case 'timestamp': 
-            case 'tag:yaml.org,2002:timestamp':
-                return TTimestamp
-            case 'null':
-            case 'tag:yaml.org,2002:null':
-                return TNull
-            case 'version':
-            case 'tosca:version':
-                return TVersion
-            case 'range':
-            case 'tosca:range':
-                return TRange
-            case 'list':
-            case 'tosca:list':
-                return TList
-            case 'map':
-            case 'tosca:map':
-                return TMap
-            case 'size':
-            case 'tosca:size':
-                return TSize
-            case 'time':
-            case 'tosca:time':
-                return TTime
-            case 'frequency':
-            case 'tosca:frequency':
-                return TFreq
-            case 'bitrate':
-            case 'tosca:bitrate':
-                return TBitrate
-        }
-        const id_eles = id.split('.')
-        const default_namespace = this.default_namespace
-        let found = null
-        if (id_eles.length > 2) {
-            const prefix = id_eles[0]
-            const category = id_eles[1]
-            const typename = id_eles.slice(2).join('.')
-            const namespace = this.prefixies.get(prefix)
-            const types = this.entities.get(typename)
-            found = (types) ? types.filter( ele => ele.category == category && ele.namespace == namespace ) : null
-            if ( expected_category && (expected_category != category) )
-                throw(`Error : provided identifier ${id} is incompatible with expected category ${expected_category}`)
-            if (found && found.length == 1 ) return found[0].type
-            if (found && found.length == 0) throw(`Error : ${(expected_category) ? expected_category : ''} type found for id ${id}`)
-        }
-        if (!found) {
-            found = this.entities.get(id)
-            if (!found) 
-                throw(`Error : no type found for id ${id}`)
-            if (found.length == 1) return found[0].type
-            found = found.filter( e => e.category == expected_category )
-            if (found.length == 1) return found[0].type
-            if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id}`)
-            found = found.filter( e => e.namespace == default_namespace )
-            if (found.length == 1) return found[0].type
-            if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id}`)
-        }
-        throw(`Error : several ${(expected_category) ? expected_category : ''} types found for id ${id}`)
+class TWorkflowSourceWeaving extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['after', 'before', 'wait_target', 'activity'])
     }
+}
 
-    derives() {
-        let all_types = this
-        this.entities.forEach(function (entities_by_name, name, map) {
-            entities_by_name.forEach(function( entity) {
-                entity.type.derives(all_types)
-            })
-        })
+class TWorkflowSourceWeavingList extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
     }
+}
 
-    toTosca(imbric=0) { 
-        let indent = '\n' + '  '.repeat(imbric)
-        let str = ""
-        this.entities.forEach(
-            function(values, key, map) { 
-                if (values) {
-                    for (value of values) {
-                        str += `${indent}name: ${value.name}, namespace: ${value.namespace}, prefix: ${value.prefix}`
-                    }
-                }
-            })
-        return str
+class TWorkflowTargetWeaving extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['after', 'before', 'wait_source', 'activity'])
     }
+}
 
+class TWorkflowTargetWeavingList extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+/////////////////////////////////////////////////////////
+// Tosca Templates
+
+class TNodeTemplate extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['type', 'metadata', 'description', 'directives',
+                         'properties', 'attributes', 'capabilities', 'requirements',
+                         'interfaces', 'artifacts', 'node_filter', 'copy'])
+    }
+}
+
+class TNodeTemplates extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+
+class TRelationshipTemplate extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['type', 'metadata', 'description', 'properties', 'attributes', 'interfaces', 'copy'])
+    }
+}
+
+class TRelationshipTemplates extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
 }
 
 class TTopologyTemplate extends TRoot {
@@ -1458,7 +1529,7 @@ class TTopologyTemplate extends TRoot {
 }
 
 class TServiceTemplate extends TRoot {
-    constructor(args, info=null) {
+    constructor(args, info) {
         super(args, info)
         this.imported=[]
         this.tosca_entity_types = ['artifact_types', 'data_types', 'capability_types', 'interface_types', 'relationship_types', 'node_types', 'group_types', 'policy_types']
@@ -1470,18 +1541,65 @@ class TServiceTemplate extends TRoot {
                 const id_eles = id.split('.')
                 let namespace = all_types.prefixies.get(id_eles[0])
                 let id_category = id_eles[1]
-                if (namespace && id_category == value.category)
-                    all_types.set(id_eles.slice(2).join('.'), value, namespace)
-                else 
-                    all_types.set(id, value)
+                let idname = 
+                    (namespace && id_category == value.category) 
+                    ? id_eles.slice(2).join('.')
+                    : id
+                all_types.set(idname, value, namespace)
             })
         }
         this.all_types = all_types
         this.set_members(['description', 'tosca_definitions_version', 'namespace', 'metadata', 'repositories',
                         'imports', 'artifact_types', 'data_types', 'capability_types', 'interface_types',
                         'relationship_types', 'node_types', 'group_types', 'policy_types', 'topology_template'])
+        this.parameters = info.parameters
+        this.definitions = info.definitions
     }
 }
+
+/////////////////////////////////////////////////////////
+// Other tosca objects  
+
+
+class TMetadata extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        let metadata = this
+        args.forEach(
+            function(value, key, map) {
+                metadata[key] = value
+            }
+        )
+    }
+}
+
+class TCredential extends TRoot {
+    constructor(args, info = null) {
+        super(args, info)
+        this.set_members(['token', 'protocol', 'token_type', 'user'])
+    }
+}
+
+class TRepository extends TRoot {
+    constructor(args, info = null) {
+        super(args, info)
+        this.set_member('url', { default: args })
+        this.set_member('description')
+        this.set_member('credential')
+        this.credential = (this.credential) ? new TCredential(this.credential) : null
+    }
+}
+
+class TRepositories extends TMap {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+
+
+/////////////////////////////////////////////////////////
+// Export  
 
 const classes = {
     TString, TInteger, TBoolean, TFloat, TTimestamp, TNull, TUnbounded, TRange, TVersion, TList, TMap,

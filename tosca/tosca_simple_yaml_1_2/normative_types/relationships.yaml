@@ -5,6 +5,9 @@ metadata:
   template_author:  ditrit
   template_version: 1.0
 
+imports:
+  - tosca_data_types:         datatypes.yaml
+
 
 description: TOSCA 1.2 normative types defintion, interface types part
 #url: http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.2/csprd01/TOSCA-Simple-Profile-YAML-v1.2-csprd01.html

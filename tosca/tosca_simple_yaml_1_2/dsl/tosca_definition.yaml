@@ -563,6 +563,7 @@ node_type->TNodeType:
     requirements: requirement_defs
     interfaces: interface_defs
     workflows: declarative_workflow_node_defs
+    artifacts: artifact_defs
   _copy: type_common_keys
 
 node_types->TNodeTypes:

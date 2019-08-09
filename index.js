@@ -5,7 +5,7 @@ const classes = require('./tosca/classes/classes.js')
 const tosca_config = lidy.parseYaml(null, './tosca/config.yaml').tree
 
 function parse_src(tosca_file, versions = []) {
-    // DEBUG // console.log(`Fichier : ${tosca_file}` )
+    // DEBUG filename // console.log(`Fichier : ${tosca_file}` )
 
     // currentdir for src file
     let path_src = path.dirname(tosca_file)
@@ -26,6 +26,8 @@ function parse_src(tosca_file, versions = []) {
     // tosca_version information
     info.tosca_prefix =    tosca_config[dsl_version].prefix
     info.tosca_namespace = tosca_config[dsl_version].uri
+    info.definitions = []
+    info.parameters = []
 
     // parse source - second step (dsl parsing)
     info = lidy.parse_src_dsl(info, 'service_template')
@@ -56,11 +58,14 @@ function parse_src(tosca_file, versions = []) {
     // import types with namespace management
     for ( const imported of info.nodes.imported ) {
         info.nodes.all_types.import(imported.service.all_types, imported.namespace, imported.prefix)
+        for (const definition of imported.service.definitions) info.nodes.definitions.push(definition)
+        for (const parameter  of imported.service.parameters)  info.nodes.parameters.push(parameter)
     }
 
     // types derivation (properties, attributes, interfaces, ...)
-    info.nodes.all_types.derives()
-
+    info.nodes.all_types.resolve_names()
+    info.nodes.parameters.forEach(element => element.resolve_names()) 
+    info.nodes.definitions.forEach(element => element.resolve_names()) 
     return info
 }
 
@@ -71,7 +76,7 @@ function parse_test(str, keyword ) {
 
     // extract tosca definition file from source 
     const dsl_version = 'tosca_simple_yaml_1_2'
-    const dsl_def_file = `tosca/${dsl_version}/dsl/tosca_definition.yaml`
+    const dsl_def_file = `tosca/nodes${dsl_version}/dsl/tosca_definition.yaml`
 
     // parse tosca definition file
     info = lidy.parse_dsl_def(info, dsl_def_file)
@@ -91,7 +96,7 @@ const tosca_file = 'tests/test.yaml'
 // parse 
 let res = parse_src(tosca_file)
 let alltypes = res.nodes.all_types
-
+console.log('fin')
 exports.parse_test=parse_test
 exports.parse_src=parse_src
 
