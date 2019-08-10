@@ -49,6 +49,7 @@ function parse_src(tosca_file, versions = []) {
         for (const imported of info.nodes.imports) {
             let file_path = (imported.file.startsWith('/') ? imported.file : `${path_src}/${imported.file}`)
             info.nodes.imported.push( { 
+                file_path: file_path,
                 service: parse_src(file_path.toString(), versions).nodes, 
                 namespace: imported.namespace_uri, 
                 prefix:    imported.namespace_prefix } ) 
@@ -76,13 +77,17 @@ function parse_test(str, keyword ) {
 
     // extract tosca definition file from source 
     const dsl_version = 'tosca_simple_yaml_1_2'
-    const dsl_def_file = `tosca/nodes${dsl_version}/dsl/tosca_definition.yaml`
+    const dsl_def_file = `tosca/${dsl_version}/dsl/tosca_definition.yaml`
 
     // parse tosca definition file
     info = lidy.parse_dsl_def(info, dsl_def_file)
 
     // use Tosca classes
     info.classes  = classes
+
+    // 
+    info.definitions = []
+    info.parameters = []
 
     // parse source - second step (dsl parsing)
     info = lidy.parse_src_dsl(info, keyword)

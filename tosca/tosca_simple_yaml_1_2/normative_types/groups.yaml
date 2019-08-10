@@ -5,9 +5,12 @@ metadata:
   template_author:  ditrit
   template_version: 1.0
 
-
 description: TOSCA 1.2 normative types defintion, group types part
 #url: http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.2/csprd01/TOSCA-Simple-Profile-YAML-v1.2-csprd01.html
+
+imports:
+  - tosca_relationships:      relationships.yaml
+
 
 group_types:
  

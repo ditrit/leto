@@ -334,7 +334,8 @@ capability_types->TCapabilityTypes:
 
 capability_def->TCapabilityDef:
   _oneOf:
-    - _dict:
+    - _required: [type]
+      _dict:
         type: str
         description: description
         properties: properties
