@@ -63,10 +63,13 @@ function parse_src(tosca_file, versions = []) {
         for (const parameter  of imported.service.parameters)  info.nodes.parameters.push(parameter)
     }
 
-    // types derivation (properties, attributes, interfaces, ...)
-    info.nodes.all_types.resolve_names()
-    info.nodes.parameters.forEach(element => element.resolve_names()) 
-    info.nodes.definitions.forEach(element => element.resolve_names()) 
+    // types derivation and resolution (properties, attributes, interfaces, ...)
+    info.nodes.all_types.derives_types()
+    info.nodes.parameters.forEach(element => element.resolve_data_type_name()) 
+    info.nodes.definitions.forEach(element => element.resolve_definition_type_names()) 
+
+    info.nodes.topology_template && info.nodes.topology_template.resolve_assignments_type_names() 
+
     return info
 }
 
@@ -96,7 +99,7 @@ function parse_test(str, keyword ) {
 }
 
 // source file
-const tosca_file = 'tests/test.yaml'
+const tosca_file = '/home/resinsec/dev/leto/tests/simple-topology.yaml'
 
 // parse 
 let res = parse_src(tosca_file)

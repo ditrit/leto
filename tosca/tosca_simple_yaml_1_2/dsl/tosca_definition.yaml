@@ -313,14 +313,14 @@ interface_def->TInterfaceDef:
 interface_defs->TInterfaceDefs:
   _dictOf: { str: interface_def }
 
-interface_def_template->TInterfaceDefTemplate:
+interface_assignment->TInterfaceAssignment:
   _dict: 
     inputs: property_assignments
   _dictOf:
-    str: operation_def
+    str: operation_def_template
 
-interface_defs_template->TInterfaceDefsTemplate:
-  _dictOf: { str: interface_def_template }
+interface_assignments->TInterfaceAssignments:
+  _dictOf: { str: interface_assignment }
 
 capability_type->TCapabilityType:
   _dict:
@@ -581,7 +581,7 @@ node_template->TNodeTemplate:
     attributes: attribute_assignments
     capabilities: capability_assignments
     requirements: requirement_assignments
-    interfaces: interface_defs_template
+    interfaces: interface_assignments
     artifacts: artifact_defs
     node_filter: node_filter
     copy: str
@@ -609,7 +609,7 @@ relationship_template->TRelationshipTemplate:
     metadata: metadata
     properties: properties
     attributes: attributes
-    interfaces: inteface_defs_template
+    interfaces: interface_assignments
     copy: str
 
 relationship_templates->TRelationshipTemplates:
@@ -632,9 +632,9 @@ group_def->TGroupDef:
   _dict:
     type: str
     description: description
-    properties: properties
+    properties: property_assignments
     members: { _listOf: str }
-    interfaces: interface_defs_template
+    interfaces: interface_assignments
 
 group_defs->TGroupDefs:
   _dictOf: { str: group_def }

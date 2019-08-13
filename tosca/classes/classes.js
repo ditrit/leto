@@ -37,8 +37,8 @@ class TParameter extends TRoot {
         info.parameters.push(this)
     }
 
-    resolve_names() {
-        this.type.resolve_names(this.info.nodes.all_types)
+    resolve_data_type_name() {
+        this.type.resolve_data_type_name(this.info.nodes.all_types)
     }
 }
 
@@ -49,9 +49,15 @@ class TDefinition extends TRoot {
         info.definitions.push(this)
     }
 
-    resolve_names() {
-    }
+    resolve_definition_type_names() {}
 
+    derives_member_from_type(member) {
+        let this_member = this[member]
+        let type_member = this.type[member]
+        let classname = type_member && type_member.constructor.name
+        if (classname)
+            this[member] = new this.info.classes[classname]([...(type_member||[]) , ...(this_member||[])])
+    }
 }
 
 // Parent of all Tosca Types 
@@ -79,11 +85,8 @@ class TEntity extends TRoot {
         let this_member = this[member]
         let parent_member = this.derived_from[member]
         let classname = (this_member && this_member.constructor.name) || (parent_member && parent_member.constructor.name)
-        let isMap = (this_member || parent_member) instanceof TMap
         if (classname)
-            this[member] = 
-                (isMap)  ? new this.info.classes[classname]([...(this_member||[]) , ...(parent_member||[])])
-                         : new this.info.classes[classname]([...(this_member||[]) , ...(parent_member||[])])
+            this[member] = new this.info.classes[classname]([...(parent_member||[]) , ...(this_member||[])])
     }
 }
 
@@ -104,10 +107,10 @@ class TTypeDef extends TRoot {
         this.key_schema = (this.key_schema) ? new TTypeDef(this.key_schema) : null
     }
 
-    resolve_names(all_types) {
+    resolve_data_type_name(all_types) {
         if (this.is_resolved) return
-        if (this.entry_schema instanceof TTypeDef) this.entry_schema.resolve_names(all_types)
-        if (this.key_schema instanceof TTypeDef) this.key_schema.resolve_names(all_types)
+        if (this.entry_schema instanceof TTypeDef) this.entry_schema.resolve_data_type_name(all_types)
+        if (this.key_schema instanceof TTypeDef) this.key_schema.resolve_data_type_name(all_types)
         this.type = all_types.get(this.type, 'datatypes')
         this.is_resolved = true
     }
@@ -276,7 +279,7 @@ class TTypes {
         throw(`Error : several ${(expected_category) ? expected_category : ''} types found for id ${id} ${_locate(id.info, id.range)}`)
     }
 
-    resolve_names() {
+    derives_types() {
         let all_types = this
         this.entities.forEach(function (entities_by_name, name, map) {
             entities_by_name.forEach(function( entity) {
@@ -490,6 +493,7 @@ class TMap extends Map {
         this.range = args.range
         this.info = info
     }
+
     set_member( member_name, options={} ) {
         let from = options.from || this.args
         let default_val = options.default || null
@@ -499,6 +503,10 @@ class TMap extends Map {
 
     set_members( member_names, options={} ) {
         member_names.forEach( member_name => this.set_member(member_name, options))
+    }
+
+    set(key, value) {
+        super.set((key) ? key.valueOf() : key, value)
     }
 }
 
@@ -698,12 +706,6 @@ class TAttributes extends TMap {
     }
 }
 
-class TAttributeAssignements extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-
 class TInput extends TParameter {
     constructor(args, info=null) {
         super(args, info)
@@ -714,11 +716,6 @@ class TInput extends TParameter {
 }
 
 class TInputs extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
-class TInputAssignements extends TMap {
     constructor(args, info=null) {
         super(args, info)
     }
@@ -749,11 +746,16 @@ class TArtifactDef extends TDefinition {
             'version', 'checksum', 'checksum_algorithm', 'properties'])
     }
 
-    resolve_names() {
+    resolve_definition_type_names() {
         if (this.is_resolved) return
         this.type = info.nodes.all_types.get(this.type, 'artifacts')
         // TODO: repository
         this.is_revolved = true
+        this.derives_member_from_type('properties')
+    }
+
+    resolve_assignments_type_names() {
+        this.resolve_parameter_assignment('properties')
     }
 }
 
@@ -770,9 +772,10 @@ class TRelationshipDef extends TDefinition {
         this.set_member('interfaces')
     }
 
-    resolve_names() {
+    resolve_definition_type_names() {
         if (this.is_resolved) return
         this.type = this.info.nodes.all_types.get(this.type, 'relationships')
+        this.derives_member_from_type('interfaces')
         this.is_resolved = true
     }
 
@@ -788,20 +791,23 @@ class TRequirementDef extends TDefinition {
         this.set_members(['description', 'node', 'occurrences', "relationship"])
     }
 
-    resolve_names() {
+    resolve_definition_type_names() {
         if (this.is_resolved) return
         this.capability = this.info.nodes.all_types.get(this.capability, 'capabilities')
         this.node = (this.node) ? this.info.nodes.all_types.get(this.node, 'nodes') : null
         this.is_resolved = true
     }
 
-    
+    resolve_assignments_type_names() {
+        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
+    }
 }
 
 class TRequirementDefs extends TList {
     constructor(args, info=null) {
         super(args, info)
-    }
+    }    
+    
 }
 
 class TDeclarativeWorkflowRelDef extends TDefinition {
@@ -811,8 +817,6 @@ class TDeclarativeWorkflowRelDef extends TDefinition {
             'source_weaving', 'target_weaving'])
     }
     
-    resolve_names() {
-    }
 }
 
 class TDeclarativeWorkflowRelDefs extends TMap {
@@ -827,8 +831,6 @@ class TImperativeWorkflowDef extends TDefinition {
         this.set_members(['description', 'metadata', 'inputs', 'preconditions', 'steps'])
     }
 
-    resolve_names() {
-    }
 }
 
 class TImperativeWorkflowDefs extends TMap {
@@ -843,8 +845,6 @@ class TOperationDef extends TDefinition {
         this.set_members(['description', 'inputs', 'implementation' ])
     }
 
-    resolve_names() {
-    }
 }
 
 class TOperationDefTemplate extends TDefinition {
@@ -853,23 +853,28 @@ class TOperationDefTemplate extends TDefinition {
         this.set_members(['description', 'inputs', 'implementation' ])
     }
 
-    resolve_names() {
-    }
 }
+
 class TInterfaceDef extends TDefinition {
     constructor(args, info=null) {
         super(args, info)
-        this.set_members(['type', 'inputs'])
-        this.operations = {}
-        args.forEach(function(value, key, map){ 
-            if (! (['type', 'inputs'].includes(key)) )
-                this.operations[key] = value
-         })
+        this.set_members(['type', 'inputs', 'outputs', 'operations', 'notifications'])
+        if (!this.operations) {
+            let operations = new TMap(new Map(), info)
+            args.forEach((value, key, map) => {
+                if (! (['type', 'inputs', 'notifications', 'operations'].includes(key)) )
+                    operations.set(key, value) }
+            )
+        }
     }
 
-    resolve_names() {
+    resolve_definition_type_names() {
         if (this.is_resolved) return
         this.type = this.info.nodes.all_types.get(this.type, 'interfaces')
+        this.derives_member_from_type('inputs')
+        this.derives_member_from_type('outputs')
+        this.derives_member_from_type('operations')        
+        this.derives_member_from_type('notifications')        
         this.is_resolved = true
     }
 
@@ -882,27 +887,6 @@ class TInterfaceDefs extends TMap {
     }
 }
 
-class TInterfaceDefTemplate extends TDefinition {
-    constructor(args, info=null) {
-        super(args, info)
-        this.set_member('inputs')
-        this.operations = {}
-        args.forEach(function(value, key, map){ 
-            if (! (['inputs'].includes(key)) )
-                this.operations[key] = value
-         })
-    }
-
-    resolve_names() {
-    }
-
-}
-
-class TInterfaceDefsTemplate extends TMap {
-    constructor(args, info=null) {
-        super(args, info)
-    }
-}
 
 class TImplementation extends TRoot {
     constructor(args, info=null) {
@@ -922,13 +906,18 @@ class TCapabilityDef extends TDefinition {
         this.set_member('occurrences', {default: new TRange( [ 1, Infinity ]) })
     }
 
-    resolve_names() {
+    resolve_definition_type_names() {
         if (this.is_resolved) return
+        // type resolution
         this.type = this.info.nodes.all_types.get(this.type, 'capabilities')
+        // source_types resolution
         if (this.valid_source_types) {
             let types = this.valid_source_types.map(type_name => this.info.nodes.all_types.get(type_name, 'nodes'))
             this.valid_source_types = new TList(types, this.valid_source_types.info)
         }
+        this.derives_member_from_type('properties')        
+        this.derives_member_from_type('attributes')     
+        // a priori, pas a dervier ? // this.derives_member_from_type('valid_sources_types')        
         this.is_resolved = true
     }
 
@@ -946,9 +935,6 @@ class TDeclarativeWorkflowNodeDef extends TDefinition {
         this.set_members(['description', 'metadata', 'inputs', 'preconditions', 'steps'])
     }
 
-    resolve_names() {
-
-    }
 }
 
 class TDeclarativeWorkflowNodeDefs extends TMap {
@@ -963,13 +949,16 @@ class TGroupDef extends TDefinition {
         this.set_members(['type', 'description', 'properties', 'interfaces', 'members'])
     }
 
-    resolve_names() {
+    resolve_definition_type_names() {
         if (this.is_resolved) return
         this.type = this.info.nodes.all_types.get(this.type, 'groups')
         this.is_resolved = true
     }
 
-
+    resolve_assignments_type_names() {
+        this.properties && this.properties.resolve_assignment_type(this.type.properties)
+        this.interfaces && this.interfaces.resolve_assignment_type(this.type.interfaces)
+    }
 
 }
 
@@ -977,6 +966,11 @@ class TGroupDefs extends TMap {
     constructor(args, info=null) {
         super(args, info)
     }
+
+    resolve_assignments_type_names() {
+        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
+    }
+
 }
 
 class TTriggerDef extends TDefinition {
@@ -988,12 +982,6 @@ class TTriggerDef extends TDefinition {
                           'period', 'evaluations', 'method', 'action' ])
         this.condition = (this.condition instanceof TConstraint) ? this.condition : this.condition.values().next().value
     }
-
-    resolve_names() {
-    }
-
-
-
 }
 
 class TTriggerDefs extends TList {
@@ -1025,10 +1013,14 @@ class TPolicyDef extends TDefinition {
         this.set_members(['type', 'description', 'properties', 'targets', 'triggers'], {from: def})
     }
 
-    resolve_names() {
+    resolve_definition_type_names() {
         if (this.is_resolved) return
         this.type = this.info.nodes.all_types.get(this.type, 'policies')
         this.is_resolved = true
+    }
+
+    resolve_assignments_type_names() {
+        this.properties && this.properties.resolve_assignment_type(this.type.properties)
     }
 
 
@@ -1038,6 +1030,11 @@ class TPolicyDefs extends TMap {
     constructor(args, info=null) {
         super(args, info)
     }
+
+    resolve_assignments_type_names() {
+        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
+    }
+
 }
 
 /////////////////////////////////////////////////////////
@@ -1095,15 +1092,11 @@ class TCapabilityType extends TEntity {
     derives_from_parent() {
         this.derives_member_from_parent('properties')
         this.derives_member_from_parent('attributes')
-    }
-    // voir derivation
-    resolve_names() {
         if (this.valid_source_types) {
             let types = this.valid_source_types.map(type_name => this.info.nodes.all_types.get(type_name, 'nodes'))
             this.valid_source_types = new TList(types, this.valid_source_types.info)
         }
     }
-
 }
 
 class TCapabilityTypes extends TMap {
@@ -1112,29 +1105,25 @@ class TCapabilityTypes extends TMap {
     }
 }
 
-
 class TInterfaceType extends TEntity {
     constructor(args, info=null) {
         super(args, info)
         this.category = 'interfaces'
-        this.set_member('properties')
-        let operations = {}
-        args.forEach(function(value, key, map){ 
-            if (! (['derived_from', 'version', 'metadata', 'description', 'properties'].includes(key)) )
-                operations[key] = value
-         })
-        this.operations = operations
+        this.set_members(['operations', 'notifications', 'inputs' ])
+        if (!this.operations) {
+            let operations = new TMap(new Map(), info)
+            args.forEach((value, key, map) => { 
+                if (! (['derived_from', 'version', 'metadata', 'description', 'operations', 'notifications', 'inputs'].includes(key.valueOf())) )
+                    operations.set(key, value) }
+            )
+            this.operations  = operations
+        }
     }
 
     derives_from_parent() {
-        this.derives_member_from_parent('properties')
-        let local = this.operations
-        this.operations = {}
-        let ope_name 
-        for (ope_name in local) 
-            this.operations[ope_name]=local[ope_name]
-        for (ope_name in this.derived_from.operations) 
-            this.operations[ope_name]=this.derived_from.operations[ope_name]
+        this.derives_member_from_parent('inputs')
+        this.derives_member_from_parent('operations')
+        this.derives_member_from_parent('notifications')
     }
 
 }
@@ -1360,28 +1349,86 @@ class TParameterAssignment extends TRoot {
         this.set_member('value', { default: args } )
         this.set_member('description')
     }
+
+    resolve_assignment_type(parameter_name, parameter_def) {
+        if (!parameter_def) throw(`No definition found for ${parameter_name} in assignment ${_locate(this.info, this.range)}`)
+        this.type = parameter_def.type
+    }
 }
 
-class TPropertyAssignments extends TMap {
+class TAssignments extends TMap {
+    constructor(args, info=null) {
+        super(args,  info)
+    }
+
+    resolve_assignment_type(definitions) {
+        this.forEach(
+            (assignment, name, map) => 
+                assignment.resolve_assignment_type(name,definitions.get(name.valueOf())))
+    }
+}
+
+class TPropertyAssignments extends TAssignments {
     constructor(args, info=null) {
         super(args,  info)
     }
 }
 
+class TAttributeAssignments extends TAssignments {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
+class TInputAssignments extends TAssignments {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
 
 class TCapabilityAssignment extends TRoot {
     constructor(args, info = null) {
         super(args, info)
         this.set_members( ['properties', 'attributes', 'occurrences'] )
     }
+
+    resolve_assignment_type(parameter_name, capability_def) {
+        this.properties && this.properties.resolve_assignment_type(capability_def.properties)
+        this.attributes && this.attributes.resolve_assignment_type(capability_def.attributes)
+    }
+
 }
 
-class TCapabilityAssignments extends TMap {
+class TCapabilityAssignments extends TAssignments {
     constructor(args, info=null) {
         super(args, info)
     }
 }
- 
+
+class TInterfaceAssignment extends TRoot {
+    constructor(args, info=null) {
+        super(args, info)
+        this.set_members(['inputs', 'notifications', 'operations'])
+        this.operations || (this.operations = new TMap(new Map(), info))
+        args.forEach(function(value, key, map){ 
+            if (! (['inputs', 'notifications', 'operations'].includes(key)) )
+                this.operations.set(key, value)
+         })
+    }
+
+    resolve_assignment_type(parameter_name, inteface_def) {
+        this.inputs && this.inputs.resolve_assignment_type(inteface_def.inputs)
+        this.attributes && this.attributes.resolve_assignment_type(capability_def.attributes)
+    }
+
+}
+
+class TInterfaceAssignments extends TAssignments {
+    constructor(args, info=null) {
+        super(args, info)
+    }
+}
+
 class TRelationshipAssignment extends TRoot {
     constructor(args, info=null) {
         super(args, info)
@@ -1396,16 +1443,53 @@ class TRequirementAssignment extends TRoot {
         super(args, info)
         let [ name, def ] = args.entries().next().valueoperator = 
         this.name = name
-        let isMap = def instanceof Map
-        this.set_member('node', { from: def, default: def })
+        if (def instanceof Map)
+            this.set_member('node', { from: def })
+        else 
+            this.node = def
         this.set_members(['relationship', 'capability', 'range', 'node_filter'], { from: def} )
     }
+
+    resolve_assignments_type_names(topology) {
+        let node_id = this.node.valueOf()
+        let node_templates = [...(topology.node_templates)]
+        let filtered
+        if (this.node) {
+            filtered = node_templates.filter(ele => ele[0] == node_id)
+            if (filtered) node_templates = filtered
+            else {
+                let node_type = info.nodes.all_types.get(node_id)
+                filtered = node_templates.filter(ele[1].type === node_type)
+                if (filtered) node_templates = filtered
+                else throw(`No node type or node template matches the node value given in the requirement ${_locate(info, args.range)}`) 
+            }
+        }
+        let capability_id = this.capability.valueOf()
+        if (this.capability) {
+            filtered = node_templates.filter(ele => ele[1].capabilities.has(capability_id))
+            if (filtered) node_templates = filtered
+            else {
+                let capability_type = info.nodes.all_types.get(capability_id)
+                filtered = node_templates.filter(ele => ele[1].capabilities.filter(ele_capa => ele_capa.type === capability_type))
+                if (filtered) nodes_templates = filtered
+                else throw(`Capability name does not allow match a node template for the requirement ${_locate(info, args.range)}`) 
+            }
+        }
+        let relationship_id = this.relationship.valuOf()
+        
+    }
+    
 }
 
 class TRequirementAssignments extends TList {
     constructor(args, info=null) {
         super(args, info)
     }
+
+    resolve_assignments_type_names(topology) {
+        this.forEach((value, key, map) => value.resolve_assignments_type_names(topology) )
+    }
+
 }
 
 /////////////////////////////////////////////////////////
@@ -1578,12 +1662,26 @@ class TWorkflowTargetWeavingList extends TMap {
 /////////////////////////////////////////////////////////
 // Tosca Templates
 
-class TNodeTemplate extends TRoot {
+class TNodeTemplate extends TDefinition {
     constructor(args, info=null) {
         super(args, info)
         this.set_members(['type', 'metadata', 'description', 'directives',
                          'properties', 'attributes', 'capabilities', 'requirements',
                          'interfaces', 'artifacts', 'node_filter', 'copy'])
+    }
+
+    resolve_definition_type_names() {
+        if (this.is_resolved) return
+        this.type = this.info.nodes.all_types.get(this.type, 'nodes')
+        this.is_resolved = true
+    }
+
+    resolve_assignments_type_names(topology) {
+        this.properties && this.properties.resolve_assignment_type(this.type.properties)
+        this.attributes && this.attributes.resolve_assignment_type(this.type.attributes)
+        this.capabilities && this.capabilities.resolve_assignment_type(this.type.capabilities)
+        this.interfaces && this.interfaces.resolve_assignment_type(this.type.interfaces)
+        this.requirements && this.requirements.resolve_assignment_type(topology)
     }
 }
 
@@ -1591,19 +1689,40 @@ class TNodeTemplates extends TMap {
     constructor(args, info=null) {
         super(args, info)
     }
+
+    resolve_assignments_type_names() {
+        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
+    }
+
 }
 
-
-class TRelationshipTemplate extends TRoot {
+class TRelationshipTemplate extends TDefinition {
     constructor(args, info=null) {
         super(args, info)
         this.set_members(['type', 'metadata', 'description', 'properties', 'attributes', 'interfaces', 'copy'])
     }
+
+    resolve_definition_type_names() {
+        if (this.is_resolved) return
+        this.type = this.info.nodes.all_types.get(this.type, 'relationships')
+        this.is_resolved = true
+    }
+
+    resolve_assignments_type_names() {
+        this.properties && this.properties.resolve_assignment_type(this.type.properties)
+        this.attributes && this.attributes.resolve_assignment_type(this.type.attributes)
+        this.interfaces && this.interfaces.resolve_assignment_type(this.type.interfaces)
+    }
+
 }
 
 class TRelationshipTemplates extends TMap {
     constructor(args, info=null) {
         super(args, info)
+    }
+
+    resolve_assignments_type_names() {
+        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
     }
 }
 
@@ -1613,6 +1732,13 @@ class TTopologyTemplate extends TRoot {
         this.imported=[]
         this.set_members(['description', 'inputs', 'outputs', 'node_templates', 'relationship_templates',
                             'groups', 'policies', 'substitution_mappings', 'workflows'])
+    }
+
+    resolve_assignments_type_names() {
+        this.groups && this.groups.resolve_assignments_type_names()
+        this.policies && this.policies.resolve_assignments_type_names()
+        this.node_templates && this.node_templates.resolve_assignments_type_names(this)
+        this.relationship_templates && this.relationship_templates.resolve_assignments_type_names()
     }
 }
 
@@ -1632,7 +1758,7 @@ class TServiceTemplate extends TRoot {
                 let idname = 
                     (namespace && id_category == value.category) 
                     ? id_eles.slice(2).join('.')
-                    : id
+                    : id.valueOf()
                 all_types.set(idname, value, namespace)
             })
         }
@@ -1693,10 +1819,10 @@ const classes = {
     TString, TInteger, TBoolean, TFloat, TTimestamp, TNull, TUnbounded, TRange, TVersion, TList, TMap,
     TNamespace, TMetadata, TUrl, TSize, TTime, TFreq, TBitrate, TValueExpression,
     TImport, TConstraint, TConstraints, TTypeDef, TParameterAssignment,
-    TProperty, TProperties, TPropertyAssignments, TAttribute, TAttributes, TAttributeAssignements,
-    TInput, TInputs, TInputAssignements, Toutput, TOutputs, TCredential, TRepository, TRepositories,
+    TProperty, TProperties, TPropertyAssignments, TAttribute, TAttributes, TAttributeAssignments,
+    TInput, TInputs, TInputAssignments, Toutput, TOutputs, TCredential, TRepository, TRepositories,
     TArtifactDef, TArtifactDefs, TImplementation, TOperationDef, TOperationDefTemplate,
-    TInterfaceDef, TInterfaceDefs, TInterfaceDefTemplate, TInterfaceDefsTemplate,
+    TInterfaceDef, TInterfaceDefs, TInterfaceAssignment, TInterfaceAssignments,
     TCapabilityDef, TCapabilityDefs, TCapabilityAssignment, TCapabilityAssignments,
     TPropertyFilter, TPropertiesFilter, TCapabilityFilter, TCapabilitiesFilter, TNodeFilter,
     TRelationshipAssignment, TRelationshipDef, TRequirementDef, TRequirementDefs, 
