@@ -426,20 +426,7 @@ requirement_assignment->TRequirementAssignment:
           - str
           - _dict:
               node: str
-              relationship: str 
-              capability: str
-              occurrences: range
-              node_filter: node_filter
-
-requirement_assignment_relationship->TRequirementAssignment:
-    _nb: 1
-    _dictOf:
-      str: 
-        _oneOf:
-          - str
-          - _dict:
-              node: str
-              relationship: relationship_assignment 
+              relationship: { _oneOf: [ str, relationship_assignment ] } 
               capability: str
               occurrences: range
               node_filter: node_filter

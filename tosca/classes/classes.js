@@ -53,7 +53,7 @@ class TDefinition extends TRoot {
 
     derives_member_from_type(member) {
         let this_member = this[member]
-        let type_member = this.type[member]
+        let type_member = this.type.value[member]
         let classname = type_member && type_member.constructor.name
         if (classname)
             this[member] = new this.info.classes[classname]([...(type_member||[]) , ...(this_member||[])])
@@ -76,17 +76,23 @@ class TEntity extends TRoot {
         }
         let parent_entity = all_types.get(this.derived_from, this.category)
         if (parent_entity instanceof TEntity) parent_entity.derives(all_types)
-        this.derived_from = parent_entity
+        this.derived_from.value = parent_entity
         this.is_derived = true
         this.derives_from_parent()
     }
 
     derives_member_from_parent(member) {
         let this_member = this[member]
-        let parent_member = this.derived_from[member]
+        let parent_member = this.derived_from.value[member]
         let classname = (this_member && this_member.constructor.name) || (parent_member && parent_member.constructor.name)
         if (classname)
             this[member] = new this.info.classes[classname]([...(parent_member||[]) , ...(this_member||[])])
+    }
+
+    subtype_of(ancestor) {
+        if (ancestor == this) return true 
+        if (!this.derived_of) return false
+        return this.derived_of.value.subtype_of(ancestor)
     }
 }
 
@@ -111,7 +117,7 @@ class TTypeDef extends TRoot {
         if (this.is_resolved) return
         if (this.entry_schema instanceof TTypeDef) this.entry_schema.resolve_data_type_name(all_types)
         if (this.key_schema instanceof TTypeDef) this.key_schema.resolve_data_type_name(all_types)
-        this.type = all_types.get(this.type, 'datatypes')
+        this.type.value = all_types.get(this.type, 'datatypes')
         this.is_resolved = true
     }
 
@@ -492,6 +498,8 @@ class TMap extends Map {
         this.args = args
         this.range = args.range
         this.info = info
+        this.by_str = new Map()
+        this.forEach((value, key, map) => this.by_str.set((key) ? key.valueOf() : key, value))
     }
 
     set_member( member_name, options={} ) {
@@ -506,7 +514,12 @@ class TMap extends Map {
     }
 
     set(key, value) {
-        super.set((key) ? key.valueOf() : key, value)
+        super.set(key, value)
+        this.by_str && this.by_str.set((key) ? key.valueOf() : key, value)
+    }
+
+    get(key) {
+        return this.by_str.get(key.valueOf())
     }
 }
 
@@ -748,15 +761,12 @@ class TArtifactDef extends TDefinition {
 
     resolve_definition_type_names() {
         if (this.is_resolved) return
-        this.type = info.nodes.all_types.get(this.type, 'artifacts')
+        this.type.value = info.nodes.all_types.get(this.type, 'artifacts')
         // TODO: repository
         this.is_revolved = true
         this.derives_member_from_type('properties')
     }
 
-    resolve_assignments_type_names() {
-        this.resolve_parameter_assignment('properties')
-    }
 }
 
 class TArtifactDefs extends TMap {
@@ -774,7 +784,7 @@ class TRelationshipDef extends TDefinition {
 
     resolve_definition_type_names() {
         if (this.is_resolved) return
-        this.type = this.info.nodes.all_types.get(this.type, 'relationships')
+        this.type.value = this.info.nodes.all_types.get(this.type, 'relationships')
         this.derives_member_from_type('interfaces')
         this.is_resolved = true
     }
@@ -793,13 +803,9 @@ class TRequirementDef extends TDefinition {
 
     resolve_definition_type_names() {
         if (this.is_resolved) return
-        this.capability = this.info.nodes.all_types.get(this.capability, 'capabilities')
-        this.node = (this.node) ? this.info.nodes.all_types.get(this.node, 'nodes') : null
+        this.capability && (this.capability.value = this.info.nodes.all_types.get(this.capability, 'capabilities'))
+        this.node && (this.node.value = this.info.nodes.all_types.get(this.node, 'nodes'))
         this.is_resolved = true
-    }
-
-    resolve_assignments_type_names() {
-        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
     }
 }
 
@@ -870,7 +876,7 @@ class TInterfaceDef extends TDefinition {
 
     resolve_definition_type_names() {
         if (this.is_resolved) return
-        this.type = this.info.nodes.all_types.get(this.type, 'interfaces')
+        this.type.value = this.info.nodes.all_types.get(this.type, 'interfaces')
         this.derives_member_from_type('inputs')
         this.derives_member_from_type('outputs')
         this.derives_member_from_type('operations')        
@@ -909,11 +915,10 @@ class TCapabilityDef extends TDefinition {
     resolve_definition_type_names() {
         if (this.is_resolved) return
         // type resolution
-        this.type = this.info.nodes.all_types.get(this.type, 'capabilities')
+        this.type.value = this.info.nodes.all_types.get(this.type, 'capabilities')
         // source_types resolution
         if (this.valid_source_types) {
-            let types = this.valid_source_types.map(type_name => this.info.nodes.all_types.get(type_name, 'nodes'))
-            this.valid_source_types = new TList(types, this.valid_source_types.info)
+            this.valid_source_types.map(type_name => type_name.value = this.info.nodes.all_types.get(type_name, 'nodes'))
         }
         this.derives_member_from_type('properties')        
         this.derives_member_from_type('attributes')     
@@ -951,13 +956,13 @@ class TGroupDef extends TDefinition {
 
     resolve_definition_type_names() {
         if (this.is_resolved) return
-        this.type = this.info.nodes.all_types.get(this.type, 'groups')
+        this.type.value = this.info.nodes.all_types.get(this.type, 'groups')
         this.is_resolved = true
     }
 
     resolve_assignments_type_names() {
-        this.properties && this.properties.resolve_assignment_type(this.type.properties)
-        this.interfaces && this.interfaces.resolve_assignment_type(this.type.interfaces)
+        this.properties && this.properties.resolve_assignment_type(this.type.value.properties)
+        this.interfaces && this.interfaces.resolve_assignment_type(this.type.value.interfaces)
     }
 
 }
@@ -1015,12 +1020,12 @@ class TPolicyDef extends TDefinition {
 
     resolve_definition_type_names() {
         if (this.is_resolved) return
-        this.type = this.info.nodes.all_types.get(this.type, 'policies')
+        this.type.value = this.info.nodes.all_types.get(this.type, 'policies')
         this.is_resolved = true
     }
 
     resolve_assignments_type_names() {
-        this.properties && this.properties.resolve_assignment_type(this.type.properties)
+        this.properties && this.properties.resolve_assignment_type(this.type.value.properties)
     }
 
 
@@ -1439,7 +1444,7 @@ class TRelationshipAssignment extends TRoot {
 
 
 class TRequirementAssignment extends TRoot {
-    constructor(args, info=null) {
+    constructor(args, info) {
         super(args, info)
         let [ name, def ] = args.entries().next().valueoperator = 
         this.name = name
@@ -1450,33 +1455,101 @@ class TRequirementAssignment extends TRoot {
         this.set_members(['relationship', 'capability', 'range', 'node_filter'], { from: def} )
     }
 
-    resolve_assignments_type_names(topology) {
-        let node_id = this.node.valueOf()
-        let node_templates = [...(topology.node_templates)]
-        let filtered
+    resolve_assignments_type_names(requirement_def, topology) {
+        // 'topology.nodes_templates' ne peut être vide (l'assignation d'un requirement est dans le contexte d'un node_template)
+
+        // elements de la definition
+        let capability_in_def   = requirement_def.capability
+        let node_in_def         = requirement_def.node
+        let relationship_in_def = requirement_def.relationship
+
+        // evaluation des differents elements de l'affectation
+        //
+        let node_templates = null
+
+        // Si 'this.node' référence un node_template, 'node_templates' est la liste ce cet élément
         if (this.node) {
-            filtered = node_templates.filter(ele => ele[0] == node_id)
-            if (filtered) node_templates = filtered
-            else {
-                let node_type = info.nodes.all_types.get(node_id)
-                filtered = node_templates.filter(ele[1].type === node_type)
-                if (filtered) node_templates = filtered
-                else throw(`No node type or node template matches the node value given in the requirement ${_locate(info, args.range)}`) 
+            let node_template = topology.node_templates.get(this.node)
+            // coherence
+            if (node_template && node_in_def)
+                if (node_template.type.value.subtype_of(node_in_def.type.value) == false) 
+                    throw(`Error : the type of the node_template in requirement assignment (${this.node}) is not a subtype of the node type in the requirement definition (${node_in_def}) ${_locate(info, this.range)})}`)
+            // resultat
+            node_templates = (node_template) ? [[this.node, node_template]] : null
+        }
+
+        // Si non, si un type de noeud est référencé (par l'assignation ou par la definition), 'node_templates' est la liste des templates sous-types de ce type.
+        if (!node_templates) {
+            let node_type_name = this.node || node_in_def
+            let node_type = (node_type_name) ? this.info.nodes.all_types.get(node_type_name, 'nodes') : null
+            // coherence
+            if (this.node && node_in_def)
+                if (node_type.subtype_of(node_in_def.type.value) == false) 
+                    throw(`Error : the type of the node in requirement assignment (${this.node}) is not a subtype of the node type in the requirement definition (${node_in_def}) ${_locate(info, this.range)})}`)
+            // resultat
+            node_templates = (node_type) ? [...(topology.nodes_templates)].filter(ele => ele[1].type.value(subtype_of(node_type))) : null 
+        }
+        // Si 'nodes_templates' est une liste vide, l'assignation n'est pas possible
+        if (node_templates && node_templates.length == 0) throw(`Error : no node_template matching the expected node value ${(this.node) ? this.node : node_in_def}`)
+        // Si 'nodes_templates' est 'null', utiliser l'ensemble des noeuds de la topologie
+        if (!node_templates) node_templates = [...(topology.node_templates)]
+
+        let templates_with_capability = null
+        // Si une capacité nommée de la définition est référencée, déterminer la liste de templates la possédant
+        if (this.capacity) {
+            templates_with_capability = node_templates.map(ele => (ele[1].has(this.capability)) ? 
+                { node_name: ele[0], node: ele[1], capability_name: this.capability, capability: ele[1].capabilities.get(this.capability) } : false).filter(x = !!x ) 
+            if (templates_with_capability.length == 0) templates_with_capability = null
+        } 
+        // Si non, si un type de capacité est référencé (par l'assignation ou par la definition), identifier la liste des templates possédant une capacité sous-types de ce type.
+        if (! templates_with_capability) {
+            let capability_type_name = this.capability || capability_in_def
+            let capability_type = (capability_type_name) ? this.info.nodes.all_types.get(capability_type_name, 'capabilities') : null
+            if (capability_type) {
+                templates_with_capability = []
+                node_templates.forEach(ele => {
+                    let node_name = ele[0]
+                    let node = ele[1]
+                    node.capabilities.forEach((capability_name, capability, capabilities) => {
+                        if (capability.type.value.subtype_of(capability_type))
+                            templates_with_capability.push({ node_name, node, capability_name, capability })
+                    })
+                })
             }
         }
-        let capability_id = this.capability.valueOf()
-        if (this.capability) {
-            filtered = node_templates.filter(ele => ele[1].capabilities.has(capability_id))
-            if (filtered) node_templates = filtered
-            else {
-                let capability_type = info.nodes.all_types.get(capability_id)
-                filtered = node_templates.filter(ele => ele[1].capabilities.filter(ele_capa => ele_capa.type === capability_type))
-                if (filtered) nodes_templates = filtered
-                else throw(`Capability name does not allow match a node template for the requirement ${_locate(info, args.range)}`) 
-            }
+        // coherence
+        if (templates_with_capability && capability_in_def)
+            templates_with_capability = templates_with_capability.filter(ele => ele.capability.subtype_of(capability_in_def.type.value))
+        // si la liste des templates possédant la capacité est vide, alors l'assignation est impossible
+        if (templates_with_capability && (templates_with_capability.length == 0)) 
+            throw(`Error : no node_template matching the expected capability value ${(this.capability) ? this.capability : capability_in_def}`)
+
+        // identifier la relation ... // todo: cas ou this.relationship est un relationship assignment
+        let relationship_template = null 
+        if (this.relationship) {
+            relationship_template = topology.relationship_templates.get(this.relationship)
+            //coherence
+            if (relationship_template && relationship_in_def)
+                if (relationship_template.type.value.subtype_of(relationship_in_def.type.value == false))
+                    throw(`Error : the type of the relationship_template in requirement assignment (${this.relationship}) is not a subtype of the relationship type in the requirement definition (${node_in_def}) ${_locate(info, this.range)})}`)
         }
-        let relationship_id = this.relationship.valuOf()
+
+        let relationship_types = null
+        if (!relationship_template) {
+            let relationship_type_name = this.relationship || relationship_in_def
+            let relationship_type = (relationship_type_name) ? this.info.nodes.all_types.get(node_type_name, 'relationships') : null
+            // coherence
+            if (relationship_type && relationship_in_def)
+                if (relationship_type.value.subtype_of(relationship_in_def.type.value == false))
+                    throw(`Error : the type of the relationship in requirement assignment (${this.relationship}) is not a subtype of the relationship type in the requirement definition (${node_in_def}) ${_locate(info, this.range)})}`)
+            relationship_types = (relationship_type) ? [ [node_type_name, relationship_type] ] : null
+        }
+        if (!relationship_types) relationship_types = [ ...(this.info.nodes.relationship_types)]
         
+        // todo : filtrer les nodes_templates.capabilities selon les valid_target_types des relations possibles et si pas ou plus d'une possibilité, alors erreur
+        
+
+        // todo : traiter les node_filter
     }
     
 }
@@ -1486,8 +1559,8 @@ class TRequirementAssignments extends TList {
         super(args, info)
     }
 
-    resolve_assignments_type_names(topology) {
-        this.forEach((value, key, map) => value.resolve_assignments_type_names(topology) )
+    resolve_assignments_type_names(requirement_defs, topology) {
+        this.forEach((value, key, map) => value.resolve_assignments_type_names(requirement_defs.get(key), topology ))
     }
 
 }
@@ -1672,16 +1745,16 @@ class TNodeTemplate extends TDefinition {
 
     resolve_definition_type_names() {
         if (this.is_resolved) return
-        this.type = this.info.nodes.all_types.get(this.type, 'nodes')
+        this.type.value = this.info.nodes.all_types.get(this.type, 'nodes')
         this.is_resolved = true
     }
 
     resolve_assignments_type_names(topology) {
-        this.properties && this.properties.resolve_assignment_type(this.type.properties)
-        this.attributes && this.attributes.resolve_assignment_type(this.type.attributes)
-        this.capabilities && this.capabilities.resolve_assignment_type(this.type.capabilities)
-        this.interfaces && this.interfaces.resolve_assignment_type(this.type.interfaces)
-        this.requirements && this.requirements.resolve_assignment_type(topology)
+        this.properties && this.properties.resolve_assignment_type(this.type.value.properties)
+        this.attributes && this.attributes.resolve_assignment_type(this.type.value.attributes)
+        this.capabilities && this.capabilities.resolve_assignment_type(this.type.value.capabilities)
+        this.interfaces && this.interfaces.resolve_assignment_type(this.type.value.interfaces)
+        this.requirements && this.requirements.resolve_assignment_type(this.type.value.requirements, topology)
     }
 }
 
@@ -1690,8 +1763,8 @@ class TNodeTemplates extends TMap {
         super(args, info)
     }
 
-    resolve_assignments_type_names() {
-        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
+    resolve_assignments_type_names(topology) {
+        this.forEach((value, key, map) => value.resolve_assignments_type_names(topology) )
     }
 
 }
@@ -1704,14 +1777,14 @@ class TRelationshipTemplate extends TDefinition {
 
     resolve_definition_type_names() {
         if (this.is_resolved) return
-        this.type = this.info.nodes.all_types.get(this.type, 'relationships')
+        this.type.value = this.info.nodes.all_types.get(this.type, 'relationships')
         this.is_resolved = true
     }
 
     resolve_assignments_type_names() {
-        this.properties && this.properties.resolve_assignment_type(this.type.properties)
-        this.attributes && this.attributes.resolve_assignment_type(this.type.attributes)
-        this.interfaces && this.interfaces.resolve_assignment_type(this.type.interfaces)
+        this.properties && this.properties.resolve_assignment_type(this.type.value.properties)
+        this.attributes && this.attributes.resolve_assignment_type(this.type.value.attributes)
+        this.interfaces && this.interfaces.resolve_assignment_type(this.type.value.interfaces)
     }
 
 }
