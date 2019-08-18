@@ -98,14 +98,12 @@ function parse_test(str, keyword ) {
     return info
 }
 
-// source file
-const tosca_file = '/home/resinsec/dev/leto/tests/simple-topology.yaml'
 
-// parse 
-let res = parse_src(tosca_file)
-let alltypes = res.nodes.all_types
-console.log('fin')
 exports.parse_test=parse_test
 exports.parse_src=parse_src
 
+//////////////////////
+// source file
+//const tosca_file = '/home/resinsec/dev/leto/tests/simple-topology.yaml'
+//let res = parse_src(tosca_file)
 

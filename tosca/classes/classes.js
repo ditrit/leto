@@ -1546,8 +1546,65 @@ class TRequirementAssignment extends TRoot {
         }
         if (!relationship_types) relationship_types = [ ...(this.info.nodes.relationship_types)]
         
-        // todo : filtrer les nodes_templates.capabilities selon les valid_target_types des relations possibles et si pas ou plus d'une possibilité, alors erreur
-        
+        // filtrer les nodes_templates.capabilities selon les valid_target_types des relations possibles et si pas ou plus d'une possibilité, alors erreur
+        let results = []
+        if (templates_with_capability && relationship_template) {
+            templates_with_capability.forEach(ele => {
+                let capability_type = ele.capability.type
+                let valid_target_types = relationship_template.type.value.valid_source_types
+                if (valid_target_types && valid_target_types.length > 0) {
+                    valid_target_types.forEach(valid_capability_type => {
+                        if (capability_type.value.subtype_of(valid_capability_type.value)) {
+                            results.push({  node_name: ele.node_name, 
+                                            node: ele.node, 
+                                            capability: ele.capability, 
+                                            capability_type: ele.capability.value,
+                                            relationship_template: relationship_template, 
+                                            relationship_type_name: relationship_template.type, 
+                                            relationship_type: relationship_template.type.value 
+                            })
+        }
+                    })
+                }
+            })
+        }
+        if (templates_with_capability && relationship_types) {
+            templates_with_capability.forEach(ele => {
+                let capability_type = ele.capability.type
+                relationship_types.forEach(relationship_type => {
+                    let valid_target_types = relationship_type[1].valid_source_types
+                    if (valid_target_types && valid_target_types.length > 0) {
+                        valid_target_types.forEach(valid_capability_type => {
+                            if (capability_type.value.subtype_of(valid_capability_type.value)) {
+                                results.push({  node_name: ele.node_name, 
+                                                node: ele.node, 
+                                                capability: ele.capability,
+                                                capability_type: ele.capability.value,
+                                                relationship_template: null, 
+                                                relationship_type_name: relationship_type[0], 
+                                                relationship_type: relationship_type[1] 
+                                            })
+                            }
+                        })
+                    }    
+                })
+            })
+        }
+        switch (results.length) {
+            case 1:
+                this.node_name = result[0].node_name
+                this.node                   = result[0].node
+                this.capability_name        = result[0].capability_name
+                this.capability             = result[0].capability
+                this.relationship_template  = result[0].relationship_template
+                this.relationship_type_name =  result[0].relationship_type_name
+                this.relationship_type      = result[0].relationship_type
+                break; 
+            case 0:
+                throw(`Error : No node template matches the reqauirement assignment ${_locate(this.info, this.range)}`)
+            default: 
+                throw(`Error : More than 1 template (${results.map(ele => ele.node_name)}) matches the requirement assignment ${_locate(this.info, this.range)}`)
+        }
 
         // todo : traiter les node_filter
     }
