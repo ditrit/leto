@@ -192,8 +192,7 @@ input_parameters->TInputs:
 input_assignments->TInputAssignments:
   _dictOf: { str: parameter_assignment }
 
-output_parameter->Toutput:
-  _required: [ type ]
+output_parameter->TOutput:
   _dict:
     type: str 
     description: description
@@ -204,7 +203,7 @@ output_parameter->Toutput:
     entry_schema: entry_schema 
     value: { _oneOf: [ value, value_expression ] } 
 
-output_parameters->Toutputs:
+output_parameters->TOutputs:
   _dictOf: { str: output_parameter }
 
 repository->TRepository:

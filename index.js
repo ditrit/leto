@@ -106,4 +106,4 @@ exports.parse_src=parse_src
 // source file
 //const tosca_file = '/home/resinsec/dev/leto/tests/simple-topology.yaml'
 //let res = parse_src(tosca_file)
-
+let res = parse_src('tests/data/topology-with-intputs-outputs.yaml')

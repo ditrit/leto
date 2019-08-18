@@ -17,5 +17,11 @@ describe("Simple service template ->", function() {
             function() { expect(  app.parse_src('tests/data/simple-topology.yaml')) })
     })
 
+    describe("Simple topology with input / outputs: ", function() {
+
+        it("One node template",
+            function() { expect(  app.parse_src('tests/data/topology-with-intputs-outputs.yaml')) })
+    })
+
 
 })

@@ -38,7 +38,8 @@ class TParameter extends TRoot {
     }
 
     resolve_data_type_name() {
-        this.type.resolve_data_type_name(this.info.nodes.all_types)
+        if (this.type)
+            this.type.resolve_data_type_name(this.info.nodes.all_types)
     }
 }
 
@@ -101,7 +102,7 @@ class TEntity extends TRoot {
 
 // Tosca DataType type definition (simple and complex types)
 class TTypeDef extends TRoot {
-    constructor(args, info=null) {
+    constructor(args, info) {
         super(args, info)
         this.set_members(['type', 'description', 'constraints', 'entry_schema', 'key_schema'])
         if (!this.type) { throw(`Error : No type field found in a Tosca entity ${_locate(info, args.range)}`) }
@@ -264,8 +265,9 @@ class TTypes {
             if ( expected_category && (expected_category != category) )
                 throw(`Error : provided identifier ${id} is incompatible with expected category ${expected_category} ${_locate(id.info, id.range)}`)
             if (found && found.length == 1 ) return found[0].type
-            if (found && found.length == 0) throw(`Error : ${(expected_category) ? expected_category : ''} type found for id ${id} ${_locate(id.info, id.range)}`)
+            if (found && found.length == 0) throw(`Error : No ${(expected_category) ? expected_category : ''} type found for id ${id} ${_locate(id.info, id.range)}`)
         }
+        
         if (!found) {
             found = this.entities.get(id.valueOf())
             if (!found) found = this.entities.get(id.valueOf())
@@ -734,10 +736,10 @@ class TInputs extends TMap {
     }
 }
 
-class Toutput extends TParameter {
-    constructor(args, info=null) {
+class TOutput extends TParameter {
+    constructor(args, info) {
         super(args, info)
-        this.type = new TTypeDef(args)
+        this.type = (args.type) ? new TTypeDef(args) : null
         this.set_members([ 'description', 'constraints', 'default', 'status','value' ])
         this.set_member('required', { default: false } )
     }
@@ -1950,7 +1952,7 @@ const classes = {
     TNamespace, TMetadata, TUrl, TSize, TTime, TFreq, TBitrate, TValueExpression,
     TImport, TConstraint, TConstraints, TTypeDef, TParameterAssignment,
     TProperty, TProperties, TPropertyAssignments, TAttribute, TAttributes, TAttributeAssignments,
-    TInput, TInputs, TInputAssignments, Toutput, TOutputs, TCredential, TRepository, TRepositories,
+    TInput, TInputs, TInputAssignments, TOutput, TOutputs, TCredential, TRepository, TRepositories,
     TArtifactDef, TArtifactDefs, TImplementation, TOperationDef, TOperationDefTemplate,
     TInterfaceDef, TInterfaceDefs, TInterfaceAssignment, TInterfaceAssignments,
     TCapabilityDef, TCapabilityDefs, TCapabilityAssignment, TCapabilityAssignments,
