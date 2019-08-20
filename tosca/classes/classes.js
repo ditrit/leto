@@ -50,14 +50,22 @@ class TDefinition extends TRoot {
         info.definitions.push(this)
     }
 
-    resolve_definition_type_names() {}
+    resolve_definition_type_name() {}
 
     derives_member_from_type(member) {
         let this_member = this[member]
         let type_member = this.type.value[member]
         let classname = type_member && type_member.constructor.name
-        if (classname)
-            this[member] = new this.info.classes[classname]([...(type_member||[]) , ...(this_member||[])])
+        if (member == 'capabilities')
+            console.log('ICI pour TDefinition')
+        if (classname) {
+            let this_member_array = [...(this_member||[])]
+            let type_member_array = [...(type_member||[])]
+            let type_member_array_no_override = (type_member instanceof Map)  ?
+                    type_member_array.filter(ele => !(this_member && this_member.has(ele[1]))) :
+                    type_member_array
+            this[member] = new this.info.classes[classname]([...type_member_array_no_override , ...this_member_array])
+        }
     }
 }
 
@@ -86,14 +94,28 @@ class TEntity extends TRoot {
         let this_member = this[member]
         let parent_member = this.derived_from.value[member]
         let classname = (this_member && this_member.constructor.name) || (parent_member && parent_member.constructor.name)
-        if (classname)
-            this[member] = new this.info.classes[classname]([...(parent_member||[]) , ...(this_member||[])])
+        if (member == 'capabilities')
+            console.log('ICI pour TEntity')
+        if (classname) {
+            let this_member_array = [...(this_member||[])]
+            let parent_member_array = [...(parent_member||[])]
+            let parent_member_array_no_override = (parent_member instanceof Map)  ?
+                    parent_member_array.filter(ele => !(this_member && this_member.has(ele[0]))) :
+                    parent_member_array
+            this[member] = new this.info.classes[classname]([...parent_member_array_no_override , ...this_member_array])
+        }
+    }
+
+    equals(other) {
+        return (this.info.filename == other.info.filename && 
+            this.range[0] == other.range[0] && 
+            this.range[1] == other.range[1])
     }
 
     subtype_of(ancestor) {
-        if (ancestor == this) return true 
-        if (!this.derived_of) return false
-        return this.derived_of.value.subtype_of(ancestor)
+        if (this.equals(ancestor)) return true 
+        if (!this.derived_from) return false
+        return this.derived_from.value.subtype_of(ancestor)
     }
 }
 
@@ -121,7 +143,6 @@ class TTypeDef extends TRoot {
         this.type.value = all_types.get(this.type, 'datatypes')
         this.is_resolved = true
     }
-
 }
 
 // Associate tosca types with alias and namespaces 
@@ -486,7 +507,7 @@ class TVersion extends String {
 }
 
 class TList extends Array {
-    constructor(args, info=null){
+    constructor(args, info){
         super(...args)
         this.args = args
         this.range = args.range
@@ -495,7 +516,7 @@ class TList extends Array {
 }
 
 class TMap extends Map {
-    constructor(args, info=null){
+    constructor(args, info){
         super(args)
         this.args = args
         this.range = args.range
@@ -523,6 +544,11 @@ class TMap extends Map {
     get(key) {
         return this.by_str.get(key.valueOf())
     }
+
+    has(key) {
+        return this.by_str.has(key.valueOf())
+    }
+
 }
 
 // Tosca expressions
@@ -761,7 +787,7 @@ class TArtifactDef extends TDefinition {
             'version', 'checksum', 'checksum_algorithm', 'properties'])
     }
 
-    resolve_definition_type_names() {
+    resolve_definition_type_name() {
         if (this.is_resolved) return
         this.type.value = info.nodes.all_types.get(this.type, 'artifacts')
         // TODO: repository
@@ -784,7 +810,7 @@ class TRelationshipDef extends TDefinition {
         this.set_member('interfaces')
     }
 
-    resolve_definition_type_names() {
+    resolve_definition_type_name() {
         if (this.is_resolved) return
         this.type.value = this.info.nodes.all_types.get(this.type, 'relationships')
         this.derives_member_from_type('interfaces')
@@ -803,7 +829,7 @@ class TRequirementDef extends TDefinition {
         this.set_members(['description', 'node', 'occurrences', "relationship"])
     }
 
-    resolve_definition_type_names() {
+    resolve_definition_type_name() {
         if (this.is_resolved) return
         this.capability && (this.capability.value = this.info.nodes.all_types.get(this.capability, 'capabilities'))
         this.node && (this.node.value = this.info.nodes.all_types.get(this.node, 'nodes'))
@@ -814,8 +840,13 @@ class TRequirementDef extends TDefinition {
 class TRequirementDefs extends TList {
     constructor(args, info=null) {
         super(args, info)
-    }    
-    
+        this.by_name = {}
+        this.forEach(def => this.by_name[def.name.valueOf()] = def)
+    }
+
+    get(name) {
+        return this.by_name[name.valueOf()]
+    }
 }
 
 class TDeclarativeWorkflowRelDef extends TDefinition {
@@ -876,7 +907,7 @@ class TInterfaceDef extends TDefinition {
         }
     }
 
-    resolve_definition_type_names() {
+    resolve_definition_type_name() {
         if (this.is_resolved) return
         this.type.value = this.info.nodes.all_types.get(this.type, 'interfaces')
         this.derives_member_from_type('inputs')
@@ -914,7 +945,7 @@ class TCapabilityDef extends TDefinition {
         this.set_member('occurrences', {default: new TRange( [ 1, Infinity ]) })
     }
 
-    resolve_definition_type_names() {
+    resolve_definition_type_name() {
         if (this.is_resolved) return
         // type resolution
         this.type.value = this.info.nodes.all_types.get(this.type, 'capabilities')
@@ -956,13 +987,13 @@ class TGroupDef extends TDefinition {
         this.set_members(['type', 'description', 'properties', 'interfaces', 'members'])
     }
 
-    resolve_definition_type_names() {
+    resolve_definition_type_name() {
         if (this.is_resolved) return
         this.type.value = this.info.nodes.all_types.get(this.type, 'groups')
         this.is_resolved = true
     }
 
-    resolve_assignments_type_names() {
+    resolve_assignment_type_name() {
         this.properties && this.properties.resolve_assignment_type(this.type.value.properties)
         this.interfaces && this.interfaces.resolve_assignment_type(this.type.value.interfaces)
     }
@@ -974,8 +1005,8 @@ class TGroupDefs extends TMap {
         super(args, info)
     }
 
-    resolve_assignments_type_names() {
-        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
+    resolve_assignment_type_name() {
+        this.forEach((value, key, map) => value.resolve_assignment_type_name() )
     }
 
 }
@@ -1020,13 +1051,13 @@ class TPolicyDef extends TDefinition {
         this.set_members(['type', 'description', 'properties', 'targets', 'triggers'], {from: def})
     }
 
-    resolve_definition_type_names() {
+    resolve_definition_type_name() {
         if (this.is_resolved) return
         this.type.value = this.info.nodes.all_types.get(this.type, 'policies')
         this.is_resolved = true
     }
 
-    resolve_assignments_type_names() {
+    resolve_assignment_type_name() {
         this.properties && this.properties.resolve_assignment_type(this.type.value.properties)
     }
 
@@ -1038,8 +1069,8 @@ class TPolicyDefs extends TMap {
         super(args, info)
     }
 
-    resolve_assignments_type_names() {
-        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
+    resolve_assignment_type_name() {
+        this.forEach((value, key, map) => value.resolve_assignment_type_name() )
     }
 
 }
@@ -1361,10 +1392,12 @@ class TParameterAssignment extends TRoot {
         if (!parameter_def) throw(`No definition found for ${parameter_name} in assignment ${_locate(this.info, this.range)}`)
         this.type = parameter_def.type
     }
+
 }
 
+
 class TAssignments extends TMap {
-    constructor(args, info=null) {
+    constructor(args, info) {
         super(args,  info)
     }
 
@@ -1448,7 +1481,7 @@ class TRelationshipAssignment extends TRoot {
 class TRequirementAssignment extends TRoot {
     constructor(args, info) {
         super(args, info)
-        let [ name, def ] = args.entries().next().valueoperator = 
+        let [ name, def ] = args.entries().next().value
         this.name = name
         if (def instanceof Map)
             this.set_member('node', { from: def })
@@ -1457,13 +1490,14 @@ class TRequirementAssignment extends TRoot {
         this.set_members(['relationship', 'capability', 'range', 'node_filter'], { from: def} )
     }
 
-    resolve_assignments_type_names(requirement_def, topology) {
+    resolve_assignment_type(requirement_def) {
         // 'topology.nodes_templates' ne peut être vide (l'assignation d'un requirement est dans le contexte d'un node_template)
 
         // elements de la definition
         let capability_in_def   = requirement_def.capability
         let node_in_def         = requirement_def.node
         let relationship_in_def = requirement_def.relationship
+        let topology            = this.info.nodes.topology_template
 
         // evaluation des differents elements de l'affectation
         //
@@ -1512,16 +1546,29 @@ class TRequirementAssignment extends TRoot {
                 node_templates.forEach(ele => {
                     let node_name = ele[0]
                     let node = ele[1]
-                    node.capabilities.forEach((capability_name, capability, capabilities) => {
+                    node.capabilities.forEach((capability, capability_name, capabilities) => {
                         if (capability.type.value.subtype_of(capability_type))
                             templates_with_capability.push({ node_name, node, capability_name, capability })
-                    })
+                        })
+                    if ((templates_with_capability.length == 0) && node.type.value) {
+                        node.type.value.capabilities.forEach((capability, capability_name, capabilities) => {
+                            console.log(`capability_type_name: ${capability_type_name}`)
+                            console.log(`  capability_type: ${capability_type}`)
+                            console.log(`capability_name: ${capability_name}`)
+                            console.log(`  capability.type: ${capability.type}`)
+                            console.log(`    capability.type.value: ${capability.type.value}`)
+                            if (capability.type.value.subtype_of(capability_type))
+                                templates_with_capability.push({ node_name, node, capability_name, capability })
+                            })
+                    }
                 })
             }
         }
         // coherence
         if (templates_with_capability && capability_in_def)
-            templates_with_capability = templates_with_capability.filter(ele => ele.capability.subtype_of(capability_in_def.type.value))
+            templates_with_capability = templates_with_capability.filter(ele => {
+                let capability_type_name = ele.capability.type 
+                return capability_type_name.value.subtype_of(capability_in_def.value) })
         // si la liste des templates possédant la capacité est vide, alors l'assignation est impossible
         if (templates_with_capability && (templates_with_capability.length == 0)) 
             throw(`Error : no node_template matching the expected capability value ${(this.capability) ? this.capability : capability_in_def}`)
@@ -1616,12 +1663,18 @@ class TRequirementAssignment extends TRoot {
 class TRequirementAssignments extends TList {
     constructor(args, info=null) {
         super(args, info)
+        this.by_name = {}
+        this.forEach(def => this.by_name[def.name.valueOf()] = def)
     }
 
-    resolve_assignments_type_names(requirement_defs, topology) {
-        this.forEach((value, key, map) => value.resolve_assignments_type_names(requirement_defs.get(key), topology ))
+
+    get(name) {
+        return this.by_name(name.valueOf())
     }
 
+    resolve_assignment_type(requirement_defs) {
+        this.forEach((value) => value.resolve_assignment_type(requirement_defs.get(value.name) ))
+    }
 }
 
 /////////////////////////////////////////////////////////
@@ -1802,19 +1855,22 @@ class TNodeTemplate extends TDefinition {
                          'interfaces', 'artifacts', 'node_filter', 'copy'])
     }
 
-    resolve_definition_type_names() {
+    resolve_definition_type_name() {
         if (this.is_resolved) return
         this.type.value = this.info.nodes.all_types.get(this.type, 'nodes')
         this.is_resolved = true
     }
 
-    resolve_assignments_type_names(topology) {
+    resolve_assignment_type_name() {
         this.properties && this.properties.resolve_assignment_type(this.type.value.properties)
         this.attributes && this.attributes.resolve_assignment_type(this.type.value.attributes)
         this.capabilities && this.capabilities.resolve_assignment_type(this.type.value.capabilities)
-        this.interfaces && this.interfaces.resolve_assignment_type(this.type.value.interfaces)
-        this.requirements && this.requirements.resolve_assignment_type(this.type.value.requirements, topology)
     }
+
+    resolve_requirement_assignment_type_name() {
+        this.requirements && this.requirements.resolve_assignment_type(this.type.value.requirements)
+    }
+
 }
 
 class TNodeTemplates extends TMap {
@@ -1822,8 +1878,9 @@ class TNodeTemplates extends TMap {
         super(args, info)
     }
 
-    resolve_assignments_type_names(topology) {
-        this.forEach((value, key, map) => value.resolve_assignments_type_names(topology) )
+    resolve_assignment_type_name() {
+        this.forEach((value, key, map) => value.resolve_assignment_type_name() )
+        this.forEach((value, key, map) => value.resolve_requirement_assignment_type_name() )
     }
 
 }
@@ -1834,13 +1891,13 @@ class TRelationshipTemplate extends TDefinition {
         this.set_members(['type', 'metadata', 'description', 'properties', 'attributes', 'interfaces', 'copy'])
     }
 
-    resolve_definition_type_names() {
+    resolve_definition_type_name() {
         if (this.is_resolved) return
         this.type.value = this.info.nodes.all_types.get(this.type, 'relationships')
         this.is_resolved = true
     }
 
-    resolve_assignments_type_names() {
+    resolve_assignment_type_name() {
         this.properties && this.properties.resolve_assignment_type(this.type.value.properties)
         this.attributes && this.attributes.resolve_assignment_type(this.type.value.attributes)
         this.interfaces && this.interfaces.resolve_assignment_type(this.type.value.interfaces)
@@ -1853,8 +1910,8 @@ class TRelationshipTemplates extends TMap {
         super(args, info)
     }
 
-    resolve_assignments_type_names() {
-        this.forEach((value, key, map) => value.resolve_assignments_type_names() )
+    resolve_assignment_type_name() {
+        this.forEach((value, key, map) => value.resolve_assignment_type_name() )
     }
 }
 
@@ -1866,11 +1923,11 @@ class TTopologyTemplate extends TRoot {
                             'groups', 'policies', 'substitution_mappings', 'workflows'])
     }
 
-    resolve_assignments_type_names() {
-        this.groups && this.groups.resolve_assignments_type_names()
-        this.policies && this.policies.resolve_assignments_type_names()
-        this.node_templates && this.node_templates.resolve_assignments_type_names(this)
-        this.relationship_templates && this.relationship_templates.resolve_assignments_type_names()
+    resolve_assignment_type_name() {
+        this.groups && this.groups.resolve_assignment_type_name()
+        this.policies && this.policies.resolve_assignment_type_name()
+        this.node_templates && this.node_templates.resolve_assignment_type_name()
+        this.relationship_templates && this.relationship_templates.resolve_assignment_type_name()
     }
 }
 

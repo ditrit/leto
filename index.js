@@ -66,9 +66,9 @@ function parse_src(tosca_file, versions = []) {
     // types derivation and resolution (properties, attributes, interfaces, ...)
     info.nodes.all_types.derives_types()
     info.nodes.parameters.forEach(element => element.resolve_data_type_name()) 
-    info.nodes.definitions.forEach(element => element.resolve_definition_type_names()) 
+    info.nodes.definitions.forEach(element => element.resolve_definition_type_name()) 
 
-    info.nodes.topology_template && info.nodes.topology_template.resolve_assignments_type_names() 
+    info.nodes.topology_template && info.nodes.topology_template.resolve_assignment_type_name() 
 
     return info
 }
@@ -106,4 +106,4 @@ exports.parse_src=parse_src
 // source file
 //const tosca_file = '/home/resinsec/dev/leto/tests/simple-topology.yaml'
 //let res = parse_src(tosca_file)
-let res = parse_src('tests/data/topology-with-intputs-outputs.yaml')
+let res = parse_src('tests/data/simple-db-on-compute.yaml')

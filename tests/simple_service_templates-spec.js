@@ -23,5 +23,11 @@ describe("Simple service template ->", function() {
             function() { expect(  app.parse_src('tests/data/topology-with-intputs-outputs.yaml')) })
     })
 
+    describe("Simple topology with simple relationship: ", function() {
+
+        it("Mysql DB on compute ",
+            function() { expect(  app.parse_src('tests/data/simple-db-on-compute.yaml')) })
+    })
+
 
 })
