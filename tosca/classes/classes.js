@@ -56,8 +56,6 @@ class TDefinition extends TRoot {
         let this_member = this[member]
         let type_member = this.type.value[member]
         let classname = type_member && type_member.constructor.name
-        if (member == 'capabilities')
-            console.log('ICI pour TDefinition')
         if (classname) {
             let this_member_array = [...(this_member||[])]
             let type_member_array = [...(type_member||[])]
@@ -94,8 +92,6 @@ class TEntity extends TRoot {
         let this_member = this[member]
         let parent_member = this.derived_from.value[member]
         let classname = (this_member && this_member.constructor.name) || (parent_member && parent_member.constructor.name)
-        if (member == 'capabilities')
-            console.log('ICI pour TEntity')
         if (classname) {
             let this_member_array = [...(this_member||[])]
             let parent_member_array = [...(parent_member||[])]
@@ -175,23 +171,36 @@ class TTypes {
         this.entities = new Map()
         this.prefixies = new Map()
         this.default_namespace = tnamespace
+        this.by_category = new Map()
     }
 
     set(tname, tentity, tnamespace=null) {
         const namespace = (tnamespace) ? tnamespace : this.default_namespace
         if (tentity instanceof TEntity) {
             let exists = this.entities.get(tname)
+            const category = tentity.category
             if (exists) {
-                const category = tentity.category
                 if (exists.find( ele => ele.category == category && ele.namespace == namespace )) 
                     throw(`Error : a ${category} '${tname}' already exists for the namespace '${(namespace) ? namespace : 'default' }'}' `)
             } else {
                 exists = [] 
             }
+            this.push_by_category(tentity)
             exists.push(new TType(tname, tentity, namespace))
             this.entities.set(tname, exists)
         } else 
             throw(`Error : '${tentity}' is not a Tosca Entity`)
+    }
+
+    push_by_category(tentity) {
+        const category = tentity.category
+        const category_types = this.by_category.get(category)
+        if (category_types) {
+            if ( !category_types.some(ele => ele.equals(tentity)) )
+                category_types.push(tentity) 
+        } else {
+            this.by_category.set(category, [ tentity ])
+        }
     }
 
     set_prefix(prefix, namespace) {
@@ -213,11 +222,11 @@ class TTypes {
             if (! new_namespace) throw(`Error : namespace prefix can not be applied to a not named namespace`)
             this.set_prefix(with_prefix, new_namespace)
         }
-        imported_entities.forEach(function(imported_ttypes, name, map) {
+        imported_entities.forEach((imported_ttypes, name, map) => {
             let local_ttypes = local_entities.get(name) || []
             for (const ttype of imported_ttypes) {
                 let new_type = (ttype.namespace) ? ttype : ttype.with_namespace(new_namespace)
-                local_ttypes.find(ele => ele.equals(new_type)) || local_ttypes.push(new_type)
+                local_ttypes.find(ele => ele.equals(new_type)) || ( local_ttypes.push(new_type) && this.push_by_category(new_type.type) )
             }
             local_entities.set(name, local_ttypes)
         })
@@ -306,6 +315,10 @@ class TTypes {
             if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id} ${_locate(id.info, id.range)}`)
         }
         throw(`Error : several ${(expected_category) ? expected_category : ''} types found for id ${id} ${_locate(id.info, id.range)}`)
+    }
+
+    get_types_of_the_category(category) {
+        return this.by_category.get(category)
     }
 
     derives_types() {
@@ -789,7 +802,7 @@ class TArtifactDef extends TDefinition {
 
     resolve_definition_type_name() {
         if (this.is_resolved) return
-        this.type.value = info.nodes.all_types.get(this.type, 'artifacts')
+        this.type.value = this.info.nodes.all_types.get(this.type, 'artifacts')
         // TODO: repository
         this.is_revolved = true
         this.derives_member_from_type('properties')
@@ -932,7 +945,7 @@ class TImplementation extends TRoot {
         super(args, info)
         let isMap = args instanceof Map
         this.set_member('primary', {default: args} )
-        this.set_members('dependencies')
+        this.set_member('dependencies')
     }
 }
 
@@ -1197,7 +1210,7 @@ class TNodeTypes extends TMap {
 }
 
 class TRelationshipType extends TEntity {
-    constructor(args, info=null) {
+    constructor(args, info) {
         super(args, info)
         this.category = 'relationships'
         this.set_members(['properties', 'attributes', 'interfaces', 'workflows', 'valid_target_types'])
@@ -1209,6 +1222,7 @@ class TRelationshipType extends TEntity {
         this.derives_member_from_parent('attributes')
         this.derives_member_from_parent('interfaces')
         this.derives_member_from_parent('workflows')
+        this.valid_target_types.forEach(type => type.value = this.info.nodes.all_types.get(type, 'capabilities'))
     }
 }
 
@@ -1450,7 +1464,7 @@ class TInterfaceAssignment extends TRoot {
         super(args, info)
         this.set_members(['inputs', 'notifications', 'operations'])
         this.operations || (this.operations = new TMap(new Map(), info))
-        args.forEach(function(value, key, map){ 
+        args.forEach((value, key, map) => { 
             if (! (['inputs', 'notifications', 'operations'].includes(key)) )
                 this.operations.set(key, value)
          })
@@ -1546,17 +1560,12 @@ class TRequirementAssignment extends TRoot {
                 node_templates.forEach(ele => {
                     let node_name = ele[0]
                     let node = ele[1]
-                    node.capabilities.forEach((capability, capability_name, capabilities) => {
+                    node.capabilities && node.capabilities.forEach((capability, capability_name, capabilities) => {
                         if (capability.type.value.subtype_of(capability_type))
                             templates_with_capability.push({ node_name, node, capability_name, capability })
                         })
                     if ((templates_with_capability.length == 0) && node.type.value) {
                         node.type.value.capabilities.forEach((capability, capability_name, capabilities) => {
-                            console.log(`capability_type_name: ${capability_type_name}`)
-                            console.log(`  capability_type: ${capability_type}`)
-                            console.log(`capability_name: ${capability_name}`)
-                            console.log(`  capability.type: ${capability.type}`)
-                            console.log(`    capability.type.value: ${capability.type.value}`)
                             if (capability.type.value.subtype_of(capability_type))
                                 templates_with_capability.push({ node_name, node, capability_name, capability })
                             })
@@ -1593,7 +1602,7 @@ class TRequirementAssignment extends TRoot {
                     throw(`Error : the type of the relationship in requirement assignment (${this.relationship}) is not a subtype of the relationship type in the requirement definition (${node_in_def}) ${_locate(info, this.range)})}`)
             relationship_types = (relationship_type) ? [ [node_type_name, relationship_type] ] : null
         }
-        if (!relationship_types) relationship_types = [ ...(this.info.nodes.relationship_types)]
+        if (!relationship_types) relationship_types = this.info.nodes.all_types.get_types_of_the_category('relationships')
         
         // filtrer les nodes_templates.capabilities selon les valid_target_types des relations possibles et si pas ou plus d'une possibilité, alors erreur
         let results = []
@@ -1606,13 +1615,23 @@ class TRequirementAssignment extends TRoot {
                         if (capability_type.value.subtype_of(valid_capability_type.value)) {
                             results.push({  node_name: ele.node_name, 
                                             node: ele.node, 
-                                            capability: ele.capability, 
-                                            capability_type: ele.capability.value,
+                                            capability_def: ele.capability, 
+                                            capability_type: ele.capability.type.value, 
                                             relationship_template: relationship_template, 
                                             relationship_type_name: relationship_template.type, 
                                             relationship_type: relationship_template.type.value 
                             })
-        }
+                        }
+                    })
+                }
+                if (!valid_target_types) {
+                    results.push({  node_name: ele.node_name, 
+                                    node: ele.node, 
+                                    capability_def: ele.capapility,
+                                    capability_type: ele.capability.type.value ,
+                                    relationship_template: relationship_template, 
+                                    relationship_type_name: relationship_template.type, 
+                                    relationship_type: relationship_template.type.value 
                     })
                 }
             })
@@ -1621,36 +1640,34 @@ class TRequirementAssignment extends TRoot {
             templates_with_capability.forEach(ele => {
                 let capability_type = ele.capability.type
                 relationship_types.forEach(relationship_type => {
-                    let valid_target_types = relationship_type[1].valid_source_types
+                    let valid_target_types = relationship_type.valid_target_types
                     if (valid_target_types && valid_target_types.length > 0) {
                         valid_target_types.forEach(valid_capability_type => {
                             if (capability_type.value.subtype_of(valid_capability_type.value)) {
                                 results.push({  node_name: ele.node_name, 
                                                 node: ele.node, 
-                                                capability: ele.capability,
-                                                capability_type: ele.capability.value,
+                                                capability_def: ele.capability,
+                                                capability_type: ele.capability.type.value,
                                                 relationship_template: null, 
-                                                relationship_type_name: relationship_type[0], 
-                                                relationship_type: relationship_type[1] 
+                                                relationship_type: relationship_type, 
                                             })
                             }
                         })
-                    }    
+                    }
                 })
             })
         }
         switch (results.length) {
             case 1:
-                this.node_name = result[0].node_name
-                this.node                   = result[0].node
-                this.capability_name        = result[0].capability_name
-                this.capability             = result[0].capability
-                this.relationship_template  = result[0].relationship_template
-                this.relationship_type_name =  result[0].relationship_type_name
-                this.relationship_type      = result[0].relationship_type
+                this.node_name              = results[0].node_name
+                this.node                   = results[0].node
+                this.capability_def         = results[0].capability_def
+                this.capability_type        = results[0].capability_type
+                this.relationship_template  = results[0].relationship_template
+                this.relationship_type      = results[0].relationship_type
                 break; 
             case 0:
-                throw(`Error : No node template matches the reqauirement assignment ${_locate(this.info, this.range)}`)
+                throw(`Error : No node template matches the requirement assignment ${_locate(this.info, this.range)}`)
             default: 
                 throw(`Error : More than 1 template (${results.map(ele => ele.node_name)}) matches the requirement assignment ${_locate(this.info, this.range)}`)
         }

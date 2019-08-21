@@ -7,6 +7,7 @@ metadata:
 
 imports:
   - tosca_data_types:         datatypes.yaml
+  - tosca_capabilities_types: capabilities.yaml
   - tosca_interfaces_types:   interfaces.yaml
 
 
@@ -43,6 +44,7 @@ relationship_types:
   
   #section: 5.7.3 tosca.relationships.HostedOn
   tosca.relationships.HostedOn:
+    description: The TOSCA HostedOn Relationship Type
     derived_from: tosca.relationships.Root
 
     valid_target_types: [ tosca.capabilities.Container ]

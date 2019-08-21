@@ -29,5 +29,19 @@ describe("Simple service template ->", function() {
             function() { expect(  app.parse_src('tests/data/simple-db-on-compute.yaml')) })
     })
 
+    describe("Simple topology with three layers relationships: ", function() {
 
+        it("DB content on Mysql DBMS on compute ",
+            function() { expect(  app.parse_src('tests/data/dbcontent-on-db-on-compute.yaml')) })
+    })
+
+})
+
+describe("Realistic service templates ->", function() {
+
+        describe("Service templates with multiple relationships : ", function() {
+    
+            it("Two tier deployment",
+                function() { expect(  app.parse_src('tests/data/two-tier-application.yaml') ) })
+        })
 })
