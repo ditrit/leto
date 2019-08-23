@@ -1,20 +1,27 @@
-// Locate error in source file
-function _locate(info, range) {
-    if (info) {
-        let begin = info.index.fromIndex( (range[0] > 1 ) ? range[0] : 0 )
-        let end = info.index.fromIndex( (range[1] > 1 ) ? range[1]  : 0 )
-        let loc_str = ` at ${begin.line}:${begin.col} <-> ${end.line}:${end.col} ${(info.filename) ? 'in ' + info.filename : '' }`
-        return loc_str
-    } else return ""
-}
+// Root Mixin and class for tosca objects
 
-// Root class for tosca objects
-class TRoot {
-    constructor(args, info=null) {
+const MixinTRoot = Base => class extends Base {
+    initRoot(args, info) {
         this.args = args
         this.range = args.range
         this.info = info
         this.argsIsMap = args instanceof Map 
+    }
+
+    _locate() {
+        if (this.info) {
+            let begin = this.info.index.fromIndex( (this.range[0] > 1 ) ? this.range[0] : 0 )
+            let end = this.info.index.fromIndex( (this.range[1] > 1 ) ? this.range[1]  : 0 )
+            let loc_str = ` at ${begin.line}:${begin.col} <-> ${end.line}:${end.col} ${(this.info.filename) ? 'in ' + this.info.filename : '' }`
+            return loc_str
+        } else return ""
+    }
+}
+
+class TRoot extends MixinTRoot(Object) {
+    constructor(args, info) {
+        super()
+        super.initRoot(args, info)
     }
 
     set_member( member_name, options={} ) {
@@ -123,12 +130,12 @@ class TTypeDef extends TRoot {
     constructor(args, info) {
         super(args, info)
         this.set_members(['type', 'description', 'constraints', 'entry_schema', 'key_schema'])
-        if (!this.type) { throw(`Error : No type field found in a Tosca entity ${_locate(info, args.range)}`) }
+        if (!this.type) { throw(`Error : No type field found in a Tosca entity ${this._locate()}`) }
         if (this.entry_schema && this.type.valueOf() != 'list' && this.type.valueOf() != 'map' )
-            throw(`Error : schema_entry to be provided only for types 'list' or 'map'  ${_locate(info, args.range)}`)
+            throw(`Error : schema_entry to be provided only for types 'list' or 'map'  ${this._locate()}`)
         this.entry_schema = (this.entry_schema) ? new TTypeDef(this.entry_schema) : null
         if (this.key_schema && this.type.valueOf() != 'map' )
-            throw(`Error : key_schema to be provided only for types 'map'  ${_locate(info, args.range)}`)
+            throw(`Error : key_schema to be provided only for types 'map'  ${this._locate()}`)
         this.key_schema = (this.key_schema) ? new TTypeDef(this.key_schema) : null
     }
 
@@ -148,6 +155,8 @@ class TType {
         this.type = ttype
         this.name = tname
         this.namespace = namespace
+        this.type.name = tname.valueOf()
+        this.type.namespace = (namespace) ? namespace.valueOf() : null
     }
 
     with_namespace(namespace = null) {
@@ -292,29 +301,31 @@ class TTypes {
             const namespace = this.prefixies.get(prefix)
             const types = this.entities.get(typename)
             found = (types) ? types.filter( ele => ele.category == category && ele.namespace == namespace ) : null
-            if ( expected_category && (expected_category != category) )
-                throw(`Error : provided identifier ${id} is incompatible with expected category ${expected_category} ${_locate(id.info, id.range)}`)
+//            if ( expected_category && (expected_category != category) )
+//                throw(`Error : provided identifier ${id} is incompatible with expected category ${expected_category} ${id._locate()}`)
             if (found && found.length == 1 ) return found[0].type
-            if (found && found.length == 0) throw(`Error : No ${(expected_category) ? expected_category : ''} type found for id ${id} ${_locate(id.info, id.range)}`)
+            if (found && found.length == 0) throw(`Error : No ${(expected_category) ? expected_category : ''} type found for id ${id} ${id._locate()}`)
         }
         
         if (!found) {
             found = this.entities.get(id.valueOf())
             if (!found) found = this.entities.get(id.valueOf())
             if (!found) {
+//                let entries_found = [...this.entities].filter( x => x[0].endsWith(`.${id}`) )
                 let entries_found = [...this.entities].filter( x => x[0].endsWith(`.${id}`) )
-                found = [].concat(entries_found.map(x => x[1]))
+                found = []
+                entries_found.forEach(x => found = found.concat(x[1]))
             }
-            if (!found) throw(`Error : no type found for id ${id} ${_locate(id.info, id.range)}`)
+            if (!found) throw(`Error : no type found for id ${id} ${id._locate()}`)
             if (found.length == 1) return found[0].type
             found = found.filter( e => e.category == expected_category )
             if (found.length == 1) return found[0].type
-            if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id} ${_locate(id.info, id.range)}`)
+            if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id} ${id._locate()}`)
             found = found.filter( e => e.namespace == default_namespace )
             if (found.length == 1) return found[0].type
-            if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id} ${_locate(id.info, id.range)}`)
+            if (found.length == 0) throw(`Error : no ${(expected_category) ? expected_category : ''} type found for id ${id} ${id._locate()}`)
         }
-        throw(`Error : several ${(expected_category) ? expected_category : ''} types found for id ${id} ${_locate(id.info, id.range)}`)
+        throw(`Error : several ${(expected_category) ? expected_category : ''} types found for id ${id} ${id._locate()}`)
     }
 
     get_types_of_the_category(category) {
@@ -323,25 +334,9 @@ class TTypes {
 
     derives_types() {
         let all_types = this
-        this.entities.forEach(function (entities_by_name, name, map) {
-            entities_by_name.forEach(function( entity) {
-                entity.type.derives(all_types)
-            })
+        this.entities.forEach( (entities_by_name, name, map) => {
+            entities_by_name.forEach(entity => { entity.type.derives(all_types) })
         })
-    }
-
-    toTosca(imbric=0) { 
-        let indent = '\n' + '  '.repeat(imbric)
-        let str = ""
-        this.entities.forEach(
-            function(values, key, map) { 
-                if (values) {
-                    for (value of values) {
-                        str += `${indent}name: ${value.name}, namespace: ${value.namespace}, prefix: ${value.prefix}`
-                    }
-                }
-            })
-        return str
     }
 
 }
@@ -350,67 +345,61 @@ class TTypes {
 // Atomic types
 //
 
-class TString extends String {
+
+
+class TString extends MixinTRoot(String) {
     constructor(args, info=null) {
         super(args)
-        this.range = args.range
-        this.info = info
+        super.initRoot(args, info)
     }
 }
 
-class TInteger extends Number {
+class TInteger extends MixinTRoot(Number) {
     constructor(args, info=null) {
         super(args)
-        this.range = args.range
-        this.info = info
+        super.initRoot(args, info)
     }
 }
 
-class TUnbounded extends Number {
+class TUnbounded extends MixinTRoot(Number) {
     constructor(args, info=null) {
         super(Infinity)
-        this.range = args.range
-        this.info = info
+        super.initRoot(args, info)
     }
 }
 
-class TBoolean extends Boolean {
+class TBoolean extends MixinTRoot(Boolean) {
     constructor(args, info=null) {
         super(args)
         this.range = args.range
-        this.info = info
+        super.initRoot(args, info)
     }
 }
 
-class TFloat  extends Number {
+class TFloat  extends MixinTRoot(Number) {
     constructor(args, info=null) {
         super(args)
-        this.range = args.range
-        this.info = info
+        super.initRoot(args, info)
     }
 }
 
-class TTimestamp extends Date {
+class TTimestamp extends MixinTRoot(Date) {
     constructor(args, info=null) {
         super(args)
-        this.range = args.range
-        this.info = info
+        super.initRoot(args, info)
     }
 }
 
-class TNamespace extends String {
+class TNamespace extends MixinTRoot(String) {
     constructor(args, info=null) {
         super(args)
-        this.range = args.range
-        this.info = info
+        super.initRoot(args, info)
     }
 }
 
-class TNull {
+class TNull extends MixinTRoot(Object) {
     constructor(args, info=null) {
-        this.args = args
-        this.range = args.range
-        this.info = info
+        super.initRoot(args, info)
     }
 
     valueOf() {
@@ -418,20 +407,90 @@ class TNull {
     }
 }
 
+class TUrl extends MixinTRoot(String) {
+    constructor(args, info=null) {
+        super(args)
+        super.initRoot(args, info)
+    }
+}
+
+class TVersion extends MixinTRoot(String) {
+    constructor(args, info=null) {
+        let version_parts = args.split(/\.|-/)
+        let major = version_parts[0] || 0
+        let minor = "." + (version_parts[1] || 0)
+        let fix   = "." + (version_parts[2] || 0)
+        let qualifier = (version_parts[3]) ? "." + version_parts[3] : ""
+        let build = (version_parts[4]) ? "-" + version_parts[4] : ""
+        super(`${major}${minor}${fix}${qualifier}${build}`)
+        super.initRoot(args, info)
+        this.major = major
+        this.minor = minor
+        this.fix   = fix
+        this.qualifier = qualifier
+        this.build = build
+        this.canonic = this.major.toString().padStart(6,' ') 
+               + '.' + this.minor.toString().padStart(6,' ')
+               + '.' + this.fix.toString().padStart(6,' ')
+               + '.' + this.qualifier.padStart(15,' ')
+               + '.' + this.build.toString().padStart(10,' ')
+    }
+
+    valueOf() { return this.canonic }
+}
+
+class TList extends  MixinTRoot(Array) {
+    constructor(args, info){
+        super(...args)
+        super.initRoot(args, info)
+    }
+}
+
+class TMap extends  MixinTRoot(Map) {
+    constructor(args, info){
+        super(args)
+        super.initRoot(args, info)
+        this.by_str = new Map()
+        this.forEach((value, key, map) => {
+            let key_str = (key) ? key.valueOf() : key
+            value && (value.name = key_str)
+            this.by_str.set(key_str, value)
+        })
+    }
+
+    set_member( member_name, options={} ) {
+        let from = options.from || this.args
+        let default_val = options.default || null
+        let is_map = from instanceof Map
+        this[member_name] = (is_map) ? from.get(member_name) : default_val
+    }
+
+    set_members( member_names, options={} ) {
+        member_names.forEach( member_name => this.set_member(member_name, options))
+    }
+
+    set(key, value) {
+        super.set(key, value)
+        this.by_str && this.by_str.set((key) ? key.valueOf() : key, value)
+    }
+
+    get(key) {
+        return this.by_str.get(key.valueOf())
+    }
+
+    has(key) {
+        return this.by_str.has(key.valueOf())
+    }
+
+}
+
+
 class TRange extends TRoot {
     constructor(args, info=null) {
         super(args, info)
         this.min = args[0]
         this.max = args[1]
         if (this.min == Infinity) this.min = -Infinity
-    }
-}
-
-class TUrl extends String {
-    constructor(args, info=null) {
-        super(args)
-        this.range = args.range
-        this.info = info
     }
 }
 
@@ -491,78 +550,6 @@ class TBitrate extends TScalarUnit {
         }
 }
 
-class TVersion extends String {
-    constructor(args, info=null) {
-        let range = args.range
-        let version_parts = args.split(/\.|-/)
-        let major = version_parts[0] || 0
-        let minor = "." + (version_parts[1] || 0)
-        let fix   = "." + (version_parts[2] || 0)
-        let qualifier = (version_parts[3]) ? "." + version_parts[3] : ""
-        let build = (version_parts[4]) ? "-" + version_parts[4] : ""
-        super(`${major}${minor}${fix}${qualifier}${build}`)
-        this.args = args
-        this.info = info
-        this.range = range
-        this.major = major
-        this.minor = minor
-        this.fix   = fix
-        this.qualifier = qualifier
-        this.build = build
-        this.canonic = this.major.toString().padStart(6,' ') 
-               + '.' + this.minor.toString().padStart(6,' ')
-               + '.' + this.fix.toString().padStart(6,' ')
-               + '.' + this.qualifier.padStart(15,' ')
-               + '.' + this.build.toString().padStart(10,' ')
-    }
-
-    valueOf() { return this.canonic }
-}
-
-class TList extends Array {
-    constructor(args, info){
-        super(...args)
-        this.args = args
-        this.range = args.range
-        this.info = info
-    }
-}
-
-class TMap extends Map {
-    constructor(args, info){
-        super(args)
-        this.args = args
-        this.range = args.range
-        this.info = info
-        this.by_str = new Map()
-        this.forEach((value, key, map) => this.by_str.set((key) ? key.valueOf() : key, value))
-    }
-
-    set_member( member_name, options={} ) {
-        let from = options.from || this.args
-        let default_val = options.default || null
-        let is_map = from instanceof Map
-        this[member_name] = (is_map) ? from.get(member_name) : default_val
-    }
-
-    set_members( member_names, options={} ) {
-        member_names.forEach( member_name => this.set_member(member_name, options))
-    }
-
-    set(key, value) {
-        super.set(key, value)
-        this.by_str && this.by_str.set((key) ? key.valueOf() : key, value)
-    }
-
-    get(key) {
-        return this.by_str.get(key.valueOf())
-    }
-
-    has(key) {
-        return this.by_str.has(key.valueOf())
-    }
-
-}
 
 // Tosca expressions
 class TValueExpression extends TRoot {
@@ -587,7 +574,7 @@ class TValueExpression extends TRoot {
             case 'concat':
                 let evaluated = val.map(x => (x instanceof TValueExpression) ? x.eval() : x )
                 if (evaluated.some(x => !( typeof x == 'string' || (x instanceof String ))))
-                    throw(`Error : concat function accepts only strings as argument ${_locate(info, args.range)}`)
+                    throw(`Error : concat function accepts only strings as argument ${this._locate()}`)
                 return evaluated.join('')
             case 'get_input':
                 return null 
@@ -607,7 +594,7 @@ class TValueExpression extends TRoot {
                 let sep = val[1] || ''
                 let evaluated = list_eles.map(x => (x instanceof TValueExpression) ? x.eval() : x )
                 if (evaluated.some(x => !( typeof x == 'string' || (x instanceof String ))))
-                    throw(`Error : join function accepts only strings as argument ${_locate(info, args.range)}`)
+                    throw(`Error : join function accepts only strings as argument ${this._locate()}`)
                 return evaluated.join(sep)
             case 'get_property':
                 return null
@@ -636,17 +623,16 @@ class TImport extends TRoot {
         this.repository = null
         this.namespace_prefix = null
         this.namespace_uri = null
-        let cthis = this
         if (args instanceof TString) {
-            cthis.file = args
+            this.file = args
         } else if (args instanceof Map) {
-            args.forEach( function(val, key, map) {
-                cthis.label = key
+            args.forEach( (val, key, map) => {
+                this.label = key
                 if (val instanceof TString) {
-                    cthis.file = val
+                    this.file = val
                 } else if (val instanceof Map) {
                     this.set_members(['file', 'repository', 
-                        'namespace_prefix', 'namespace_uri'], {from_val: cthis} )
+                        'namespace_prefix', 'namespace_uri'], {from_val: this} )
                 }
             })
         }
@@ -660,16 +646,10 @@ class TImport extends TRoot {
 class TConstraints extends TList {
     constructor(args, info=null){
         super(args)
-        this.args.forEach(
-            function(value) {
-                if (! value instanceof TConstraint ) { throw (`Error : '${value}' is not a constraint in '${args}' ${_locate(info, value.range)}`)}
-            }
-        )
-    }
-    eval(constrained_value) {
-        return this.every( x => x.eval(constrained_value) )
+        this.args.forEach( value => { if (! value instanceof TConstraint ) { throw (`Error : '${value}' is not a constraint in '${args}' ${this._locate()}`)} })
     }
 
+    eval(constrained_value) { return this.every( x => x.eval(constrained_value) ) }
 }
 
 class TConstraint extends TRoot {
@@ -768,6 +748,8 @@ class TInput extends TParameter {
         this.set_member('required', { default: false } )
     }
 }
+
+
 
 class TInputs extends TMap {
     constructor(args, info=null) {
@@ -894,7 +876,8 @@ class TImperativeWorkflowDefs extends TMap {
 class TOperationDef extends TDefinition {
     constructor(args, info=null) {
         super(args, info)
-        this.set_members(['description', 'inputs', 'implementation' ])
+        this.set_member('implementation', { default: args} )
+        this.set_members(['description', 'inputs' ])
     }
 
 }
@@ -902,7 +885,8 @@ class TOperationDef extends TDefinition {
 class TOperationDefTemplate extends TDefinition {
     constructor(args, info=null) {
         super(args, info)
-        this.set_members(['description', 'inputs', 'implementation' ])
+        this.set_member('implementation', { default: args} )
+        this.set_members(['description', 'inputs' ])
     }
 
 }
@@ -929,8 +913,6 @@ class TInterfaceDef extends TDefinition {
         this.derives_member_from_type('notifications')        
         this.is_resolved = true
     }
-
-
 }
 
 class TInterfaceDefs extends TMap {
@@ -1097,9 +1079,9 @@ class TDataType extends TEntity{
         this.category= 'datatypes'
         this.set_members(['properties', 'constraints', 'key_schema', 'key_schema'])
         if (this.key_schema && this.derived_from.valueOf() != 'map') {
-            throw(`Error : 'key_schema' field is only allowed for data_types derived from 'map' ${_locate(info, args.range)}`) }
+            throw(`Error : 'key_schema' field is only allowed for data_types derived from 'map' ${this._locate()}`) }
         if (this.entry_schema && this.derived_from.valueOf() != 'map' && this.derived_from.valueOf() != 'list') {
-            throw(`Error : 'key_schema' field is only allowed for data_types derived from 'map' ${_locate(info, args.range)}`) }
+            throw(`Error : 'key_schema' field is only allowed for data_types derived from 'map' ${this._locate()}`) }
     }
 
     derives_from_parent() {
@@ -1222,7 +1204,12 @@ class TRelationshipType extends TEntity {
         this.derives_member_from_parent('attributes')
         this.derives_member_from_parent('interfaces')
         this.derives_member_from_parent('workflows')
-        this.valid_target_types.forEach(type => type.value = this.info.nodes.all_types.get(type, 'capabilities'))
+        if (this.valid_target_types) { 
+            this.valid_target_types.forEach(type => type.value = this.info.nodes.all_types.get(type, 'capabilities'))
+        } else {
+            let parent_valid_target_type = this.derived_from.value.valid_target_types
+            this.valid_target_types = parent_valid_target_type
+        }
     }
 }
 
@@ -1403,7 +1390,7 @@ class TParameterAssignment extends TRoot {
     }
 
     resolve_assignment_type(parameter_name, parameter_def) {
-        if (!parameter_def) throw(`No definition found for ${parameter_name} in assignment ${_locate(this.info, this.range)}`)
+        if (!parameter_def) throw(`No definition found for ${parameter_name} in assignment ${this._locate()}`)
         this.type = parameter_def.type
     }
 
@@ -1495,19 +1482,19 @@ class TRelationshipAssignment extends TRoot {
 class TRequirementAssignment extends TRoot {
     constructor(args, info) {
         super(args, info)
-        let [ name, def ] = args.entries().next().value
+        let [ name, def ] = args.entries().next().value        
         this.name = name
         if (def instanceof Map)
             this.set_member('node', { from: def })
         else 
             this.node = def
-        this.set_members(['relationship', 'capability', 'range', 'node_filter'], { from: def} )
+        this.set_members(['relationship', 'capability', 'occurrences', 'node_filter'], { from: def} )
     }
 
     resolve_assignment_type(requirement_def) {
-        // 'topology.nodes_templates' ne peut être vide (l'assignation d'un requirement est dans le contexte d'un node_template)
 
-        // elements de la definition
+        if (!requirement_def)
+            throw(`Error : no related requirement_def for requirement assignment ${this.name} ${this._locate()}`)
         let capability_in_def   = requirement_def.capability
         let node_in_def         = requirement_def.node
         let relationship_in_def = requirement_def.relationship
@@ -1523,7 +1510,7 @@ class TRequirementAssignment extends TRoot {
             // coherence
             if (node_template && node_in_def)
                 if (node_template.type.value.subtype_of(node_in_def.type.value) == false) 
-                    throw(`Error : the type of the node_template in requirement assignment (${this.node}) is not a subtype of the node type in the requirement definition (${node_in_def}) ${_locate(info, this.range)})}`)
+                    throw(`Error : the type of the node_template in requirement assignment (${this.node}) is not a subtype of the node type in the requirement definition (${node_in_def}) ${this._locate()})}`)
             // resultat
             node_templates = (node_template) ? [[this.node, node_template]] : null
         }
@@ -1535,7 +1522,7 @@ class TRequirementAssignment extends TRoot {
             // coherence
             if (this.node && node_in_def)
                 if (node_type.subtype_of(node_in_def.type.value) == false) 
-                    throw(`Error : the type of the node in requirement assignment (${this.node}) is not a subtype of the node type in the requirement definition (${node_in_def}) ${_locate(info, this.range)})}`)
+                    throw(`Error : the type of the node in requirement assignment (${this.node}) is not a subtype of the node type in the requirement definition (${node_in_def}) ${this._locate()})}`)
             // resultat
             node_templates = (node_type) ? [...(topology.nodes_templates)].filter(ele => ele[1].type.value(subtype_of(node_type))) : null 
         }
@@ -1546,7 +1533,7 @@ class TRequirementAssignment extends TRoot {
 
         let templates_with_capability = null
         // Si une capacité nommée de la définition est référencée, déterminer la liste de templates la possédant
-        if (this.capacity) {
+        if (this.capability) {
             templates_with_capability = node_templates.map(ele => (ele[1].has(this.capability)) ? 
                 { node_name: ele[0], node: ele[1], capability_name: this.capability, capability: ele[1].capabilities.get(this.capability) } : false).filter(x = !!x ) 
             if (templates_with_capability.length == 0) templates_with_capability = null
@@ -1585,91 +1572,88 @@ class TRequirementAssignment extends TRoot {
         // identifier la relation ... // todo: cas ou this.relationship est un relationship assignment
         let relationship_template = null 
         if (this.relationship) {
-            relationship_template = topology.relationship_templates.get(this.relationship)
+            relationship_template = (topology.relationship_templates) ? topology.relationship_templates.get(this.relationship) : null
             //coherence
             if (relationship_template && relationship_in_def)
                 if (relationship_template.type.value.subtype_of(relationship_in_def.type.value == false))
-                    throw(`Error : the type of the relationship_template in requirement assignment (${this.relationship}) is not a subtype of the relationship type in the requirement definition (${node_in_def}) ${_locate(info, this.range)})}`)
+                    throw(`Error : the type of the relationship_template in requirement assignment (${this.relationship}) is not a subtype of the relationship type in the requirement definition (${node_in_def}) ${this._locate()})}`)
         }
 
         let relationship_types = null
         if (!relationship_template) {
             let relationship_type_name = this.relationship || relationship_in_def
-            let relationship_type = (relationship_type_name) ? this.info.nodes.all_types.get(node_type_name, 'relationships') : null
+            let relationship_type = (relationship_type_name) ? this.info.nodes.all_types.get(relationship_type_name, 'relationships') : null
             // coherence
             if (relationship_type && relationship_in_def)
                 if (relationship_type.value.subtype_of(relationship_in_def.type.value == false))
-                    throw(`Error : the type of the relationship in requirement assignment (${this.relationship}) is not a subtype of the relationship type in the requirement definition (${node_in_def}) ${_locate(info, this.range)})}`)
-            relationship_types = (relationship_type) ? [ [node_type_name, relationship_type] ] : null
+                    throw(`Error : the type of the relationship in requirement assignment (${this.relationship}) is not a subtype of the relationship type in the requirement definition (${node_in_def}) ${this._locate()})}`)
+            relationship_types = (relationship_type) ? [ [relationship_type_name, relationship_type] ] : null
         }
-        if (!relationship_types) relationship_types = this.info.nodes.all_types.get_types_of_the_category('relationships')
+        if (!relationship_template && !relationship_types) relationship_types = this.info.nodes.all_types.get_types_of_the_category('relationships')
         
         // filtrer les nodes_templates.capabilities selon les valid_target_types des relations possibles et si pas ou plus d'une possibilité, alors erreur
         let results = []
         if (templates_with_capability && relationship_template) {
             templates_with_capability.forEach(ele => {
-                let capability_type = ele.capability.type
-                let valid_target_types = relationship_template.type.value.valid_source_types
+                let capability_def = ele.capability
+                let capability_type = ele.capability.type.value
+                let node = ele.node
+                let candidate_relationships = []
+                let valid_target_types = relationship_template.type.value.valid_target_types
                 if (valid_target_types && valid_target_types.length > 0) {
                     valid_target_types.forEach(valid_capability_type => {
-                        if (capability_type.value.subtype_of(valid_capability_type.value)) {
-                            results.push({  node_name: ele.node_name, 
-                                            node: ele.node, 
-                                            capability_def: ele.capability, 
-                                            capability_type: ele.capability.type.value, 
-                                            relationship_template: relationship_template, 
-                                            relationship_type_name: relationship_template.type, 
-                                            relationship_type: relationship_template.type.value 
-                            })
-                        }
+                        if (capability_type.subtype_of(valid_capability_type.value))
+                            candidate_relationships.push(relationship_template)
                     })
+                } else {
+                    candidate_relationships.push(relationship_template)
                 }
-                if (!valid_target_types) {
-                    results.push({  node_name: ele.node_name, 
-                                    node: ele.node, 
-                                    capability_def: ele.capapility,
-                                    capability_type: ele.capability.type.value ,
-                                    relationship_template: relationship_template, 
-                                    relationship_type_name: relationship_template.type, 
-                                    relationship_type: relationship_template.type.value 
-                    })
+                let result = {  
+                    node:           node, 
+                    capability_def: capability_def, 
+                    capability_type: capability_type, 
+                    relationships: candidate_relationships
                 }
+                results.push(result)
             })
         }
         if (templates_with_capability && relationship_types) {
             templates_with_capability.forEach(ele => {
-                let capability_type = ele.capability.type
+                let capability_def = ele.capability
+                let capability_type = ele.capability.type.value
+                let node = ele.node
+                let candidate_relationships = []
                 relationship_types.forEach(relationship_type => {
                     let valid_target_types = relationship_type.valid_target_types
                     if (valid_target_types && valid_target_types.length > 0) {
                         valid_target_types.forEach(valid_capability_type => {
-                            if (capability_type.value.subtype_of(valid_capability_type.value)) {
-                                results.push({  node_name: ele.node_name, 
-                                                node: ele.node, 
-                                                capability_def: ele.capability,
-                                                capability_type: ele.capability.type.value,
-                                                relationship_template: null, 
-                                                relationship_type: relationship_type, 
-                                            })
-                            }
+                            if (capability_type.subtype_of(valid_capability_type.value))
+                                candidate_relationships.push(relationship_type)
                         })
+                    } else {
+                        candidate_relationships.push(relationship_type)
                     }
                 })
+                let result = {  
+                    node:               node, 
+                    capability_def:     capability_def,
+                    capability_type:    capability_type,
+                    relationships:      candidate_relationships.filter(relationship_type => relationship_type.name != "Root")
+                }
+                results.push(result)
             })
         }
         switch (results.length) {
             case 1:
-                this.node_name              = results[0].node_name
                 this.node                   = results[0].node
                 this.capability_def         = results[0].capability_def
                 this.capability_type        = results[0].capability_type
-                this.relationship_template  = results[0].relationship_template
-                this.relationship_type      = results[0].relationship_type
+                this.relationships          = results[0].relationships
                 break; 
             case 0:
-                throw(`Error : No node template matches the requirement assignment ${_locate(this.info, this.range)}`)
+                throw(`Error : No node template matches the requirement assignment ${this._locate()}`)
             default: 
-                throw(`Error : More than 1 template (${results.map(ele => ele.node_name)}) matches the requirement assignment ${_locate(this.info, this.range)}`)
+                throw(`Error : More than 1 template (${results.map(ele => ele.node.name)}) matches the requirement assignment ${this._locate()}`)
         }
 
         // todo : traiter les node_filter
@@ -1777,7 +1761,7 @@ class TWorkflowConditionOperator extends TRoot {
                 let constraints = this.clause
                 return attribute_val && constraints.eval(attribute_val)
             default:
-                throw (`Error : ${operator} is not an allowed operator in a workflow condition ${_locate(this.info, this.range)}`)
+                throw (`Error : ${operator} is not an allowed operator in a workflow condition ${this._locate()}`)
         }
     }
 }
@@ -1842,7 +1826,7 @@ class TWorkflowSourceWeaving extends TRoot {
     }
 }
 
-class TWorkflowSourceWeavingList extends TMap {
+class TWorkflowSourceWeavingList extends TList {
     constructor(args, info=null) {
         super(args, info)
     }
@@ -1855,7 +1839,7 @@ class TWorkflowTargetWeaving extends TRoot {
     }
 }
 
-class TWorkflowTargetWeavingList extends TMap {
+class TWorkflowTargetWeavingList extends TList {
     constructor(args, info=null) {
         super(args, info)
     }
@@ -1943,8 +1927,8 @@ class TTopologyTemplate extends TRoot {
     resolve_assignment_type_name() {
         this.groups && this.groups.resolve_assignment_type_name()
         this.policies && this.policies.resolve_assignment_type_name()
-        this.node_templates && this.node_templates.resolve_assignment_type_name()
         this.relationship_templates && this.relationship_templates.resolve_assignment_type_name()
+        this.node_templates && this.node_templates.resolve_assignment_type_name()
     }
 }
 
@@ -1957,7 +1941,7 @@ class TServiceTemplate extends TRoot {
         all_types.set_prefix(info.tosca_prefix, info.tosca_namespace)
         for (const category of this.tosca_entity_types) {
             let types = this.args.get(category) 
-            types && types.forEach(function(value, id, map) {
+            types && types.forEach( (value, id, map) => {
                 const id_eles = id.split('.')
                 let namespace = all_types.prefixies.get(id_eles[0])
                 let id_category = id_eles[1]
@@ -1985,11 +1969,7 @@ class TMetadata extends TRoot {
     constructor(args, info=null) {
         super(args, info)
         let metadata = this
-        args.forEach(
-            function(value, key, map) {
-                metadata[key] = value
-            }
-        )
+        args.forEach( (value, key, map) => this[key] = value )
     }
 }
 

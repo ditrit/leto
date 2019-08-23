@@ -280,16 +280,20 @@ implementation->TImplementation:
         dependencies: { _listOf: {_oneOf: [str, artifact_def]}}
 
 operation_def->TOperationDef:
-  _dict:
-    description: description
-    inputs: properties
-    implementation: implementation
+  _oneOf:
+    - str
+    - _dict:
+        description: description
+        inputs: properties
+        implementation: implementation
 
 operation_def_template->TOperationDefTemplate:
-  _dict:
-    description: description
-    inputs: input_assignments
-    implementation: implementation
+  _oneOf:
+    - str
+    - _dict:  
+        description: description
+        inputs: input_assignments
+        implementation: implementation
 
 interface_type->TInterfaceType:
   _dict:

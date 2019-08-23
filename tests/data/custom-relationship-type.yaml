@@ -16,7 +16,7 @@ node_types:
     properties:
       port:
         description: reflect the default MySQL server port
-        default: 3306
+        default: 3306 
         type: integer
       root_password:
         # MySQL requires a root_password for configuration
@@ -43,7 +43,15 @@ node_types:
           capability: tosca.capabilities.Endpoint.Database
           node: tosca.nodes.Database
           relationship: tosca.relationships.ConnectsTo
-  
+
+relationship_types:
+  my.types.WordpressDbConnection:
+    derived_from: tosca.relationships.ConnectsTo
+    interfaces:
+      Configure:
+        type: Configure
+        pre_configure_source: scripts/wp_db_configure.sh 
+
 topology_template:
 
   inputs:
@@ -68,6 +76,7 @@ topology_template:
       type: string
 
   node_templates:
+
     wordpress:
       type: tosca.nodes.WebApplication.WordPress
       properties:
@@ -77,7 +86,9 @@ topology_template:
         db_host: { get_attribute: [ db_server, private_address ] }
       requirements:
         - host: apache
-        - database_endpoint: wordpress_db
+        - database_endpoint:
+            node: wordpress_db
+            relationship: my.types.WordpressDbConnection
       interfaces:
         Standard:
           inputs:

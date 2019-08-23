@@ -42,6 +42,17 @@ describe("Realistic service templates ->", function() {
         describe("Service templates with multiple relationships : ", function() {
     
             it("Two tier deployment",
-                function() { expect(  app.parse_src('tests/data/two-tier-application.yaml') ) })
+                function() { expect(  app.parse_src('tests/data/two-tier-application.yaml') ) 
+                })
+
+            it("custom script in relationship",
+                function() { expect(  app.parse_src('tests/data/custom-script-in-relationship.yaml') ) 
+                })
+
+            it("custom relationship types",
+                function() { expect(  app.parse_src('tests/data/custom-relationship-type.yaml') ) 
+                })
+
         })
+   
 })

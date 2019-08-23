@@ -77,7 +77,9 @@ topology_template:
         db_host: { get_attribute: [ db_server, private_address ] }
       requirements:
         - host: apache
-        - database_endpoint: wordpress_db
+        - database_endpoint:
+            node: wordpress_db
+            relationship: my_custom_database_connection
       interfaces:
         Standard:
           inputs:
@@ -122,3 +124,11 @@ topology_template:
       capabilities:
         # omitted here for brevity
 
+  relationship_templates:
+
+    my_custom_database_connection:
+      type: ConnectsTo
+      interfaces:
+        Configure:
+          pre_configure_source: scripts/wp_db_configure.sh
+          # other resources not shown for this example ...
