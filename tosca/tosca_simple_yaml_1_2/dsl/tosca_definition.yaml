@@ -306,7 +306,7 @@ interface_types->TInterfaceTypes:
   _dictOf: { str: interface_type }
 
 interface_def->TInterfaceDef:
-  _required: [ type ]
+  #_required: [ type ]
   _dict:
     type: str
     inputs: properties
@@ -466,16 +466,50 @@ workflow_activities->TWorkflowActivities:
 workflow_activity->TWorkflowActivity:
     _nb: 1
     _dict:
-      delegate: str
-      set_state: str
-      call_operation: str
-      inline: str
+      delegate: 
+        _oneOf: 
+          - str
+          - _required: [workflow]
+            _dict: 
+              workflow: str
+              inputs: input_assignments
+      set_state: { _in: [ initial, creating, created, configuring, configured, starting, started, stopping, stopped, deleting, deleted, error ] }
+      call_operation: 
+        _oneOf: 
+          - str
+          - _required: [operation]
+            _dict:
+              operation: str
+              inputs: input_assignments
+      inline:
+        _oneOf: 
+          - str
+          - _required: [workflow]
+            _dict: 
+              workflow: str
+              inputs: input_assignments
 
-workflow_steps->TWorkflowSteps:
+declarative_workflow_steps->TWorkflowSteps:
   _dictOf:
-    str: workflow_step
+    str: declarative_workflow_step
 
-workflow_step->TWorkflowStep:
+imperative_workflow_steps->TWorkflowSteps:
+  _dictOf:
+    str: imperative_workflow_step
+
+declarative_workflow_step->TWorkflowStep:
+  _required: [activities]
+  _dict:
+    filter: workflow_condition_clause
+    activities: workflow_activities
+    operation_host: str
+    on_succes: 
+      _oneOf: [ str, { _listOf: str } ]
+    on_failure:
+      _oneOf: [ str, { _listOf: str } ]
+
+imperative_workflow_step->TWorkflowStep:
+  _required: [target, activities]
   _dict:
     target: str
     target_relationship: str
@@ -519,7 +553,7 @@ declarative_workflow_node_def->TDeclarativeWorkflowNodeDef:
     metadata: metadata
     inputs: properties
     preconditions: workflow_preconditions
-    steps: workflow_steps
+    steps: declarative_workflow_steps
           
 declarative_workflow_rel_defs->TDeclarativeWorkflowRelDefs:
   _dictOf: 
@@ -544,7 +578,7 @@ imperative_workflow_def->TImperativeWorkflowDef:
         metadata: metadata
         inputs: properties
         preconditions: workflow_preconditions
-        steps: workflow_steps
+        steps: imperative_workflow_steps
 
 node_type->TNodeType:
   _dict:

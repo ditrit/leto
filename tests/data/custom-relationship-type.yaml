@@ -49,7 +49,6 @@ relationship_types:
     derived_from: tosca.relationships.ConnectsTo
     interfaces:
       Configure:
-        type: Configure
         pre_configure_source: scripts/wp_db_configure.sh 
 
 topology_template:

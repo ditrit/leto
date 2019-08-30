@@ -23,20 +23,23 @@ class TRoot extends MixinTRoot(Object) {
         super()
         super.initRoot(args, info)
     }
-
+ 
     set_member( member_name, options={} ) {
         let from = options.from || this.args
         let default_val = options.default || null
         let is_map = from instanceof Map
         this[member_name] = (is_map) ? from.get(member_name) : default_val
+//        if (this[member_name] && this[member_name].member_of && (!this instanceof TTypeDef))
+//            console.log("DEJA UN PARENT !!!!")
+//        this[member_name] && (this[member_name].member_of = this)
     }
-
+  
     set_members( member_names, options={} ) {
         member_names.forEach( member_name => this.set_member(member_name, options))
     }
-
+  
 }
-
+ 
 // Parent of all parameters (inputs, outputs, properties, attributes)
 class TParameter extends TRoot {
     constructor(args, info) {
@@ -72,6 +75,7 @@ class TDefinition extends TRoot {
             this[member] = new this.info.classes[classname]([...type_member_array_no_override , ...this_member_array])
         }
     }
+
 }
 
 // Parent of all Tosca Types 
@@ -120,6 +124,23 @@ class TEntity extends TRoot {
         if (!this.derived_from) return false
         return this.derived_from.value.subtype_of(ancestor)
     }
+
+    derive_type_for_ele_in_member(name, member) {
+        let ele = this[member] && this[member].get(name)
+        if (ele && ele.type) {
+            return ele.type
+        } else {
+            let ele_type = (this.derived_from && this.derived_from.value && this.derived_from.value.derive_type_for_ele_in_member(name, member)) || name
+            ele && (ele.type = ele_type)
+            return ele_type
+        }
+    }
+
+    derive_type_in_member(member) {
+        this[member] && this[member].forEach( (member_ele, ele_name, member_map) => this.derive_type_for_ele_in_member(ele_name, member) )
+
+    }
+
 }
 
 /////////////////////////////////////////////////////////
@@ -919,6 +940,8 @@ class TInterfaceDefs extends TMap {
     constructor(args, info=null) {
         super(args, info)
     }
+
+
 }
 
 
@@ -1158,7 +1181,6 @@ class TInterfaceType extends TEntity {
         this.derives_member_from_parent('operations')
         this.derives_member_from_parent('notifications')
     }
-
 }
 
 class TInterfaceTypes extends TMap {
@@ -1180,6 +1202,7 @@ class TNodeType extends TEntity {
         this.derives_member_from_parent('attributes')
         this.derives_member_from_parent('capabilities')
         this.derives_member_from_parent('requirements')
+        this.derive_type_in_member('interfaces')
         this.derives_member_from_parent('interfaces')
         this.derives_member_from_parent('workflows')
     }
@@ -1199,9 +1222,15 @@ class TRelationshipType extends TEntity {
     
     }
 
+    derives_interfaces_from_parent() {
+        this.interfaces.forEach((interface_def, interface_name, map) => this.derives_interface_from_parent(interface_name))
+    }
+
+
     derives_from_parent() {
         this.derives_member_from_parent('properties')
         this.derives_member_from_parent('attributes')
+        this.derive_type_in_member('interfaces')
         this.derives_member_from_parent('interfaces')
         this.derives_member_from_parent('workflows')
         if (this.valid_target_types) { 
@@ -1230,10 +1259,10 @@ class TGroupType extends TEntity {
         this.derives_member_from_parent('properties')
         this.derives_member_from_parent('capabilities')
         this.derives_member_from_parent('requirements')
+        this.derive_type_in_member('interfaces')
         this.derives_member_from_parent('interfaces')
         this.derives_member_from_parent('members')
     }
-
 }
 
 class TGroupTypes extends TMap {
@@ -1793,7 +1822,36 @@ class TWorkflowPreconditions extends TList {
 class TWorkflowActivity extends TRoot {
     constructor(args, info=null) {
         super(args, info)
-        this.set_members(['delegate', 'set_state', 'call_operation','inline'])
+        if (args.has('set_state')) {
+            this.type_activity = 'set_state'
+            this.set_member('set_state')
+        } else {
+            let delegate = args.get('delegate')
+            if (delegate) {
+                this.type_activity = 'delegate'
+                this.set_member('workflow', {from: delegate, default: delegate})
+                this.set_member('inputs', {from: delegate})
+            } else {
+                let inline = args.get('inline')
+                if (inline) {
+                    this.type_activity = 'inline'
+                    this.set_member('workflow', {from: inline, default: inline})
+                    this.set_member('inputs', {from: delegate})
+                } else {
+                    let call_operation = args.get('call_operation')
+                    if (call_operation) {
+                        this.type_activity = 'call_operation'
+                        this.set_member('operation', {from: call_operation, default: call_operation})
+                        this.set_member('inputs', {from: delegate})
+                        let idx = this.operation.lastIndexOf('.')
+                        if (idx > -1) {
+                            this.operation_name = this.operation.substr(idx+1)
+                            this.interface_name = this.operation.substr(0, idx)
+                        } else throw(`Error : call_operation value '${this.operation}' non valide (doit être de la forme <nom_interface>.<nom_operation> ${this._locate()})`)
+                    }
+                }
+            }
+        }
     }
 }
 
