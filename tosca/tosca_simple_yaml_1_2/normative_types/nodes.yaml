@@ -12,7 +12,7 @@ imports:
   - tosca_capabilities_types: capabilities.yaml
   - tosca_relationships:      relationships.yaml
 
-description: TOSCA 1.2 normative types defintion, node types part
+description: TOSCA 1.2 normative types definition, node types part
 #url: http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.2/csprd01/TOSCA-Simple-Profile-YAML-v1.2-csprd01.html
 
 
