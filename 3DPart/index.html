@@ -4,39 +4,30 @@
 	<title>LETO</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<style type="text/css">
-		body{ margin:0; font: 24px "Fira Sans", sans-serif; }
-		canvas{ width:100%; height:100%; }
-		#leftBar {
-		    width: 290px;
-		    height: 100%;
-		    background-color: rgba(170,170,170,0.5);
-		    left: 0;
-		    z-index: 2;
-		    position: absolute;
-		    display: flex;
-		    flex-direction: column;
-		    justify-content: center;
-		    justify-content: flex-start;
-		}
-		.objectButtons{
-			padding: 6px 10px;
-			margin: 10px 0;
-			color: #000;
-			background-color: #2f4353;
-			background-image: linear-gradient(315deg, #2f4353 0%, #d2ccc4 74%);
-			font: 16px "Fira Sans", sans-serif;
-			font-weight: bold;
-		}
-	</style>
+	<link rel="stylesheet" href="./public/style.css">
 </head>
 <body>
 	<div id="leftBar">
-		<button class="objectButtons"> WWW </button><br/>
-		<button class="objectButtons"> Apache </button><br/>
-		<button class="objectButtons"> PHP </button><br/>
+		<div id="conponentsSection">
+			<h2>Components :</h2>
+			<button class="objectButtons" data-value="serveur"> WWW </button><br/>
+			<button class="objectButtons" data-value="apache"> Apache </button><br/>
+			<button class="objectButtons" data-value="php"> PHP </button><br/>
+		</div>
+		<div id="hierarchieSection">
+			<h2>hierarchie :</h2>
+			<ul id="sceneComponentslist">
+			</ul>
+		</div>
+	</div>
+
+	<div id="bottomToolBar">
+		<button id="eyeTool" class="toolButtons"> Oeuil </button><br/>
+		<button id="moveTool" class="toolButtons"> Déplacer </button><br/>
+		<button id="linkTool" class="toolButtons"> Liaisons </button><br/>
 	</div>
 	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script type="module" src="./public/script.js"></script>
 </body>
 </html>
