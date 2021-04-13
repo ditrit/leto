@@ -1,0 +1,5 @@
+CONTROLS
+	* right click: rotate view
+	* midle click: zoom in/out
+	* left click: select/move component
+	* space bar: reset camera
