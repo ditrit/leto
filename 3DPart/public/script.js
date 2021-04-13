@@ -1,12 +1,20 @@
 import * as THREE from './libs/three.js/build/three.module.js';
 import { OrbitControls } from './libs/three.js/examples/jsm/controls/OrbitControls.js';
 import { DragControls } from './libs/three.js/examples/jsm/controls/DragControls.js';
+import { EffectComposer } from './libs/three.js/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from './libs/three.js/examples/jsm/postprocessing/RenderPass.js';
+import { ShaderPass } from './libs/three.js/examples/jsm/postprocessing/ShaderPass.js';
+import { OutlinePass } from './libs/three.js/examples/jsm/postprocessing/OutlinePass.js';
+import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
 
 /// VARIABLES ///
 const htmlComponentList = $('#sceneComponentslist');
 
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster, selectedTool = 'eyeTool', paletteChild = null,selectedComponent = null, enableAutoFocus = false;
-let componentsList, sceneComponents = [];	// Liste de tous les comosants existants; liste des composants de la Scene
+let componentsList, sceneComponents = [], sceneComponentsObj = new THREE.Group();	// Liste de tous les comosants existants; liste des composants de la Scene
+// postprocessing
+let composer, effectFXAA, outlinePass;
+let selectedObjects = [];
 // config
 let config_distance = 5, config_tolerance = 0.2, config_diviseurVitesse = 30, config_focusDistance = 7;
 // Loaders
@@ -35,8 +43,20 @@ function init(){
 
 	document.body.appendChild(renderer.domElement);
 
+	// postprocessing
+	composer = new EffectComposer( renderer );
+	const renderPass = new RenderPass( scene, camera );
+	composer.addPass( renderPass );
+	outlinePass = new OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
+	composer.addPass( outlinePass );
+	effectFXAA = new ShaderPass( FXAAShader );
+	effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
+	composer.addPass( effectFXAA );
+
 	// ----------------------------------------------
 	//initialisation de la liste des composants
+	scene.add(sceneComponentsObj);
+
 	const box = new THREE.BoxGeometry(1, 1, 1);
 	const bigTile =  new THREE.BoxGeometry(1, 0.4, 1);
 	const smallTile =  new THREE.BoxGeometry(1.2, 0.2, 1.2);
@@ -114,7 +134,8 @@ function animate(){
 	update();
 
 	// Déclenche l'affichage
-	renderer.render(scene, camera);
+	//renderer.render(scene, camera);
+	composer.render();
 
 	requestAnimationFrame(animate);
 }
@@ -198,10 +219,8 @@ function autoFocus(){
 }
 
 function onKeyDown( event ) {
-	if(dragControls.enabled)
-		enableSelection = ( event.keyCode === 16 ) ? true : false;
 	if(event.keyCode === 32)
-	orbitControls.target = new THREE.Vector3(0, 0, 0);
+		orbitControls.target = new THREE.Vector3(0, 0, 0);
 }
 
 function onKeyUp() {
@@ -242,7 +261,7 @@ function onClick( event ) {
 
 			raycaster.setFromCamera( mouse, camera );
 
-			const intersections = raycaster.intersectObjects( sceneComponents, true );
+			const intersections = raycaster.intersectObjects( sceneComponentsObj.children, true );
 
 			if ( intersections.length > 0 ) {
 				const object = intersections[ 0 ].object;
@@ -268,17 +287,23 @@ function onClick( event ) {
 			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 			raycaster.setFromCamera(mouse, camera);
-			let intersects = raycaster.intersectObjects(scene.children);
-			if(intersects.length > 1) {
+			let intersects = raycaster.intersectObjects(sceneComponentsObj.children);
+			if(intersects.length > 0) {
 				selectedComponent = intersects[0].object;
-				//orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
-				//enableAutoFocus = true;
+				addSelectedObject( selectedComponent );
+				outlinePass.selectedObjects = selectedObjects;
 			}else{
+				outlinePass.selectedObjects = [];
 				selectedComponent = null;
 				$('.addChildButtons').removeClass('selectedChild');
 			}
 		}
 	}
+}
+
+function addSelectedObject( object ) {
+	selectedObjects = [];
+	selectedObjects.push( object );
 }
 
 
@@ -288,16 +313,17 @@ window.addEventListener('resize', function(){
 	camera.aspect = window.innerWidth/window.innerHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(window.innerWidth, window.innerHeight);
+	composer.setSize( window.innerWidth, window.innerHeight );
+	effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
 });
 // add Component
 $('.addComponentButtons').on('click', function () {
 	let componentType = this.dataset.value;
 	let index = sceneComponents.length;
-	let group = new THREE.Group();
-	group.add(new THREE.Mesh( componentsList[componentType]['geometry'], componentsList[componentType]['mesh'] ));
-	sceneComponents.push( group );
-	group.position.set(Math.random(), 0, Math.random());
-	scene.add(group);
+	sceneComponents.push( new THREE.Mesh( componentsList[componentType]['geometry'], componentsList[componentType]['mesh'] ) );
+	sceneComponents[index].position.set(Math.random(), 0, Math.random());
+	sceneComponentsObj.add(sceneComponents[index]);
+	//scene.add(sceneComponents[index]);
 	htmlComponentList.append('<li class="componentlistItem" data-value="'+index+'">'+componentType+'</li>');
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement );
@@ -320,6 +346,8 @@ $('#conponentsSection').on('click', '.selectedChild', function () {
 $('#sceneComponentslist').on('click', "li.componentlistItem", function () {
 	let index = this.dataset.value;
 	selectedComponent = sceneComponents[index];
+	addSelectedObject( selectedComponent );
+	outlinePass.selectedObjects = selectedObjects;
 	orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
 	enableAutoFocus = true;
 });
