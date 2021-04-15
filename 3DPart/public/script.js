@@ -10,8 +10,11 @@ import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
 /// VARIABLES ///
 const htmlComponentList = $('#sceneComponentslist');
 
-let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster, selectedTool = 'eyeTool', paletteChild = null,selectedComponent = null, enableAutoFocus = false;
+let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
+	selectedTool = 'eyeTool', paletteChild = null,selectedComponent = null, enableAutoFocus = false,
+	preventClick = false;
 let componentsList, sceneComponents = [], sceneComponentsObj = new THREE.Group();	// Liste de tous les comosants existants; liste des composants de la Scene
+let box, bigTile, smallTile;
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
@@ -53,13 +56,33 @@ function init(){
 	effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
 	composer.addPass( effectFXAA );
 
+	// Controles camera
+	orbitControls = new OrbitControls( camera, renderer.domElement );
+	orbitControls.mouseButtons = {
+		LEFT: THREE.MOUSE.PAN,
+		MIDDLE: THREE.MOUSE.DOLLY,
+		RIGHT: THREE.MOUSE.ROTATE
+	}
+	orbitControls.enablePan = false;
+	orbitControls.enableDamping = true;
+	orbitControls.minDistance = 2;
+	orbitControls.maxDistance = 200;
+	orbitControls.update();
+
+	// Drag control
+	dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement);
+	dragControls.deactivate();
+	document.addEventListener( 'click', onClick );
+	window.addEventListener( 'keydown', onKeyDown );
+	window.addEventListener( 'keyup', onKeyUp );
+
 	// ----------------------------------------------
 	//initialisation de la liste des composants
 	scene.add(sceneComponentsObj);
 
-	const box = new THREE.BoxGeometry(1, 1, 1);
-	const bigTile =  new THREE.BoxGeometry(1, 0.4, 1);
-	const smallTile =  new THREE.BoxGeometry(1.2, 0.2, 1.2);
+	box = new THREE.BoxGeometry(1, 1, 1);
+	bigTile =  new THREE.BoxGeometry(1, 0.4, 1);
+	smallTile =  new THREE.BoxGeometry(0.8, 0.2, 0.8);
 	componentsList = {
 		'serveur' : { 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
 		'router': { 'geometry' : bigTile, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x09bab1 })},
@@ -100,26 +123,6 @@ function init(){
 	const pointLight = new THREE.PointLight(0xFFFFFF, 0.5, 1000);
 	pointLight.position.set(0, 10, 0);
 	scene.add(pointLight);
-
-	// Controles camera
-	orbitControls = new OrbitControls( camera, renderer.domElement );
-	orbitControls.mouseButtons = {
-		LEFT: THREE.MOUSE.PAN,
-		MIDDLE: THREE.MOUSE.DOLLY,
-		RIGHT: THREE.MOUSE.ROTATE
-	}
-	orbitControls.enablePan = false;
-	orbitControls.enableDamping = true;
-	orbitControls.minDistance = 2;
-	orbitControls.maxDistance = 70;
-	orbitControls.update();
-
-	// Drag control
-	dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement);
-	dragControls.deactivate();
-	document.addEventListener( 'click', onClick );
-	window.addEventListener( 'keydown', onKeyDown );
-	window.addEventListener( 'keyup', onKeyUp );
 }
 
 // Mises à jour de l'application
@@ -144,54 +147,45 @@ function animate(){
 /// FONCTIONS ADDITIONNELLES ///
 // espace les composants entre eux
 function ajustementEspacement(){
-	//let firstComponent = true;
 	sceneComponents.forEach(component => {
-		//if(!firstComponent){
-			let haveNeighbour = false;
-			let lastDistance = null;
-			let nearestNeighbour = null;
-			component.position.y = 0;
-			sceneComponents.forEach(neighbour => {
-				if(component != neighbour){
-					let distance = Math.sqrt(
-						Math.pow((component.position.x - neighbour.position.x), 2) +
-						Math.pow((component.position.y - neighbour.position.y), 2) +
-						Math.pow((component.position.z - neighbour.position.z), 2)
-						);
-					//console.log(distance);
-					if(nearestNeighbour == null){
-						lastDistance = distance;
-						nearestNeighbour = neighbour;
-					}else if(distance < lastDistance){
-						lastDistance = distance;
-						nearestNeighbour = neighbour;
-					}
-
-					if(distance == 0){
-						component.position.x += Math.random();
-						//component.position.y += Math.random();
-						component.position.z += Math.random();
-						haveNeighbour = true;
-					}else if(distance <= config_distance){		// eloignement
-						component.position.x += (component.position.x - neighbour.position.x) / config_diviseurVitesse;
-						//component.position.y += (component.position.y - neighbour.position.y) / config_diviseurVitesse;
-						component.position.z += (component.position.z - neighbour.position.z) / config_diviseurVitesse;
-						haveNeighbour = true;
-					} else if(distance >= config_distance - config_tolerance && distance <= config_distance + config_tolerance){
-						haveNeighbour = true;
-					}
+		let haveNeighbour = false;
+		let lastDistance = null;
+		let nearestNeighbour = null;
+		component.position.y = 0 + (0.2*component.children.length);
+		sceneComponents.forEach(neighbour => {
+			if(component != neighbour){
+				let distance = Math.sqrt(
+					Math.pow((component.position.x - neighbour.position.x), 2) +
+					Math.pow((component.position.z - neighbour.position.z), 2)
+					);
+				if(nearestNeighbour == null){
+					lastDistance = distance;
+					nearestNeighbour = neighbour;
+				}else if(distance < lastDistance){
+					lastDistance = distance;
+					nearestNeighbour = neighbour;
 				}
-			});
-			// rapprochement
-			if(!haveNeighbour && nearestNeighbour){	// nearestNeighbour will be replaced with parent element in futur update
-				if(lastDistance > config_distance + config_tolerance){
-					component.position.x -= (component.position.x - nearestNeighbour.position.x) / config_diviseurVitesse;
-					//component.position.y -= (component.position.y - nearestNeighbour.position.y) / config_diviseurVitesse;
-					component.position.z -= (component.position.z - nearestNeighbour.position.z) / config_diviseurVitesse;
+
+				if(distance == 0){
+					component.position.x += Math.random();
+					component.position.z += Math.random();
+					haveNeighbour = true;
+				}else if(distance <= config_distance){		// eloignement
+					component.position.x += (component.position.x - neighbour.position.x) / config_diviseurVitesse;
+					component.position.z += (component.position.z - neighbour.position.z) / config_diviseurVitesse;
+					haveNeighbour = true;
+				} else if(distance >= config_distance - config_tolerance && distance <= config_distance + config_tolerance){
+					haveNeighbour = true;
 				}
 			}
-		//}
-		//firstComponent = false;
+		});
+		// rapprochement
+		if(!haveNeighbour && nearestNeighbour){	// nearestNeighbour will be replaced with parent element in futur update
+			if(lastDistance > config_distance + config_tolerance){
+				component.position.x -= (component.position.x - nearestNeighbour.position.x) / config_diviseurVitesse;
+				component.position.z -= (component.position.z - nearestNeighbour.position.z) / config_diviseurVitesse;
+			}
+		}
 	});
 }
 
@@ -219,8 +213,22 @@ function autoFocus(){
 }
 
 function onKeyDown( event ) {
+	// reset camera's rotation pivot
 	if(event.keyCode === 32)
 		orbitControls.target = new THREE.Vector3(0, 0, 0);
+	// camera movements (future enhancement)
+	if(selectedComponent){
+		if(event.keyCode === 38 ){
+			orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
+			camera.position.x -= (camera.position.x - selectedComponent.position.x) / config_diviseurVitesse;
+			camera.position.z -= (camera.position.z - selectedComponent.position.z) / config_diviseurVitesse;
+		}
+		if(event.keyCode === 40){
+			orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
+			camera.position.x += (camera.position.x - selectedComponent.position.x) / config_diviseurVitesse;
+			camera.position.z += (camera.position.z - selectedComponent.position.z) / config_diviseurVitesse;
+		}
+	}
 }
 
 function onKeyUp() {
@@ -229,25 +237,43 @@ function onKeyUp() {
 }
 
 function onClick( event ) {
-	/*if(paletteChild && selectedComponent){
-		let componentType = 'test';
+	if(preventClick){
+		preventClick = false;
+		return;
+	}
+	if(paletteChild && selectedComponent){
+		let componentType = paletteChild.userData.componentType;
+		paletteChild.userData.parent
 		selectedComponent.add(paletteChild);
-		let index = selectedComponent.children.length;
-		//sceneComponents.push( paletteChild );
-		sceneComponents[index].position.set(selectedComponent[0].position.x, selectedComponent[0].position.y, selectedComponent[0].position.z);
-		//scene.add(sceneComponents[index]);
-		htmlComponentList.append('<li class="childListItem" data-value="'+componentType+' '+index+'">'+componentType+'</li>');
+		selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
+		selectedComponent.position.y = 0 + (0.2*selectedComponent.children.length);
+		let childIndex = selectedComponent.children.length - 1;
+		selectedComponent.children[childIndex].position.z += 0.3;
+		let arithmeticSeries = 0 + (0.2*selectedComponent.children.length); // arithmeticSeries's Uo
+
+		selectedComponent.children.forEach(child => {
+			child.position.y = arithmeticSeries;
+			// Un = (Un-1) - r - 0.2
+			arithmeticSeries = arithmeticSeries - (0.2) - 0.2;
+		});
+
+		$('#'+selectedComponent.userData.componentID).append(
+			'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+componentType+' '+childIndex+'">'
+				+componentType+
+			'</li>'
+		);
+
 		dragControls.dispose();
 		dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement );
 		if(selectedTool !== 'moveTool')
 			dragControls.deactivate();
 		
 			
-		$('.selectedChild').removeClass("selectedChild").addClass( "addChildButtons" );
+		$('.selectedChild').removeClass('selectedChild').addClass( 'addChildButtons' );
 		paletteChild = null;
 
 		return;
-	}*/
+	}
 	if(selectedTool === 'moveTool'){
 		event.preventDefault();
 
@@ -260,7 +286,6 @@ function onClick( event ) {
 			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
 			raycaster.setFromCamera( mouse, camera );
-
 			const intersections = raycaster.intersectObjects( sceneComponentsObj.children, true );
 
 			if ( intersections.length > 0 ) {
@@ -292,10 +317,19 @@ function onClick( event ) {
 				selectedComponent = intersects[0].object;
 				addSelectedObject( selectedComponent );
 				outlinePass.selectedObjects = selectedObjects;
+				const componentId = selectedComponent.userData.componentID;
+				$('.componentLabel').removeClass('selectedComponent');
+				$('#sceneComponentslist').find('#c'+componentId).addClass('selectedComponent');
+				$('#componentID').html(selectedComponent.userData.componentID);
+				$('#componentName').val(selectedComponent.userData.componentName);
+				$('#componentType').html(selectedComponent.userData.componentType);
+				$('#rightPannel').css('display', 'block');
 			}else{
 				outlinePass.selectedObjects = [];
 				selectedComponent = null;
+				$('.componentLabel').removeClass('selectedComponent');
 				$('.addChildButtons').removeClass('selectedChild');
+				$('#rightPannel').css('display', 'none');
 			}
 		}
 	}
@@ -322,9 +356,15 @@ $('.addComponentButtons').on('click', function () {
 	let index = sceneComponents.length;
 	sceneComponents.push( new THREE.Mesh( componentsList[componentType]['geometry'], componentsList[componentType]['mesh'] ) );
 	sceneComponents[index].position.set(Math.random(), 0, Math.random());
+	sceneComponents[index].userData.componentType = componentType;
+	sceneComponents[index].userData.componentID = index;
+	sceneComponents[index].userData.componentName = componentType + index;
 	sceneComponentsObj.add(sceneComponents[index]);
 	//scene.add(sceneComponents[index]);
-	htmlComponentList.append('<li class="componentlistItem" data-value="'+index+'">'+componentType+'</li>');
+	htmlComponentList.append('<li class="componentlistItem" data-value="'+index+'">'+
+								'<div class="componentLabel" data-value="'+index+'" id="c'+index+'">'+componentType + index +'</div>'+
+								'<ul class="childList" id="'+index+'"></ul>'+
+							'</li>');
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement );
 	if(selectedTool !== 'moveTool')
@@ -337,20 +377,43 @@ $('#conponentsSection').on('click', '.addChildButtons', function ( event ) {
 
 	let componentType = this.dataset.value;
 	paletteChild = new THREE.Mesh( componentsList[componentType]['geometry'], componentsList[componentType]['mesh'] );
+	paletteChild.userData.componentType = componentType;
 });
 $('#conponentsSection').on('click', '.selectedChild', function () {
 	$(this).removeClass("selectedChild").addClass( "addChildButtons" );
 	paletteChild = null;
 });
-// Select element (activate auto-focus)
-$('#sceneComponentslist').on('click', "li.componentlistItem", function () {
+// Select component (activate auto-focus)
+$('#sceneComponentslist').on('click', "div.componentLabel", function () {
 	let index = this.dataset.value;
 	selectedComponent = sceneComponents[index];
 	addSelectedObject( selectedComponent );
 	outlinePass.selectedObjects = selectedObjects;
 	orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
+	$('.componentLabel').removeClass('selectedComponent');
+	$('#sceneComponentslist').find('#c'+index).addClass('selectedComponent');
+	$('#componentID').html(selectedComponent.userData.componentID);
+	$('#componentName').val(selectedComponent.userData.componentName);
+	$('#componentType').html(selectedComponent.userData.componentType);
+	$('#rightPannel').css('display', 'block');
+
 	enableAutoFocus = true;
 });
+// Select child (activate auto-focus)
+/*$('#sceneComponentslist').on('click', "li.childListItem", function () {
+	console.log('child clicked !');
+	let parentIndex = this.id.charAt(1);
+	let childIndex = this.dataset.value.split(' ')[1];
+	console.log('ParentId :' + parentIndex + '; ChildId :' +childIndex);
+
+	selectedComponent = sceneComponents[parentIndex].children[childIndex];
+	console.log('component :'+selectedComponent);
+
+	addSelectedObject( selectedComponent );
+	outlinePass.selectedObjects = selectedObjects;
+	orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
+	enableAutoFocus = true;
+});*/
 // switch selected tool
 $('.toolButtons').on('click', function () {
 	selectedTool = $(this).attr("id");
@@ -371,6 +434,9 @@ $('.toolButtons').on('click', function () {
 			//orbitControls.enableRotate = false;
 			break;
 	}
+});
+$('.UI').on('click', function(){
+	preventClick = true;
 });
 
 // Affichage framerate (debug)

@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="./public/style.css">
 </head>
 <body>
-	<div id="leftBar">
+	<div id="leftPannel" class="UI">
 		<div id="conponentsSection">
 			<h2>Components :</h2>
 			<button class="addComponentButtons" data-value="serveur"> Serveur </button><br/>
@@ -24,13 +24,34 @@
 		</div>
 	</div>
 
-	<div id="bottomToolBar">
+	<div id="bottomToolBar" class="UI">
 		<button id="eyeTool" class="toolButtons"> Oeuil </button><br/>
 		<button id="moveTool" class="toolButtons"> Déplacer </button><br/>
 		<button id="linkTool" class="toolButtons"> Liaisons </button><br/>
 	</div>
+
+	
+	<div id="rightPannel" class="UI">
+		<ul>
+			<li>ID : <span id="componentID"></span></li>
+			<li>Nom : <input id="componentName"></span></li>
+			<li>Type : <span id="componentType"></span></li>
+		</ul>
+
+		<div>
+			<button id="monoDirectionnalLinkBtn" class="toolButtons"> Lien unidirectionnel </button><br/>
+			<button id="biDirectionnalLinkBtn" class="toolButtons"> Lien bidirectionnel </button><br/>
+		</div>
+	</div>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script type="module" src="./public/script.js"></script>
+
+	<!-- Handle secondary and independant events -->
+	<script>
+		$('#componentName').on('change', function(){
+			$('#c'+componentID).html( $(this).val() );
+		});
+	</script>
 </body>
 </html>
