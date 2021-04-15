@@ -8,14 +8,15 @@
 </head>
 <body>
 	<div id="leftPannel" class="UI">
+		<input id="paletteSearchField" type="text" placeholder="search for a component" />
 		<div id="conponentsSection">
 			<h2>Components :</h2>
-			<button class="addComponentButtons" data-value="serveur"> Serveur </button><br/>
-				<button class="addChildButtons" data-value="apache"> Apache </button><br/>
-				<button class="addChildButtons" data-value="php"> PHP </button><br/>
-				<button class="addChildButtons" data-value="database"> Database </button><br/>
-				<button class="addChildButtons" data-value="nodejs"> Node.js </button><br/>
-			<button class="addComponentButtons" data-value="router"> Router </button><br/>
+			<button class="paletteComponent addComponentButtons" data-value="serveur">Serveur</button><br/>
+				<button class="paletteComponent addChildButtons" data-value="apache">Apache</button><br/>
+				<button class="paletteComponent addChildButtons" data-value="php">PHP</button><br/>
+				<button class="paletteComponent addChildButtons" data-value="database">Database</button><br/>
+				<button class="paletteComponent addChildButtons" data-value="nodejs">Node.js</button><br/>
+			<button class="paletteComponent addComponentButtons" data-value="router">Router</button><br/>
 		</div>
 		<div id="hierarchieSection">
 			<h2>hierarchie :</h2>
@@ -25,7 +26,7 @@
 	</div>
 
 	<div id="bottomToolBar" class="UI">
-		<button id="eyeTool" class="toolButtons"> Oeuil </button><br/>
+		<button id="eyeTool" class="toolButtons selectedTool"> Oeuil </button><br/>
 		<button id="moveTool" class="toolButtons"> Déplacer </button><br/>
 		<button id="linkTool" class="toolButtons"> Liaisons </button><br/>
 	</div>
@@ -39,8 +40,8 @@
 		</ul>
 
 		<div>
-			<button id="monoDirectionnalLinkBtn" class="toolButtons"> Lien unidirectionnel </button><br/>
-			<button id="biDirectionnalLinkBtn" class="toolButtons"> Lien bidirectionnel </button><br/>
+			<button id="monoDirectionnalLinkBtn"> + Lien unidirectionnel </button><br/>
+			<button id="biDirectionnalLinkBtn"> + Lien bidirectionnel </button><br/>
 		</div>
 	</div>
 	
@@ -49,6 +50,16 @@
 
 	<!-- Handle secondary and independant events -->
 	<script>
+		$('#paletteSearchField').on('input', function(){
+			const stringQuery = $(this).val().toLowerCase();
+			$('.paletteComponent').each(function(){
+				if( !$(this).html().toLowerCase().includes(stringQuery) ){
+					$(this).css('display', 'none');
+				}else{
+					$(this).css('display', 'block');
+				}
+			});
+		});
 	</script>
 </body>
 </html>

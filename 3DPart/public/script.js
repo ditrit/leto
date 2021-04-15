@@ -450,29 +450,30 @@ $('.toolButtons').on('click', function () {
 
 	switch($(this).attr("id")){
 		case 'eyeTool':
-			console.log("eyeTool selected");
-			//orbitControls.enableRotate = true;
 			dragControls.deactivate();
+			$('.toolButtons').removeClass('selectedTool');
+			$('#eyeTool').addClass('selectedTool');
 			break;
 		case 'moveTool':
-			console.log("moveTool selected");
-			//orbitControls.enableRotate = false;
 			dragControls.activate();
+			$('.toolButtons').removeClass('selectedTool');
+			$('#moveTool').addClass('selectedTool');
 			break;
 		case 'linkTool':
-			console.log("linkTool selected");
-			//orbitControls.enableRotate = false;
+			dragControls.deactivate();
+			$('.toolButtons').removeClass('selectedTool');
+			$('#linkTool').addClass('selectedTool');
 			break;
 	}
 });
 $('.UI').on('click', function(){
 	preventClick = true;
 });
-$('#componentName').on('change', function(){
+$('#componentName').on('input', function(){
 	const newLabel = $(this).val();
 	$('#c'+ selectedComponent.userData.componentID ).html(newLabel);
 	selectedComponent.userData.componentName = newLabel;
 });
 
 // Affichage framerate (debug)
-(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+//(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()

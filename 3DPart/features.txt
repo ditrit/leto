@@ -1,0 +1,24 @@
+Fonctionnalités :
+
+- zoomer/dézoomer (molette enfoncée puis glisser / roulement molette)
+
+- pivoter la caméra (click droit puis glisser)
+
+- recentrer la caméra (barre d'espace)
+
+- ajouter des objets
+
+- imbriquer des composants dans ces objets
+
+- déplacer des objets (outils 'Déplacer' uniquement)
+
+- séléctionner un objet (outils 'Oeuil' uniquement)
+			(séléction visible même à travers d'autres objets)
+
+- focus sur un objet (click dans la hiérarchie)
+
+- affichage des informations sur l'objet séléctioné
+
+- renomer un objet
+
+- chercher un type d'objet dans la palette
