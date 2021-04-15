@@ -243,7 +243,6 @@ function onClick( event ) {
 	}
 	if(paletteChild && selectedComponent){
 		let componentType = paletteChild.userData.componentType;
-		paletteChild.userData.parent
 		selectedComponent.add(paletteChild);
 		selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
 		selectedComponent.position.y = 0 + (0.2*selectedComponent.children.length);
@@ -378,6 +377,37 @@ $('#conponentsSection').on('click', '.addChildButtons', function ( event ) {
 	let componentType = this.dataset.value;
 	paletteChild = new THREE.Mesh( componentsList[componentType]['geometry'], componentsList[componentType]['mesh'] );
 	paletteChild.userData.componentType = componentType;
+
+	if(!selectedComponent)
+		return;
+		
+	selectedComponent.add(paletteChild);
+	selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
+	selectedComponent.position.y = 0 + (0.2*selectedComponent.children.length);
+	let childIndex = selectedComponent.children.length - 1;
+	selectedComponent.children[childIndex].position.z += 0.3;
+	let arithmeticSeries = 0 + (0.2*selectedComponent.children.length); // arithmeticSeries's Uo
+
+	selectedComponent.children.forEach(child => {
+		child.position.y = arithmeticSeries;
+		// Un = (Un-1) - r - 0.2
+		arithmeticSeries = arithmeticSeries - (0.2) - 0.2;
+	});
+
+	$('#'+selectedComponent.userData.componentID).append(
+		'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+componentType+' '+childIndex+'">'
+			+componentType+
+		'</li>'
+	);
+
+	dragControls.dispose();
+	dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement );
+	if(selectedTool !== 'moveTool')
+		dragControls.deactivate();
+	
+		
+	$('.selectedChild').removeClass('selectedChild').addClass( 'addChildButtons' );
+	paletteChild = null;
 });
 $('#conponentsSection').on('click', '.selectedChild', function () {
 	$(this).removeClass("selectedChild").addClass( "addChildButtons" );
