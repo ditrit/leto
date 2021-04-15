@@ -1,5 +1,5 @@
 CONTROLS
 	* right click: rotate view
-	* midle click: zoom in/out
-	* left click: select/move component
-	* space bar: reset camera
+	* midle click/mouse-wheel: zoom in/out
+	* left click: select/move component (depending on the tool selected)
+	* space bar: reset camera's rotation pivot

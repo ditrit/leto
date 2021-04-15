@@ -380,7 +380,7 @@ $('#conponentsSection').on('click', '.addChildButtons', function ( event ) {
 
 	if(!selectedComponent)
 		return;
-		
+
 	selectedComponent.add(paletteChild);
 	selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
 	selectedComponent.position.y = 0 + (0.2*selectedComponent.children.length);
@@ -467,6 +467,11 @@ $('.toolButtons').on('click', function () {
 });
 $('.UI').on('click', function(){
 	preventClick = true;
+});
+$('#componentName').on('change', function(){
+	const newLabel = $(this).val();
+	$('#c'+ selectedComponent.userData.componentID ).html(newLabel);
+	selectedComponent.userData.componentName = newLabel;
 });
 
 // Affichage framerate (debug)
