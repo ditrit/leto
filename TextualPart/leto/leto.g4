@@ -1,5 +1,5 @@
 /* test 
-asset serv is_a server;
+asset serv is_a server; //test
 asset bdd is_a database;
 componant bdd : serv;
 asset rout is_a router;
