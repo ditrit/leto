@@ -8,7 +8,9 @@ Fonctionnalités :
 
 - ajouter des objets
 
-- imbriquer des composants dans ces objets
+- supprimer des objets
+
+- imbriquer des composants enfants dans ces objets (bouttons noirs dans la palette)
 
 - déplacer des objets (outils 'Déplacer' uniquement)
 

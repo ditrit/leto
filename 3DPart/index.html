@@ -8,18 +8,12 @@
 </head>
 <body>
 	<div id="leftPannel" class="UI">
-		<input id="paletteSearchField" type="text" placeholder="search for a component" />
-		<div id="conponentsSection">
-			<h2>Components :</h2>
-			<button class="paletteComponent addComponentButtons" data-value="serveur">Serveur</button><br/>
-				<button class="paletteComponent addChildButtons" data-value="apache">Apache</button><br/>
-				<button class="paletteComponent addChildButtons" data-value="php">PHP</button><br/>
-				<button class="paletteComponent addChildButtons" data-value="database">Database</button><br/>
-				<button class="paletteComponent addChildButtons" data-value="nodejs">Node.js</button><br/>
-			<button class="paletteComponent addComponentButtons" data-value="router">Router</button><br/>
+		<input id="paletteSearchField" type="text" placeholder="Chercher un composant" />
+		<div id="componentsSection">
+			<h2>Composants :</h2>
 		</div>
 		<div id="hierarchieSection">
-			<h2>hierarchie :</h2>
+			<h2>Hierarchie :</h2>
 			<ul id="sceneComponentslist">
 			</ul>
 		</div>
@@ -33,6 +27,7 @@
 
 	
 	<div id="rightPannel" class="UI">
+		<a id="deleteButton">supprimer</a>
 		<ul>
 			<li>ID : <span id="componentID"></span></li>
 			<li>Nom : <input id="componentName"></span></li>

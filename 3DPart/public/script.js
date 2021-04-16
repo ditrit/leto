@@ -35,9 +35,9 @@ function init(){
 	scene = new THREE.Scene();
 
 	camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 0.1, 3000);
-	camera.position.set(0, 3, 15);
+	camera.position.set(0, 4, 15);
 
-	renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setClearColor(0x132644);
 
@@ -67,6 +67,7 @@ function init(){
 	orbitControls.enableDamping = true;
 	orbitControls.minDistance = 2;
 	orbitControls.maxDistance = 200;
+	orbitControls.target = new THREE.Vector3(0, 1, 0);
 	orbitControls.update();
 
 	// Drag control
@@ -83,17 +84,39 @@ function init(){
 	box = new THREE.BoxGeometry(1, 1, 1);
 	bigTile =  new THREE.BoxGeometry(1, 0.4, 1);
 	smallTile =  new THREE.BoxGeometry(0.8, 0.2, 0.8);
-	componentsList = {
-		'serveur' : { 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'router': { 'geometry' : bigTile, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x09bab1 })},
-		'apache': { 'geometry' : smallTile,	'mesh' :  new THREE.MeshStandardMaterial({ color: 0xb00d07 })},
-		'php': { 'geometry' : smallTile, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x3d51ad })},
-		'database': { 'geometry' : smallTile,	'mesh' :  new THREE.MeshStandardMaterial({ color: 0xc77c0c })},
-		'nodejs': { 'geometry' : smallTile,	'mesh' :  new THREE.MeshStandardMaterial({ color: 0x85E36B })}
-	  };
 
-	/*sceneComponents.push( new THREE.Mesh(shape, new THREE.MeshBasicMaterial({ color: 0x8288a1 })) );
-	scene.add(sceneComponents[0]);*/
+	componentsList = {
+		'serveur' : { 'derivedFrom' : '', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'serveur de fichier' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'serveur d\'impression' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'serveur d\'application' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'serveur DNS' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'serveur de messagerie' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'serveur web' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'serveur de bases de données' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'serveur virtuel' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'jetty' : { 'derivedFrom' : 'serveur virtuel', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
+		'router': { 'derivedFrom' : '', 'geometry' : bigTile, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x09bab1 })},
+		'apache': { 'derivedFrom' : 'child', 'geometry' : smallTile,	'mesh' :  new THREE.MeshStandardMaterial({ color: 0xb00d07 })},
+		'php': { 'derivedFrom' : 'child', 'geometry' : smallTile, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x3d51ad })},
+		'database': { 'derivedFrom' : 'child', 'geometry' : smallTile,	'mesh' :  new THREE.MeshStandardMaterial({ color: 0xc77c0c })},
+		'nodejs': { 'derivedFrom' : 'child', 'geometry' : smallTile,	'mesh' :  new THREE.MeshStandardMaterial({ color: 0x85E36B })}
+	};
+
+	const palette = $('#componentsSection');
+	let i = 0;
+	Object.entries(componentsList).forEach(function(component) {
+		if(component[1]['derivedFrom'] === 'child')
+			palette.append('<button class="paletteComponent addChildButtons" data-value="'+component[0]+'">'+component[0]+'</button><br/>');
+		else if(component[1]['derivedFrom'] === '')
+			palette.append('<button class="paletteComponent addComponentButtons" data-value="'+component[0]+'">'+component[0]+'</button><br/>');
+		else if(componentsList[ component[1]['derivedFrom'] ]['derivedFrom'] === '')
+			palette.append('<button class="paletteComponent addComponentButtons derivedComponent" data-value="'+component[0]+'">'+component[0]+'</button><br/>');
+		else
+			palette.append('<button class="paletteComponent addComponentButtons derivedComponent2" data-value="'+component[0]+'">'+component[0]+'</button><br/>');
+		
+		i++;
+	});
 
 	// Skybox
 	const DayFront = textureLoaderSky.load('Day-front.png');
@@ -113,7 +136,7 @@ function init(){
 	const skybox = new THREE.Mesh(new THREE.BoxGeometry(1000, 1000, 1000), skyboxMaterial);
 	scene.add(skybox);
 
-	const gridHelper = new THREE.GridHelper( 100, 100 );
+	const gridHelper = new THREE.GridHelper( 200, 200 );
 	gridHelper.position.y = -0.5;
 	scene.add( gridHelper );
 
@@ -215,7 +238,7 @@ function autoFocus(){
 function onKeyDown( event ) {
 	// reset camera's rotation pivot
 	if(event.keyCode === 32)
-		orbitControls.target = new THREE.Vector3(0, 0, 0);
+		orbitControls.target = new THREE.Vector3(0, 1, 0);
 	// camera movements (future enhancement)
 	if(selectedComponent){
 		if(event.keyCode === 38 ){
@@ -321,7 +344,10 @@ function onClick( event ) {
 				$('#sceneComponentslist').find('#c'+componentId).addClass('selectedComponent');
 				$('#componentID').html(selectedComponent.userData.componentID);
 				$('#componentName').val(selectedComponent.userData.componentName);
-				$('#componentType').html(selectedComponent.userData.componentType);
+				let derivationInfo = '';
+				if(selectedComponent.userData.derivedFrom !== '')
+					derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
+				$('#componentType').html(selectedComponent.userData.componentType + derivationInfo);
 				$('#rightPannel').css('display', 'block');
 			}else{
 				outlinePass.selectedObjects = [];
@@ -358,6 +384,7 @@ $('.addComponentButtons').on('click', function () {
 	sceneComponents[index].userData.componentType = componentType;
 	sceneComponents[index].userData.componentID = index;
 	sceneComponents[index].userData.componentName = componentType + index;
+	sceneComponents[index].userData.derivedFrom = componentsList[componentType]['derivedFrom'];
 	sceneComponentsObj.add(sceneComponents[index]);
 	//scene.add(sceneComponents[index]);
 	htmlComponentList.append('<li class="componentlistItem" data-value="'+index+'">'+
@@ -370,7 +397,7 @@ $('.addComponentButtons').on('click', function () {
 		dragControls.deactivate();
 });
 // select child to add to a Component
-$('#conponentsSection').on('click', '.addChildButtons', function ( event ) {
+$('#componentsSection').on('click', '.addChildButtons', function ( event ) {
 	$('.selectedChild').removeClass("selectedChild").addClass( "addChildButtons" );
 	$(this).removeClass("addChildButtons").addClass( "selectedChild" );
 
@@ -424,7 +451,10 @@ $('#sceneComponentslist').on('click', "div.componentLabel", function () {
 	$('#sceneComponentslist').find('#c'+index).addClass('selectedComponent');
 	$('#componentID').html(selectedComponent.userData.componentID);
 	$('#componentName').val(selectedComponent.userData.componentName);
-	$('#componentType').html(selectedComponent.userData.componentType);
+	let derivationInfo = '';
+	if(selectedComponent.userData.derivedFrom !== '')
+		derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
+	$('#componentType').html(selectedComponent.userData.componentType + derivationInfo);
 	$('#rightPannel').css('display', 'block');
 
 	enableAutoFocus = true;
@@ -473,6 +503,19 @@ $('#componentName').on('input', function(){
 	const newLabel = $(this).val();
 	$('#c'+ selectedComponent.userData.componentID ).html(newLabel);
 	selectedComponent.userData.componentName = newLabel;
+});
+// supprimer un objet
+$('#deleteButton').on('click', function(){
+	if(selectedComponent){
+		delete sceneComponents[selectedComponent.userData.componentID];
+		delete sceneComponentsObj.remove(selectedComponent);
+		$('.componentlistItem').each(function(){
+			if( $(this).attr('data-value') == selectedComponent.userData.componentID )
+				$(this).remove();
+		});
+		selectedComponent = null;
+		$('#rightPannel').css('display', 'none');
+	}
 });
 
 // Affichage framerate (debug)
