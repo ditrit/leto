@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 LIB_DIR=./lib
 ANTLR_DIR=./antlr
@@ -9,14 +8,19 @@ ANTLR_LIB=antlr-$ANTLR_VERSION-complete.jar
 ANTLR_RUNTIME=antlr-runtime-$ANTLR_VERSION.jar
 ANTLR_DOWNLOAD=https://www.antlr.org/download/
 
-ANTLR_LIBFILE=$LIB_DIR/ANTLR_LIB
+ANTLR_LIBFILE=$LIB_DIR/$ANTLR_LIB
+
+ARGS=$*
+
 
 mkdir -p $LIB_DIR
 mkdir -p $ANTLR_DIR
 rm -rf $ANTLR_DIR/*
 
-wget -O $ANTLR_LIBFILE $ANTLR_DOWNLOAD/$ANTLR_LIB
-wget -O $LIB_DIR/$ANTLR_RUNTIME $ANTLR_DOWNLOAD/$ANTLR_RUNTIME
+[ -f $ANTLR_LIBFILE ] || wget -O $ANTLR_LIBFILE $ANTLR_DOWNLOAD/$ANTLR_LIB
+[ -f $LIB_DIR/$ANTLR_RUNTIME ] || wget -O $LIB_DIR/$ANTLR_RUNTIME $ANTLR_DOWNLOAD/$ANTLR_RUNTIME
+
 
 CLASSPATH="$ANTLR_LIBFILE:$CLASSPATH"
-java -Xmx500M -cp "$ANTLR_LIBFILE:$CLASSPATH" org.antlr.v4.Tool -o $ANTLR_DIR -Dlanguage=JavaScript $*
+java -Xmx500M -cp $CLASSPATH org.antlr.v4.Tool -o $ANTLR_DIR -Dlanguage=JavaScript $ARGS
+
