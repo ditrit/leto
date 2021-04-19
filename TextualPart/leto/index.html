@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Leto Partie Textuelle</title>
+        <script src="require.js"></script>
+        <script src = "./require.js" > </script>  
+    </head>
+
+    <body>
+    	<p>Emplacement code</p>
+	    <textarea id = "code" rows="40" cols="50">
+asset serv is_a server;
+asset bdd is_a database;
+componant bdd : serv;
+asset rout is_a router;
+componant rout -> serv;
+		</textarea>
+		<br/><br/><br/>
+		<button id="parse">Parse</button>
+
+    </body>
+
+    <script >
+		var antlr4 = require('antlr4/index');
+		var letoLexer = require('generated-parser/letoLexer');
+		var letoParser = require('generated-parser/letoParser');
+		document.getElementById("parse").addEventListener("click", function(){
+	    var input = document.getElementById("code").value;
+	    var chars = new antlr4.InputStream(input);
+	    var lexer = new letoLexer.letoLexer(chars);
+	    var tokens  = new antlr4.CommonTokenStream(lexer);
+	    var parser = new letoParser.letoParser(tokens);
+	    parser.buildParseTrees = true;
+	    var tree = parser.elements();
+	    console.log("Parsed: "+ tree);
+		});
+	</script>
+
+</html>
+
