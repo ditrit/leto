@@ -29,8 +29,14 @@ JSListener.prototype.exitDefinition = function(ctx) {
 
 };
 
+class getInstantiation{
+    constructor(node)
+    {
+        this.node = new getNode(node);
+    }
+}
 JSListener.prototype.exitInstantiation = function(ctx) {
-
+    const Myinstant = new getInstantiation(ctx.getChild(0));
 };
 
 
