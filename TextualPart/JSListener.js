@@ -15,6 +15,23 @@ JSListener = function () {
 JSListener.prototype = Object.create(letoListener.prototype);
 JSListener.prototype.constructor = JSListener;
 
+//MyModele((bdd:serv)(bdd database))
+class model{
+    constructor(chaine){
+        this.chaine = chaine;
+    }
+
+    init(){
+        this.chaine = "MyModele(";
+    }
+    newAsset(id, comp){
+        this.chaine += "(" + id + " " + comp + ")";
+    }
+    newComponant(id, lien, id2){
+        this.chaine += "(" + id + " " +lien + " " + id2 + ")";
+    }
+
+}
 
 
 JSListener.prototype.exitProg = function(ctx) {
