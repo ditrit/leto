@@ -15,22 +15,21 @@ JSListener = function () {
 JSListener.prototype = Object.create(letoListener.prototype);
 JSListener.prototype.constructor = JSListener;
 
-//MyModele((bdd:serv)(bdd database))
+//MyModele : ( bdd database ) ( serv server ) ( bdd : serv )
 class model{
     constructor(chaine){
         this.chaine = chaine;
     }
 
     init(){
-        this.chaine = "MyModele(";
+        this.chaine = "MyModele";
     }
     newAsset(id, comp){
-        this.chaine += "(" + id + " " + comp + ")";
+        this.chaine += " ( " + id + " " + comp + " ) ";
     }
     newComponant(id, lien, id2){
-        this.chaine += "(" + id + " " +lien + " " + id2 + ")";
+        this.chaine += " ( " + id + " " + lien + " " + id2 + " ) ";
     }
-
 }
 
 
@@ -39,7 +38,7 @@ JSListener.prototype.exitProg = function(ctx) {
 };
 
 JSListener.prototype.exitInstruction = function(ctx) {
-
+    model.init();
 };
 
 JSListener.prototype.exitDefinition = function(ctx) {
@@ -57,65 +56,44 @@ JSListener.prototype.exitInstantiation = function(ctx) {
 };
 
 
-class getNodeType{
-    constructor(id, id2)
-    {
-        this.id = new getId(id);
-        this.id2 = new getComponant(id2);
-    }
-}
 JSListener.prototype.exitNode_type = function(ctx) {
-    const myNodeType = new getNodeType(ctx.getChild(1), ctx.getChild(3))
+    id = ctx.getChild(1);
+    lien = ctx.getChild(2);
+    id2 = ctx.getChild(3);
+    model.newComponant(id, lien, id2);
 };
 
 
 JSListener.prototype.exitRelationship_type = function(ctx) {};
 
 
-class getNode{
-    constructor(id, comp)
-    {
-        this.id = new getId(id);
-        this.comp = new getComponant(comp);
-    }
-}
 JSListener.prototype.exitNode = function(ctx) {
-   const myNode = new getNode(ctx.getChild(1), ctx.getChild(3))
+    id = ctx.getChild(1);
+    comp = ctx.getChild(3);
+    model.newAsset(id, comp);
 };
 
 
 JSListener.prototype.exitRelationship = function(ctx) {};
 
 
-class getNumber {
-    constructor(num) {
-        this.num = num;
-    }
-}
 JSListener.prototype.exitNumber = function(ctx) {
-    const myNum = new getNumber(ctx.getChild(0));
+    num = ctx.getChild(0);
+    return num;
 };
 
 
 JSListener.prototype.exitComment = function(ctx) {};
 
 
-class getId {
-    constructor(name) {
-        this.name = name;
-    }
-}
 JSListener.prototype.exitId = function(ctx) {
-    const myId = new getId(ctx.getChild(0));
+    id = ctx.getChild(0);
+    return id;
 };
 
 
-class getComponant {
-    constructor(comp) {
-        this.comp = comp;
-    }
-}
 JSListener.prototype.exitComponant = function(ctx) {
-    const myComponant = new getComponant(ctx.getChild(0));
+    componant = ctx.getChild(0);
+    return componant ;
 };
 
