@@ -15,17 +15,23 @@ JSListener = function () {
 JSListener.prototype = Object.create(letoListener.prototype);
 JSListener.prototype.constructor = JSListener;
 
-//MyModele : ( bdd database ) ( serv server ) ( bdd : serv )
-class model{
+//MyModele instantiation ( bdd database ) ( serv server ) definition ( bdd : serv )
+class Model{
     constructor(chaine){
         this.chaine = chaine;
     }
 
     init(){
-        this.chaine = "MyModele";
+        this.chaine = "MyModele ";
+    }
+    newInst(){
+        this.chaine += "instantiation";
     }
     newAsset(id, comp){
         this.chaine += " ( " + id + " " + comp + " ) ";
+    }
+    newDef(){
+        this.chaine += "definition";
     }
     newComponant(id, lien, id2){
         this.chaine += " ( " + id + " " + lien + " " + id2 + " ) ";
@@ -38,21 +44,17 @@ JSListener.prototype.exitProg = function(ctx) {
 };
 
 JSListener.prototype.exitInstruction = function(ctx) {
+    model = new Model("");
     model.init();
 };
 
 JSListener.prototype.exitDefinition = function(ctx) {
-
+    model.newDef();
 };
 
-class getInstantiation{
-    constructor(node)
-    {
-        this.node = new getNode(node);
-    }
-}
+
 JSListener.prototype.exitInstantiation = function(ctx) {
-    const Myinstant = new getInstantiation(ctx.getChild(0));
+    model.newInst();
 };
 
 
