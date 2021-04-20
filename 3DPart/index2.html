@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<title>LETO</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+</head>
+<body>
+
+	<!-- Handle secondary and independant events -->
+	<script>
+		const width = 500;
+		const height = 500;
+		const color = '#555555';
+		const tagColor = '#FF0000';
+		const componentColor = '#8288a1';
+		const componentType = 'Serveur';
+		const logo = 'file.jpg';
+
+		const canvas = document.createElement('canvas');
+		canvas.width  = width;
+		canvas.height = height;
+		canvas.style.zIndex   = 8;
+		canvas.style.position = "absolute";
+		canvas.style.top = 0;
+		canvas.style.left = 0;
+		const ctx = canvas.getContext("2d");
+		document.body.appendChild(canvas);
+		// Background
+		ctx.beginPath();
+		ctx.rect(0, 0, width, height);
+		ctx.fillStyle = color;
+		ctx.fill();
+		ctx.closePath();
+		// Label
+		ctx.font = '40px serif';
+		ctx.fillStyle = '#FFFFFF';
+		ctx.fillText(componentType, 55, 40, width-110);
+		// TagColor
+		ctx.beginPath();
+		ctx.rect(width-50, 0, 50, 50);
+		ctx.fillStyle = tagColor;
+		ctx.fill();
+		ctx.closePath();
+		// Logo
+		const img = new Image();   // Crée un nouvel élément Image
+		img.addEventListener('load', function() {
+			ctx.drawImage(img, 0, 0, 50, 50);
+		}, false);
+		img.src = './public/textures/logos/'+logo;
+	</script>
+</body>
+</html>

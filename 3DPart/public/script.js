@@ -8,13 +8,11 @@ import { OutlinePass } from './libs/three.js/examples/jsm/postprocessing/Outline
 import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
 
 /// VARIABLES ///
-const htmlComponentList = $('#sceneComponentslist');
 
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
 	selectedTool = 'eyeTool', paletteChild = null,selectedComponent = null, enableAutoFocus = false,
 	preventClick = false;
 let componentsList, sceneComponents = [], sceneComponentsObj = new THREE.Group();	// Liste de tous les comosants existants; liste des composants de la Scene
-let box, bigTile, smallTile;
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
@@ -23,6 +21,8 @@ let config_distance = 5, config_tolerance = 0.2, config_diviseurVitesse = 30, co
 // Loaders
 const textureLoaderSky = new THREE.TextureLoader();
 textureLoaderSky.setPath( 'public/skybox/' );
+// JQuery
+const htmlComponentList =  $('#componentsSection');
 
 
 /// FONCTIONS DE BASE ///
@@ -71,7 +71,7 @@ function init(){
 	orbitControls.update();
 
 	// Drag control
-	dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement);
+	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement);
 	dragControls.deactivate();
 	document.addEventListener( 'click', onClick );
 	window.addEventListener( 'keydown', onKeyDown );
@@ -81,26 +81,26 @@ function init(){
 	//initialisation de la liste des composants
 	scene.add(sceneComponentsObj);
 
-	box = new THREE.BoxGeometry(1, 1, 1);
-	bigTile =  new THREE.BoxGeometry(1, 0.4, 1);
-	smallTile =  new THREE.BoxGeometry(0.8, 0.2, 0.8);
+	//new THREE.MeshStandardMaterial({ color: 0x8288a1 })
+
+	//textures
 
 	componentsList = {
-		'serveur' : { 'derivedFrom' : '', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'serveur de fichier' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'serveur d\'impression' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'serveur d\'application' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'serveur DNS' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'serveur de messagerie' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'serveur web' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'serveur de bases de données' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'serveur virtuel' : { 'derivedFrom' : 'serveur', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'jetty' : { 'derivedFrom' : 'serveur virtuel', 'geometry' : box, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x8288a1 })},
-		'router': { 'derivedFrom' : '', 'geometry' : bigTile, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x09bab1 })},
-		'apache': { 'derivedFrom' : 'child', 'geometry' : smallTile,	'mesh' :  new THREE.MeshStandardMaterial({ color: 0xb00d07 })},
-		'php': { 'derivedFrom' : 'child', 'geometry' : smallTile, 'mesh' :  new THREE.MeshStandardMaterial({ color: 0x3d51ad })},
-		'database': { 'derivedFrom' : 'child', 'geometry' : smallTile,	'mesh' :  new THREE.MeshStandardMaterial({ color: 0xc77c0c })},
-		'nodejs': { 'derivedFrom' : 'child', 'geometry' : smallTile,	'mesh' :  new THREE.MeshStandardMaterial({ color: 0x85E36B })}
+		'serveur' : { 'derivedFrom' : '', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'serveur de fichier' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'serveur d\'impression' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'print.png' },
+		'serveur d\'application' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'menu.webp' },
+		'serveur DNS' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'dns.png' },
+		'serveur de messagerie' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'mail.png' },
+		'serveur web' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'web.jpg' },
+		'serveur de bases de données' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'servBDD.png' },
+		'serveur virtuel' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'jetty' : { 'derivedFrom' : 'serveur virtuel', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'router': { 'derivedFrom' : '', 'width' : 1, 'height' : 0.4, 'depht' : 1, 'color' : '#19bfba', 'logo' : 'wifi.png' },
+		'apache': { 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#a82b18', 'logo' : 'apache.png' },
+		'php': { 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#3065ba', 'logo' : 'php.png' },
+		'database': { 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#db852a', 'logo' : 'db.png' },
+		'nodejs': { 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg' }
 	};
 
 	const palette = $('#componentsSection');
@@ -170,13 +170,13 @@ function animate(){
 /// FONCTIONS ADDITIONNELLES ///
 // espace les composants entre eux
 function ajustementEspacement(){
-	sceneComponents.forEach(component => {
+	sceneComponentsObj.children.forEach(component => {
 		let haveNeighbour = false;
 		let lastDistance = null;
 		let nearestNeighbour = null;
-		component.position.y = 0 + (0.2*component.children.length);
-		sceneComponents.forEach(neighbour => {
-			if(component != neighbour){
+		component.position.y = 0.2*component.children.length;
+		sceneComponentsObj.children.forEach(neighbour => {
+			if(component !== neighbour){
 				let distance = Math.sqrt(
 					Math.pow((component.position.x - neighbour.position.x), 2) +
 					Math.pow((component.position.z - neighbour.position.z), 2)
@@ -189,7 +189,7 @@ function ajustementEspacement(){
 					nearestNeighbour = neighbour;
 				}
 
-				if(distance == 0){
+				if(distance === 0){
 					component.position.x += Math.random();
 					component.position.z += Math.random();
 					haveNeighbour = true;
@@ -268,10 +268,10 @@ function onClick( event ) {
 		let componentType = paletteChild.userData.componentType;
 		selectedComponent.add(paletteChild);
 		selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
-		selectedComponent.position.y = 0 + (0.2*selectedComponent.children.length);
+		selectedComponent.position.y = (0.2 * selectedComponent.children.length);
 		let childIndex = selectedComponent.children.length - 1;
 		selectedComponent.children[childIndex].position.z += 0.3;
-		let arithmeticSeries = 0 + (0.2*selectedComponent.children.length); // arithmeticSeries's Uo
+		let arithmeticSeries = (0.2 * selectedComponent.children.length); // arithmeticSeries's Uo
 
 		selectedComponent.children.forEach(child => {
 			child.position.y = arithmeticSeries;
@@ -286,7 +286,7 @@ function onClick( event ) {
 		);
 
 		dragControls.dispose();
-		dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement );
+		dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
 		if(selectedTool !== 'moveTool')
 			dragControls.deactivate();
 		
@@ -326,7 +326,7 @@ function onClick( event ) {
 
 			if ( group.children.length === 0 ) {
 				dragControls.transformGroup = false;
-				draggableObjects.push( ...sceneComponents );
+				draggableObjects.push( ...sceneComponentsObj.children );
 			}
 		}
 	}else if(selectedTool === 'eyeTool'){
@@ -365,6 +365,143 @@ function addSelectedObject( object ) {
 	selectedObjects.push( object );
 }
 
+function generateTexture(componentType, color, width, height, tagColor, logo, generateComponnent) {
+	width *= 500;
+	height *= 500;
+
+	const canvas2 = document.createElement('canvas');
+	canvas2.width  = width;
+	canvas2.height = height;
+	const ctx2 = canvas2.getContext("2d");
+	// Background
+	ctx2.beginPath();
+	ctx2.rect(0, 0, width, height);
+	ctx2.fillStyle = color;
+	ctx2.fill();
+	ctx2.closePath();
+
+	const canvas = document.createElement('canvas');
+	canvas.width  = width;
+	canvas.height = height;
+	const ctx = canvas.getContext("2d");
+	// Background
+	ctx.beginPath();
+	ctx.rect(0, 0, width, height);
+	ctx.fillStyle = color;
+	ctx.fill();
+	ctx.closePath();
+	// Label
+	ctx.font = '90px serif';
+	ctx.fillStyle = '#FFFFFF';
+	ctx.fillText(componentType, 105, 70, width-110);
+	// TagColor
+	ctx.beginPath();
+	ctx.rect(width-100, 0, 100, 100);
+	ctx.fillStyle = tagColor;
+	ctx.fill();
+	ctx.closePath();
+	// Logo
+	const img = new Image();   // Crée un nouvel élément Image
+	img.addEventListener('load', function() {
+		ctx.drawImage(img, 0, 0, 100, 100);
+
+		const texture = new THREE.CanvasTexture(canvas);
+		const texture2 = new THREE.CanvasTexture(canvas2);
+
+		const material = [
+			new THREE.MeshStandardMaterial({ map: texture }),	// Right side
+			new THREE.MeshStandardMaterial({ map: texture }),	// Left side
+			new THREE.MeshStandardMaterial({ map: texture2 }),	// Top side
+			new THREE.MeshStandardMaterial({ map: texture2 }),	// Bottom side
+			new THREE.MeshStandardMaterial({ map: texture }),	// Front side
+			new THREE.MeshStandardMaterial({ map: texture })	// Back side
+		];
+		if(componentsList[componentType]['derivedFrom'] === 'child')
+			generateComponnentChildren(componentType, material);
+		else if(generateComponnent)
+			generateComponentParent(componentType, material);
+		else
+			regenerateTexture(material);
+
+	}, false);
+	img.src = './public/textures/logos/'+logo;
+}
+
+function generateComponentParent(componentType, material) {
+	const cWidth = componentsList[componentType]['width'];
+	const cHeight = componentsList[componentType]['height'];
+	const cDepht = componentsList[componentType]['depht'];
+
+	const geometry = new THREE.BoxGeometry( cWidth, cHeight, cDepht );
+	const index = sceneComponentsObj.children.length;
+	let ncID = 0;
+	if(index > 0)
+		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
+	sceneComponentsObj.add( new THREE.Mesh(geometry, material) );
+	sceneComponentsObj.children[index].position.set(Math.random(), 0, Math.random());
+	sceneComponentsObj.children[index].userData.componentType = componentType;
+	sceneComponentsObj.children[index].userData.componentID = ncID;
+	sceneComponentsObj.children[index].userData.componentName = componentType + ncID;
+	sceneComponentsObj.children[index].userData.derivedFrom = componentsList[componentType]['derivedFrom'];
+
+	$('#sceneComponentslist').append('<li class="componentlistItem" data-value="'+ncID+'">'+
+										'<div class="componentLabel" data-value="'+ncID+'" id="c'+ncID+'">'+componentType + ncID +'</div>'+
+										'<ul class="childList" id="'+ncID+'"></ul>'+
+									'</li>');
+	dragControls.dispose();
+	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+	if(selectedTool !== 'moveTool')
+		dragControls.deactivate();
+}
+
+function generateComponnentChildren(componentType, material) {
+	const cWidth = componentsList[componentType]['width'];
+	const cHeight = componentsList[componentType]['height'];
+	const cDepht = componentsList[componentType]['depht'];
+	const pComponentType = selectedComponent.userData.componentType;
+	const pColor = componentsList[pComponentType]['color'];
+	const pTagColor = '#FF0000';
+	const pLogo = componentsList[pComponentType]['logo'];
+
+	paletteChild = new THREE.Mesh( new THREE.BoxGeometry( cWidth, cHeight, cDepht ), material );
+	paletteChild.userData.componentType = componentType;
+
+	if(!selectedComponent)
+		return;
+
+	selectedComponent.add(paletteChild);
+	selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
+	generateTexture(pComponentType, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, false);
+	selectedComponent.position.y = 0.2 * selectedComponent.children.length;
+	let childIndex = selectedComponent.children.length - 1;
+	//selectedComponent.children[childIndex].position.z += 0.3;
+	let arithmeticSeries = 0.2 * selectedComponent.children.length; // arithmeticSeries's Uo
+
+	selectedComponent.children.forEach(child => {
+		child.position.y = arithmeticSeries;
+		// Un = (Un-1) - r - 0.2
+		arithmeticSeries = arithmeticSeries - (0.2) - 0.2;
+	});
+
+	$('#'+selectedComponent.userData.componentID).append(
+		'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+componentType+' '+childIndex+'">'
+		+componentType+
+		'</li>'
+	);
+
+	dragControls.dispose();
+	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+	if(selectedTool !== 'moveTool')
+		dragControls.deactivate();
+
+
+	$('.selectedChild').removeClass('selectedChild').addClass( 'addChildButtons' );
+	paletteChild = null;
+}
+
+function regenerateTexture(material){
+	selectedComponent.material = material;
+}
 
 /// EVENEMENTS ///
 // Met à jour la taille de la vue si la fenêtre est redimentionée
@@ -377,64 +514,28 @@ window.addEventListener('resize', function(){
 });
 // add Component
 $('.addComponentButtons').on('click', function () {
-	let componentType = this.dataset.value;
-	let index = sceneComponents.length;
-	sceneComponents.push( new THREE.Mesh( componentsList[componentType]['geometry'], componentsList[componentType]['mesh'] ) );
-	sceneComponents[index].position.set(Math.random(), 0, Math.random());
-	sceneComponents[index].userData.componentType = componentType;
-	sceneComponents[index].userData.componentID = index;
-	sceneComponents[index].userData.componentName = componentType + index;
-	sceneComponents[index].userData.derivedFrom = componentsList[componentType]['derivedFrom'];
-	sceneComponentsObj.add(sceneComponents[index]);
-	//scene.add(sceneComponents[index]);
-	htmlComponentList.append('<li class="componentlistItem" data-value="'+index+'">'+
-								'<div class="componentLabel" data-value="'+index+'" id="c'+index+'">'+componentType + index +'</div>'+
-								'<ul class="childList" id="'+index+'"></ul>'+
-							'</li>');
-	dragControls.dispose();
-	dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement );
-	if(selectedTool !== 'moveTool')
-		dragControls.deactivate();
+	const componentType = this.dataset.value;
+	const cWidth = componentsList[componentType]['width'];
+	const cHeight = componentsList[componentType]['height'];
+	const cColor = componentsList[componentType]['color'];
+	const cLogo = componentsList[componentType]['logo'];
+
+	//const geometry = new THREE.BoxGeometry( cWidth, cHeight, cDepht );
+	//const material = generateTexture(componentType, cColor, cWidth, cHeight, '#FF0000', cLogo);
+	generateTexture(componentType, cColor, cWidth, cHeight, '#ff0000', cLogo, true);
 });
 // select child to add to a Component
-$('#componentsSection').on('click', '.addChildButtons', function ( event ) {
+htmlComponentList.on('click', '.addChildButtons', function ( event ) {
 	$('.selectedChild').removeClass("selectedChild").addClass( "addChildButtons" );
 	$(this).removeClass("addChildButtons").addClass( "selectedChild" );
 
-	let componentType = this.dataset.value;
-	paletteChild = new THREE.Mesh( componentsList[componentType]['geometry'], componentsList[componentType]['mesh'] );
-	paletteChild.userData.componentType = componentType;
+	const componentType = this.dataset.value;
+	const cWidth = componentsList[componentType]['width'];
+	const cHeight = componentsList[componentType]['height'];
+	const cColor = componentsList[componentType]['color'];
+	const cLogo = componentsList[componentType]['logo'];
 
-	if(!selectedComponent)
-		return;
-
-	selectedComponent.add(paletteChild);
-	selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
-	selectedComponent.position.y = 0 + (0.2*selectedComponent.children.length);
-	let childIndex = selectedComponent.children.length - 1;
-	selectedComponent.children[childIndex].position.z += 0.3;
-	let arithmeticSeries = 0 + (0.2*selectedComponent.children.length); // arithmeticSeries's Uo
-
-	selectedComponent.children.forEach(child => {
-		child.position.y = arithmeticSeries;
-		// Un = (Un-1) - r - 0.2
-		arithmeticSeries = arithmeticSeries - (0.2) - 0.2;
-	});
-
-	$('#'+selectedComponent.userData.componentID).append(
-		'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+componentType+' '+childIndex+'">'
-			+componentType+
-		'</li>'
-	);
-
-	dragControls.dispose();
-	dragControls = new DragControls( [ ... sceneComponents ], camera, renderer.domElement );
-	if(selectedTool !== 'moveTool')
-		dragControls.deactivate();
-	
-		
-	$('.selectedChild').removeClass('selectedChild').addClass( 'addChildButtons' );
-	paletteChild = null;
+	generateTexture(componentType, cColor, cWidth, cHeight, '#FF0000', cLogo, false);
 });
 $('#conponentsSection').on('click', '.selectedChild', function () {
 	$(this).removeClass("selectedChild").addClass( "addChildButtons" );
@@ -442,22 +543,32 @@ $('#conponentsSection').on('click', '.selectedChild', function () {
 });
 // Select component (activate auto-focus)
 $('#sceneComponentslist').on('click', "div.componentLabel", function () {
-	let index = this.dataset.value;
-	selectedComponent = sceneComponents[index];
-	addSelectedObject( selectedComponent );
-	outlinePass.selectedObjects = selectedObjects;
-	orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
-	$('.componentLabel').removeClass('selectedComponent');
-	$('#sceneComponentslist').find('#c'+index).addClass('selectedComponent');
-	$('#componentID').html(selectedComponent.userData.componentID);
-	$('#componentName').val(selectedComponent.userData.componentName);
-	let derivationInfo = '';
-	if(selectedComponent.userData.derivedFrom !== '')
-		derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
-	$('#componentType').html(selectedComponent.userData.componentType + derivationInfo);
-	$('#rightPannel').css('display', 'block');
+	let cpID = $(this).attr('data-value');
+	let cIndex = 0;
 
-	enableAutoFocus = true;
+	sceneComponentsObj.children.forEach(function(component){
+		if( cpID == component.userData.componentID ){
+			selectedComponent = sceneComponentsObj.children[cIndex];
+
+			addSelectedObject( selectedComponent );
+			outlinePass.selectedObjects = selectedObjects;
+			orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
+
+			$('.componentLabel').removeClass('selectedComponent');
+			$('#sceneComponentslist').find('#c'+selectedComponent.userData.componentID).addClass('selectedComponent');
+			$('#componentID').html(selectedComponent.userData.componentID);
+			$('#componentName').val(selectedComponent.userData.componentName);
+			let derivationInfo = '';
+			if(selectedComponent.userData.derivedFrom !== '')
+				derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
+			$('#componentType').html(selectedComponent.userData.componentType + derivationInfo);
+			$('#rightPannel').css('display', 'block');
+			enableAutoFocus = true;
+
+			return false;
+		}
+		cIndex++;
+	});
 });
 // Select child (activate auto-focus)
 /*$('#sceneComponentslist').on('click', "li.childListItem", function () {
@@ -496,9 +607,11 @@ $('.toolButtons').on('click', function () {
 			break;
 	}
 });
+// prevent UI's clicks to have effects on the scene
 $('.UI').on('click', function(){
 	preventClick = true;
 });
+// update name in component list
 $('#componentName').on('input', function(){
 	const newLabel = $(this).val();
 	$('#c'+ selectedComponent.userData.componentID ).html(newLabel);
@@ -507,14 +620,20 @@ $('#componentName').on('input', function(){
 // supprimer un objet
 $('#deleteButton').on('click', function(){
 	if(selectedComponent){
-		delete sceneComponents[selectedComponent.userData.componentID];
-		delete sceneComponentsObj.remove(selectedComponent);
 		$('.componentlistItem').each(function(){
-			if( $(this).attr('data-value') == selectedComponent.userData.componentID )
+			if( $(this).attr('data-value') == selectedComponent.userData.componentID ){
 				$(this).remove();
+				sceneComponentsObj.remove(selectedComponent);
+				selectedComponent = null;
+
+				dragControls.dispose();
+				dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+				if(selectedTool !== 'moveTool')
+					dragControls.deactivate();
+
+				return false;
+			}
 		});
-		selectedComponent = null;
-		$('#rightPannel').css('display', 'none');
 	}
 });
 
