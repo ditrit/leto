@@ -265,12 +265,17 @@ function onClick( event ) {
 		return;
 	}
 	if(paletteChild && selectedComponent){
+		const pComponentType = selectedComponent.userData.componentType;
+		const pTagColor = '#FF0000';
+		const pColor = componentsList[pComponentType]['color'];
+		const pLogo = componentsList[pComponentType]['logo'];
+
 		let componentType = paletteChild.userData.componentType;
 		selectedComponent.add(paletteChild);
 		selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
+		generateTexture(pComponentType, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, false);
 		selectedComponent.position.y = (0.2 * selectedComponent.children.length);
 		let childIndex = selectedComponent.children.length - 1;
-		selectedComponent.children[childIndex].position.z += 0.3;
 		let arithmeticSeries = (0.2 * selectedComponent.children.length); // arithmeticSeries's Uo
 
 		selectedComponent.children.forEach(child => {
@@ -295,6 +300,36 @@ function onClick( event ) {
 		paletteChild = null;
 
 		return;
+
+		/*
+		selectedComponent.add(paletteChild);
+		selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
+		generateTexture(pComponentType, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, false);
+		selectedComponent.position.y = 0.2 * selectedComponent.children.length;
+		let childIndex = selectedComponent.children.length - 1;
+		//selectedComponent.children[childIndex].position.z += 0.3;
+		let arithmeticSeries = 0.2 * selectedComponent.children.length; // arithmeticSeries's Uo
+
+		selectedComponent.children.forEach(child => {
+			child.position.y = arithmeticSeries;
+			// Un = (Un-1) - r - 0.2
+			arithmeticSeries = arithmeticSeries - (0.2) - 0.2;
+		});
+
+		$('#'+selectedComponent.userData.componentID).append(
+			'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+componentType+' '+childIndex+'">'
+			+componentType+
+			'</li>'
+		);
+
+		dragControls.dispose();
+		dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+		if(selectedTool !== 'moveTool')
+			dragControls.deactivate();
+
+
+		$('.selectedChild').removeClass('selectedChild').addClass( 'addChildButtons' );
+		paletteChild = null;*/
 	}
 	if(selectedTool === 'moveTool'){
 		event.preventDefault();
@@ -458,10 +493,6 @@ function generateComponnentChildren(componentType, material) {
 	const cWidth = componentsList[componentType]['width'];
 	const cHeight = componentsList[componentType]['height'];
 	const cDepht = componentsList[componentType]['depht'];
-	const pComponentType = selectedComponent.userData.componentType;
-	const pColor = componentsList[pComponentType]['color'];
-	const pTagColor = '#FF0000';
-	const pLogo = componentsList[pComponentType]['logo'];
 
 	paletteChild = new THREE.Mesh( new THREE.BoxGeometry( cWidth, cHeight, cDepht ), material );
 	paletteChild.userData.componentType = componentType;
@@ -469,6 +500,10 @@ function generateComponnentChildren(componentType, material) {
 	if(!selectedComponent)
 		return;
 
+	const pComponentType = selectedComponent.userData.componentType;
+	const pTagColor = '#FF0000';
+	const pColor = componentsList[pComponentType]['color'];
+	const pLogo = componentsList[pComponentType]['logo'];
 	selectedComponent.add(paletteChild);
 	selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
 	generateTexture(pComponentType, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, false);
