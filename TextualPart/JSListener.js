@@ -25,6 +25,9 @@ JSListener.prototype.exitInstruction = function(ctx) {
 JSListener.prototype.exitDefinition = function(ctx) {
 };
 
+JSListener.prototype.exitInstantiation = function(ctx) {
+};
+
 class Model{
     init(){
         m = "MyModele ";
@@ -36,17 +39,6 @@ class Model{
         c = foncComponant(id, lien, id2);
     }
 }
-
-class getInstantiation{
-    constructor(node)
-    {
-        this.node = new getNode(node);
-    }
-}
-JSListener.prototype.exitInstantiation = function(ctx) {
-    Myinstant = new getInstantiation(ctx.getChild(0));
-};
-
 
 function foncComponant (id, lien, id2) {
     this.id = id;
