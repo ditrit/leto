@@ -15,87 +15,105 @@ JSListener = function () {
 JSListener.prototype = Object.create(letoListener.prototype);
 JSListener.prototype.constructor = JSListener;
 
-//MyModele instantiation ( bdd database ) ( serv server ) definition ( bdd : serv )
-class Model{
-    constructor(chaine){
-        this.chaine = chaine;
-    }
 
-    init(){
-        this.chaine = "MyModele ";
-    }
-    newInst(){
-        this.chaine += "instantiation";
-    }
-    newAsset(id, comp){
-        this.chaine += " ( " + id + " " + comp + " ) ";
-    }
-    newDef(){
-        this.chaine += "definition";
-    }
-    newComponant(id, lien, id2){
-        this.chaine += " ( " + id + " " + lien + " " + id2 + " ) ";
-    }
-}
-
-
-JSListener.prototype.exitProg = function(ctx) {
-    
+JSListener.prototype.exitProg = function(ctx) { 
 };
 
 JSListener.prototype.exitInstruction = function(ctx) {
-    model = new Model("");
-    model.init();
 };
 
 JSListener.prototype.exitDefinition = function(ctx) {
-    model.newDef();
 };
 
+class Model{
+    constructor(comp, asset){
+        this.comp = comp;
+        this.asset = asset;
+    }
+    init(){
+        this.chaine = "MyModele ";
+    }
+    newAsset(){
 
+    }
+    newComponant(){
+        
+    }
+}
+
+class getInstantiation{
+    constructor(node)
+    {
+        this.node = new getNode(node);
+    }
+}
 JSListener.prototype.exitInstantiation = function(ctx) {
-    model.newInst();
+    Myinstant = new getInstantiation(ctx.getChild(0));
 };
 
 
+function foncComponant (id, lien, id2) {
+    this.id = id;
+    this.lien = lien;
+    this.id2 = id2;
+    this.string = function() {
+        alert(id + ' ' + lien + ' ' + id2 );
+    }
+}
+
+ 
 JSListener.prototype.exitNode_type = function(ctx) {
-    id = ctx.getChild(1);
-    lien = ctx.getChild(2);
-    id2 = ctx.getChild(3);
-    model.newComponant(id, lien, id2);
+    var comp = foncComponant(ctx.getChild(1), ctx.getChild(2), ctx.getChild(3));
 };
 
 
 JSListener.prototype.exitRelationship_type = function(ctx) {};
 
 
+function foncAsset (id, comp) {
+    this.id = id;
+    this.comp = comp;
+    this.string = function() {
+        alert(id + ' ' + comp);
+    }
+}
 JSListener.prototype.exitNode = function(ctx) {
-    id = ctx.getChild(1);
-    comp = ctx.getChild(3);
-    model.newAsset(id, comp);
+   myNode = new getNode(ctx.getChild(1), ctx.getChild(3))
 };
 
 
 JSListener.prototype.exitRelationship = function(ctx) {};
 
 
+class getNumber {
+    constructor(num) {
+        this.num = num;
+    }
+}
 JSListener.prototype.exitNumber = function(ctx) {
-    num = ctx.getChild(0);
-    return num;
+    myNum = new getNumber(ctx.getChild(0));
 };
 
 
 JSListener.prototype.exitComment = function(ctx) {};
 
 
+class getId {
+    constructor(name) {
+        this.name = name;
+    }
+}
 JSListener.prototype.exitId = function(ctx) {
-    id = ctx.getChild(0);
-    return id;
+    myId = new getId(ctx.getChild(0));
 };
 
 
+class getComponant {
+    constructor(comp) {
+        this.comp = comp;
+    }
+}
 JSListener.prototype.exitComponant = function(ctx) {
-    componant = ctx.getChild(0);
-    return componant ;
+    myComponant = new getComponant(ctx.getChild(0));
 };
 
