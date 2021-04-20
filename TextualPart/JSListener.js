@@ -26,18 +26,14 @@ JSListener.prototype.exitDefinition = function(ctx) {
 };
 
 class Model{
-    constructor(comp, asset){
-        this.comp = comp;
-        this.asset = asset;
-    }
     init(){
-        this.chaine = "MyModele ";
+        m = "MyModele ";
     }
-    newAsset(){
-
+    newAsset(id, comp){
+        a = foncAsset(id, comp);
     }
-    newComponant(){
-        
+    newComponant(id, lien, id2){
+        c = foncComponant(id, lien, id2);
     }
 }
 
@@ -63,7 +59,7 @@ function foncComponant (id, lien, id2) {
 
  
 JSListener.prototype.exitNode_type = function(ctx) {
-    var comp = foncComponant(ctx.getChild(1), ctx.getChild(2), ctx.getChild(3));
+    var comp = model.newComponant(ctx.getChild(1), ctx.getChild(2), ctx.getChild(3));
 };
 
 
@@ -78,7 +74,7 @@ function foncAsset (id, comp) {
     }
 }
 JSListener.prototype.exitNode = function(ctx) {
-   myNode = new getNode(ctx.getChild(1), ctx.getChild(3))
+   ass = model.newAsset(ctx.getChild(1), ctx.getChild(3))
 };
 
 
