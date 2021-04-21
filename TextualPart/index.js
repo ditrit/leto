@@ -1,7 +1,7 @@
 const antlr4 = require("antlr4/index")
 const fs = require("fs")
-const letoLexer = require("./letoLexer.js")
-const letoParser = require("./letoParser.js")
+const letoLexer = require("./antlr/letoLexer.js")
+const letoParser = require("./antlr/letoParser.js")
 const JSListener = require("./JSListener.js").JSListener
 
 const iName = process.argv[2]
