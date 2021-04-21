@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "leto",
   "version": "1.0.0",
   "description": "",
@@ -16,6 +17,8 @@
     "url": "https://github.com/ditrit/leto/issues"
   },
   "homepage": "https://github.com/ditrit/leto#readme",
+=======
+>>>>>>> 4acccd0934aa3536b80c3f63ef50791376f202cf
   "dependencies": {
     "antlr4": "^4.9.2"
   }

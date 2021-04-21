@@ -83,6 +83,7 @@ export class Definition extends ModelNode {
     constructor() {
 
     }
+
 }
 
 export class Instantiation extends ModelNode {
@@ -95,4 +96,6 @@ export class Prog extends ModelNode {
     constructor() {
 
     }
+
 }
+
