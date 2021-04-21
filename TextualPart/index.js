@@ -7,8 +7,11 @@ var parseDone = false
 
 export function parse() {
     if (parseDone == false ) {
-        const input = `componant toto ; 
-        `;
+        const input = ` 
+        componant serv from server; 
+        componant bdd from database; 
+        asset bdd : database;
+        `
         const chars = new antlr4.InputStream(input);
         const lexer = new MyGrammarLexer(chars);
         const tokens  = new antlr4.CommonTokenStream(lexer);

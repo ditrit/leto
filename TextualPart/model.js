@@ -2,6 +2,19 @@ export class ModelNode extends Object {
     constructor(ctx) {
         super();
         this.ctx = ctx
+        var tabDef = []
+        var tabInst = []
+        let i = 1
+    }
+
+    tab(name) {
+        if(name == "definition") {
+            tabDef[i] == i
+        }
+        else if(name == "instantiation") {
+            tabInst[i] == i
+        }
+        this.i += 1 
     }
 }
 
@@ -40,7 +53,7 @@ export class Componant extends ModelNode {
 
 }
 
-export class RelationShip extends ModelNode {
+export class Relationship extends ModelNode {
     constructor(name, parent, ctx) {
         super(ctx)
         this.name = name
@@ -53,49 +66,73 @@ export class RelationShip extends ModelNode {
 
 }
 
-export class Link extends ModelNode {
-    constructor(id, connection, id2, ctx) {
+export class Asset extends ModelNode {
+    constructor(id, idConnection, ctx) {
         super(ctx)
         this.id = id
-        this.connection = connection
-        this.id2 = id2
+        this.idConnection = idConnection
     }
 
     toString() {
-        return "link " + this.id.toString() + " " + this.connection.toString() + " " + this.id2.toString() + ";";
+        return "asset " + this.id.toString() + " : " + this.idConnection.toString() + ";";
     }
 }
 
-export class Asset extends ModelNode {
-    constructor(id, connection, id2, ctx) {
+export class Link extends ModelNode {
+    constructor(id, idConnection, ctx) {
         super(ctx)
         this.id = id
-        this.connection = connection
-        this.id2 = id2
+        this.idConnection = idConnection
     }
 
     toString() {
-        return "asset " + this.id.toString() + " " + this.connection.toString() + " " + this.id2.toString() + ";";
+        return "link " + this.id.toString() + " - " + this.idConnection.toString() + ";";
     }
 }
 
 export class Definition extends ModelNode {
-    constructor() {
-
+    constructor(name, ctx) {
+        super(ctx)
+        this.name = name;
     }
 
+    toString() {
+        super.tab("Definition")
+        return "Definition : " 
+    }
 }
 
 export class Instantiation extends ModelNode {
-    constructor() {
+    constructor(name, ctx) {
+        super(ctx)
+        this.name = name;
+    }
 
+    toString() {
+        super.tab("Instantiation")
+        return "Instantiation"
+    }
+}
+
+export class Instruction extends ModelNode {
+    constructor( ctx) {
+        super(ctx)
+    }
+
+    toString() {
+        return "Instruction"
     }
 }
 
 export class Prog extends ModelNode {
-    constructor() {
-
+    constructor(name, ctx) {
+        super(ctx)
+        this.name = name
     }
 
+    toString() {
+        return "Prog" 
+    }
 }
+
 

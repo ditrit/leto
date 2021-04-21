@@ -69,7 +69,7 @@ export default class letoParser extends antlr4.Parser {
 
     static grammarFileName = "leto.g4";
     static literalNames = [ null, "'componant'", "'from'", "';'", "'relationship'", 
-                            "'asset'", "':'", "'link'", "'->'" ];
+                            "'asset'", "':'", "'link'", "'-'" ];
     static symbolicNames = [ null, null, null, null, null, null, null, null, 
                              null, "ID", "STRINGLITERAL", "LETTRE", "NUMBER", 
                              "FLOAT", "COMMENT", "EOL", "WS" ];

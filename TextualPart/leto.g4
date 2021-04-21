@@ -49,7 +49,7 @@ asset
 ;
 
 link 
-: 'link' id '->' id';'
+: 'link' id '-' id';'
 ;
 
 number 
