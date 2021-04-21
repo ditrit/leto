@@ -17,10 +17,20 @@ JSListener.prototype = Object.create(letoListener.prototype);
 JSListener.prototype.constructor = JSListener;
 
 
-JSListener.prototype.exitProg = function(ctx) { 
+JSListener.prototype.exitProg = function(ctx) {
+    nbChild = childElementCount;
+    for(let i=0; i<nbChild; i++){
+        child = ctx.getChild(i).model;
+        if(child == "instruction"){
+            ctx.model = new model.definition(child);
+            console.log("création d'un programme : " + ctx.model);
+        }
+    } 
 };
 
 JSListener.prototype.exitInstruction = function(ctx) {
+    ctx.model = new model.Instruction(ctx.getChild(0));
+    console.log("Création d'une instruction : " + ctx.model);
 };
 
 JSListener.prototype.exitDefinition = function(ctx) {
