@@ -12,7 +12,7 @@ import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
 	selectedTool = 'eyeTool', paletteChild = null,selectedComponent = null, enableAutoFocus = false,
 	preventClick = false;
-let componentsList, sceneComponents = [], sceneComponentsObj = new THREE.Group();	// Liste de tous les comosants existants; liste des composants de la Scene
+let componentsList, sceneComponentsObj = new THREE.Group();	// Liste de tous les composants existants (palette); liste des composants de la Scene
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
@@ -22,7 +22,13 @@ let config_distance = 5, config_tolerance = 0.2, config_diviseurVitesse = 30, co
 const textureLoaderSky = new THREE.TextureLoader();
 textureLoaderSky.setPath( 'public/skybox/' );
 // JQuery
-const htmlComponentList =  $('#componentsSection');
+const htmlComponentList = $('#componentsSection');
+const sceneComponentList = $('#sceneComponentslist');
+const pannelSectionID = $('#componentID');
+const pannelSectionName = $('#componentName');
+const pannelSectionType = $('#componentType');
+const rightPannel = $('#rightPannel');
+const toolButtons = $('.toolButtons');
 
 
 /// FONCTIONS DE BASE ///
@@ -103,17 +109,32 @@ function init(){
 		'nodejs': { 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg' }
 	};
 
-	const palette = $('#componentsSection');
 	let i = 0;
 	Object.entries(componentsList).forEach(function(component) {
-		if(component[1]['derivedFrom'] === 'child')
-			palette.append('<button class="paletteComponent addChildButtons" data-value="'+component[0]+'">'+component[0]+'</button><br/>');
-		else if(component[1]['derivedFrom'] === '')
-			palette.append('<button class="paletteComponent addComponentButtons" data-value="'+component[0]+'">'+component[0]+'</button><br/>');
-		else if(componentsList[ component[1]['derivedFrom'] ]['derivedFrom'] === '')
-			palette.append('<button class="paletteComponent addComponentButtons derivedComponent" data-value="'+component[0]+'">'+component[0]+'</button><br/>');
-		else
-			palette.append('<button class="paletteComponent addComponentButtons derivedComponent2" data-value="'+component[0]+'">'+component[0]+'</button><br/>');
+		if(component[1]['derivedFrom'] === 'child'){
+			htmlComponentList.append('<div class="paletteComponent addChildButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
+										'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
+										'<span>'+component[0]+'</span>'+
+									'</div><br/>');
+		}
+		else if(component[1]['derivedFrom'] === ''){
+			htmlComponentList.append('<div class="paletteComponent addComponentButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
+				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
+				'<span>'+component[0]+'</span>'+
+				'</div><br/>');
+		}
+		else if(componentsList[ component[1]['derivedFrom'] ]['derivedFrom'] === ''){
+			htmlComponentList.append('<div class="paletteComponent addComponentButtons derivedComponent" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
+				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
+				'<span>'+component[0]+'</span>'+
+				'</div><br/>');
+		}
+		else{
+			htmlComponentList.append('<div class="paletteComponent addComponentButtons derivedComponent2" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
+				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
+				'<span>'+component[0]+'</span>'+
+				'</div><br/>');
+		}
 		
 		i++;
 	});
@@ -300,36 +321,6 @@ function onClick( event ) {
 		paletteChild = null;
 
 		return;
-
-		/*
-		selectedComponent.add(paletteChild);
-		selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
-		generateTexture(pComponentType, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, false);
-		selectedComponent.position.y = 0.2 * selectedComponent.children.length;
-		let childIndex = selectedComponent.children.length - 1;
-		//selectedComponent.children[childIndex].position.z += 0.3;
-		let arithmeticSeries = 0.2 * selectedComponent.children.length; // arithmeticSeries's Uo
-
-		selectedComponent.children.forEach(child => {
-			child.position.y = arithmeticSeries;
-			// Un = (Un-1) - r - 0.2
-			arithmeticSeries = arithmeticSeries - (0.2) - 0.2;
-		});
-
-		$('#'+selectedComponent.userData.componentID).append(
-			'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+componentType+' '+childIndex+'">'
-			+componentType+
-			'</li>'
-		);
-
-		dragControls.dispose();
-		dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
-		if(selectedTool !== 'moveTool')
-			dragControls.deactivate();
-
-
-		$('.selectedChild').removeClass('selectedChild').addClass( 'addChildButtons' );
-		paletteChild = null;*/
 	}
 	if(selectedTool === 'moveTool'){
 		event.preventDefault();
@@ -376,20 +367,20 @@ function onClick( event ) {
 				outlinePass.selectedObjects = selectedObjects;
 				const componentId = selectedComponent.userData.componentID;
 				$('.componentLabel').removeClass('selectedComponent');
-				$('#sceneComponentslist').find('#c'+componentId).addClass('selectedComponent');
-				$('#componentID').html(selectedComponent.userData.componentID);
-				$('#componentName').val(selectedComponent.userData.componentName);
+				sceneComponentList.find('#c'+componentId).addClass('selectedComponent');
+				pannelSectionID.html(selectedComponent.userData.componentID);
+				pannelSectionName.val(selectedComponent.userData.componentName);
 				let derivationInfo = '';
 				if(selectedComponent.userData.derivedFrom !== '')
 					derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
-				$('#componentType').html(selectedComponent.userData.componentType + derivationInfo);
-				$('#rightPannel').css('display', 'block');
+				pannelSectionType.html(selectedComponent.userData.componentType + derivationInfo);
+				rightPannel.css('display', 'block');
 			}else{
 				outlinePass.selectedObjects = [];
 				selectedComponent = null;
 				$('.componentLabel').removeClass('selectedComponent');
 				$('.addChildButtons').removeClass('selectedChild');
-				$('#rightPannel').css('display', 'none');
+				rightPannel.css('display', 'none');
 			}
 		}
 	}
@@ -479,7 +470,7 @@ function generateComponentParent(componentType, material) {
 	sceneComponentsObj.children[index].userData.componentName = componentType + ncID;
 	sceneComponentsObj.children[index].userData.derivedFrom = componentsList[componentType]['derivedFrom'];
 
-	$('#sceneComponentslist').append('<li class="componentlistItem" data-value="'+ncID+'">'+
+	sceneComponentList.append('<li class="componentlistItem" data-value="'+ncID+'">'+
 										'<div class="componentLabel" data-value="'+ncID+'" id="c'+ncID+'">'+componentType + ncID +'</div>'+
 										'<ul class="childList" id="'+ncID+'"></ul>'+
 									'</li>');
@@ -555,12 +546,10 @@ $('.addComponentButtons').on('click', function () {
 	const cColor = componentsList[componentType]['color'];
 	const cLogo = componentsList[componentType]['logo'];
 
-	//const geometry = new THREE.BoxGeometry( cWidth, cHeight, cDepht );
-	//const material = generateTexture(componentType, cColor, cWidth, cHeight, '#FF0000', cLogo);
 	generateTexture(componentType, cColor, cWidth, cHeight, '#ff0000', cLogo, true);
 });
 // select child to add to a Component
-htmlComponentList.on('click', '.addChildButtons', function ( event ) {
+htmlComponentList.on('click', '.addChildButtons', function () {
 	$('.selectedChild').removeClass("selectedChild").addClass( "addChildButtons" );
 	$(this).removeClass("addChildButtons").addClass( "selectedChild" );
 
@@ -577,7 +566,7 @@ $('#conponentsSection').on('click', '.selectedChild', function () {
 	paletteChild = null;
 });
 // Select component (activate auto-focus)
-$('#sceneComponentslist').on('click', "div.componentLabel", function () {
+sceneComponentList.on('click', "div.componentLabel", function () {
 	let cpID = $(this).attr('data-value');
 	let cIndex = 0;
 
@@ -590,14 +579,14 @@ $('#sceneComponentslist').on('click', "div.componentLabel", function () {
 			orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
 
 			$('.componentLabel').removeClass('selectedComponent');
-			$('#sceneComponentslist').find('#c'+selectedComponent.userData.componentID).addClass('selectedComponent');
-			$('#componentID').html(selectedComponent.userData.componentID);
-			$('#componentName').val(selectedComponent.userData.componentName);
+			sceneComponentList.find('#c'+selectedComponent.userData.componentID).addClass('selectedComponent');
+			pannelSectionID.html(selectedComponent.userData.componentID);
+			pannelSectionName.val(selectedComponent.userData.componentName);
 			let derivationInfo = '';
 			if(selectedComponent.userData.derivedFrom !== '')
 				derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
-			$('#componentType').html(selectedComponent.userData.componentType + derivationInfo);
-			$('#rightPannel').css('display', 'block');
+			pannelSectionType.html(selectedComponent.userData.componentType + derivationInfo);
+			rightPannel.css('display', 'block');
 			enableAutoFocus = true;
 
 			return false;
@@ -606,7 +595,7 @@ $('#sceneComponentslist').on('click', "div.componentLabel", function () {
 	});
 });
 // Select child (activate auto-focus)
-/*$('#sceneComponentslist').on('click', "li.childListItem", function () {
+/*sceneComponentList.on('click', "li.childListItem", function () {
 	console.log('child clicked !');
 	let parentIndex = this.id.charAt(1);
 	let childIndex = this.dataset.value.split(' ')[1];
@@ -621,23 +610,23 @@ $('#sceneComponentslist').on('click', "div.componentLabel", function () {
 	enableAutoFocus = true;
 });*/
 // switch selected tool
-$('.toolButtons').on('click', function () {
+toolButtons.on('click', function () {
 	selectedTool = $(this).attr("id");
 
 	switch($(this).attr("id")){
 		case 'eyeTool':
 			dragControls.deactivate();
-			$('.toolButtons').removeClass('selectedTool');
+			toolButtons.removeClass('selectedTool');
 			$('#eyeTool').addClass('selectedTool');
 			break;
 		case 'moveTool':
 			dragControls.activate();
-			$('.toolButtons').removeClass('selectedTool');
+			toolButtons.removeClass('selectedTool');
 			$('#moveTool').addClass('selectedTool');
 			break;
 		case 'linkTool':
 			dragControls.deactivate();
-			$('.toolButtons').removeClass('selectedTool');
+			toolButtons.removeClass('selectedTool');
 			$('#linkTool').addClass('selectedTool');
 			break;
 	}
@@ -646,8 +635,8 @@ $('.toolButtons').on('click', function () {
 $('.UI').on('click', function(){
 	preventClick = true;
 });
-// update name in component list
-$('#componentName').on('input', function(){
+// update name when input
+pannelSectionName.on('input', function(){
 	const newLabel = $(this).val();
 	$('#c'+ selectedComponent.userData.componentID ).html(newLabel);
 	selectedComponent.userData.componentName = newLabel;
