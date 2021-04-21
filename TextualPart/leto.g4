@@ -1,9 +1,14 @@
-/* test 
-asset serv is_a server; //test
-asset bdd is_a database;
-componant bdd : serv;
-asset rout is_a router;
-componant rout -> serv;
+/* test 1
+componant serv (from server); //test
+componant bdd (from database);
+componant rout (from router);
+asset bdd : serv;
+link rout -> serv;
+*/
+/* test 2
+componant serv (from server); componant bdd (from database);
+componant rout (from router);
+asset bdd : serv; link rout -> serv;
 */
 
 
@@ -24,29 +29,27 @@ instruction
 ;
 
 definition
-: (node_type | relationship_type)+ comment? | comment
+: (componant | relationship)+ comment? | comment
 ;
 
 instantiation
-: (node | relationship)+ comment? | comment 
+: (asset | link)+ comment? | comment 
 ;
 
-node_type 
-: 'componant' id ((':' | '->') id)?';'
+componant 
+: 'componant' id ('from' id)?';'
 ;
 
-//a modifier plus tard
-relationship_type 
-: 'componant' id ((':' | '->') id)?';'
+relationship
+: 'relationship' id ('from' id)?';'
 ;
 
-node 
-: 'asset' id 'is_a' componant';'
+asset 
+: 'asset' id ':' id ';'
 ;
 
-//a modifier plus tard
-relationship 
-: 'asset' id 'is_a' componant';'
+link 
+: 'link' id '->' id';'
 ;
 
 number 
@@ -61,20 +64,9 @@ id
 : ID
 ;
 
-componant
-: COMPONANT
-;
-
-
-
 /*
 *	Regle Lexer 
 */
-
-
-COMPONANT 
-: 'server' | 'router' | 'database' | 'apache' | 'php'
-;
 
 ID
 : [a-zA-Z][a-z0-9_]*
@@ -83,19 +75,15 @@ ID
 STRINGLITERAL
 : '"'~["\r\n]*'"'
 ;
-
 LETTRE
 : ('a'..'z'|'A'..'Z')+
 ;
-
 NUMBER
 : ('0'..'9')+(('e'|'E')NUMBER)*
 ;
-
 FLOAT
 : ('0'..'9')*'.'('0'..'9')+(('e'|'E')('0'..'9')+)*
 ;
-
 COMMENT
 : '//'~[\r\n]*
 ;
