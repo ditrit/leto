@@ -24,29 +24,27 @@ instruction
 ;
 
 definition
-: (node_type | relationship_type)+ comment? | comment
+: (componant | relationship)+ comment? | comment
 ;
 
 instantiation
-: (node | relationship)+ comment? | comment 
+: (asset | link)+ comment? | comment 
 ;
 
-node_type 
-: 'componant' id ((':' | '->') id)?';'
+componant 
+: 'componant' id ('from' id)?';'
 ;
 
-//a modifier plus tard
-relationship_type 
-: 'componant' id ((':' | '->') id)?';'
+relationship
+: 'relationship' id ('from' id)?';'
 ;
 
-node 
-: 'asset' id 'is_a' componant';'
+asset 
+: 'asset' id ':' id ';'
 ;
 
-//a modifier plus tard
-relationship 
-: 'asset' id 'is_a' componant';'
+link 
+: 'link' id '->' id';'
 ;
 
 number 
@@ -61,20 +59,9 @@ id
 : ID
 ;
 
-componant
-: COMPONANT
-;
-
-
-
 /*
 *	Regle Lexer 
 */
-
-
-COMPONANT 
-: 'server' | 'router' | 'database' | 'apache' | 'php'
-;
 
 ID
 : [a-zA-Z][a-z0-9_]*

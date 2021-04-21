@@ -1,20 +1,20 @@
-const antlr4 = require("antlr4/index")
-const fs = require("fs")
-const letoLexer = require("./antlr/letoLexer.js")
-const letoParser = require("./antlr/letoParser.js")
-const JSListener = require("./JSListener.js").JSListener
+import antlr4 from 'antlr4';
+import MyGrammarLexer from './antlr/letoLexer.js';
+import MyGrammarParser from './antlr/letoParser.js';
+import MyLetoListener from './MyLetoListener.js';
 
-const iName = process.argv[2]
-JSListener.tFileName = iName.replace(".leto", ".js")
-console.log("Compiling " + iName + " to " + JSListener.tFileName)
 
-var input = fs.readFileSync(iName, 'UTF-8')
-var chars = new antlr4.InputStream(input)
-var lexer = new letoLexer.letoLexer(chars)
-var tokens  = new antlr4.CommonTokenStream(lexer)
-var parser = new letoParser.letoParser(tokens)
-parser.buildParseTrees = true
-var tree = parser.program()
+export function parse() {
+    const input = `componant toto ; 
+    `;
+    const chars = new antlr4.InputStream(input);
+    const lexer = new MyGrammarLexer(chars);
+    const tokens  = new antlr4.CommonTokenStream(lexer);
+    const parser = new MyGrammarParser(tokens);
+    parser.buildParseTrees = true;
+    const tree = parser.prog();
+    const myListener = new MyLetoListener();
+    antlr4.tree.ParseTreeWalker.DEFAULT.walk(myListener, tree)
+}
 
-var extractor = new JSListener()
-antlr4.tree.ParseTreeWalker.DEFAULT.walk(extractor, tree)
+parse()
