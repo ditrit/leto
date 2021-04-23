@@ -8,7 +8,7 @@ var parseDone = false
 export function parse() {
     if (parseDone == false ) {
         const input = ` 
-        componant serv from server 1Test/test/ serv.serv2. ; 
+        componant serv from server 1Test/te22st/ serv.serv2. ; 
         componant serv2 from server 1Test/test/ serv.serv2. ;
         link serv - server ; 
         asset bdd : serv ;  
