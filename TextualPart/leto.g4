@@ -1,5 +1,5 @@
 /* test 1
-componant serv (from server); //test
+componant serv (from server) test/test2/ containers;
 componant bdd (from database);
 componant rout (from router);
 asset bdd : serv;
@@ -37,7 +37,7 @@ instantiation
 ;
 
 componant 
-: 'componant' id ('from' id)?';'
+: 'componant' id ('from' id)? attributes ';'
 ;
 
 relationship
@@ -64,9 +64,28 @@ id
 : ID
 ;
 
+attributes
+: logo containers
+;
+
+logo
+: LOGO
+;
+
+containers
+: CONTAINERS
+;
+
 /*
 *	Regle Lexer 
 */
+LOGO
+: ( ( [a-zA-Z] | [0-9] )+ '/' )+ | ( ( [a-zA-Z] | [0-9] )+ '\\' )+
+;
+
+CONTAINERS
+: ( [a-zA-Z][a-z0-9]* '.' )+
+;
 
 ID
 : [a-zA-Z][a-z0-9_]*

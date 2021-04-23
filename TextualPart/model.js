@@ -98,7 +98,7 @@ export class Definition extends ModelNode {
 
     toString() {
         super.tab("Definition")
-        return "Definition : " 
+        return "Definition " 
     }
 }
 
