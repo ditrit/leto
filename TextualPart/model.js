@@ -1,11 +1,7 @@
 export class ModelNode extends Object {
-    constructor(name, expression, ctx) {
+    constructor(ctx) {
         super();
         this.ctx = ctx
-        this.expression = expression
-        this.name = name
-        var tabDef = []
-        var tabInst = []
     }
 }
 
