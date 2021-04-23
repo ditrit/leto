@@ -87,56 +87,78 @@ function init(){
 	//initialisation de la liste des composants
 	scene.add(sceneComponentsObj);
 
-	//new THREE.MeshStandardMaterial({ color: 0x8288a1 })
-
 	//textures
-
+	// les composants doivent tous avoir des noms différents et hériter de composants existants (ou ne pas hériter du tout)
 	componentsList = {
-		'serveur' : { 'derivedFrom' : '', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'serveur de fichier' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'serveur d\'impression' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'print.png' },
-		'serveur d\'application' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'menu.webp' },
-		'serveur DNS' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'dns.png' },
-		'serveur de messagerie' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'mail.png' },
-		'serveur web' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'web.jpg' },
-		'serveur de bases de données' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'servBDD.png' },
-		'serveur virtuel' : { 'derivedFrom' : 'serveur', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'jetty' : { 'derivedFrom' : 'serveur virtuel', 'width' : 1, 'height' : 1, 'depht' : 1, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'router': { 'derivedFrom' : '', 'width' : 1, 'height' : 0.4, 'depht' : 1, 'color' : '#19bfba', 'logo' : 'wifi.png' },
-		'apache': { 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#a82b18', 'logo' : 'apache.png' },
-		'php': { 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#3065ba', 'logo' : 'php.png' },
-		'database': { 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#db852a', 'logo' : 'db.png' },
-		'nodejs': { 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg' }
+		'serveur' : { 'name': 'serveur', 'derivedFrom' : '', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'print.png' },
+		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'menu.webp' },
+		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'dns.png' },
+		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'mail.png' },
+		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'web.jpg' },
+		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'servBDD.png' },
+		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'router': { 'name': 'router', 'derivedFrom' : '', 'width' : 1, 'height' : 0.4, 'depht' : 1, 'color' : '#19bfba', 'logo' : 'wifi.png' },
+		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#8288a1', 'logo' : 'db.png' },
+		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#a82b18', 'logo' : 'apache.png' },
+		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#3065ba', 'logo' : 'php.png' },
+		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#db852a', 'logo' : 'db.png' },
+		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg' }
 	};
 
+	// génération dynamique de la palette de composants
 	let i = 0;
 	Object.entries(componentsList).forEach(function(component) {
 		if(component[1]['derivedFrom'] === 'child'){
-			htmlComponentList.append('<div class="paletteComponent addChildButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
+			$('#child').append('<div class="paletteComponent addChildButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
 										'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
-										'<span>'+component[0]+'</span>'+
-									'</div><br/>');
+										'<span>'+component[1]['name']+'</span>'+
+									'</div>'+
+									'<button id="showHide'+component[0]+'">+</button>'+
+									'<ul id="'+component[0]+'"></ul>');
 		}
 		else if(component[1]['derivedFrom'] === ''){
-			htmlComponentList.append('<div class="paletteComponent addComponentButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
-				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
-				'<span>'+component[0]+'</span>'+
-				'</div><br/>');
-		}
-		else if(componentsList[ component[1]['derivedFrom'] ]['derivedFrom'] === ''){
-			htmlComponentList.append('<div class="paletteComponent addComponentButtons derivedComponent" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
-				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
-				'<span>'+component[0]+'</span>'+
-				'</div><br/>');
+			htmlComponentList.append('<br/><div class="paletteComponent addComponentButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
+										'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
+										'<span>'+component[1]['name']+'</span>'+
+									'</div>'+
+									'<button id="showHide'+component[0]+'">+</button>'+
+									'<ul id="'+component[0]+'"></ul>');
 		}
 		else{
-			htmlComponentList.append('<div class="paletteComponent addComponentButtons derivedComponent2" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
-				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
-				'<span>'+component[0]+'</span>'+
-				'</div><br/>');
+			$('#'+component[1]['derivedFrom']).append('<div class="paletteComponent addComponentButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
+										'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
+										'<span>'+component[1]['name']+'</span>'+
+									'</div>'+
+									'<button id="showHide'+component[0]+'">+</button>'+
+									'<ul id="'+component[0]+'"></ul>');
 		}
-		
 		i++;
+	});
+
+	// affichage des bouttons pour afficher/cacher les listes
+	htmlComponentList.find('ul').each(function(){
+		const associatedButton = $( '#showHide'+$(this).attr('id') );
+		const list = $(this);
+
+		if ( list.html() === '' ){
+			associatedButton.css('display', 'none');	// hide 'show/hide' button if list's empty
+		}else{
+			list.css('display', 'none');	// hide list if not empty
+			associatedButton.css('display', 'block');	// display 'show/hide' button if list isn't empty
+		}
+
+		associatedButton.on('click', function(){
+			if( associatedButton.html() === '+' ){
+				list.css('display', 'block');
+				associatedButton.html('-');
+			}else if( associatedButton.html() === '-' ){
+				list.css('display', 'none');
+				associatedButton.html('+');
+			}
+		});
 	});
 
 	// Skybox
@@ -287,7 +309,7 @@ function onClick( event ) {
 	}
 	if(paletteChild && selectedComponent){
 		const pComponentType = selectedComponent.userData.componentType;
-		const pTagColor = '#FF0000';
+		const pTagColor = '#7d2f9e';
 		const pColor = componentsList[pComponentType]['color'];
 		const pLogo = componentsList[pComponentType]['logo'];
 
@@ -391,20 +413,9 @@ function addSelectedObject( object ) {
 	selectedObjects.push( object );
 }
 
-function generateTexture(componentType, color, width, height, tagColor, logo, generateComponnent) {
+function generateTexture(componentType, name, color, width, height, tagColor, logo, action) {
 	width *= 500;
 	height *= 500;
-
-	const canvas2 = document.createElement('canvas');
-	canvas2.width  = width;
-	canvas2.height = height;
-	const ctx2 = canvas2.getContext("2d");
-	// Background
-	ctx2.beginPath();
-	ctx2.rect(0, 0, width, height);
-	ctx2.fillStyle = color;
-	ctx2.fill();
-	ctx2.closePath();
 
 	const canvas = document.createElement('canvas');
 	canvas.width  = width;
@@ -419,7 +430,7 @@ function generateTexture(componentType, color, width, height, tagColor, logo, ge
 	// Label
 	ctx.font = '90px serif';
 	ctx.fillStyle = '#FFFFFF';
-	ctx.fillText(componentType, 105, 70, width-110);
+	ctx.fillText(name, 105, 70, width-110);
 	// TagColor
 	ctx.beginPath();
 	ctx.rect(width-100, 0, 100, 100);
@@ -432,19 +443,18 @@ function generateTexture(componentType, color, width, height, tagColor, logo, ge
 		ctx.drawImage(img, 0, 0, 100, 100);
 
 		const texture = new THREE.CanvasTexture(canvas);
-		const texture2 = new THREE.CanvasTexture(canvas2);
 
 		const material = [
 			new THREE.MeshStandardMaterial({ map: texture }),	// Right side
 			new THREE.MeshStandardMaterial({ map: texture }),	// Left side
-			new THREE.MeshStandardMaterial({ map: texture2 }),	// Top side
-			new THREE.MeshStandardMaterial({ map: texture2 }),	// Bottom side
+			new THREE.MeshStandardMaterial({ color: color }),	// Top side
+			new THREE.MeshStandardMaterial({ color: color }),	// Bottom side
 			new THREE.MeshStandardMaterial({ map: texture }),	// Front side
 			new THREE.MeshStandardMaterial({ map: texture })	// Back side
 		];
 		if(componentsList[componentType]['derivedFrom'] === 'child')
 			generateComponnentChildren(componentType, material);
-		else if(generateComponnent)
+		else if(action)
 			generateComponentParent(componentType, material);
 		else
 			regenerateTexture(material);
@@ -492,12 +502,13 @@ function generateComponnentChildren(componentType, material) {
 		return;
 
 	const pComponentType = selectedComponent.userData.componentType;
-	const pTagColor = '#FF0000';
+	const pTagColor = '#7d2f9e';
 	const pColor = componentsList[pComponentType]['color'];
 	const pLogo = componentsList[pComponentType]['logo'];
+	const pName = selectedComponent.userData.componentName;
 	selectedComponent.add(paletteChild);
 	selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
-	generateTexture(pComponentType, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, false);
+	generateTexture(pComponentType, pName, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, false);
 	selectedComponent.position.y = 0.2 * selectedComponent.children.length;
 	let childIndex = selectedComponent.children.length - 1;
 	//selectedComponent.children[childIndex].position.z += 0.3;
@@ -545,8 +556,12 @@ $('.addComponentButtons').on('click', function () {
 	const cHeight = componentsList[componentType]['height'];
 	const cColor = componentsList[componentType]['color'];
 	const cLogo = componentsList[componentType]['logo'];
+	const index = sceneComponentsObj.children.length;
+	let ncID = 0;
+	if(index > 0)
+		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 
-	generateTexture(componentType, cColor, cWidth, cHeight, '#ff0000', cLogo, true);
+	generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, true);
 });
 // select child to add to a Component
 htmlComponentList.on('click', '.addChildButtons', function () {
@@ -558,8 +573,12 @@ htmlComponentList.on('click', '.addChildButtons', function () {
 	const cHeight = componentsList[componentType]['height'];
 	const cColor = componentsList[componentType]['color'];
 	const cLogo = componentsList[componentType]['logo'];
+	const index = sceneComponentsObj.children.length;
+	let ncID = 0;
+	if(index > 0)
+		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 
-	generateTexture(componentType, cColor, cWidth, cHeight, '#FF0000', cLogo, false);
+	generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, false);
 });
 $('#conponentsSection').on('click', '.selectedChild', function () {
 	$(this).removeClass("selectedChild").addClass( "addChildButtons" );
@@ -640,6 +659,14 @@ pannelSectionName.on('input', function(){
 	const newLabel = $(this).val();
 	$('#c'+ selectedComponent.userData.componentID ).html(newLabel);
 	selectedComponent.userData.componentName = newLabel;
+
+	const componentType = selectedComponent.userData.componentType;
+	const cWidth = componentsList[componentType]['width'];
+	const cHeight = componentsList[componentType]['height'];
+	const cColor = componentsList[componentType]['color'];
+	const cTagColor = componentsList[componentType]['tagColor'];
+	const cLogo = componentsList[componentType]['logo'];
+	generateTexture(componentType, selectedComponent.userData.componentName, cColor, cWidth, cHeight, '#7d2f9e', cLogo, false);
 });
 // supprimer un objet
 $('#deleteButton').on('click', function(){
@@ -649,6 +676,7 @@ $('#deleteButton').on('click', function(){
 				$(this).remove();
 				sceneComponentsObj.remove(selectedComponent);
 				selectedComponent = null;
+				rightPannel.css('display', 'none');
 
 				dragControls.dispose();
 				dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );

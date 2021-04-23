@@ -8,9 +8,11 @@
 </head>
 <body>
 	<div id="leftPannel" class="UI">
-		<input id="paletteSearchField" type="text" placeholder="Chercher un composant" />
-		<div id="componentsSection">
-			<h2>Composants :</h2>
+		<div>
+			<input id="paletteSearchField" type="text" placeholder="Chercher un composant" />
+			<div id="componentsSection">
+				<h2>Composants :</h2>
+			</div>
 		</div>
 		<div id="hierarchieSection">
 			<h2>Hierarchie :</h2>
@@ -45,15 +47,43 @@
 
 	<!-- Handle secondary and independant events -->
 	<script>
+		// find component type by name
+		const palette = $('#componentsSection');
+
 		$('#paletteSearchField').on('input', function(){
 			const stringQuery = $(this).val().toLowerCase();
-			$('.paletteComponent').each(function(){
-				if( !$(this).html().toLowerCase().includes(stringQuery) ){
-					$(this).css('display', 'none');
-				}else{
-					$(this).css('display', 'block');
-				}
-			});
+			const buttons = palette.find('button');
+			const lists = palette.find('ul');
+			const components = $('.paletteComponent');
+
+			if(stringQuery !== ''){
+				buttons.css('display', 'none');
+				lists.css('display', 'block');
+
+				components.each(function(){
+					if( !$(this).html().toLowerCase().includes(stringQuery) ){
+						$(this).css('display', 'none');
+					}else{
+						$(this).css('display', 'flex');
+					}
+				});
+			}else{
+				buttons.css('display', 'block').html('+');
+				lists.css('display', 'none');
+
+				lists.each(function(){
+					const associatedButton = $( '#showHide'+$(this).attr('id') );
+					const list = $(this);
+
+					if ( list.html() === '' ){
+						associatedButton.css('display', 'none');	// hide 'show/hide' button if list's empty
+					}else{
+						list.css('display', 'none');	// hide list if not empty
+						associatedButton.css('display', 'block');	// display 'show/hide' button if list isn't empty
+					}
+				});
+				components.css('display', 'flex');
+			}
 		});
 	</script>
 </body>
