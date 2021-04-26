@@ -18,7 +18,7 @@ public class letoParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, PATH=14, ID=15, STRINGLITERAL=16, 
-		LETTRE=17, NUMBER=18, FLOAT=19, COMMENT=20, EOL=21, WS=22;
+		LETTRE=17, NUMBER=18, FLOAT=19, COMMENT=20, WS=21;
 	public static final int
 		RULE_prog = 0, RULE_line = 1, RULE_instructions = 2, RULE_instruction = 3, 
 		RULE_definition = 4, RULE_instantiation = 5, RULE_componant = 6, RULE_componant_attributes = 7, 
@@ -45,7 +45,7 @@ public class letoParser extends Parser {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, "PATH", "ID", "STRINGLITERAL", "LETTRE", "NUMBER", "FLOAT", 
-			"COMMENT", "EOL", "WS"
+			"COMMENT", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -224,6 +224,7 @@ public class letoParser extends Parser {
 	public final InstructionsContext instructions() throws RecognitionException {
 		InstructionsContext _localctx = new InstructionsContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_instructions);
+		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
@@ -248,8 +249,16 @@ public class letoParser extends Parser {
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 			}
-			setState(54);
-			match(T__0);
+			setState(55);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__0) {
+				{
+				setState(54);
+				match(T__0);
+				}
+			}
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -280,14 +289,14 @@ public class letoParser extends Parser {
 		InstructionContext _localctx = new InstructionContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_instruction);
 		try {
-			setState(58);
+			setState(59);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__1:
 			case T__9:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(56);
+				setState(57);
 				definition();
 				}
 				break;
@@ -295,7 +304,7 @@ public class letoParser extends Parser {
 			case T__11:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(57);
+				setState(58);
 				instantiation();
 				}
 				break;
@@ -331,20 +340,20 @@ public class letoParser extends Parser {
 		DefinitionContext _localctx = new DefinitionContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_definition);
 		try {
-			setState(62);
+			setState(63);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(60);
+				setState(61);
 				componant();
 				}
 				break;
 			case T__9:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(61);
+				setState(62);
 				relationship();
 				}
 				break;
@@ -380,20 +389,20 @@ public class letoParser extends Parser {
 		InstantiationContext _localctx = new InstantiationContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_instantiation);
 		try {
-			setState(66);
+			setState(67);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__10:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(64);
+				setState(65);
 				asset();
 				}
 				break;
 			case T__11:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(65);
+				setState(66);
 				link();
 				}
 				break;
@@ -435,27 +444,27 @@ public class letoParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(68);
-			match(T__1);
 			setState(69);
+			match(T__1);
+			setState(70);
 			id();
-			setState(72);
+			setState(73);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__2) {
 				{
-				setState(70);
-				match(T__2);
 				setState(71);
+				match(T__2);
+				setState(72);
 				id();
 				}
 			}
 
-			setState(74);
-			match(T__3);
 			setState(75);
-			componant_attributes();
+			match(T__3);
 			setState(76);
+			componant_attributes();
+			setState(77);
 			match(T__4);
 			}
 		}
@@ -492,49 +501,49 @@ public class letoParser extends Parser {
 		int _la;
 		try {
 			int _alt;
-			setState(95);
+			setState(96);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__5:
 			case T__7:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(78);
+				setState(79);
 				componant_attribute();
-				setState(83);
+				setState(84);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
 				while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 					if ( _alt==1 ) {
 						{
 						{
-						setState(79);
-						match(T__0);
 						setState(80);
+						match(T__0);
+						setState(81);
 						componant_attribute();
 						}
 						} 
 					}
-					setState(85);
+					setState(86);
 					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
+					_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
 				}
-				setState(87);
+				setState(88);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==T__0) {
 					{
-					setState(86);
+					setState(87);
 					match(T__0);
 					}
 				}
 
-				setState(90);
+				setState(91);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==COMMENT) {
 					{
-					setState(89);
+					setState(90);
 					comment();
 					}
 				}
@@ -545,12 +554,12 @@ public class letoParser extends Parser {
 			case COMMENT:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(93);
+				setState(94);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				if (_la==COMMENT) {
 					{
-					setState(92);
+					setState(93);
 					comment();
 					}
 				}
@@ -589,20 +598,20 @@ public class letoParser extends Parser {
 		Componant_attributeContext _localctx = new Componant_attributeContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_componant_attribute);
 		try {
-			setState(99);
+			setState(100);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__5:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(97);
+				setState(98);
 				logo();
 				}
 				break;
 			case T__7:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(98);
+				setState(99);
 				hosts();
 				}
 				break;
@@ -635,11 +644,11 @@ public class letoParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(101);
-			match(T__5);
 			setState(102);
-			match(T__6);
+			match(T__5);
 			setState(103);
+			match(T__6);
+			setState(104);
 			match(PATH);
 			}
 		}
@@ -672,25 +681,25 @@ public class letoParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(105);
-			match(T__7);
 			setState(106);
-			match(T__6);
+			match(T__7);
 			setState(107);
+			match(T__6);
+			setState(108);
 			match(ID);
-			setState(112);
+			setState(113);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__8) {
 				{
 				{
-				setState(108);
-				match(T__8);
 				setState(109);
+				match(T__8);
+				setState(110);
 				match(ID);
 				}
 				}
-				setState(114);
+				setState(115);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -727,18 +736,18 @@ public class letoParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(115);
-			match(T__9);
 			setState(116);
+			match(T__9);
+			setState(117);
 			id();
-			setState(119);
+			setState(120);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__2) {
 				{
-				setState(117);
-				match(T__2);
 				setState(118);
+				match(T__2);
+				setState(119);
 				id();
 				}
 			}
@@ -775,13 +784,13 @@ public class letoParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(121);
-			match(T__10);
 			setState(122);
-			id();
+			match(T__10);
 			setState(123);
-			match(T__6);
+			id();
 			setState(124);
+			match(T__6);
+			setState(125);
 			id();
 			}
 		}
@@ -815,13 +824,13 @@ public class letoParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(126);
-			match(T__11);
 			setState(127);
-			id();
+			match(T__11);
 			setState(128);
-			match(T__12);
+			id();
 			setState(129);
+			match(T__12);
+			setState(130);
 			id();
 			}
 		}
@@ -850,7 +859,7 @@ public class letoParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(131);
+			setState(132);
 			match(NUMBER);
 			}
 		}
@@ -879,7 +888,7 @@ public class letoParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(133);
+			setState(134);
 			match(COMMENT);
 			}
 		}
@@ -908,7 +917,7 @@ public class letoParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(135);
+			setState(136);
 			match(ID);
 			}
 		}
@@ -924,40 +933,41 @@ public class letoParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\30\u008c\4\2\t\2"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\27\u008d\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\3\2\6\2&\n\2\r\2\16\2\'\3\3\3\3\5\3,\n\3\3\3\5\3/\n\3\3\4\3\4\3\4\7\4"+
-		"\64\n\4\f\4\16\4\67\13\4\3\4\3\4\3\5\3\5\5\5=\n\5\3\6\3\6\5\6A\n\6\3\7"+
-		"\3\7\5\7E\n\7\3\b\3\b\3\b\3\b\5\bK\n\b\3\b\3\b\3\b\3\b\3\t\3\t\3\t\7\t"+
-		"T\n\t\f\t\16\tW\13\t\3\t\5\tZ\n\t\3\t\5\t]\n\t\3\t\5\t`\n\t\5\tb\n\t\3"+
-		"\n\3\n\5\nf\n\n\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\f\3\f\7\fq\n\f\f\f\16"+
-		"\ft\13\f\3\r\3\r\3\r\3\r\5\rz\n\r\3\16\3\16\3\16\3\16\3\16\3\17\3\17\3"+
-		"\17\3\17\3\17\3\20\3\20\3\21\3\21\3\22\3\22\3\22\2\2\23\2\4\6\b\n\f\16"+
-		"\20\22\24\26\30\32\34\36 \"\2\2\2\u008a\2%\3\2\2\2\4.\3\2\2\2\6\60\3\2"+
-		"\2\2\b<\3\2\2\2\n@\3\2\2\2\fD\3\2\2\2\16F\3\2\2\2\20a\3\2\2\2\22e\3\2"+
-		"\2\2\24g\3\2\2\2\26k\3\2\2\2\30u\3\2\2\2\32{\3\2\2\2\34\u0080\3\2\2\2"+
-		"\36\u0085\3\2\2\2 \u0087\3\2\2\2\"\u0089\3\2\2\2$&\5\4\3\2%$\3\2\2\2&"+
-		"\'\3\2\2\2\'%\3\2\2\2\'(\3\2\2\2(\3\3\2\2\2)+\5\6\4\2*,\5 \21\2+*\3\2"+
-		"\2\2+,\3\2\2\2,/\3\2\2\2-/\5 \21\2.)\3\2\2\2.-\3\2\2\2/\5\3\2\2\2\60\65"+
-		"\5\b\5\2\61\62\7\3\2\2\62\64\5\b\5\2\63\61\3\2\2\2\64\67\3\2\2\2\65\63"+
-		"\3\2\2\2\65\66\3\2\2\2\668\3\2\2\2\67\65\3\2\2\289\7\3\2\29\7\3\2\2\2"+
-		":=\5\n\6\2;=\5\f\7\2<:\3\2\2\2<;\3\2\2\2=\t\3\2\2\2>A\5\16\b\2?A\5\30"+
-		"\r\2@>\3\2\2\2@?\3\2\2\2A\13\3\2\2\2BE\5\32\16\2CE\5\34\17\2DB\3\2\2\2"+
-		"DC\3\2\2\2E\r\3\2\2\2FG\7\4\2\2GJ\5\"\22\2HI\7\5\2\2IK\5\"\22\2JH\3\2"+
-		"\2\2JK\3\2\2\2KL\3\2\2\2LM\7\6\2\2MN\5\20\t\2NO\7\7\2\2O\17\3\2\2\2PU"+
-		"\5\22\n\2QR\7\3\2\2RT\5\22\n\2SQ\3\2\2\2TW\3\2\2\2US\3\2\2\2UV\3\2\2\2"+
-		"VY\3\2\2\2WU\3\2\2\2XZ\7\3\2\2YX\3\2\2\2YZ\3\2\2\2Z\\\3\2\2\2[]\5 \21"+
-		"\2\\[\3\2\2\2\\]\3\2\2\2]b\3\2\2\2^`\5 \21\2_^\3\2\2\2_`\3\2\2\2`b\3\2"+
-		"\2\2aP\3\2\2\2a_\3\2\2\2b\21\3\2\2\2cf\5\24\13\2df\5\26\f\2ec\3\2\2\2"+
-		"ed\3\2\2\2f\23\3\2\2\2gh\7\b\2\2hi\7\t\2\2ij\7\20\2\2j\25\3\2\2\2kl\7"+
-		"\n\2\2lm\7\t\2\2mr\7\21\2\2no\7\13\2\2oq\7\21\2\2pn\3\2\2\2qt\3\2\2\2"+
-		"rp\3\2\2\2rs\3\2\2\2s\27\3\2\2\2tr\3\2\2\2uv\7\f\2\2vy\5\"\22\2wx\7\5"+
-		"\2\2xz\5\"\22\2yw\3\2\2\2yz\3\2\2\2z\31\3\2\2\2{|\7\r\2\2|}\5\"\22\2}"+
-		"~\7\t\2\2~\177\5\"\22\2\177\33\3\2\2\2\u0080\u0081\7\16\2\2\u0081\u0082"+
-		"\5\"\22\2\u0082\u0083\7\17\2\2\u0083\u0084\5\"\22\2\u0084\35\3\2\2\2\u0085"+
-		"\u0086\7\24\2\2\u0086\37\3\2\2\2\u0087\u0088\7\26\2\2\u0088!\3\2\2\2\u0089"+
-		"\u008a\7\21\2\2\u008a#\3\2\2\2\22\'+.\65<@DJUY\\_aery";
+		"\64\n\4\f\4\16\4\67\13\4\3\4\5\4:\n\4\3\5\3\5\5\5>\n\5\3\6\3\6\5\6B\n"+
+		"\6\3\7\3\7\5\7F\n\7\3\b\3\b\3\b\3\b\5\bL\n\b\3\b\3\b\3\b\3\b\3\t\3\t\3"+
+		"\t\7\tU\n\t\f\t\16\tX\13\t\3\t\5\t[\n\t\3\t\5\t^\n\t\3\t\5\ta\n\t\5\t"+
+		"c\n\t\3\n\3\n\5\ng\n\n\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\f\3\f\7\fr\n"+
+		"\f\f\f\16\fu\13\f\3\r\3\r\3\r\3\r\5\r{\n\r\3\16\3\16\3\16\3\16\3\16\3"+
+		"\17\3\17\3\17\3\17\3\17\3\20\3\20\3\21\3\21\3\22\3\22\3\22\2\2\23\2\4"+
+		"\6\b\n\f\16\20\22\24\26\30\32\34\36 \"\2\2\2\u008c\2%\3\2\2\2\4.\3\2\2"+
+		"\2\6\60\3\2\2\2\b=\3\2\2\2\nA\3\2\2\2\fE\3\2\2\2\16G\3\2\2\2\20b\3\2\2"+
+		"\2\22f\3\2\2\2\24h\3\2\2\2\26l\3\2\2\2\30v\3\2\2\2\32|\3\2\2\2\34\u0081"+
+		"\3\2\2\2\36\u0086\3\2\2\2 \u0088\3\2\2\2\"\u008a\3\2\2\2$&\5\4\3\2%$\3"+
+		"\2\2\2&\'\3\2\2\2\'%\3\2\2\2\'(\3\2\2\2(\3\3\2\2\2)+\5\6\4\2*,\5 \21\2"+
+		"+*\3\2\2\2+,\3\2\2\2,/\3\2\2\2-/\5 \21\2.)\3\2\2\2.-\3\2\2\2/\5\3\2\2"+
+		"\2\60\65\5\b\5\2\61\62\7\3\2\2\62\64\5\b\5\2\63\61\3\2\2\2\64\67\3\2\2"+
+		"\2\65\63\3\2\2\2\65\66\3\2\2\2\669\3\2\2\2\67\65\3\2\2\28:\7\3\2\298\3"+
+		"\2\2\29:\3\2\2\2:\7\3\2\2\2;>\5\n\6\2<>\5\f\7\2=;\3\2\2\2=<\3\2\2\2>\t"+
+		"\3\2\2\2?B\5\16\b\2@B\5\30\r\2A?\3\2\2\2A@\3\2\2\2B\13\3\2\2\2CF\5\32"+
+		"\16\2DF\5\34\17\2EC\3\2\2\2ED\3\2\2\2F\r\3\2\2\2GH\7\4\2\2HK\5\"\22\2"+
+		"IJ\7\5\2\2JL\5\"\22\2KI\3\2\2\2KL\3\2\2\2LM\3\2\2\2MN\7\6\2\2NO\5\20\t"+
+		"\2OP\7\7\2\2P\17\3\2\2\2QV\5\22\n\2RS\7\3\2\2SU\5\22\n\2TR\3\2\2\2UX\3"+
+		"\2\2\2VT\3\2\2\2VW\3\2\2\2WZ\3\2\2\2XV\3\2\2\2Y[\7\3\2\2ZY\3\2\2\2Z[\3"+
+		"\2\2\2[]\3\2\2\2\\^\5 \21\2]\\\3\2\2\2]^\3\2\2\2^c\3\2\2\2_a\5 \21\2`"+
+		"_\3\2\2\2`a\3\2\2\2ac\3\2\2\2bQ\3\2\2\2b`\3\2\2\2c\21\3\2\2\2dg\5\24\13"+
+		"\2eg\5\26\f\2fd\3\2\2\2fe\3\2\2\2g\23\3\2\2\2hi\7\b\2\2ij\7\t\2\2jk\7"+
+		"\20\2\2k\25\3\2\2\2lm\7\n\2\2mn\7\t\2\2ns\7\21\2\2op\7\13\2\2pr\7\21\2"+
+		"\2qo\3\2\2\2ru\3\2\2\2sq\3\2\2\2st\3\2\2\2t\27\3\2\2\2us\3\2\2\2vw\7\f"+
+		"\2\2wz\5\"\22\2xy\7\5\2\2y{\5\"\22\2zx\3\2\2\2z{\3\2\2\2{\31\3\2\2\2|"+
+		"}\7\r\2\2}~\5\"\22\2~\177\7\t\2\2\177\u0080\5\"\22\2\u0080\33\3\2\2\2"+
+		"\u0081\u0082\7\16\2\2\u0082\u0083\5\"\22\2\u0083\u0084\7\17\2\2\u0084"+
+		"\u0085\5\"\22\2\u0085\35\3\2\2\2\u0086\u0087\7\24\2\2\u0087\37\3\2\2\2"+
+		"\u0088\u0089\7\26\2\2\u0089!\3\2\2\2\u008a\u008b\7\21\2\2\u008b#\3\2\2"+
+		"\2\23\'+.\659=AEKVZ]`bfsz";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
