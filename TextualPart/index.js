@@ -5,14 +5,8 @@ import MyLetoListener from './MyLetoListener.js';
 
 var parseDone = false
 
-export function parse() {
+export function parse(input) {
     if (parseDone == false ) {
-        const input = ` 
-        componant serv from server 1Test/te22st/ serv.serv2. ; 
-        componant serv2 from server 1Test/test/ serv.serv2. ;
-        link serv - server ; 
-        asset bdd : serv ;  
-        `
         const chars = new antlr4.InputStream(input);
         const lexer = new MyGrammarLexer(chars);
         const tokens  = new antlr4.CommonTokenStream(lexer);

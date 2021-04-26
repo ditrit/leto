@@ -21,35 +21,61 @@ grammar leto;
 
 
 prog 
-: (instruction? EOL)+
+: line+ 
+;
+
+line
+: instructions comment? 
+| comment
+;
+
+instructions
+: instruction (';' instruction)* ';' 
 ;
 
 instruction 
-: definition | instantiation
+: definition | instantiation 
 ;
 
 definition
-: (componant | relationship)+ comment? | comment
+: componant | relationship
 ;
 
 instantiation
-: (asset | link)+ comment? | comment 
+: asset | link
 ;
 
 componant 
-: 'componant' id ('from' id)? attributes ';'
+: 'componant' id ('from' id)? '{' componant_attributes '}'
+;
+
+componant_attributes
+: componant_attribute (';' componant_attribute)* ';'?  comment?
+| comment?
+;
+
+componant_attribute
+: logo | hosts
+;
+
+logo
+: 'logo' ':' PATH 
+;
+
+hosts
+: 'host' ':' ID (',' ID)*  
 ;
 
 relationship
-: 'relationship' id ('from' id)?';'
+: 'relationship' id ('from' id)?
 ;
 
 asset 
-: 'asset' id ':' id ';'
+: 'asset' id ':' id 
 ;
 
 link 
-: 'link' id '-' id';'
+: 'link' id '-' id
 ;
 
 number 
@@ -64,27 +90,12 @@ id
 : ID
 ;
 
-attributes
-: logo containers
-;
-
-logo
-: LOGO
-;
-
-containers
-: CONTAINERS
-;
 
 /*
 *	Regle Lexer 
 */
-LOGO
-: ( ( [a-zA-Z] | [0-9] )+ '/' )+ | ( ( [a-zA-Z] | [0-9] )+ '\\' )+
-;
-
-CONTAINERS
-: ( [a-zA-Z][a-z0-9]* '.' )+
+PATH
+: ( [a-zA-Z0-9_.-]+ '/' )+ [a-zA-Z0-9_.-]+
 ;
 
 ID

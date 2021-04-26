@@ -4,65 +4,80 @@ import antlr4 from 'antlr4';
 import letoListener from './letoListener.js';
 
 const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
-    "\u5964\u0003\u0014m\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004",
-    "\t\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007",
-    "\u0004\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004\f\t\f",
-    "\u0004\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0003\u0002\u0005",
-    "\u0002 \n\u0002\u0003\u0002\u0006\u0002#\n\u0002\r\u0002\u000e\u0002",
-    "$\u0003\u0003\u0003\u0003\u0005\u0003)\n\u0003\u0003\u0004\u0003\u0004",
-    "\u0006\u0004-\n\u0004\r\u0004\u000e\u0004.\u0003\u0004\u0005\u00042",
-    "\n\u0004\u0003\u0004\u0005\u00045\n\u0004\u0003\u0005\u0003\u0005\u0006",
-    "\u00059\n\u0005\r\u0005\u000e\u0005:\u0003\u0005\u0005\u0005>\n\u0005",
-    "\u0003\u0005\u0005\u0005A\n\u0005\u0003\u0006\u0003\u0006\u0003\u0006",
-    "\u0003\u0006\u0005\u0006G\n\u0006\u0003\u0006\u0003\u0006\u0003\u0006",
-    "\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0005\u0007P\n\u0007",
-    "\u0003\u0007\u0003\u0007\u0003\b\u0003\b\u0003\b\u0003\b\u0003\b\u0003",
-    "\b\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\t\u0003\n\u0003\n\u0003",
-    "\u000b\u0003\u000b\u0003\f\u0003\f\u0003\r\u0003\r\u0003\r\u0003\u000e",
-    "\u0003\u000e\u0003\u000f\u0003\u000f\u0003\u000f\u0002\u0002\u0010\u0002",
-    "\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u0002",
-    "\u0002\u0002k\u0002\"\u0003\u0002\u0002\u0002\u0004(\u0003\u0002\u0002",
-    "\u0002\u00064\u0003\u0002\u0002\u0002\b@\u0003\u0002\u0002\u0002\nB",
-    "\u0003\u0002\u0002\u0002\fK\u0003\u0002\u0002\u0002\u000eS\u0003\u0002",
-    "\u0002\u0002\u0010Y\u0003\u0002\u0002\u0002\u0012_\u0003\u0002\u0002",
-    "\u0002\u0014a\u0003\u0002\u0002\u0002\u0016c\u0003\u0002\u0002\u0002",
-    "\u0018e\u0003\u0002\u0002\u0002\u001ah\u0003\u0002\u0002\u0002\u001c",
-    "j\u0003\u0002\u0002\u0002\u001e \u0005\u0004\u0003\u0002\u001f\u001e",
-    "\u0003\u0002\u0002\u0002\u001f \u0003\u0002\u0002\u0002 !\u0003\u0002",
-    "\u0002\u0002!#\u0007\u0013\u0002\u0002\"\u001f\u0003\u0002\u0002\u0002",
-    "#$\u0003\u0002\u0002\u0002$\"\u0003\u0002\u0002\u0002$%\u0003\u0002",
-    "\u0002\u0002%\u0003\u0003\u0002\u0002\u0002&)\u0005\u0006\u0004\u0002",
-    "\')\u0005\b\u0005\u0002(&\u0003\u0002\u0002\u0002(\'\u0003\u0002\u0002",
-    "\u0002)\u0005\u0003\u0002\u0002\u0002*-\u0005\n\u0006\u0002+-\u0005",
-    "\f\u0007\u0002,*\u0003\u0002\u0002\u0002,+\u0003\u0002\u0002\u0002-",
-    ".\u0003\u0002\u0002\u0002.,\u0003\u0002\u0002\u0002./\u0003\u0002\u0002",
-    "\u0002/1\u0003\u0002\u0002\u000202\u0005\u0014\u000b\u000210\u0003\u0002",
-    "\u0002\u000212\u0003\u0002\u0002\u000225\u0003\u0002\u0002\u000235\u0005",
-    "\u0014\u000b\u00024,\u0003\u0002\u0002\u000243\u0003\u0002\u0002\u0002",
-    "5\u0007\u0003\u0002\u0002\u000269\u0005\u000e\b\u000279\u0005\u0010",
-    "\t\u000286\u0003\u0002\u0002\u000287\u0003\u0002\u0002\u00029:\u0003",
-    "\u0002\u0002\u0002:8\u0003\u0002\u0002\u0002:;\u0003\u0002\u0002\u0002",
-    ";=\u0003\u0002\u0002\u0002<>\u0005\u0014\u000b\u0002=<\u0003\u0002\u0002",
-    "\u0002=>\u0003\u0002\u0002\u0002>A\u0003\u0002\u0002\u0002?A\u0005\u0014",
-    "\u000b\u0002@8\u0003\u0002\u0002\u0002@?\u0003\u0002\u0002\u0002A\t",
-    "\u0003\u0002\u0002\u0002BC\u0007\u0003\u0002\u0002CF\u0005\u0016\f\u0002",
-    "DE\u0007\u0004\u0002\u0002EG\u0005\u0016\f\u0002FD\u0003\u0002\u0002",
-    "\u0002FG\u0003\u0002\u0002\u0002GH\u0003\u0002\u0002\u0002HI\u0005\u0018",
-    "\r\u0002IJ\u0007\u0005\u0002\u0002J\u000b\u0003\u0002\u0002\u0002KL",
-    "\u0007\u0006\u0002\u0002LO\u0005\u0016\f\u0002MN\u0007\u0004\u0002\u0002",
-    "NP\u0005\u0016\f\u0002OM\u0003\u0002\u0002\u0002OP\u0003\u0002\u0002",
-    "\u0002PQ\u0003\u0002\u0002\u0002QR\u0007\u0005\u0002\u0002R\r\u0003",
-    "\u0002\u0002\u0002ST\u0007\u0007\u0002\u0002TU\u0005\u0016\f\u0002U",
-    "V\u0007\b\u0002\u0002VW\u0005\u0016\f\u0002WX\u0007\u0005\u0002\u0002",
-    "X\u000f\u0003\u0002\u0002\u0002YZ\u0007\t\u0002\u0002Z[\u0005\u0016",
-    "\f\u0002[\\\u0007\n\u0002\u0002\\]\u0005\u0016\f\u0002]^\u0007\u0005",
-    "\u0002\u0002^\u0011\u0003\u0002\u0002\u0002_`\u0007\u0010\u0002\u0002",
-    "`\u0013\u0003\u0002\u0002\u0002ab\u0007\u0012\u0002\u0002b\u0015\u0003",
-    "\u0002\u0002\u0002cd\u0007\r\u0002\u0002d\u0017\u0003\u0002\u0002\u0002",
-    "ef\u0005\u001a\u000e\u0002fg\u0005\u001c\u000f\u0002g\u0019\u0003\u0002",
-    "\u0002\u0002hi\u0007\u000b\u0002\u0002i\u001b\u0003\u0002\u0002\u0002",
-    "jk\u0007\f\u0002\u0002k\u001d\u0003\u0002\u0002\u0002\u000f\u001f$(",
-    ",.148:=@FO"].join("");
+    "\u5964\u0003\u0018\u008c\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004",
+    "\u0004\t\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t",
+    "\u0007\u0004\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004",
+    "\f\t\f\u0004\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010",
+    "\t\u0010\u0004\u0011\t\u0011\u0004\u0012\t\u0012\u0003\u0002\u0006\u0002",
+    "&\n\u0002\r\u0002\u000e\u0002\'\u0003\u0003\u0003\u0003\u0005\u0003",
+    ",\n\u0003\u0003\u0003\u0005\u0003/\n\u0003\u0003\u0004\u0003\u0004\u0003",
+    "\u0004\u0007\u00044\n\u0004\f\u0004\u000e\u00047\u000b\u0004\u0003\u0004",
+    "\u0003\u0004\u0003\u0005\u0003\u0005\u0005\u0005=\n\u0005\u0003\u0006",
+    "\u0003\u0006\u0005\u0006A\n\u0006\u0003\u0007\u0003\u0007\u0005\u0007",
+    "E\n\u0007\u0003\b\u0003\b\u0003\b\u0003\b\u0005\bK\n\b\u0003\b\u0003",
+    "\b\u0003\b\u0003\b\u0003\t\u0003\t\u0003\t\u0007\tT\n\t\f\t\u000e\t",
+    "W\u000b\t\u0003\t\u0005\tZ\n\t\u0003\t\u0005\t]\n\t\u0003\t\u0005\t",
+    "`\n\t\u0005\tb\n\t\u0003\n\u0003\n\u0005\nf\n\n\u0003\u000b\u0003\u000b",
+    "\u0003\u000b\u0003\u000b\u0003\f\u0003\f\u0003\f\u0003\f\u0003\f\u0007",
+    "\fq\n\f\f\f\u000e\ft\u000b\f\u0003\r\u0003\r\u0003\r\u0003\r\u0005\r",
+    "z\n\r\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003",
+    "\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u0010\u0003",
+    "\u0010\u0003\u0011\u0003\u0011\u0003\u0012\u0003\u0012\u0003\u0012\u0002",
+    "\u0002\u0013\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018",
+    "\u001a\u001c\u001e \"\u0002\u0002\u0002\u008a\u0002%\u0003\u0002\u0002",
+    "\u0002\u0004.\u0003\u0002\u0002\u0002\u00060\u0003\u0002\u0002\u0002",
+    "\b<\u0003\u0002\u0002\u0002\n@\u0003\u0002\u0002\u0002\fD\u0003\u0002",
+    "\u0002\u0002\u000eF\u0003\u0002\u0002\u0002\u0010a\u0003\u0002\u0002",
+    "\u0002\u0012e\u0003\u0002\u0002\u0002\u0014g\u0003\u0002\u0002\u0002",
+    "\u0016k\u0003\u0002\u0002\u0002\u0018u\u0003\u0002\u0002\u0002\u001a",
+    "{\u0003\u0002\u0002\u0002\u001c\u0080\u0003\u0002\u0002\u0002\u001e",
+    "\u0085\u0003\u0002\u0002\u0002 \u0087\u0003\u0002\u0002\u0002\"\u0089",
+    "\u0003\u0002\u0002\u0002$&\u0005\u0004\u0003\u0002%$\u0003\u0002\u0002",
+    "\u0002&\'\u0003\u0002\u0002\u0002\'%\u0003\u0002\u0002\u0002\'(\u0003",
+    "\u0002\u0002\u0002(\u0003\u0003\u0002\u0002\u0002)+\u0005\u0006\u0004",
+    "\u0002*,\u0005 \u0011\u0002+*\u0003\u0002\u0002\u0002+,\u0003\u0002",
+    "\u0002\u0002,/\u0003\u0002\u0002\u0002-/\u0005 \u0011\u0002.)\u0003",
+    "\u0002\u0002\u0002.-\u0003\u0002\u0002\u0002/\u0005\u0003\u0002\u0002",
+    "\u000205\u0005\b\u0005\u000212\u0007\u0003\u0002\u000224\u0005\b\u0005",
+    "\u000231\u0003\u0002\u0002\u000247\u0003\u0002\u0002\u000253\u0003\u0002",
+    "\u0002\u000256\u0003\u0002\u0002\u000268\u0003\u0002\u0002\u000275\u0003",
+    "\u0002\u0002\u000289\u0007\u0003\u0002\u00029\u0007\u0003\u0002\u0002",
+    "\u0002:=\u0005\n\u0006\u0002;=\u0005\f\u0007\u0002<:\u0003\u0002\u0002",
+    "\u0002<;\u0003\u0002\u0002\u0002=\t\u0003\u0002\u0002\u0002>A\u0005",
+    "\u000e\b\u0002?A\u0005\u0018\r\u0002@>\u0003\u0002\u0002\u0002@?\u0003",
+    "\u0002\u0002\u0002A\u000b\u0003\u0002\u0002\u0002BE\u0005\u001a\u000e",
+    "\u0002CE\u0005\u001c\u000f\u0002DB\u0003\u0002\u0002\u0002DC\u0003\u0002",
+    "\u0002\u0002E\r\u0003\u0002\u0002\u0002FG\u0007\u0004\u0002\u0002GJ",
+    "\u0005\"\u0012\u0002HI\u0007\u0005\u0002\u0002IK\u0005\"\u0012\u0002",
+    "JH\u0003\u0002\u0002\u0002JK\u0003\u0002\u0002\u0002KL\u0003\u0002\u0002",
+    "\u0002LM\u0007\u0006\u0002\u0002MN\u0005\u0010\t\u0002NO\u0007\u0007",
+    "\u0002\u0002O\u000f\u0003\u0002\u0002\u0002PU\u0005\u0012\n\u0002QR",
+    "\u0007\u0003\u0002\u0002RT\u0005\u0012\n\u0002SQ\u0003\u0002\u0002\u0002",
+    "TW\u0003\u0002\u0002\u0002US\u0003\u0002\u0002\u0002UV\u0003\u0002\u0002",
+    "\u0002VY\u0003\u0002\u0002\u0002WU\u0003\u0002\u0002\u0002XZ\u0007\u0003",
+    "\u0002\u0002YX\u0003\u0002\u0002\u0002YZ\u0003\u0002\u0002\u0002Z\\",
+    "\u0003\u0002\u0002\u0002[]\u0005 \u0011\u0002\\[\u0003\u0002\u0002\u0002",
+    "\\]\u0003\u0002\u0002\u0002]b\u0003\u0002\u0002\u0002^`\u0005 \u0011",
+    "\u0002_^\u0003\u0002\u0002\u0002_`\u0003\u0002\u0002\u0002`b\u0003\u0002",
+    "\u0002\u0002aP\u0003\u0002\u0002\u0002a_\u0003\u0002\u0002\u0002b\u0011",
+    "\u0003\u0002\u0002\u0002cf\u0005\u0014\u000b\u0002df\u0005\u0016\f\u0002",
+    "ec\u0003\u0002\u0002\u0002ed\u0003\u0002\u0002\u0002f\u0013\u0003\u0002",
+    "\u0002\u0002gh\u0007\b\u0002\u0002hi\u0007\t\u0002\u0002ij\u0007\u0010",
+    "\u0002\u0002j\u0015\u0003\u0002\u0002\u0002kl\u0007\n\u0002\u0002lm",
+    "\u0007\t\u0002\u0002mr\u0007\u0011\u0002\u0002no\u0007\u000b\u0002\u0002",
+    "oq\u0007\u0011\u0002\u0002pn\u0003\u0002\u0002\u0002qt\u0003\u0002\u0002",
+    "\u0002rp\u0003\u0002\u0002\u0002rs\u0003\u0002\u0002\u0002s\u0017\u0003",
+    "\u0002\u0002\u0002tr\u0003\u0002\u0002\u0002uv\u0007\f\u0002\u0002v",
+    "y\u0005\"\u0012\u0002wx\u0007\u0005\u0002\u0002xz\u0005\"\u0012\u0002",
+    "yw\u0003\u0002\u0002\u0002yz\u0003\u0002\u0002\u0002z\u0019\u0003\u0002",
+    "\u0002\u0002{|\u0007\r\u0002\u0002|}\u0005\"\u0012\u0002}~\u0007\t\u0002",
+    "\u0002~\u007f\u0005\"\u0012\u0002\u007f\u001b\u0003\u0002\u0002\u0002",
+    "\u0080\u0081\u0007\u000e\u0002\u0002\u0081\u0082\u0005\"\u0012\u0002",
+    "\u0082\u0083\u0007\u000f\u0002\u0002\u0083\u0084\u0005\"\u0012\u0002",
+    "\u0084\u001d\u0003\u0002\u0002\u0002\u0085\u0086\u0007\u0014\u0002\u0002",
+    "\u0086\u001f\u0003\u0002\u0002\u0002\u0087\u0088\u0007\u0016\u0002\u0002",
+    "\u0088!\u0003\u0002\u0002\u0002\u0089\u008a\u0007\u0011\u0002\u0002",
+    "\u008a#\u0003\u0002\u0002\u0002\u0012\'+.5<@DJUY\\_aery"].join("");
 
 
 const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -74,15 +89,17 @@ const sharedContextCache = new antlr4.PredictionContextCache();
 export default class letoParser extends antlr4.Parser {
 
     static grammarFileName = "leto.g4";
-    static literalNames = [ null, "'componant'", "'from'", "';'", "'relationship'", 
-                            "'asset'", "':'", "'link'", "'-'" ];
+    static literalNames = [ null, "';'", "'componant'", "'from'", "'{'", 
+                            "'}'", "'logo'", "':'", "'host'", "','", "'relationship'", 
+                            "'asset'", "'link'", "'-'" ];
     static symbolicNames = [ null, null, null, null, null, null, null, null, 
-                             null, "LOGO", "CONTAINERS", "ID", "STRINGLITERAL", 
-                             "LETTRE", "NUMBER", "FLOAT", "COMMENT", "EOL", 
-                             "WS" ];
-    static ruleNames = [ "prog", "instruction", "definition", "instantiation", 
-                         "componant", "relationship", "asset", "link", "number", 
-                         "comment", "id", "attributes", "logo", "containers" ];
+                             null, null, null, null, null, null, "PATH", 
+                             "ID", "STRINGLITERAL", "LETTRE", "NUMBER", 
+                             "FLOAT", "COMMENT", "EOL", "WS" ];
+    static ruleNames = [ "prog", "line", "instructions", "instruction", 
+                         "definition", "instantiation", "componant", "componant_attributes", 
+                         "componant_attribute", "logo", "hosts", "relationship", 
+                         "asset", "link", "number", "comment", "id" ];
 
     constructor(input) {
         super(input);
@@ -104,24 +121,103 @@ export default class letoParser extends antlr4.Parser {
 	    var _la = 0; // Token type
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 32; 
+	        this.state = 35; 
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
 	        do {
-	            this.state = 29;
+	            this.state = 34;
+	            this.line();
+	            this.state = 37; 
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << letoParser.T__0) | (1 << letoParser.T__3) | (1 << letoParser.T__4) | (1 << letoParser.T__6) | (1 << letoParser.COMMENT))) !== 0)) {
-	                this.state = 28;
-	                this.instruction();
-	            }
+	        } while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << letoParser.T__1) | (1 << letoParser.T__9) | (1 << letoParser.T__10) | (1 << letoParser.T__11) | (1 << letoParser.COMMENT))) !== 0));
+	    } catch (re) {
+	    	if(re instanceof antlr4.error.RecognitionException) {
+		        localctx.exception = re;
+		        this._errHandler.reportError(this, re);
+		        this._errHandler.recover(this, re);
+		    } else {
+		    	throw re;
+		    }
+	    } finally {
+	        this.exitRule();
+	    }
+	    return localctx;
+	}
 
-	            this.state = 31;
-	            this.match(letoParser.EOL);
-	            this.state = 34; 
+
+
+	line() {
+	    let localctx = new LineContext(this, this._ctx, this.state);
+	    this.enterRule(localctx, 2, letoParser.RULE_line);
+	    try {
+	        this.state = 44;
+	        this._errHandler.sync(this);
+	        switch(this._input.LA(1)) {
+	        case letoParser.T__1:
+	        case letoParser.T__9:
+	        case letoParser.T__10:
+	        case letoParser.T__11:
+	            this.enterOuterAlt(localctx, 1);
+	            this.state = 39;
+	            this.instructions();
+	            this.state = 41;
 	            this._errHandler.sync(this);
-	            _la = this._input.LA(1);
-	        } while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << letoParser.T__0) | (1 << letoParser.T__3) | (1 << letoParser.T__4) | (1 << letoParser.T__6) | (1 << letoParser.COMMENT) | (1 << letoParser.EOL))) !== 0));
+	            var la_ = this._interp.adaptivePredict(this._input,1,this._ctx);
+	            if(la_===1) {
+	                this.state = 40;
+	                this.comment();
+
+	            }
+	            break;
+	        case letoParser.COMMENT:
+	            this.enterOuterAlt(localctx, 2);
+	            this.state = 43;
+	            this.comment();
+	            break;
+	        default:
+	            throw new antlr4.error.NoViableAltException(this);
+	        }
+	    } catch (re) {
+	    	if(re instanceof antlr4.error.RecognitionException) {
+		        localctx.exception = re;
+		        this._errHandler.reportError(this, re);
+		        this._errHandler.recover(this, re);
+		    } else {
+		    	throw re;
+		    }
+	    } finally {
+	        this.exitRule();
+	    }
+	    return localctx;
+	}
+
+
+
+	instructions() {
+	    let localctx = new InstructionsContext(this, this._ctx, this.state);
+	    this.enterRule(localctx, 4, letoParser.RULE_instructions);
+	    try {
+	        this.enterOuterAlt(localctx, 1);
+	        this.state = 46;
+	        this.instruction();
+	        this.state = 51;
+	        this._errHandler.sync(this);
+	        var _alt = this._interp.adaptivePredict(this._input,3,this._ctx)
+	        while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
+	            if(_alt===1) {
+	                this.state = 47;
+	                this.match(letoParser.T__0);
+	                this.state = 48;
+	                this.instruction(); 
+	            }
+	            this.state = 53;
+	            this._errHandler.sync(this);
+	            _alt = this._interp.adaptivePredict(this._input,3,this._ctx);
+	        }
+
+	        this.state = 54;
+	        this.match(letoParser.T__0);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -140,24 +236,25 @@ export default class letoParser extends antlr4.Parser {
 
 	instruction() {
 	    let localctx = new InstructionContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 2, letoParser.RULE_instruction);
+	    this.enterRule(localctx, 6, letoParser.RULE_instruction);
 	    try {
-	        this.state = 38;
+	        this.state = 58;
 	        this._errHandler.sync(this);
-	        var la_ = this._interp.adaptivePredict(this._input,2,this._ctx);
-	        switch(la_) {
-	        case 1:
+	        switch(this._input.LA(1)) {
+	        case letoParser.T__1:
+	        case letoParser.T__9:
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 36;
+	            this.state = 56;
 	            this.definition();
 	            break;
-
-	        case 2:
+	        case letoParser.T__10:
+	        case letoParser.T__11:
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 37;
+	            this.state = 57;
 	            this.instantiation();
 	            break;
-
+	        default:
+	            throw new antlr4.error.NoViableAltException(this);
 	        }
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -177,50 +274,20 @@ export default class letoParser extends antlr4.Parser {
 
 	definition() {
 	    let localctx = new DefinitionContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 4, letoParser.RULE_definition);
-	    var _la = 0; // Token type
+	    this.enterRule(localctx, 8, letoParser.RULE_definition);
 	    try {
-	        this.state = 50;
+	        this.state = 62;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case letoParser.T__0:
-	        case letoParser.T__3:
+	        case letoParser.T__1:
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 42; 
-	            this._errHandler.sync(this);
-	            _la = this._input.LA(1);
-	            do {
-	                this.state = 42;
-	                this._errHandler.sync(this);
-	                switch(this._input.LA(1)) {
-	                case letoParser.T__0:
-	                    this.state = 40;
-	                    this.componant();
-	                    break;
-	                case letoParser.T__3:
-	                    this.state = 41;
-	                    this.relationship();
-	                    break;
-	                default:
-	                    throw new antlr4.error.NoViableAltException(this);
-	                }
-	                this.state = 44; 
-	                this._errHandler.sync(this);
-	                _la = this._input.LA(1);
-	            } while(_la===letoParser.T__0 || _la===letoParser.T__3);
-	            this.state = 47;
-	            this._errHandler.sync(this);
-	            _la = this._input.LA(1);
-	            if(_la===letoParser.COMMENT) {
-	                this.state = 46;
-	                this.comment();
-	            }
-
+	            this.state = 60;
+	            this.componant();
 	            break;
-	        case letoParser.COMMENT:
+	        case letoParser.T__9:
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 49;
-	            this.comment();
+	            this.state = 61;
+	            this.relationship();
 	            break;
 	        default:
 	            throw new antlr4.error.NoViableAltException(this);
@@ -243,50 +310,20 @@ export default class letoParser extends antlr4.Parser {
 
 	instantiation() {
 	    let localctx = new InstantiationContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 6, letoParser.RULE_instantiation);
-	    var _la = 0; // Token type
+	    this.enterRule(localctx, 10, letoParser.RULE_instantiation);
 	    try {
-	        this.state = 62;
+	        this.state = 66;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
-	        case letoParser.T__4:
-	        case letoParser.T__6:
+	        case letoParser.T__10:
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 54; 
-	            this._errHandler.sync(this);
-	            _la = this._input.LA(1);
-	            do {
-	                this.state = 54;
-	                this._errHandler.sync(this);
-	                switch(this._input.LA(1)) {
-	                case letoParser.T__4:
-	                    this.state = 52;
-	                    this.asset();
-	                    break;
-	                case letoParser.T__6:
-	                    this.state = 53;
-	                    this.link();
-	                    break;
-	                default:
-	                    throw new antlr4.error.NoViableAltException(this);
-	                }
-	                this.state = 56; 
-	                this._errHandler.sync(this);
-	                _la = this._input.LA(1);
-	            } while(_la===letoParser.T__4 || _la===letoParser.T__6);
-	            this.state = 59;
-	            this._errHandler.sync(this);
-	            _la = this._input.LA(1);
-	            if(_la===letoParser.COMMENT) {
-	                this.state = 58;
-	                this.comment();
-	            }
-
+	            this.state = 64;
+	            this.asset();
 	            break;
-	        case letoParser.COMMENT:
+	        case letoParser.T__11:
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 61;
-	            this.comment();
+	            this.state = 65;
+	            this.link();
 	            break;
 	        default:
 	            throw new antlr4.error.NoViableAltException(this);
@@ -309,28 +346,209 @@ export default class letoParser extends antlr4.Parser {
 
 	componant() {
 	    let localctx = new ComponantContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 8, letoParser.RULE_componant);
+	    this.enterRule(localctx, 12, letoParser.RULE_componant);
 	    var _la = 0; // Token type
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 64;
-	        this.match(letoParser.T__0);
-	        this.state = 65;
-	        this.id();
 	        this.state = 68;
+	        this.match(letoParser.T__1);
+	        this.state = 69;
+	        this.id();
+	        this.state = 72;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===letoParser.T__1) {
-	            this.state = 66;
-	            this.match(letoParser.T__1);
-	            this.state = 67;
+	        if(_la===letoParser.T__2) {
+	            this.state = 70;
+	            this.match(letoParser.T__2);
+	            this.state = 71;
 	            this.id();
 	        }
 
-	        this.state = 70;
-	        this.attributes();
-	        this.state = 71;
-	        this.match(letoParser.T__2);
+	        this.state = 74;
+	        this.match(letoParser.T__3);
+	        this.state = 75;
+	        this.componant_attributes();
+	        this.state = 76;
+	        this.match(letoParser.T__4);
+	    } catch (re) {
+	    	if(re instanceof antlr4.error.RecognitionException) {
+		        localctx.exception = re;
+		        this._errHandler.reportError(this, re);
+		        this._errHandler.recover(this, re);
+		    } else {
+		    	throw re;
+		    }
+	    } finally {
+	        this.exitRule();
+	    }
+	    return localctx;
+	}
+
+
+
+	componant_attributes() {
+	    let localctx = new Componant_attributesContext(this, this._ctx, this.state);
+	    this.enterRule(localctx, 14, letoParser.RULE_componant_attributes);
+	    var _la = 0; // Token type
+	    try {
+	        this.state = 95;
+	        this._errHandler.sync(this);
+	        switch(this._input.LA(1)) {
+	        case letoParser.T__5:
+	        case letoParser.T__7:
+	            this.enterOuterAlt(localctx, 1);
+	            this.state = 78;
+	            this.componant_attribute();
+	            this.state = 83;
+	            this._errHandler.sync(this);
+	            var _alt = this._interp.adaptivePredict(this._input,8,this._ctx)
+	            while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
+	                if(_alt===1) {
+	                    this.state = 79;
+	                    this.match(letoParser.T__0);
+	                    this.state = 80;
+	                    this.componant_attribute(); 
+	                }
+	                this.state = 85;
+	                this._errHandler.sync(this);
+	                _alt = this._interp.adaptivePredict(this._input,8,this._ctx);
+	            }
+
+	            this.state = 87;
+	            this._errHandler.sync(this);
+	            _la = this._input.LA(1);
+	            if(_la===letoParser.T__0) {
+	                this.state = 86;
+	                this.match(letoParser.T__0);
+	            }
+
+	            this.state = 90;
+	            this._errHandler.sync(this);
+	            _la = this._input.LA(1);
+	            if(_la===letoParser.COMMENT) {
+	                this.state = 89;
+	                this.comment();
+	            }
+
+	            break;
+	        case letoParser.T__4:
+	        case letoParser.COMMENT:
+	            this.enterOuterAlt(localctx, 2);
+	            this.state = 93;
+	            this._errHandler.sync(this);
+	            _la = this._input.LA(1);
+	            if(_la===letoParser.COMMENT) {
+	                this.state = 92;
+	                this.comment();
+	            }
+
+	            break;
+	        default:
+	            throw new antlr4.error.NoViableAltException(this);
+	        }
+	    } catch (re) {
+	    	if(re instanceof antlr4.error.RecognitionException) {
+		        localctx.exception = re;
+		        this._errHandler.reportError(this, re);
+		        this._errHandler.recover(this, re);
+		    } else {
+		    	throw re;
+		    }
+	    } finally {
+	        this.exitRule();
+	    }
+	    return localctx;
+	}
+
+
+
+	componant_attribute() {
+	    let localctx = new Componant_attributeContext(this, this._ctx, this.state);
+	    this.enterRule(localctx, 16, letoParser.RULE_componant_attribute);
+	    try {
+	        this.state = 99;
+	        this._errHandler.sync(this);
+	        switch(this._input.LA(1)) {
+	        case letoParser.T__5:
+	            this.enterOuterAlt(localctx, 1);
+	            this.state = 97;
+	            this.logo();
+	            break;
+	        case letoParser.T__7:
+	            this.enterOuterAlt(localctx, 2);
+	            this.state = 98;
+	            this.hosts();
+	            break;
+	        default:
+	            throw new antlr4.error.NoViableAltException(this);
+	        }
+	    } catch (re) {
+	    	if(re instanceof antlr4.error.RecognitionException) {
+		        localctx.exception = re;
+		        this._errHandler.reportError(this, re);
+		        this._errHandler.recover(this, re);
+		    } else {
+		    	throw re;
+		    }
+	    } finally {
+	        this.exitRule();
+	    }
+	    return localctx;
+	}
+
+
+
+	logo() {
+	    let localctx = new LogoContext(this, this._ctx, this.state);
+	    this.enterRule(localctx, 18, letoParser.RULE_logo);
+	    try {
+	        this.enterOuterAlt(localctx, 1);
+	        this.state = 101;
+	        this.match(letoParser.T__5);
+	        this.state = 102;
+	        this.match(letoParser.T__6);
+	        this.state = 103;
+	        this.match(letoParser.PATH);
+	    } catch (re) {
+	    	if(re instanceof antlr4.error.RecognitionException) {
+		        localctx.exception = re;
+		        this._errHandler.reportError(this, re);
+		        this._errHandler.recover(this, re);
+		    } else {
+		    	throw re;
+		    }
+	    } finally {
+	        this.exitRule();
+	    }
+	    return localctx;
+	}
+
+
+
+	hosts() {
+	    let localctx = new HostsContext(this, this._ctx, this.state);
+	    this.enterRule(localctx, 20, letoParser.RULE_hosts);
+	    var _la = 0; // Token type
+	    try {
+	        this.enterOuterAlt(localctx, 1);
+	        this.state = 105;
+	        this.match(letoParser.T__7);
+	        this.state = 106;
+	        this.match(letoParser.T__6);
+	        this.state = 107;
+	        this.match(letoParser.ID);
+	        this.state = 112;
+	        this._errHandler.sync(this);
+	        _la = this._input.LA(1);
+	        while(_la===letoParser.T__8) {
+	            this.state = 108;
+	            this.match(letoParser.T__8);
+	            this.state = 109;
+	            this.match(letoParser.ID);
+	            this.state = 114;
+	            this._errHandler.sync(this);
+	            _la = this._input.LA(1);
+	        }
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -349,26 +567,24 @@ export default class letoParser extends antlr4.Parser {
 
 	relationship() {
 	    let localctx = new RelationshipContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 10, letoParser.RULE_relationship);
+	    this.enterRule(localctx, 22, letoParser.RULE_relationship);
 	    var _la = 0; // Token type
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 73;
-	        this.match(letoParser.T__3);
-	        this.state = 74;
+	        this.state = 115;
+	        this.match(letoParser.T__9);
+	        this.state = 116;
 	        this.id();
-	        this.state = 77;
+	        this.state = 119;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===letoParser.T__1) {
-	            this.state = 75;
-	            this.match(letoParser.T__1);
-	            this.state = 76;
+	        if(_la===letoParser.T__2) {
+	            this.state = 117;
+	            this.match(letoParser.T__2);
+	            this.state = 118;
 	            this.id();
 	        }
 
-	        this.state = 79;
-	        this.match(letoParser.T__2);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -387,19 +603,17 @@ export default class letoParser extends antlr4.Parser {
 
 	asset() {
 	    let localctx = new AssetContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 12, letoParser.RULE_asset);
+	    this.enterRule(localctx, 24, letoParser.RULE_asset);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 81;
-	        this.match(letoParser.T__4);
-	        this.state = 82;
+	        this.state = 121;
+	        this.match(letoParser.T__10);
+	        this.state = 122;
 	        this.id();
-	        this.state = 83;
-	        this.match(letoParser.T__5);
-	        this.state = 84;
+	        this.state = 123;
+	        this.match(letoParser.T__6);
+	        this.state = 124;
 	        this.id();
-	        this.state = 85;
-	        this.match(letoParser.T__2);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -418,19 +632,17 @@ export default class letoParser extends antlr4.Parser {
 
 	link() {
 	    let localctx = new LinkContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 14, letoParser.RULE_link);
+	    this.enterRule(localctx, 26, letoParser.RULE_link);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 87;
-	        this.match(letoParser.T__6);
-	        this.state = 88;
+	        this.state = 126;
+	        this.match(letoParser.T__11);
+	        this.state = 127;
 	        this.id();
-	        this.state = 89;
-	        this.match(letoParser.T__7);
-	        this.state = 90;
+	        this.state = 128;
+	        this.match(letoParser.T__12);
+	        this.state = 129;
 	        this.id();
-	        this.state = 91;
-	        this.match(letoParser.T__2);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -449,10 +661,10 @@ export default class letoParser extends antlr4.Parser {
 
 	number() {
 	    let localctx = new NumberContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 16, letoParser.RULE_number);
+	    this.enterRule(localctx, 28, letoParser.RULE_number);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 93;
+	        this.state = 131;
 	        this.match(letoParser.NUMBER);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -472,10 +684,10 @@ export default class letoParser extends antlr4.Parser {
 
 	comment() {
 	    let localctx = new CommentContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 18, letoParser.RULE_comment);
+	    this.enterRule(localctx, 30, letoParser.RULE_comment);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 95;
+	        this.state = 133;
 	        this.match(letoParser.COMMENT);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -495,82 +707,11 @@ export default class letoParser extends antlr4.Parser {
 
 	id() {
 	    let localctx = new IdContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 20, letoParser.RULE_id);
+	    this.enterRule(localctx, 32, letoParser.RULE_id);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 97;
+	        this.state = 135;
 	        this.match(letoParser.ID);
-	    } catch (re) {
-	    	if(re instanceof antlr4.error.RecognitionException) {
-		        localctx.exception = re;
-		        this._errHandler.reportError(this, re);
-		        this._errHandler.recover(this, re);
-		    } else {
-		    	throw re;
-		    }
-	    } finally {
-	        this.exitRule();
-	    }
-	    return localctx;
-	}
-
-
-
-	attributes() {
-	    let localctx = new AttributesContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 22, letoParser.RULE_attributes);
-	    try {
-	        this.enterOuterAlt(localctx, 1);
-	        this.state = 99;
-	        this.logo();
-	        this.state = 100;
-	        this.containers();
-	    } catch (re) {
-	    	if(re instanceof antlr4.error.RecognitionException) {
-		        localctx.exception = re;
-		        this._errHandler.reportError(this, re);
-		        this._errHandler.recover(this, re);
-		    } else {
-		    	throw re;
-		    }
-	    } finally {
-	        this.exitRule();
-	    }
-	    return localctx;
-	}
-
-
-
-	logo() {
-	    let localctx = new LogoContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 24, letoParser.RULE_logo);
-	    try {
-	        this.enterOuterAlt(localctx, 1);
-	        this.state = 102;
-	        this.match(letoParser.LOGO);
-	    } catch (re) {
-	    	if(re instanceof antlr4.error.RecognitionException) {
-		        localctx.exception = re;
-		        this._errHandler.reportError(this, re);
-		        this._errHandler.recover(this, re);
-		    } else {
-		    	throw re;
-		    }
-	    } finally {
-	        this.exitRule();
-	    }
-	    return localctx;
-	}
-
-
-
-	containers() {
-	    let localctx = new ContainersContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 26, letoParser.RULE_containers);
-	    try {
-	        this.enterOuterAlt(localctx, 1);
-	        this.state = 104;
-	        this.match(letoParser.CONTAINERS);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -597,31 +738,38 @@ letoParser.T__4 = 5;
 letoParser.T__5 = 6;
 letoParser.T__6 = 7;
 letoParser.T__7 = 8;
-letoParser.LOGO = 9;
-letoParser.CONTAINERS = 10;
-letoParser.ID = 11;
-letoParser.STRINGLITERAL = 12;
-letoParser.LETTRE = 13;
-letoParser.NUMBER = 14;
-letoParser.FLOAT = 15;
-letoParser.COMMENT = 16;
-letoParser.EOL = 17;
-letoParser.WS = 18;
+letoParser.T__8 = 9;
+letoParser.T__9 = 10;
+letoParser.T__10 = 11;
+letoParser.T__11 = 12;
+letoParser.T__12 = 13;
+letoParser.PATH = 14;
+letoParser.ID = 15;
+letoParser.STRINGLITERAL = 16;
+letoParser.LETTRE = 17;
+letoParser.NUMBER = 18;
+letoParser.FLOAT = 19;
+letoParser.COMMENT = 20;
+letoParser.EOL = 21;
+letoParser.WS = 22;
 
 letoParser.RULE_prog = 0;
-letoParser.RULE_instruction = 1;
-letoParser.RULE_definition = 2;
-letoParser.RULE_instantiation = 3;
-letoParser.RULE_componant = 4;
-letoParser.RULE_relationship = 5;
-letoParser.RULE_asset = 6;
-letoParser.RULE_link = 7;
-letoParser.RULE_number = 8;
-letoParser.RULE_comment = 9;
-letoParser.RULE_id = 10;
-letoParser.RULE_attributes = 11;
-letoParser.RULE_logo = 12;
-letoParser.RULE_containers = 13;
+letoParser.RULE_line = 1;
+letoParser.RULE_instructions = 2;
+letoParser.RULE_instruction = 3;
+letoParser.RULE_definition = 4;
+letoParser.RULE_instantiation = 5;
+letoParser.RULE_componant = 6;
+letoParser.RULE_componant_attributes = 7;
+letoParser.RULE_componant_attribute = 8;
+letoParser.RULE_logo = 9;
+letoParser.RULE_hosts = 10;
+letoParser.RULE_relationship = 11;
+letoParser.RULE_asset = 12;
+letoParser.RULE_link = 13;
+letoParser.RULE_number = 14;
+letoParser.RULE_comment = 15;
+letoParser.RULE_id = 16;
 
 class ProgContext extends antlr4.ParserRuleContext {
 
@@ -637,17 +785,86 @@ class ProgContext extends antlr4.ParserRuleContext {
         this.ruleIndex = letoParser.RULE_prog;
     }
 
-	EOL = function(i) {
-		if(i===undefined) {
-			i = null;
-		}
+	line = function(i) {
+	    if(i===undefined) {
+	        i = null;
+	    }
 	    if(i===null) {
-	        return this.getTokens(letoParser.EOL);
+	        return this.getTypedRuleContexts(LineContext);
 	    } else {
-	        return this.getToken(letoParser.EOL, i);
+	        return this.getTypedRuleContext(LineContext,i);
 	    }
 	};
 
+	enterRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.enterProg(this);
+		}
+	}
+
+	exitRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.exitProg(this);
+		}
+	}
+
+
+}
+
+
+
+class LineContext extends antlr4.ParserRuleContext {
+
+    constructor(parser, parent, invokingState) {
+        if(parent===undefined) {
+            parent = null;
+        }
+        if(invokingState===undefined || invokingState===null) {
+            invokingState = -1;
+        }
+        super(parent, invokingState);
+        this.parser = parser;
+        this.ruleIndex = letoParser.RULE_line;
+    }
+
+	instructions() {
+	    return this.getTypedRuleContext(InstructionsContext,0);
+	};
+
+	comment() {
+	    return this.getTypedRuleContext(CommentContext,0);
+	};
+
+	enterRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.enterLine(this);
+		}
+	}
+
+	exitRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.exitLine(this);
+		}
+	}
+
+
+}
+
+
+
+class InstructionsContext extends antlr4.ParserRuleContext {
+
+    constructor(parser, parent, invokingState) {
+        if(parent===undefined) {
+            parent = null;
+        }
+        if(invokingState===undefined || invokingState===null) {
+            invokingState = -1;
+        }
+        super(parent, invokingState);
+        this.parser = parser;
+        this.ruleIndex = letoParser.RULE_instructions;
+    }
 
 	instruction = function(i) {
 	    if(i===undefined) {
@@ -662,13 +879,13 @@ class ProgContext extends antlr4.ParserRuleContext {
 
 	enterRule(listener) {
 	    if(listener instanceof letoListener ) {
-	        listener.enterProg(this);
+	        listener.enterInstructions(this);
 		}
 	}
 
 	exitRule(listener) {
 	    if(listener instanceof letoListener ) {
-	        listener.exitProg(this);
+	        listener.exitInstructions(this);
 		}
 	}
 
@@ -730,30 +947,12 @@ class DefinitionContext extends antlr4.ParserRuleContext {
         this.ruleIndex = letoParser.RULE_definition;
     }
 
-	componant = function(i) {
-	    if(i===undefined) {
-	        i = null;
-	    }
-	    if(i===null) {
-	        return this.getTypedRuleContexts(ComponantContext);
-	    } else {
-	        return this.getTypedRuleContext(ComponantContext,i);
-	    }
+	componant() {
+	    return this.getTypedRuleContext(ComponantContext,0);
 	};
 
-	relationship = function(i) {
-	    if(i===undefined) {
-	        i = null;
-	    }
-	    if(i===null) {
-	        return this.getTypedRuleContexts(RelationshipContext);
-	    } else {
-	        return this.getTypedRuleContext(RelationshipContext,i);
-	    }
-	};
-
-	comment() {
-	    return this.getTypedRuleContext(CommentContext,0);
+	relationship() {
+	    return this.getTypedRuleContext(RelationshipContext,0);
 	};
 
 	enterRule(listener) {
@@ -787,30 +986,12 @@ class InstantiationContext extends antlr4.ParserRuleContext {
         this.ruleIndex = letoParser.RULE_instantiation;
     }
 
-	asset = function(i) {
-	    if(i===undefined) {
-	        i = null;
-	    }
-	    if(i===null) {
-	        return this.getTypedRuleContexts(AssetContext);
-	    } else {
-	        return this.getTypedRuleContext(AssetContext,i);
-	    }
+	asset() {
+	    return this.getTypedRuleContext(AssetContext,0);
 	};
 
-	link = function(i) {
-	    if(i===undefined) {
-	        i = null;
-	    }
-	    if(i===null) {
-	        return this.getTypedRuleContexts(LinkContext);
-	    } else {
-	        return this.getTypedRuleContext(LinkContext,i);
-	    }
-	};
-
-	comment() {
-	    return this.getTypedRuleContext(CommentContext,0);
+	link() {
+	    return this.getTypedRuleContext(LinkContext,0);
 	};
 
 	enterRule(listener) {
@@ -855,8 +1036,8 @@ class ComponantContext extends antlr4.ParserRuleContext {
 	    }
 	};
 
-	attributes() {
-	    return this.getTypedRuleContext(AttributesContext,0);
+	componant_attributes() {
+	    return this.getTypedRuleContext(Componant_attributesContext,0);
 	};
 
 	enterRule(listener) {
@@ -868,6 +1049,169 @@ class ComponantContext extends antlr4.ParserRuleContext {
 	exitRule(listener) {
 	    if(listener instanceof letoListener ) {
 	        listener.exitComponant(this);
+		}
+	}
+
+
+}
+
+
+
+class Componant_attributesContext extends antlr4.ParserRuleContext {
+
+    constructor(parser, parent, invokingState) {
+        if(parent===undefined) {
+            parent = null;
+        }
+        if(invokingState===undefined || invokingState===null) {
+            invokingState = -1;
+        }
+        super(parent, invokingState);
+        this.parser = parser;
+        this.ruleIndex = letoParser.RULE_componant_attributes;
+    }
+
+	componant_attribute = function(i) {
+	    if(i===undefined) {
+	        i = null;
+	    }
+	    if(i===null) {
+	        return this.getTypedRuleContexts(Componant_attributeContext);
+	    } else {
+	        return this.getTypedRuleContext(Componant_attributeContext,i);
+	    }
+	};
+
+	comment() {
+	    return this.getTypedRuleContext(CommentContext,0);
+	};
+
+	enterRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.enterComponant_attributes(this);
+		}
+	}
+
+	exitRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.exitComponant_attributes(this);
+		}
+	}
+
+
+}
+
+
+
+class Componant_attributeContext extends antlr4.ParserRuleContext {
+
+    constructor(parser, parent, invokingState) {
+        if(parent===undefined) {
+            parent = null;
+        }
+        if(invokingState===undefined || invokingState===null) {
+            invokingState = -1;
+        }
+        super(parent, invokingState);
+        this.parser = parser;
+        this.ruleIndex = letoParser.RULE_componant_attribute;
+    }
+
+	logo() {
+	    return this.getTypedRuleContext(LogoContext,0);
+	};
+
+	hosts() {
+	    return this.getTypedRuleContext(HostsContext,0);
+	};
+
+	enterRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.enterComponant_attribute(this);
+		}
+	}
+
+	exitRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.exitComponant_attribute(this);
+		}
+	}
+
+
+}
+
+
+
+class LogoContext extends antlr4.ParserRuleContext {
+
+    constructor(parser, parent, invokingState) {
+        if(parent===undefined) {
+            parent = null;
+        }
+        if(invokingState===undefined || invokingState===null) {
+            invokingState = -1;
+        }
+        super(parent, invokingState);
+        this.parser = parser;
+        this.ruleIndex = letoParser.RULE_logo;
+    }
+
+	PATH() {
+	    return this.getToken(letoParser.PATH, 0);
+	};
+
+	enterRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.enterLogo(this);
+		}
+	}
+
+	exitRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.exitLogo(this);
+		}
+	}
+
+
+}
+
+
+
+class HostsContext extends antlr4.ParserRuleContext {
+
+    constructor(parser, parent, invokingState) {
+        if(parent===undefined) {
+            parent = null;
+        }
+        if(invokingState===undefined || invokingState===null) {
+            invokingState = -1;
+        }
+        super(parent, invokingState);
+        this.parser = parser;
+        this.ruleIndex = letoParser.RULE_hosts;
+    }
+
+	ID = function(i) {
+		if(i===undefined) {
+			i = null;
+		}
+	    if(i===null) {
+	        return this.getTokens(letoParser.ID);
+	    } else {
+	        return this.getToken(letoParser.ID, i);
+	    }
+	};
+
+
+	enterRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.enterHosts(this);
+		}
+	}
+
+	exitRule(listener) {
+	    if(listener instanceof letoListener ) {
+	        listener.exitHosts(this);
 		}
 	}
 
@@ -1107,127 +1451,21 @@ class IdContext extends antlr4.ParserRuleContext {
 
 
 
-class AttributesContext extends antlr4.ParserRuleContext {
-
-    constructor(parser, parent, invokingState) {
-        if(parent===undefined) {
-            parent = null;
-        }
-        if(invokingState===undefined || invokingState===null) {
-            invokingState = -1;
-        }
-        super(parent, invokingState);
-        this.parser = parser;
-        this.ruleIndex = letoParser.RULE_attributes;
-    }
-
-	logo() {
-	    return this.getTypedRuleContext(LogoContext,0);
-	};
-
-	containers() {
-	    return this.getTypedRuleContext(ContainersContext,0);
-	};
-
-	enterRule(listener) {
-	    if(listener instanceof letoListener ) {
-	        listener.enterAttributes(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof letoListener ) {
-	        listener.exitAttributes(this);
-		}
-	}
-
-
-}
-
-
-
-class LogoContext extends antlr4.ParserRuleContext {
-
-    constructor(parser, parent, invokingState) {
-        if(parent===undefined) {
-            parent = null;
-        }
-        if(invokingState===undefined || invokingState===null) {
-            invokingState = -1;
-        }
-        super(parent, invokingState);
-        this.parser = parser;
-        this.ruleIndex = letoParser.RULE_logo;
-    }
-
-	LOGO() {
-	    return this.getToken(letoParser.LOGO, 0);
-	};
-
-	enterRule(listener) {
-	    if(listener instanceof letoListener ) {
-	        listener.enterLogo(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof letoListener ) {
-	        listener.exitLogo(this);
-		}
-	}
-
-
-}
-
-
-
-class ContainersContext extends antlr4.ParserRuleContext {
-
-    constructor(parser, parent, invokingState) {
-        if(parent===undefined) {
-            parent = null;
-        }
-        if(invokingState===undefined || invokingState===null) {
-            invokingState = -1;
-        }
-        super(parent, invokingState);
-        this.parser = parser;
-        this.ruleIndex = letoParser.RULE_containers;
-    }
-
-	CONTAINERS() {
-	    return this.getToken(letoParser.CONTAINERS, 0);
-	};
-
-	enterRule(listener) {
-	    if(listener instanceof letoListener ) {
-	        listener.enterContainers(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof letoListener ) {
-	        listener.exitContainers(this);
-		}
-	}
-
-
-}
-
-
-
 
 letoParser.ProgContext = ProgContext; 
+letoParser.LineContext = LineContext; 
+letoParser.InstructionsContext = InstructionsContext; 
 letoParser.InstructionContext = InstructionContext; 
 letoParser.DefinitionContext = DefinitionContext; 
 letoParser.InstantiationContext = InstantiationContext; 
 letoParser.ComponantContext = ComponantContext; 
+letoParser.Componant_attributesContext = Componant_attributesContext; 
+letoParser.Componant_attributeContext = Componant_attributeContext; 
+letoParser.LogoContext = LogoContext; 
+letoParser.HostsContext = HostsContext; 
 letoParser.RelationshipContext = RelationshipContext; 
 letoParser.AssetContext = AssetContext; 
 letoParser.LinkContext = LinkContext; 
 letoParser.NumberContext = NumberContext; 
 letoParser.CommentContext = CommentContext; 
 letoParser.IdContext = IdContext; 
-letoParser.AttributesContext = AttributesContext; 
-letoParser.LogoContext = LogoContext; 
-letoParser.ContainersContext = ContainersContext; 

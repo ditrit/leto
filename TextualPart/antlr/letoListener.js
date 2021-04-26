@@ -14,6 +14,24 @@ export default class letoListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by letoParser#line.
+	enterLine(ctx) {
+	}
+
+	// Exit a parse tree produced by letoParser#line.
+	exitLine(ctx) {
+	}
+
+
+	// Enter a parse tree produced by letoParser#instructions.
+	enterInstructions(ctx) {
+	}
+
+	// Exit a parse tree produced by letoParser#instructions.
+	exitInstructions(ctx) {
+	}
+
+
 	// Enter a parse tree produced by letoParser#instruction.
 	enterInstruction(ctx) {
 	}
@@ -47,6 +65,42 @@ export default class letoListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by letoParser#componant.
 	exitComponant(ctx) {
+	}
+
+
+	// Enter a parse tree produced by letoParser#componant_attributes.
+	enterComponant_attributes(ctx) {
+	}
+
+	// Exit a parse tree produced by letoParser#componant_attributes.
+	exitComponant_attributes(ctx) {
+	}
+
+
+	// Enter a parse tree produced by letoParser#componant_attribute.
+	enterComponant_attribute(ctx) {
+	}
+
+	// Exit a parse tree produced by letoParser#componant_attribute.
+	exitComponant_attribute(ctx) {
+	}
+
+
+	// Enter a parse tree produced by letoParser#logo.
+	enterLogo(ctx) {
+	}
+
+	// Exit a parse tree produced by letoParser#logo.
+	exitLogo(ctx) {
+	}
+
+
+	// Enter a parse tree produced by letoParser#hosts.
+	enterHosts(ctx) {
+	}
+
+	// Exit a parse tree produced by letoParser#hosts.
+	exitHosts(ctx) {
 	}
 
 
@@ -101,33 +155,6 @@ export default class letoListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by letoParser#id.
 	exitId(ctx) {
-	}
-
-
-	// Enter a parse tree produced by letoParser#attributes.
-	enterAttributes(ctx) {
-	}
-
-	// Exit a parse tree produced by letoParser#attributes.
-	exitAttributes(ctx) {
-	}
-
-
-	// Enter a parse tree produced by letoParser#logo.
-	enterLogo(ctx) {
-	}
-
-	// Exit a parse tree produced by letoParser#logo.
-	exitLogo(ctx) {
-	}
-
-
-	// Enter a parse tree produced by letoParser#containers.
-	enterContainers(ctx) {
-	}
-
-	// Exit a parse tree produced by letoParser#containers.
-	exitContainers(ctx) {
 	}
 
 
