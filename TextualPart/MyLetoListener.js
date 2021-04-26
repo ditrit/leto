@@ -8,8 +8,8 @@ export default class MyLetoListener extends letoListener {
 
 	enterProg(ctx) {
         ctx.prog = new Prog(ctx)
-        let num = ctx.getChildCount()
-        for(let i=0; i<num; i++) {
+        let nbChild = ctx.getChildCount()
+        for(let i=0; i<nbChild; i++) {
             let child = ctx.getChild(i).model
             
         }
@@ -20,8 +20,8 @@ export default class MyLetoListener extends letoListener {
 
 
 	enterLine(ctx) {
-        let num = ctx.getChildCount()
-        for(let i=0; i<num; i++) {
+        let nbChild = ctx.getChildCount()
+        for(let i=0; i<nbChild; i++) {
 
         }
 	}
