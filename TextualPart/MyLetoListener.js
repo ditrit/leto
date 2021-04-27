@@ -25,9 +25,16 @@ export default class MyLetoListener extends letoListener {
             let prog = ctx.getChild(i).model
             ctx.model += new Prog(prog, ctx)
         }
+        console.log('Componants ')
         console.log(ctx.prog.componants)
+
+        console.log('Relationships ')
         console.log(ctx.prog.relationships)
+
+        console.log('Assets ')
         console.log(ctx.prog.assets)
+        
+        console.log('Links ')
         console.log(ctx.prog.links)
     }
 
