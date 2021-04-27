@@ -6,8 +6,9 @@ export class ModelNode extends Object {
 }
 
 export class Prog extends ModelNode {
-    constructor(ctx) {
+    constructor(prog, ctx) {
         super(ctx)
+        this.prog = prog
         this.componants = {}
         this.relationships = {}
         this.assets = {}
@@ -15,19 +16,29 @@ export class Prog extends ModelNode {
     }
 
     toString() {
-        return "" 
+        return this.prog.toString()
     }
 }
 
 export class Line extends ModelNode {
-    constructor(ctx) {
+    constructor(line, ctx) {
         super(ctx)
+        this.line = line
+    }
+
+    toString() {
+        return this.line.toString()
     }
 }
 
 export class Instructions extends ModelNode {
-    constructor(ctx) {
+    constructor(inst,ctx) {
         super(ctx)
+        this.inst = inst
+    }
+
+    toString() {
+        return this.inst.toString()
     }
 }
 
@@ -49,7 +60,7 @@ export class Definition extends ModelNode {
     }
 
     toString() {
-        //return this.comp.toString()
+        return this.comp.toString()
     }
 }
 
@@ -73,20 +84,32 @@ export class Componant extends ModelNode {
     }
 
     toString() {
-        return "componant " + this.name.toString() + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + this.attributes.toString() + " ; "
+        //return "componant " + this.name.toString() + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + this.attributes.toString() + " ; "
+        return "componant " + this.name.toString() + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + ' {' + this.attributes.toString() + '}' + " ; "
+
     }
 
 }
 
 export class ComponantAttributes extends ModelNode {
-    constructor (ctx) {
+    constructor (attrs, ctx) {
         super(ctx)
+        this.attrs = attrs
+    }
+
+    toString() {
+        return this.attrs.toString()
     }
 }
 
 export class ComponantAttribute extends ModelNode {
-    constructor (ctx) {
+    constructor(attr, ctx) {
         super(ctx)
+        this.attr = attr
+    }
+
+    toString() {
+        return this.attr.toString()
     }
 }
 
@@ -108,7 +131,7 @@ export class Hosts extends ModelNode {
     }
 
     toString() {
-        return "hosts : " + this.id
+        return this.id + ", "
     }
 }
 
@@ -120,7 +143,7 @@ export class Relationship extends ModelNode {
     }
 
     toString() {
-        return "relationShip " + this.name.toString() + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + " ; "
+        return "relationship " + this.name.toString() + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + " ; "
     }
 }
 
