@@ -1,74 +1,104 @@
 import letoListener from './antlr/letoListener.js';
-import { Componant, Id, Number, Relationship, Asset, Link, Definition, Instantiation, Instruction, Prog, Logo, Containers, Attributes, ModelNode } from './model.js';
+import {Prog, Line, Instructions, Instruction, Definition, Instantiation, Componant, ComponantAttributes, ComponantAttribute, Logo, Hosts, Relationship, Asset, Link, Number, Comment, Id} from './model.js';
 
 export default class MyLetoListener extends letoListener {
     constructor() {
         super();
     }
 
-    exitContainers(ctx) {
-        if ( ctx.getChildCount() == 1 ) {
-            ctx.model = new Containers(ctx.getChild(0).getText(), ctx)
+    propagateProg(ctx) { 
+        for(let i=0; i<ctx.getChildCount(); i++) {
+            let child = ctx.getChild(i)
+            child.prog =ctx.prog
         }
     }
 
-    exitLogo(ctx) {
-        if ( ctx.getChildCount() == 1 ) {
-            ctx.model = new Logo(ctx.getChild(0).getText(), ctx)
-        }
+    enterProg(ctx) {
+        ctx.prog = new Prog(ctx)
+        this.propagateProg(ctx)
     }
 
-    exitAttributes(ctx) {
-        let chemin = ctx.getChild(0).model
-        let contain = ctx.getChild(1).model
-        ctx.model = new Attributes(chemin, contain) 
-    }
- 
-    exitId(ctx) {
-        if ( ctx.getChildCount() == 1 ) {
-            ctx.model = new Id(ctx.getChild(0).getText(), ctx)
-        }
-    }
-    
-    exitNumber(ctx) {
-        if ( ctx.getChildCount() == 1 ) {
-            ctx.model = new Number(ctx.getChild(0).getText(), ctx)
-        }
-    }
-
-    exitLink(ctx) {
-        let name = ctx.getChild(1).model
-        let nameConnection = ctx.getChild(3).model
-        ctx.model = new Link(name, nameConnection) 
-        //console.log( ctx.model.toString() )
-    }
-
-    exitAsset(ctx) {
-        let name = ctx.getChild(1).model
-        let nameConnection = ctx.getChild(3).model
-        ctx.model = new Asset(name, nameConnection) 
-        //console.log( ctx.model.toString() )
-    }
-
-    exitRelationship(ctx) {
+    exitProg(ctx) {
         let nbChilds = ctx.getChildCount()
-        if (nbChilds == 3 || nbChilds == 5 ) {
-            let name = ctx.getChild(1).model
-            let parent = (nbChilds == 5) ? ctx.getChild(4).model : null
-            ctx.model = new Relationship(name, parent) 
+        ctx.model = ""
+        for(let i = 0; i<nbChilds; i++) {
+            let prog = ctx.getChild(i).model
+            ctx.model += new Prog(prog, ctx)
         }
-        //console.log( ctx.model.toString() )
+        console.log('Componants ')
+        console.log(ctx.prog.componants)
+
+        console.log('Relationships ')
+        console.log(ctx.prog.relationships)
+
+        console.log('Assets ')
+        console.log(ctx.prog.assets)
+        
+        console.log('Links ')
+        console.log(ctx.prog.links)
     }
 
-    exitComponant(ctx) {
+
+    enterLine(ctx) {
+        this.propagateProg(ctx)
+    }
+
+    exitLine(ctx) {
         let nbChilds = ctx.getChildCount()
-        if (nbChilds == 4 || nbChilds == 6 ) {
-            let name = ctx.getChild(1).model
-            let parent = ((nbChilds == 6) ? ctx.getChild(3).model : null)
-            let attributes = ((nbChilds == 6) ? ctx.getChild(4).model : ctx.getChild(2).model)
-            ctx.model = new Componant(name, parent, attributes) 
+        ctx.model = ""
+        for(let i = 0; i<nbChilds; i++) {
+            let line = ctx.getChild(i).model
+            ctx.model += new Line(line, ctx)
         }
-        //console.log( ctx.model.toString() )
+    }
+
+
+    enterInstructions(ctx) {
+        this.propagateProg(ctx)
+    }
+
+    exitInstructions(ctx) {
+        let nbChilds = ctx.getChildCount()
+        ctx.model = ""
+        for(let i = 0; i<nbChilds; i++) {
+            if(i%2 == 0) {
+                let inst = ctx.getChild(i).model
+                ctx.model += new Instructions(inst, ctx)
+            }  
+        }
+    }
+
+
+    enterInstruction(ctx) {
+        this.propagateProg(ctx)
+    }
+
+    exitInstruction(ctx) {
+        let nbChilds = ctx.getChildCount()
+        ctx.model = ""
+        for(let i = 0; i<nbChilds; i++) {
+            let instr = ctx.getChild(i).model
+            ctx.model += new Instruction(instr, ctx)
+        }
+    }
+
+
+    enterDefinition(ctx) {
+        this.propagateProg(ctx)
+    }
+
+    exitDefinition(ctx) {
+        let nbChilds = ctx.getChildCount()
+        ctx.model = ""
+        for(let i = 0; i<nbChilds; i++) {
+            let comp = ctx.getChild(i).model
+            ctx.model += new Definition(comp, ctx)
+        }
+    }
+
+
+    enterInstantiation(ctx) {
+        this.propagateProg(ctx)
     }
 
     exitInstantiation(ctx) {
@@ -76,37 +106,139 @@ export default class MyLetoListener extends letoListener {
         ctx.model = ""
         for(let i = 0; i<nbChilds; i++) {
             let inst = ctx.getChild(i).model
-            ctx.model += new Instantiation(inst)
+            ctx.model += new Instantiation(inst, ctx)
         }
-        //console.log( ctx.model.toString() )
-    }    
+    }
 
-    exitDefinition(ctx) {
+
+    enterComponant(ctx) {
+        this.propagateProg(ctx)
+    }
+
+    exitComponant(ctx) {
+        let nbChilds = ctx.getChildCount()
+        ctx.model = ""
+        let nameId = ctx.getChild(1).model
+        let parentId = null
+        let attributes = null
+        let index = 3
+        let value = ctx.getChild(index).model
+        if(value instanceof Id) {
+            parentId = value
+            index = 5
+        } 
+        value = ctx.getChild(index).model
+        if(value != null) {
+            attributes = value
+        }
+        ctx.model += new Componant(nameId, parentId, attributes, ctx)
+        ctx.prog.componants[nameId.name] = ctx.model
+    }
+
+
+    exitComponant_attributes(ctx) {
         let nbChilds = ctx.getChildCount()
         ctx.model = ""
         for(let i = 0; i<nbChilds; i++) {
-            let comp = ctx.getChild(i).model
-            ctx.model += new Definition(comp)
+            if(i%2 == 0) {
+                let attrs = ctx.getChild(i).model
+                ctx.model += new ComponantAttributes(attrs, ctx)
+                ctx.model += " "
+            }
         }
-        //console.log( ctx.model.toString() )
     }
 
-    exitInstruction(ctx) {
-        let instr = ctx.getChild(0).model
-        ctx.model = new Instruction(instr)
-        //console.log( ctx.model.toString() )
+
+    exitComponant_attribute(ctx) {
+        ctx.model = ''
+        let attr = ctx.getChild(0).model
+        ctx.model += new ComponantAttribute(attr, ctx)
     }
 
-    exitProg(ctx) {
+
+    exitLogo(ctx) {
+        let path = ctx.getChild(2).getText()
+        ctx.model = new Logo(path, ctx)
+    }
+
+
+    exitHosts(ctx) {
+        ctx.model = 'host : '
+        for(let i = 2; i< ctx.getChildCount(); i++) {
+            if(i%2 == 0) {
+                let host = ctx.getChild(i).getText()
+                ctx.model += new Hosts(host, ctx)
+            }
+        }
+    }
+
+
+    enterRelationship(ctx) {
+        this.propagateProg(ctx)
+    }
+
+    exitRelationship(ctx) {
         let nbChilds = ctx.getChildCount()
-        ctx.model = "Mon programme : "
-        for(let i = 0; i<nbChilds; i++) {
-            if((i%2) != 0) {
-                let prog = ctx.getChild(i).model
-                ctx.model += new Prog(prog)
-            } 
+        ctx.model =''
+        if (nbChilds == 2) {
+            let nameId = ctx.getChild(1).model
+            let parentId = null
+            ctx.model += new Relationship(nameId, parentId, ctx)
+            ctx.prog.relationships[nameId.name] = ctx.model 
         }
-        console.log( ctx.model.toString() )
+        else if(nbChilds == 4) {
+            let nameId = ctx.getChild(1).model
+            let parentId = ctx.getChild(3).model
+            ctx.model += new Relationship(nameId, parentId, ctx)
+            ctx.prog.relationships[nameId.name] = ctx.model 
+        }
+    }
+
+
+    enterAsset(ctx) {
+        this.propagateProg(ctx)
+    }
+
+    exitAsset(ctx) {
+        ctx.model = ''
+        let nameId = ctx.getChild(1).model
+        let nameConnection = ctx.getChild(3).model
+        ctx.model += new Asset(nameId, nameConnection, ctx)
+        ctx.prog.assets[nameId.name] = ctx.model
+    }
+
+
+    enterLink(ctx) {
+        this.propagateProg(ctx)
+    }
+
+    exitLink(ctx) {
+        ctx.model = ''
+        let nameId = ctx.getChild(1).model
+        let nameConnection = ctx.getChild(3).model
+        ctx.model += new Link(nameId, nameConnection, ctx) 
+        ctx.prog.links[nameId.name] = ctx.model
+    }
+
+
+    exitNumber(ctx) {
+        if ( ctx.getChildCount() == 1 ) {
+            ctx.model = new Number(ctx.getChild(0).getText(), ctx)
+        }
+    }
+
+
+    exitComment(ctx) {
+        if ( ctx.getChildCount() == 1 ) {
+            ctx.model = new Comment(ctx.getChild(0).getText(), ctx)
+        }
+    }
+
+
+    exitId(ctx) {
+        if ( ctx.getChildCount() == 1 ) {
+            ctx.model = new Id(ctx.getChild(0).getText(), ctx)
+        }
     }
 
 }

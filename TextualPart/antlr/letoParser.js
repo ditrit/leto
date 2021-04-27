@@ -4,7 +4,7 @@ import antlr4 from 'antlr4';
 import letoListener from './letoListener.js';
 
 const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
-    "\u5964\u0003\u0018\u008c\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004",
+    "\u5964\u0003\u0017\u008d\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004",
     "\u0004\t\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t",
     "\u0007\u0004\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004",
     "\f\t\f\u0004\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010",
@@ -12,72 +12,73 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "&\n\u0002\r\u0002\u000e\u0002\'\u0003\u0003\u0003\u0003\u0005\u0003",
     ",\n\u0003\u0003\u0003\u0005\u0003/\n\u0003\u0003\u0004\u0003\u0004\u0003",
     "\u0004\u0007\u00044\n\u0004\f\u0004\u000e\u00047\u000b\u0004\u0003\u0004",
-    "\u0003\u0004\u0003\u0005\u0003\u0005\u0005\u0005=\n\u0005\u0003\u0006",
-    "\u0003\u0006\u0005\u0006A\n\u0006\u0003\u0007\u0003\u0007\u0005\u0007",
-    "E\n\u0007\u0003\b\u0003\b\u0003\b\u0003\b\u0005\bK\n\b\u0003\b\u0003",
-    "\b\u0003\b\u0003\b\u0003\t\u0003\t\u0003\t\u0007\tT\n\t\f\t\u000e\t",
-    "W\u000b\t\u0003\t\u0005\tZ\n\t\u0003\t\u0005\t]\n\t\u0003\t\u0005\t",
-    "`\n\t\u0005\tb\n\t\u0003\n\u0003\n\u0005\nf\n\n\u0003\u000b\u0003\u000b",
-    "\u0003\u000b\u0003\u000b\u0003\f\u0003\f\u0003\f\u0003\f\u0003\f\u0007",
-    "\fq\n\f\f\f\u000e\ft\u000b\f\u0003\r\u0003\r\u0003\r\u0003\r\u0005\r",
-    "z\n\r\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003",
-    "\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u0010\u0003",
-    "\u0010\u0003\u0011\u0003\u0011\u0003\u0012\u0003\u0012\u0003\u0012\u0002",
-    "\u0002\u0013\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018",
-    "\u001a\u001c\u001e \"\u0002\u0002\u0002\u008a\u0002%\u0003\u0002\u0002",
-    "\u0002\u0004.\u0003\u0002\u0002\u0002\u00060\u0003\u0002\u0002\u0002",
-    "\b<\u0003\u0002\u0002\u0002\n@\u0003\u0002\u0002\u0002\fD\u0003\u0002",
-    "\u0002\u0002\u000eF\u0003\u0002\u0002\u0002\u0010a\u0003\u0002\u0002",
-    "\u0002\u0012e\u0003\u0002\u0002\u0002\u0014g\u0003\u0002\u0002\u0002",
-    "\u0016k\u0003\u0002\u0002\u0002\u0018u\u0003\u0002\u0002\u0002\u001a",
-    "{\u0003\u0002\u0002\u0002\u001c\u0080\u0003\u0002\u0002\u0002\u001e",
-    "\u0085\u0003\u0002\u0002\u0002 \u0087\u0003\u0002\u0002\u0002\"\u0089",
-    "\u0003\u0002\u0002\u0002$&\u0005\u0004\u0003\u0002%$\u0003\u0002\u0002",
-    "\u0002&\'\u0003\u0002\u0002\u0002\'%\u0003\u0002\u0002\u0002\'(\u0003",
-    "\u0002\u0002\u0002(\u0003\u0003\u0002\u0002\u0002)+\u0005\u0006\u0004",
-    "\u0002*,\u0005 \u0011\u0002+*\u0003\u0002\u0002\u0002+,\u0003\u0002",
-    "\u0002\u0002,/\u0003\u0002\u0002\u0002-/\u0005 \u0011\u0002.)\u0003",
-    "\u0002\u0002\u0002.-\u0003\u0002\u0002\u0002/\u0005\u0003\u0002\u0002",
-    "\u000205\u0005\b\u0005\u000212\u0007\u0003\u0002\u000224\u0005\b\u0005",
-    "\u000231\u0003\u0002\u0002\u000247\u0003\u0002\u0002\u000253\u0003\u0002",
-    "\u0002\u000256\u0003\u0002\u0002\u000268\u0003\u0002\u0002\u000275\u0003",
-    "\u0002\u0002\u000289\u0007\u0003\u0002\u00029\u0007\u0003\u0002\u0002",
-    "\u0002:=\u0005\n\u0006\u0002;=\u0005\f\u0007\u0002<:\u0003\u0002\u0002",
-    "\u0002<;\u0003\u0002\u0002\u0002=\t\u0003\u0002\u0002\u0002>A\u0005",
-    "\u000e\b\u0002?A\u0005\u0018\r\u0002@>\u0003\u0002\u0002\u0002@?\u0003",
-    "\u0002\u0002\u0002A\u000b\u0003\u0002\u0002\u0002BE\u0005\u001a\u000e",
-    "\u0002CE\u0005\u001c\u000f\u0002DB\u0003\u0002\u0002\u0002DC\u0003\u0002",
-    "\u0002\u0002E\r\u0003\u0002\u0002\u0002FG\u0007\u0004\u0002\u0002GJ",
-    "\u0005\"\u0012\u0002HI\u0007\u0005\u0002\u0002IK\u0005\"\u0012\u0002",
-    "JH\u0003\u0002\u0002\u0002JK\u0003\u0002\u0002\u0002KL\u0003\u0002\u0002",
-    "\u0002LM\u0007\u0006\u0002\u0002MN\u0005\u0010\t\u0002NO\u0007\u0007",
-    "\u0002\u0002O\u000f\u0003\u0002\u0002\u0002PU\u0005\u0012\n\u0002QR",
-    "\u0007\u0003\u0002\u0002RT\u0005\u0012\n\u0002SQ\u0003\u0002\u0002\u0002",
-    "TW\u0003\u0002\u0002\u0002US\u0003\u0002\u0002\u0002UV\u0003\u0002\u0002",
-    "\u0002VY\u0003\u0002\u0002\u0002WU\u0003\u0002\u0002\u0002XZ\u0007\u0003",
-    "\u0002\u0002YX\u0003\u0002\u0002\u0002YZ\u0003\u0002\u0002\u0002Z\\",
-    "\u0003\u0002\u0002\u0002[]\u0005 \u0011\u0002\\[\u0003\u0002\u0002\u0002",
-    "\\]\u0003\u0002\u0002\u0002]b\u0003\u0002\u0002\u0002^`\u0005 \u0011",
-    "\u0002_^\u0003\u0002\u0002\u0002_`\u0003\u0002\u0002\u0002`b\u0003\u0002",
-    "\u0002\u0002aP\u0003\u0002\u0002\u0002a_\u0003\u0002\u0002\u0002b\u0011",
-    "\u0003\u0002\u0002\u0002cf\u0005\u0014\u000b\u0002df\u0005\u0016\f\u0002",
-    "ec\u0003\u0002\u0002\u0002ed\u0003\u0002\u0002\u0002f\u0013\u0003\u0002",
-    "\u0002\u0002gh\u0007\b\u0002\u0002hi\u0007\t\u0002\u0002ij\u0007\u0010",
-    "\u0002\u0002j\u0015\u0003\u0002\u0002\u0002kl\u0007\n\u0002\u0002lm",
-    "\u0007\t\u0002\u0002mr\u0007\u0011\u0002\u0002no\u0007\u000b\u0002\u0002",
-    "oq\u0007\u0011\u0002\u0002pn\u0003\u0002\u0002\u0002qt\u0003\u0002\u0002",
-    "\u0002rp\u0003\u0002\u0002\u0002rs\u0003\u0002\u0002\u0002s\u0017\u0003",
-    "\u0002\u0002\u0002tr\u0003\u0002\u0002\u0002uv\u0007\f\u0002\u0002v",
-    "y\u0005\"\u0012\u0002wx\u0007\u0005\u0002\u0002xz\u0005\"\u0012\u0002",
-    "yw\u0003\u0002\u0002\u0002yz\u0003\u0002\u0002\u0002z\u0019\u0003\u0002",
-    "\u0002\u0002{|\u0007\r\u0002\u0002|}\u0005\"\u0012\u0002}~\u0007\t\u0002",
-    "\u0002~\u007f\u0005\"\u0012\u0002\u007f\u001b\u0003\u0002\u0002\u0002",
-    "\u0080\u0081\u0007\u000e\u0002\u0002\u0081\u0082\u0005\"\u0012\u0002",
-    "\u0082\u0083\u0007\u000f\u0002\u0002\u0083\u0084\u0005\"\u0012\u0002",
-    "\u0084\u001d\u0003\u0002\u0002\u0002\u0085\u0086\u0007\u0014\u0002\u0002",
-    "\u0086\u001f\u0003\u0002\u0002\u0002\u0087\u0088\u0007\u0016\u0002\u0002",
-    "\u0088!\u0003\u0002\u0002\u0002\u0089\u008a\u0007\u0011\u0002\u0002",
-    "\u008a#\u0003\u0002\u0002\u0002\u0012\'+.5<@DJUY\\_aery"].join("");
+    "\u0005\u0004:\n\u0004\u0003\u0005\u0003\u0005\u0005\u0005>\n\u0005\u0003",
+    "\u0006\u0003\u0006\u0005\u0006B\n\u0006\u0003\u0007\u0003\u0007\u0005",
+    "\u0007F\n\u0007\u0003\b\u0003\b\u0003\b\u0003\b\u0005\bL\n\b\u0003\b",
+    "\u0003\b\u0003\b\u0003\b\u0003\t\u0003\t\u0003\t\u0007\tU\n\t\f\t\u000e",
+    "\tX\u000b\t\u0003\t\u0005\t[\n\t\u0003\t\u0005\t^\n\t\u0003\t\u0005",
+    "\ta\n\t\u0005\tc\n\t\u0003\n\u0003\n\u0005\ng\n\n\u0003\u000b\u0003",
+    "\u000b\u0003\u000b\u0003\u000b\u0003\f\u0003\f\u0003\f\u0003\f\u0003",
+    "\f\u0007\fr\n\f\f\f\u000e\fu\u000b\f\u0003\r\u0003\r\u0003\r\u0003\r",
+    "\u0005\r{\n\r\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003",
+    "\u000e\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003",
+    "\u0010\u0003\u0010\u0003\u0011\u0003\u0011\u0003\u0012\u0003\u0012\u0003",
+    "\u0012\u0002\u0002\u0013\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014",
+    "\u0016\u0018\u001a\u001c\u001e \"\u0002\u0002\u0002\u008c\u0002%\u0003",
+    "\u0002\u0002\u0002\u0004.\u0003\u0002\u0002\u0002\u00060\u0003\u0002",
+    "\u0002\u0002\b=\u0003\u0002\u0002\u0002\nA\u0003\u0002\u0002\u0002\f",
+    "E\u0003\u0002\u0002\u0002\u000eG\u0003\u0002\u0002\u0002\u0010b\u0003",
+    "\u0002\u0002\u0002\u0012f\u0003\u0002\u0002\u0002\u0014h\u0003\u0002",
+    "\u0002\u0002\u0016l\u0003\u0002\u0002\u0002\u0018v\u0003\u0002\u0002",
+    "\u0002\u001a|\u0003\u0002\u0002\u0002\u001c\u0081\u0003\u0002\u0002",
+    "\u0002\u001e\u0086\u0003\u0002\u0002\u0002 \u0088\u0003\u0002\u0002",
+    "\u0002\"\u008a\u0003\u0002\u0002\u0002$&\u0005\u0004\u0003\u0002%$\u0003",
+    "\u0002\u0002\u0002&\'\u0003\u0002\u0002\u0002\'%\u0003\u0002\u0002\u0002",
+    "\'(\u0003\u0002\u0002\u0002(\u0003\u0003\u0002\u0002\u0002)+\u0005\u0006",
+    "\u0004\u0002*,\u0005 \u0011\u0002+*\u0003\u0002\u0002\u0002+,\u0003",
+    "\u0002\u0002\u0002,/\u0003\u0002\u0002\u0002-/\u0005 \u0011\u0002.)",
+    "\u0003\u0002\u0002\u0002.-\u0003\u0002\u0002\u0002/\u0005\u0003\u0002",
+    "\u0002\u000205\u0005\b\u0005\u000212\u0007\u0003\u0002\u000224\u0005",
+    "\b\u0005\u000231\u0003\u0002\u0002\u000247\u0003\u0002\u0002\u00025",
+    "3\u0003\u0002\u0002\u000256\u0003\u0002\u0002\u000269\u0003\u0002\u0002",
+    "\u000275\u0003\u0002\u0002\u00028:\u0007\u0003\u0002\u000298\u0003\u0002",
+    "\u0002\u00029:\u0003\u0002\u0002\u0002:\u0007\u0003\u0002\u0002\u0002",
+    ";>\u0005\n\u0006\u0002<>\u0005\f\u0007\u0002=;\u0003\u0002\u0002\u0002",
+    "=<\u0003\u0002\u0002\u0002>\t\u0003\u0002\u0002\u0002?B\u0005\u000e",
+    "\b\u0002@B\u0005\u0018\r\u0002A?\u0003\u0002\u0002\u0002A@\u0003\u0002",
+    "\u0002\u0002B\u000b\u0003\u0002\u0002\u0002CF\u0005\u001a\u000e\u0002",
+    "DF\u0005\u001c\u000f\u0002EC\u0003\u0002\u0002\u0002ED\u0003\u0002\u0002",
+    "\u0002F\r\u0003\u0002\u0002\u0002GH\u0007\u0004\u0002\u0002HK\u0005",
+    "\"\u0012\u0002IJ\u0007\u0005\u0002\u0002JL\u0005\"\u0012\u0002KI\u0003",
+    "\u0002\u0002\u0002KL\u0003\u0002\u0002\u0002LM\u0003\u0002\u0002\u0002",
+    "MN\u0007\u0006\u0002\u0002NO\u0005\u0010\t\u0002OP\u0007\u0007\u0002",
+    "\u0002P\u000f\u0003\u0002\u0002\u0002QV\u0005\u0012\n\u0002RS\u0007",
+    "\u0003\u0002\u0002SU\u0005\u0012\n\u0002TR\u0003\u0002\u0002\u0002U",
+    "X\u0003\u0002\u0002\u0002VT\u0003\u0002\u0002\u0002VW\u0003\u0002\u0002",
+    "\u0002WZ\u0003\u0002\u0002\u0002XV\u0003\u0002\u0002\u0002Y[\u0007\u0003",
+    "\u0002\u0002ZY\u0003\u0002\u0002\u0002Z[\u0003\u0002\u0002\u0002[]\u0003",
+    "\u0002\u0002\u0002\\^\u0005 \u0011\u0002]\\\u0003\u0002\u0002\u0002",
+    "]^\u0003\u0002\u0002\u0002^c\u0003\u0002\u0002\u0002_a\u0005 \u0011",
+    "\u0002`_\u0003\u0002\u0002\u0002`a\u0003\u0002\u0002\u0002ac\u0003\u0002",
+    "\u0002\u0002bQ\u0003\u0002\u0002\u0002b`\u0003\u0002\u0002\u0002c\u0011",
+    "\u0003\u0002\u0002\u0002dg\u0005\u0014\u000b\u0002eg\u0005\u0016\f\u0002",
+    "fd\u0003\u0002\u0002\u0002fe\u0003\u0002\u0002\u0002g\u0013\u0003\u0002",
+    "\u0002\u0002hi\u0007\b\u0002\u0002ij\u0007\t\u0002\u0002jk\u0007\u0010",
+    "\u0002\u0002k\u0015\u0003\u0002\u0002\u0002lm\u0007\n\u0002\u0002mn",
+    "\u0007\t\u0002\u0002ns\u0007\u0011\u0002\u0002op\u0007\u000b\u0002\u0002",
+    "pr\u0007\u0011\u0002\u0002qo\u0003\u0002\u0002\u0002ru\u0003\u0002\u0002",
+    "\u0002sq\u0003\u0002\u0002\u0002st\u0003\u0002\u0002\u0002t\u0017\u0003",
+    "\u0002\u0002\u0002us\u0003\u0002\u0002\u0002vw\u0007\f\u0002\u0002w",
+    "z\u0005\"\u0012\u0002xy\u0007\u0005\u0002\u0002y{\u0005\"\u0012\u0002",
+    "zx\u0003\u0002\u0002\u0002z{\u0003\u0002\u0002\u0002{\u0019\u0003\u0002",
+    "\u0002\u0002|}\u0007\r\u0002\u0002}~\u0005\"\u0012\u0002~\u007f\u0007",
+    "\t\u0002\u0002\u007f\u0080\u0005\"\u0012\u0002\u0080\u001b\u0003\u0002",
+    "\u0002\u0002\u0081\u0082\u0007\u000e\u0002\u0002\u0082\u0083\u0005\"",
+    "\u0012\u0002\u0083\u0084\u0007\u000f\u0002\u0002\u0084\u0085\u0005\"",
+    "\u0012\u0002\u0085\u001d\u0003\u0002\u0002\u0002\u0086\u0087\u0007\u0014",
+    "\u0002\u0002\u0087\u001f\u0003\u0002\u0002\u0002\u0088\u0089\u0007\u0016",
+    "\u0002\u0002\u0089!\u0003\u0002\u0002\u0002\u008a\u008b\u0007\u0011",
+    "\u0002\u0002\u008b#\u0003\u0002\u0002\u0002\u0013\'+.59=AEKVZ]`bfsz"].join("");
 
 
 const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -95,7 +96,7 @@ export default class letoParser extends antlr4.Parser {
     static symbolicNames = [ null, null, null, null, null, null, null, null, 
                              null, null, null, null, null, null, "PATH", 
                              "ID", "STRINGLITERAL", "LETTRE", "NUMBER", 
-                             "FLOAT", "COMMENT", "EOL", "WS" ];
+                             "FLOAT", "COMMENT", "WS" ];
     static ruleNames = [ "prog", "line", "instructions", "instruction", 
                          "definition", "instantiation", "componant", "componant_attributes", 
                          "componant_attribute", "logo", "hosts", "relationship", 
@@ -197,6 +198,7 @@ export default class letoParser extends antlr4.Parser {
 	instructions() {
 	    let localctx = new InstructionsContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 4, letoParser.RULE_instructions);
+	    var _la = 0; // Token type
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 46;
@@ -216,8 +218,14 @@ export default class letoParser extends antlr4.Parser {
 	            _alt = this._interp.adaptivePredict(this._input,3,this._ctx);
 	        }
 
-	        this.state = 54;
-	        this.match(letoParser.T__0);
+	        this.state = 55;
+	        this._errHandler.sync(this);
+	        _la = this._input.LA(1);
+	        if(_la===letoParser.T__0) {
+	            this.state = 54;
+	            this.match(letoParser.T__0);
+	        }
+
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -238,19 +246,19 @@ export default class letoParser extends antlr4.Parser {
 	    let localctx = new InstructionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 6, letoParser.RULE_instruction);
 	    try {
-	        this.state = 58;
+	        this.state = 59;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
 	        case letoParser.T__1:
 	        case letoParser.T__9:
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 56;
+	            this.state = 57;
 	            this.definition();
 	            break;
 	        case letoParser.T__10:
 	        case letoParser.T__11:
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 57;
+	            this.state = 58;
 	            this.instantiation();
 	            break;
 	        default:
@@ -276,17 +284,17 @@ export default class letoParser extends antlr4.Parser {
 	    let localctx = new DefinitionContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 8, letoParser.RULE_definition);
 	    try {
-	        this.state = 62;
+	        this.state = 63;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
 	        case letoParser.T__1:
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 60;
+	            this.state = 61;
 	            this.componant();
 	            break;
 	        case letoParser.T__9:
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 61;
+	            this.state = 62;
 	            this.relationship();
 	            break;
 	        default:
@@ -312,17 +320,17 @@ export default class letoParser extends antlr4.Parser {
 	    let localctx = new InstantiationContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 10, letoParser.RULE_instantiation);
 	    try {
-	        this.state = 66;
+	        this.state = 67;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
 	        case letoParser.T__10:
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 64;
+	            this.state = 65;
 	            this.asset();
 	            break;
 	        case letoParser.T__11:
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 65;
+	            this.state = 66;
 	            this.link();
 	            break;
 	        default:
@@ -350,25 +358,25 @@ export default class letoParser extends antlr4.Parser {
 	    var _la = 0; // Token type
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 68;
-	        this.match(letoParser.T__1);
 	        this.state = 69;
+	        this.match(letoParser.T__1);
+	        this.state = 70;
 	        this.id();
-	        this.state = 72;
+	        this.state = 73;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
 	        if(_la===letoParser.T__2) {
-	            this.state = 70;
-	            this.match(letoParser.T__2);
 	            this.state = 71;
+	            this.match(letoParser.T__2);
+	            this.state = 72;
 	            this.id();
 	        }
 
-	        this.state = 74;
-	        this.match(letoParser.T__3);
 	        this.state = 75;
-	        this.componant_attributes();
+	        this.match(letoParser.T__3);
 	        this.state = 76;
+	        this.componant_attributes();
+	        this.state = 77;
 	        this.match(letoParser.T__4);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -391,42 +399,42 @@ export default class letoParser extends antlr4.Parser {
 	    this.enterRule(localctx, 14, letoParser.RULE_componant_attributes);
 	    var _la = 0; // Token type
 	    try {
-	        this.state = 95;
+	        this.state = 96;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
 	        case letoParser.T__5:
 	        case letoParser.T__7:
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 78;
+	            this.state = 79;
 	            this.componant_attribute();
-	            this.state = 83;
+	            this.state = 84;
 	            this._errHandler.sync(this);
-	            var _alt = this._interp.adaptivePredict(this._input,8,this._ctx)
+	            var _alt = this._interp.adaptivePredict(this._input,9,this._ctx)
 	            while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
 	                if(_alt===1) {
-	                    this.state = 79;
-	                    this.match(letoParser.T__0);
 	                    this.state = 80;
+	                    this.match(letoParser.T__0);
+	                    this.state = 81;
 	                    this.componant_attribute(); 
 	                }
-	                this.state = 85;
+	                this.state = 86;
 	                this._errHandler.sync(this);
-	                _alt = this._interp.adaptivePredict(this._input,8,this._ctx);
+	                _alt = this._interp.adaptivePredict(this._input,9,this._ctx);
 	            }
 
-	            this.state = 87;
+	            this.state = 88;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===letoParser.T__0) {
-	                this.state = 86;
+	                this.state = 87;
 	                this.match(letoParser.T__0);
 	            }
 
-	            this.state = 90;
+	            this.state = 91;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===letoParser.COMMENT) {
-	                this.state = 89;
+	                this.state = 90;
 	                this.comment();
 	            }
 
@@ -434,11 +442,11 @@ export default class letoParser extends antlr4.Parser {
 	        case letoParser.T__4:
 	        case letoParser.COMMENT:
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 93;
+	            this.state = 94;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===letoParser.COMMENT) {
-	                this.state = 92;
+	                this.state = 93;
 	                this.comment();
 	            }
 
@@ -466,17 +474,17 @@ export default class letoParser extends antlr4.Parser {
 	    let localctx = new Componant_attributeContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 16, letoParser.RULE_componant_attribute);
 	    try {
-	        this.state = 99;
+	        this.state = 100;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
 	        case letoParser.T__5:
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 97;
+	            this.state = 98;
 	            this.logo();
 	            break;
 	        case letoParser.T__7:
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 98;
+	            this.state = 99;
 	            this.hosts();
 	            break;
 	        default:
@@ -503,11 +511,11 @@ export default class letoParser extends antlr4.Parser {
 	    this.enterRule(localctx, 18, letoParser.RULE_logo);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 101;
-	        this.match(letoParser.T__5);
 	        this.state = 102;
-	        this.match(letoParser.T__6);
+	        this.match(letoParser.T__5);
 	        this.state = 103;
+	        this.match(letoParser.T__6);
+	        this.state = 104;
 	        this.match(letoParser.PATH);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -531,21 +539,21 @@ export default class letoParser extends antlr4.Parser {
 	    var _la = 0; // Token type
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 105;
-	        this.match(letoParser.T__7);
 	        this.state = 106;
-	        this.match(letoParser.T__6);
+	        this.match(letoParser.T__7);
 	        this.state = 107;
+	        this.match(letoParser.T__6);
+	        this.state = 108;
 	        this.match(letoParser.ID);
-	        this.state = 112;
+	        this.state = 113;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
 	        while(_la===letoParser.T__8) {
-	            this.state = 108;
-	            this.match(letoParser.T__8);
 	            this.state = 109;
+	            this.match(letoParser.T__8);
+	            this.state = 110;
 	            this.match(letoParser.ID);
-	            this.state = 114;
+	            this.state = 115;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	        }
@@ -571,17 +579,17 @@ export default class letoParser extends antlr4.Parser {
 	    var _la = 0; // Token type
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 115;
-	        this.match(letoParser.T__9);
 	        this.state = 116;
+	        this.match(letoParser.T__9);
+	        this.state = 117;
 	        this.id();
-	        this.state = 119;
+	        this.state = 120;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
 	        if(_la===letoParser.T__2) {
-	            this.state = 117;
-	            this.match(letoParser.T__2);
 	            this.state = 118;
+	            this.match(letoParser.T__2);
+	            this.state = 119;
 	            this.id();
 	        }
 
@@ -606,13 +614,13 @@ export default class letoParser extends antlr4.Parser {
 	    this.enterRule(localctx, 24, letoParser.RULE_asset);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 121;
-	        this.match(letoParser.T__10);
 	        this.state = 122;
-	        this.id();
+	        this.match(letoParser.T__10);
 	        this.state = 123;
-	        this.match(letoParser.T__6);
+	        this.id();
 	        this.state = 124;
+	        this.match(letoParser.T__6);
+	        this.state = 125;
 	        this.id();
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -635,13 +643,13 @@ export default class letoParser extends antlr4.Parser {
 	    this.enterRule(localctx, 26, letoParser.RULE_link);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 126;
-	        this.match(letoParser.T__11);
 	        this.state = 127;
-	        this.id();
+	        this.match(letoParser.T__11);
 	        this.state = 128;
-	        this.match(letoParser.T__12);
+	        this.id();
 	        this.state = 129;
+	        this.match(letoParser.T__12);
+	        this.state = 130;
 	        this.id();
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -664,7 +672,7 @@ export default class letoParser extends antlr4.Parser {
 	    this.enterRule(localctx, 28, letoParser.RULE_number);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 131;
+	        this.state = 132;
 	        this.match(letoParser.NUMBER);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -687,7 +695,7 @@ export default class letoParser extends antlr4.Parser {
 	    this.enterRule(localctx, 30, letoParser.RULE_comment);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 133;
+	        this.state = 134;
 	        this.match(letoParser.COMMENT);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -710,7 +718,7 @@ export default class letoParser extends antlr4.Parser {
 	    this.enterRule(localctx, 32, letoParser.RULE_id);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 135;
+	        this.state = 136;
 	        this.match(letoParser.ID);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -750,8 +758,7 @@ letoParser.LETTRE = 17;
 letoParser.NUMBER = 18;
 letoParser.FLOAT = 19;
 letoParser.COMMENT = 20;
-letoParser.EOL = 21;
-letoParser.WS = 22;
+letoParser.WS = 21;
 
 letoParser.RULE_prog = 0;
 letoParser.RULE_line = 1;

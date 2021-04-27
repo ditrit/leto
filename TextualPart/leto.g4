@@ -30,7 +30,7 @@ line
 ;
 
 instructions
-: instruction (';' instruction)* ';' 
+: instruction (';' instruction)* ';'? 
 ;
 
 instruction 
@@ -105,21 +105,21 @@ ID
 STRINGLITERAL
 : '"'~["\r\n]*'"'
 ;
+
 LETTRE
 : ('a'..'z'|'A'..'Z')+
 ;
+
 NUMBER
 : ('0'..'9')+(('e'|'E')NUMBER)*
 ;
+
 FLOAT
 : ('0'..'9')*'.'('0'..'9')+(('e'|'E')('0'..'9')+)*
 ;
+
 COMMENT
 : '//'~[\r\n]*
-;
-
-EOL
-: '\r'?'\n'
 ;
 
 WS
