@@ -6,194 +6,133 @@ export class ModelNode extends Object {
 }
 
 export class Prog extends ModelNode {
-    constructor(prog, ctx) {
+    constructor(ctx) {
         super(ctx)
-        this.prog = prog
         this.componants = {}
         this.relationships = {}
         this.assets = {}
         this.links = {}
-    }
-
-    toString() {
-        return this.prog.toString()
+        this.instructions = []
     }
 }
 
-export class Line extends ModelNode {
-    constructor(line, ctx) {
+export class InstructionNode extends ModelNode {
+    constructor(ctx) {
         super(ctx)
-        this.line = line
-    }
-
-    toString() {
-        return this.line.toString()
+        this.nodeType = "Instruction"
     }
 }
 
-export class Instructions extends ModelNode {
-    constructor(inst,ctx) {
-        super(ctx)
-        this.inst = inst
-    }
-
-    toString() {
-        return this.inst.toString()
-    }
-}
-
-export class Instruction extends ModelNode {
-    constructor(instr, ctx) {
-        super(ctx)
-        this.instr = instr
-    }
-
-    toString() {
-        return this.instr.toString()
-    }
-}
-
-export class Definition extends ModelNode {
-    constructor(comp , ctx) {
-        super(ctx)
-        this.comp = comp
-    }
-
-    toString() {
-        return this.comp.toString()
-    }
-}
-
-export class Instantiation extends ModelNode {
-    constructor(inst, ctx) {
-        super(ctx)
-        this.inst = inst
-    }
-
-    toString() {
-        return this.inst.toString()
-    }
-}
-
-export class Componant extends ModelNode {
+export class Componant extends InstructionNode {
     constructor(name, parent, attributes, ctx) {
         super(ctx)
-        this.name = name
+        this.id = name
         this.parent = parent
         this.attributes = attributes
     }
 
     toString() {
-        //return "componant " + this.name.toString() + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + this.attributes.toString() + " ; "
-        return "componant " + this.name.toString() + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + ' {' + this.attributes.toString() + '}' + " ; "
-
+        return "componant " + this.id.name + ((this.parent != null) ? (" from " + this.parent.name) : "") + ' {' + this.attributes.join(",") + '}' + " ; "
     }
-
 }
 
-export class ComponantAttributes extends ModelNode {
-    constructor (attrs, ctx) {
+export class AttributeNode extends ModelNode {
+    constructor(ctx) {
         super(ctx)
-        this.attrs = attrs
+        this.nodeType = "Attribute"
+    }
+}
+
+export class Logo extends AttributeNode {
+    constructor(path, ctx) {
+        super(ctx)
+        this.path = path
     }
 
     toString() {
-        return this.attrs.toString()
+        return "logo : " + this.path + ";"
     }
 }
 
-export class ComponantAttribute extends ModelNode {
-    constructor(attr, ctx) {
-        super(ctx)
-        this.attr = attr
-    }
-
-    toString() {
-        return this.attr.toString()
-    }
-}
-
-export class Logo extends ModelNode {
-    constructor(chemin, ctx) {
-        super(ctx)
-        this.chemin = chemin
-    }
-
-    toString() {
-        return "logo : " + this.chemin + ";"
-    }
-}
-
-export class Hosts extends ModelNode {
-    constructor(id, ctx) {
-        super(ctx)
-        this.id = id
-    }
-
-    toString() {
-        return this.id + ", "
-    }
-}
-
-export class Relationship extends ModelNode {
+export class Relationship extends InstructionNode {
     constructor(name, parent, ctx) {
         super(ctx)
-        this.name = name
+        this.id = name
         this.parent = parent
     }
 
     toString() {
-        return "relationship " + this.name.toString() + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + " ; "
+        return "relationship " + this.id.name + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + " ; "
     }
 }
 
-export class Asset extends ModelNode {
-    constructor(id, idConnection, ctx) {
+export class Asset extends InstructionNode {
+    constructor(name, componant, ctx) {
         super(ctx)
-        this.id = id
-        this.idConnection = idConnection
+        this.id = name
+        this.componant = componant
     }
 
     toString() {
-        return "asset " + this.id.toString() + " : " + this.idConnection.toString() + " ; ";
+        return "asset " + this.id.name + " : " + this.componant.name + " ; ";
     }
 }
 
-export class Link extends ModelNode {
-    constructor(id, idConnection, ctx) {
+export class Link extends InstructionNode {
+    constructor(src, dst, rel, ctx) {
         super(ctx)
-        this.id = id
-        this.idConnection = idConnection
+        this.src = src
+        this.dst = dst
+        this.rel = rel
     }
 
     toString() {
-        return "link " + this.id.toString() + " - " + this.idConnection.toString() + " ; ";
+        return "link " + this.src.name + " -> " + this.dst.name + " : " + this.rel.name + ";";
     }
 }
 
-export class Number extends ModelNode {
+
+export class TerminalNode extends ModelNode {
+    constructor(ctx) {
+        super(ctx)
+        this.nodeType = "Terminal"
+    }
+}
+
+export class NumVal extends TerminalNode {
     constructor(num, ctx) {
         super(ctx)
-        this.num = num
+        this.num = Number(num)
     }
 
     toString(){
-        return this.num
+        return String(this.num)
     }
 }
 
-export class Comment extends ModelNode {
-    constructor(com, ctx) {
+export class StrVal extends TerminalNode {
+    constructor(val, ctx) {
         super(ctx)
-        this.com = com
+        this.str = String(val)
     }
 
     toString(){
-        return this.com
+        return this.str
     }
 }
 
-export class Id extends ModelNode {
+export class CommentVal extends TerminalNode {
+    constructor(comment, ctx) {
+        super(ctx)
+        this.text = comment
+    }
+
+    toString(){
+        return this.comment
+    }
+}
+
+export class IdVal extends TerminalNode {
     constructor(name, ctx) {
         super(ctx)
         this.name = name
@@ -203,4 +142,3 @@ export class Id extends ModelNode {
         return this.name
     }
 }
-

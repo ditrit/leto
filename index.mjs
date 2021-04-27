@@ -1,17 +1,20 @@
 import { parse } from "./TextualPart/index.js";
 
-console.log('test :')
-parse(`componant toto from serv {logo : test/test.txt; host : test}; //testComm
-componant tutu {logo : test/test.txt; host : test, test2};
-relationship titi from tata
-link tata - test; //testComm
-//lineTestComm
-link tutu - serv;
-asset bdd : titi`)
-/*
-console.log('test 2 :')
-parse(`componant toto from serv {}`)
 
+//console.log('test 2 :')
+//parse(`componant toto : serv {}`)
+
+
+console.log('test :')
+parse(`componant toto : serv {logo : test/test.txt;}; //testComm
+componant tutu {logo : test/test.txt};
+relationship titi : tata;
+link tata -> test : network; //testComm
+//lineTestComm
+link tutu -> serv : der;
+asset bdd : titi`)
+
+/*
 console.log('test 3 :')
 parse(`componant toto {logo : test/test.txt; host : test};`)
 

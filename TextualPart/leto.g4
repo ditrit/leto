@@ -1,17 +1,3 @@
-/* test 1
-componant serv (from server) test/test2/ containers;
-componant bdd (from database);
-componant rout (from router);
-asset bdd : serv;
-link rout -> serv;
-*/
-/* test 2
-componant serv (from server); componant bdd (from database);
-componant rout (from router);
-asset bdd : serv; link rout -> serv;
-*/
-
-
 grammar leto;
 
 
@@ -46,7 +32,7 @@ instantiation
 ;
 
 componant 
-: 'componant' id ('from' id)? '{' componant_attributes '}'
+: 'componant' id (':' id)? '{' componant_attributes '}'
 ;
 
 componant_attributes
@@ -55,19 +41,15 @@ componant_attributes
 ;
 
 componant_attribute
-: logo | hosts
+: logo 
 ;
 
 logo
 : 'logo' ':' PATH 
 ;
 
-hosts
-: 'host' ':' ID (',' ID)*  
-;
-
 relationship
-: 'relationship' id ('from' id)?
+: 'relationship' id (':' id)?
 ;
 
 asset 
@@ -75,7 +57,7 @@ asset
 ;
 
 link 
-: 'link' id '-' id
+: 'link'  id '->' id ':' id
 ;
 
 number 
