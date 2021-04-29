@@ -78,6 +78,7 @@ function init(){
 
 	// Drag control
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement);
+	dragControls.transformGroup = true;
 	dragControls.deactivate();
 	document.addEventListener( 'click', onClick );
 	window.addEventListener( 'keydown', onKeyDown );
@@ -91,17 +92,17 @@ function init(){
 	// les composants doivent tous avoir des noms différents et hériter de composants existants (ou ne pas hériter du tout)
 	componentsList = {
 		'serveur' : { 'name': 'serveur', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'print.png' },
-		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'menu.webp' },
-		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'dns.png' },
-		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'mail.png' },
-		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'web.jpg' },
-		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'servBDD.png' },
-		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'router': { 'name': 'router', 'derivedFrom' : '', 'width' : 1, 'height' : 0.4, 'depht' : 1, 'color' : '#19bfba', 'logo' : 'wifi.png' },
-		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#8288a1', 'logo' : 'db.png' },
+		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png' },
+		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp' },
+		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'dns.png' },
+		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png' },
+		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg' },
+		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png' },
+		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'router': { 'name': 'router', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png' },
+		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#8288a1', 'logo' : 'db.png' },
 		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#a82b18', 'logo' : 'apache.png' },
 		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#3065ba', 'logo' : 'php.png' },
 		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#db852a', 'logo' : 'db.png' },
@@ -218,6 +219,7 @@ function ajustementEspacement(){
 		let lastDistance = null;
 		let nearestNeighbour = null;
 		//component.position.y = 0.2*component.children.length;
+		component.position.y = -0.5 + (component.geometry.parameters.height/2);
 		sceneComponentsObj.children.forEach(neighbour => {
 			if(component !== neighbour){
 				let distance = Math.sqrt(
@@ -335,6 +337,7 @@ function onClick( event ) {
 
 		dragControls.dispose();
 		dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+		dragControls.transformGroup = true;
 		if(selectedTool !== 'moveTool')
 			dragControls.deactivate();
 
@@ -486,6 +489,7 @@ function generateComponentParent(componentType, material) {
 		'</li>');
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+	dragControls.transformGroup = true;
 	if(selectedTool !== 'moveTool')
 		dragControls.deactivate();
 }
@@ -546,6 +550,7 @@ function generateComponnentChildren(componentType, material) {
 
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+	dragControls.transformGroup = true;
 	if(selectedTool !== 'moveTool')
 		dragControls.deactivate();
 
@@ -698,6 +703,7 @@ $('#deleteButton').on('click', function(){
 
 				dragControls.dispose();
 				dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+				dragControls.transformGroup = true;
 				if(selectedTool !== 'moveTool')
 					dragControls.deactivate();
 
