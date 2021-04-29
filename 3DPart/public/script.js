@@ -90,7 +90,7 @@ function init(){
 	//textures
 	// les composants doivent tous avoir des noms différents et hériter de composants existants (ou ne pas hériter du tout)
 	componentsList = {
-		'serveur' : { 'name': 'serveur', 'derivedFrom' : '', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
+		'serveur' : { 'name': 'serveur', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
 		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
 		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'print.png' },
 		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'menu.webp' },
@@ -102,10 +102,10 @@ function init(){
 		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 2, 'height' : 0.3, 'depht' : 2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
 		'router': { 'name': 'router', 'derivedFrom' : '', 'width' : 1, 'height' : 0.4, 'depht' : 1, 'color' : '#19bfba', 'logo' : 'wifi.png' },
 		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#8288a1', 'logo' : 'db.png' },
-		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#a82b18', 'logo' : 'apache.png' },
-		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#3065ba', 'logo' : 'php.png' },
-		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#db852a', 'logo' : 'db.png' },
-		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'child', 'width' : 1.3, 'height' : 0.2, 'depht' : 1.3, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg' }
+		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#a82b18', 'logo' : 'apache.png' },
+		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#3065ba', 'logo' : 'php.png' },
+		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#db852a', 'logo' : 'db.png' },
+		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg' }
 	};
 
 	// génération dynamique de la palette de composants
@@ -113,27 +113,27 @@ function init(){
 	Object.entries(componentsList).forEach(function(component) {
 		if(component[1]['derivedFrom'] === 'child'){
 			$('#child').append('<div class="paletteComponent addChildButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
-										'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
-										'<span>'+component[1]['name']+'</span>'+
-									'</div>'+
-									'<button id="showHide'+component[0]+'">+</button>'+
-									'<ul id="'+component[0]+'"></ul>');
+				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
+				'<span>'+component[1]['name']+'</span>'+
+				'</div>'+
+				'<button id="showHide'+component[0]+'">+</button>'+
+				'<ul id="'+component[0]+'"></ul>');
 		}
 		else if(component[1]['derivedFrom'] === ''){
 			htmlComponentList.append('<br/><div class="paletteComponent addComponentButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
-										'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
-										'<span>'+component[1]['name']+'</span>'+
-									'</div>'+
-									'<button id="showHide'+component[0]+'">+</button>'+
-									'<ul id="'+component[0]+'"></ul>');
+				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
+				'<span>'+component[1]['name']+'</span>'+
+				'</div>'+
+				'<button id="showHide'+component[0]+'">+</button>'+
+				'<ul id="'+component[0]+'"></ul>');
 		}
 		else{
 			$('#'+component[1]['derivedFrom']).append('<div class="paletteComponent addComponentButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
-										'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
-										'<span>'+component[1]['name']+'</span>'+
-									'</div>'+
-									'<button id="showHide'+component[0]+'">+</button>'+
-									'<ul id="'+component[0]+'"></ul>');
+				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
+				'<span>'+component[1]['name']+'</span>'+
+				'</div>'+
+				'<button id="showHide'+component[0]+'">+</button>'+
+				'<ul id="'+component[0]+'"></ul>');
 		}
 		i++;
 	});
@@ -217,13 +217,13 @@ function ajustementEspacement(){
 		let haveNeighbour = false;
 		let lastDistance = null;
 		let nearestNeighbour = null;
-		component.position.y = 0.2*component.children.length;
+		//component.position.y = 0.2*component.children.length;
 		sceneComponentsObj.children.forEach(neighbour => {
 			if(component !== neighbour){
 				let distance = Math.sqrt(
 					Math.pow((component.position.x - neighbour.position.x), 2) +
 					Math.pow((component.position.z - neighbour.position.z), 2)
-					);
+				);
 				if(nearestNeighbour == null){
 					lastDistance = distance;
 					nearestNeighbour = neighbour;
@@ -262,8 +262,8 @@ function autoFocus(){
 			Math.pow((camera.position.x - selectedComponent.position.x), 2) +
 			Math.pow((camera.position.y - selectedComponent.position.y), 2) +
 			Math.pow((camera.position.z - selectedComponent.position.z), 2)
-			);
-		
+		);
+
 		if(distanceFromeTarget > config_focusDistance + config_tolerance){		// rapprochement
 			camera.position.x -= (camera.position.x - selectedComponent.position.x) / config_diviseurVitesse;
 			camera.position.y -= (camera.position.y - selectedComponent.position.y) / config_diviseurVitesse;
@@ -308,7 +308,7 @@ function onClick( event ) {
 		return;
 	}
 	if(paletteChild && selectedComponent){
-		const pComponentType = selectedComponent.userData.componentType;
+		/*const pComponentType = selectedComponent.userData.componentType;
 		const pTagColor = '#7d2f9e';
 		const pColor = componentsList[pComponentType]['color'];
 		const pLogo = componentsList[pComponentType]['logo'];
@@ -329,7 +329,7 @@ function onClick( event ) {
 
 		$('#'+selectedComponent.userData.componentID).append(
 			'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+componentType+' '+childIndex+'">'
-				+componentType+
+			+componentType+
 			'</li>'
 		);
 
@@ -337,12 +337,12 @@ function onClick( event ) {
 		dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
 		if(selectedTool !== 'moveTool')
 			dragControls.deactivate();
-		
-			
+
+
 		$('.selectedChild').removeClass('selectedChild').addClass( 'addChildButtons' );
 		paletteChild = null;
 
-		return;
+		return;*/
 	}
 	if(selectedTool === 'moveTool'){
 		event.preventDefault();
@@ -382,7 +382,7 @@ function onClick( event ) {
 			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 			raycaster.setFromCamera(mouse, camera);
-			let intersects = raycaster.intersectObjects(sceneComponentsObj.children);
+			let intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
 			if(intersects.length > 0) {
 				selectedComponent = intersects[0].object;
 				addSelectedObject( selectedComponent );
@@ -481,9 +481,9 @@ function generateComponentParent(componentType, material) {
 	sceneComponentsObj.children[index].userData.derivedFrom = componentsList[componentType]['derivedFrom'];
 
 	sceneComponentList.append('<li class="componentlistItem" data-value="'+ncID+'">'+
-										'<div class="componentLabel" data-value="'+ncID+'" id="c'+ncID+'">'+componentType + ncID +'</div>'+
-										'<ul class="childList" id="'+ncID+'"></ul>'+
-									'</li>');
+		'<div class="componentLabel" data-value="'+ncID+'" id="c'+ncID+'">'+componentType + ncID +'</div>'+
+		'<ul class="childList" id="'+ncID+'"></ul>'+
+		'</li>');
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
 	if(selectedTool !== 'moveTool')
@@ -506,18 +506,36 @@ function generateComponnentChildren(componentType, material) {
 	const pColor = componentsList[pComponentType]['color'];
 	const pLogo = componentsList[pComponentType]['logo'];
 	const pName = selectedComponent.userData.componentName;
-	selectedComponent.add(paletteChild);
-	selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
-	generateTexture(pComponentType, pName, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, false);
-	selectedComponent.position.y = 0.2 * selectedComponent.children.length;
-	let childIndex = selectedComponent.children.length - 1;
-	//selectedComponent.children[childIndex].position.z += 0.3;
-	let arithmeticSeries = 0.2 * selectedComponent.children.length; // arithmeticSeries's Uo
 
+	selectedComponent.add(paletteChild);
+	//selectedComponent.position.y -= paletteChild.geometry.parameters.height*4;
+	//selectedComponent.children[childIndex].position.z += 0.3;
+	let arithmeticSeries = 0; // arithmeticSeries's Uo
+
+	//
+	/*const parent = selectedComponent;
+	if()*/
+	const nbLines = Math.ceil(Math.sqrt(selectedComponent.children.length));
+	const nbElemPerLine = Math.ceil(selectedComponent.children.length / nbLines);
+	const reste = selectedComponent.children.length % nbLines;
+
+	console.log('lignes: '+nbLines+' colones: '+nbElemPerLine);
+
+	selectedComponent.geometry = new THREE.BoxGeometry(componentsList[selectedComponent.userData.componentType]['width'] + (nbLines-1),
+														0.3,
+													componentsList[selectedComponent.userData.componentType]['depht'] + nbElemPerLine-1);
+	generateTexture(pComponentType, pName, pColor, selectedComponent.geometry.parameters.width, selectedComponent.geometry.parameters.height, pTagColor, pLogo, false);
+	paletteChild.position.y += paletteChild.scale.y/2;
+	selectedComponent.position.y = -0.5 + (selectedComponent.geometry.parameters.height/2);
+	let childIndex = selectedComponent.children.length - 1;
+	//paletteChild.position.z += (1 * selectedComponent.children.length) % nbElemPerLine;
+
+	let count = 0;
 	selectedComponent.children.forEach(child => {
-		child.position.y = arithmeticSeries;
-		// Un = (Un-1) - r - 0.2
-		arithmeticSeries = arithmeticSeries - (0.2) - 0.2;
+		const ligneCourante = count % nbElemPerLine;
+		child.position.z = ligneCourante - (0.5*(nbElemPerLine-1));
+		child.position.x = Math.floor(count / nbElemPerLine) - (0.5*(nbLines-1));
+		count++;
 	});
 
 	$('#'+selectedComponent.userData.componentID).append(
