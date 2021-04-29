@@ -3,9 +3,8 @@ import { parse } from "./TextualPart/index.js";
 
 console.log('TEST :')
 parse(`
-componant bdd : serv {logo : test/test.txt}; 
+componant bdd : serv {logo : test/test.txt};
 asset toto : bdd;
-
 relationship tutu : serv;
 relationship tata : serv;
 relationship titi : serv;
@@ -19,7 +18,8 @@ componant test {};
 componant test {logo : test/text.txt};
 asset toto : titi;
 
-relationship tutu : serv;
+relationship tutu : serv
 relationship tutu : rout;
 link tutu -> test : der;
-`)*/
+`)
+*/

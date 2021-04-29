@@ -16,6 +16,20 @@ export class Prog extends ModelNode {
     }
 }
 
+export class Instructions extends ModelNode {
+    constructor(ctx) {
+        super(ctx)
+    }
+
+    errorPonctuation() {
+        try {
+            throw new Error(" ==> Attention oublis d'un point-virgule")
+        } catch (e) {
+            console.log(e.name + e.message)
+        }
+    }
+}
+
 export class InstructionNode extends ModelNode {
     constructor(ctx) {
         super(ctx)

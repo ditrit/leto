@@ -1,5 +1,5 @@
 import letoListener from './antlr/letoListener.js';
-import { Prog, InstructionNode, IdVal, NumVal, CommentVal, Logo, Relationship, Asset, Link, Componant } from './model.js';
+import { Prog, Instructions, InstructionNode, IdVal, NumVal, CommentVal, Logo, Relationship, Asset, Link, Componant } from './model.js';
 
 export default class MyLetoListener extends letoListener {
     constructor(nbError) {
@@ -28,21 +28,28 @@ export default class MyLetoListener extends letoListener {
                 ctx.prog.instructions = ctx.prog.instructions.concat(ele)
             }
         }
-        console.log(' Nombre d\'erreur(s) : ' + this.nbError + "\n")
 
-        console.log('Componants ')
-        console.log(ctx.prog.componants)
+        if(this.nbError == 0) {
+            console.log('Componants ')
+            console.log(ctx.prog.componants)
 
-        console.log('Relationships ')
-        console.log(ctx.prog.relationships)
+            console.log('Relationships ')
+            console.log(ctx.prog.relationships)
 
-        console.log('Assets ')
-        console.log(ctx.prog.assets)
-        
-        console.log('Links ')
-        console.log(ctx.prog.links)
+            console.log('Assets ')
+            console.log(ctx.prog.assets)
+            
+            console.log('Links ')
+            console.log(ctx.prog.links)
 
-        console.log("\n")
+            console.log("\n")
+        } else {
+            ctx.prog.componants = {}
+            ctx.prog.relationships = {}
+            ctx.prog.links = {}
+            ctx.prog.assets = {}
+            return;
+        }
     }
 
 
@@ -71,6 +78,11 @@ export default class MyLetoListener extends letoListener {
             let ele = ctx.getChild(i).model
             if (ele instanceof InstructionNode) {
                 ctx.model.push(ele)
+                if (i==nbChilds-1 && ctx.getChild(i).getText() != ';') {
+                    ctx.model = new Instructions(ctx)
+                    ctx.model.errorPonctuation()
+                    this.nbError ++
+                }
             }
         }
     }
@@ -125,8 +137,6 @@ export default class MyLetoListener extends letoListener {
         } else {
             ctx.prog.componants[id.name] = ctx.model
         }
-        
-        
     }
 
     exitComponant_attributes(ctx) {
