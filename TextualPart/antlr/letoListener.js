@@ -95,15 +95,6 @@ export default class letoListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
-	// Enter a parse tree produced by letoParser#hosts.
-	enterHosts(ctx) {
-	}
-
-	// Exit a parse tree produced by letoParser#hosts.
-	exitHosts(ctx) {
-	}
-
-
 	// Enter a parse tree produced by letoParser#relationship.
 	enterRelationship(ctx) {
 	}
