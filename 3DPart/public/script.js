@@ -78,7 +78,6 @@ function init(){
 
 	// Drag control
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement);
-	dragControls.transformGroup = true;
 	dragControls.deactivate();
 	document.addEventListener( 'click', onClick );
 	window.addEventListener( 'keydown', onKeyDown );
@@ -337,7 +336,6 @@ function onClick( event ) {
 
 		dragControls.dispose();
 		dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
-		dragControls.transformGroup = true;
 		if(selectedTool !== 'moveTool')
 			dragControls.deactivate();
 
@@ -489,7 +487,6 @@ function generateComponentParent(componentType, material) {
 		'</li>');
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
-	dragControls.transformGroup = true;
 	if(selectedTool !== 'moveTool')
 		dragControls.deactivate();
 }
@@ -550,7 +547,6 @@ function generateComponnentChildren(componentType, material) {
 
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
-	dragControls.transformGroup = true;
 	if(selectedTool !== 'moveTool')
 		dragControls.deactivate();
 
@@ -703,7 +699,6 @@ $('#deleteButton').on('click', function(){
 
 				dragControls.dispose();
 				dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
-				dragControls.transformGroup = true;
 				if(selectedTool !== 'moveTool')
 					dragControls.deactivate();
 
