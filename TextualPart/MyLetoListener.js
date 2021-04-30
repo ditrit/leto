@@ -194,7 +194,8 @@ export default class MyLetoListener extends letoListener {
         let rel = ctx.getChild(5).model
         ctx.model = new Link(src, dst, rel, ctx) 
         if(ctx.prog.relationships[src.name] != null && ctx.prog.relationships[dst.name] != null) {
-            ctx.prog.links[src.name] = ctx.model
+            ctx.prog.addLink(ctx.model)
+            //ctx.prog.links[src.name] = ctx.model
         } else {
             ctx.model.errorLink()
             this.nbError ++
