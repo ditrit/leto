@@ -46,7 +46,7 @@ export default class MyLetoListener extends letoListener {
         } else {
             ctx.prog.componants = {}
             ctx.prog.relationships = {}
-            ctx.prog.links = {}
+            ctx.prog.links = {bySrc: {}, byDst: {}, byRel: {}}
             ctx.prog.assets = {}
             return;
         }
@@ -185,7 +185,6 @@ export default class MyLetoListener extends letoListener {
             ctx.model.errorAsset()
             this.nbError ++
         }
-        
     }
 
     exitLink(ctx) {
@@ -195,7 +194,6 @@ export default class MyLetoListener extends letoListener {
         ctx.model = new Link(src, dst, rel, ctx) 
         if(ctx.prog.relationships[src.name] != null && ctx.prog.relationships[dst.name] != null) {
             ctx.prog.addLink(ctx.model)
-            //ctx.prog.links[src.name] = ctx.model
         } else {
             ctx.model.errorLink()
             this.nbError ++

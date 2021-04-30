@@ -11,6 +11,7 @@ relationship titi : serv;
 link tutu -> tata : der;
 link tutu -> titi : der;
 `) 
+
 /*
 console.log('TEST 2 :\n')
 parse(`
