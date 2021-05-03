@@ -12,4 +12,6 @@ export function parse(input) {
     const tree = parser.prog();
     const myListener = new MyLetoListener();
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(myListener, tree)
+    let myProg = tree.prog
+    myProg.checkType()
 }
