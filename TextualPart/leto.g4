@@ -24,23 +24,23 @@ instruction
 ;
 
 definition
-: componant | relationship
+: nodeType | relationshipType
 ;
 
 instantiation
-: asset | link
+: nodeTemplate | relationship
 ;
 
-componant 
-: 'componant' id (':' id)? '{' componant_attributes '}'
+nodeType 
+: 'nodeType' id ('derived_from' id)? '{' properties '}'
 ;
 
-componant_attributes
-: componant_attribute (';' componant_attribute)* ';'?  comment?
+properties
+: property (';' property)* ';'?  comment?
 | comment?
 ;
 
-componant_attribute
+property
 : logo 
 ;
 
@@ -48,16 +48,16 @@ logo
 : 'logo' ':' PATH 
 ;
 
-relationship
-: 'relationship' id (':' id)?
+relationshipType
+: 'relationshipType' id ('derived_from' id)?
 ;
 
-asset 
-: 'asset' id ':' id 
+nodeTemplate 
+: 'nodeTemplate' id 'type' id 
 ;
 
-link 
-: 'link'  id '->' id ':' id
+relationship 
+: 'relationship'  id '->' id 'type' id
 ;
 
 number 

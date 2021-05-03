@@ -1,25 +1,29 @@
 import { parse } from "./TextualPart/index.js";
 
-
+/*
 console.log('TEST :\n')
 parse(`
-componant bdd : serv {logo : test/test.txt};
-asset toto : bdd;
-relationship tutu : serv;
-relationship tata : serv;
-relationship titi : serv;
-link tutu -> tata : der;
-link tutu -> titi : der;
-`) 
+nodeType database {};
+nodeType server {};
+nodeType bdd derived_from database {logo : test/test.txt};
 
-/*
+nodeTemplate db type bdd;   
+nodeTemplate serv type server;
+
+relationshipType ser derived_from server;
+
+//relationship serv -> db type ser;
+`) */
+
 console.log('TEST 2 :\n')
 parse(`
-componant test {};
-componant test {logo : test/text.txt};
-asset toto : titi;
+nodeType server {};
+nodeType server derived_from database {logo : test/test.txt};
 
-relationship tutu : serv
-relationship tutu : rout;
-link tutu -> test : der;
-`) */
+nodeTemplate db type bdd;   
+nodeTemplate serv type server;
+
+relationshipType ser derived_from database;
+
+//relationship serv -> db type ser;
+`) 

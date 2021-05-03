@@ -8,36 +8,40 @@ export class ModelNode extends Object {
 export class Prog extends ModelNode {
     constructor(ctx) {
         super(ctx)
-        this.componants = {}
-        this.relationships = {}
-        this.assets = {}
-        this.links = {bySrc: {}, byDst: {}, byRel: {}}
+        this.nodeTypes = {}
+        this.relationshipsTypes = {}
+        this.nodeTemplates = {}
+        this.relationships = {bySrc: {}, byDst: {}, byRel: {}}
         this.instructions = []
     }
 
     checkType() {
-        for (var key in this.componants) {
-            this.componants[key].checkType(this)
+        for (var key in this.nodeTypes) {
+            this.nodeTypes[key].checkType(this)
         }
-        for (var key in this.relationships) {
-            this.componants[key].checkType(this)
+        for (var key in this.relationshipsTypes) {
+            this.relationshipsTypes[key].checkType(this)
         }
-        for (var key in this.assets) {
-            this.componants[key].checkType(this)
+        for (var key in this.nodeTemplates) {
+            this.nodeTemplates[key].checkType(this)
         }
-        for (var key in this.links) {
-            this.componants[key].checkType(this)
+        for (var key in this.relationships.bySrc) {
+            for (var key2 in this.relationships.byDst) {
+                for (var key3 in this.relationships.byRel) {
+                    this.relationships[key][key2][key3].checkType(this)
+                }
+            }
         }
     }
 
-    addLink(link) {
-        let src = link.src.name
-        let dst = link.dst.name
-        let rel = link.rel.name
+    addRelationship(link) {
+        let src = link.srcName.name
+        let dst = link.dstName.name
+        let rel = link.relName.name
         let label  = link.label
-        let srcLinks = this.links.bySrc
-        let dstLinks = this.links.byDst
-        let relLinks = this.links.byRel
+        let srcLinks = this.relationships.bySrc
+        let dstLinks = this.relationships.byDst
+        let relLinks = this.relationships.byRel
         if(srcLinks[src] == null) {
             srcLinks[src] = {}
         }
@@ -119,31 +123,40 @@ export class InstructionNode extends ModelNode {
     }
 }   
 
-export class Componant extends InstructionNode {
-    constructor(name, parentName, attributes, ctx) {
+export class NodeType extends InstructionNode {
+    constructor(name, derived, parentName, attributes, ctx) {
         super(ctx)
         this.id = name
+        this.derived = derived
         this.parentName = parentName
         this.parent = null
         this.attributes = attributes
     }
 
     checkType(prog) {
-        if (parentName == null) {
-            throw Error("pas beau")
-        };
-        this.parent  = prog.componants[parentName]
-        if (parent == null ) {
-            throw Error("Error : Componant type '" + parentName + "' is not defined.")
+        if (this.parentName == null && this.derived == "derived_from") {
+            try {
+                throw new Error(" ==> problem about name of parent")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+        this.parent = prog.nodeTypes[this.parentName]
+        if (this.parent == null && this.derived == "derived_from") {
+            try {
+                throw new Error(" ==> nodeType '" + this.parentName + "' is not defined.")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
         }
     }
 
-    errorComponant() {
+    errorNodeType() {
         try {
-            throw new Error(" ==> cannot create a component, " + this.id + " already exists")
+            throw new Error(" ==> cannot create a nodeType, " + this.id + " already exists, or " + this.parentName + " does not exist")
         } catch (e) {
             console.error(e.name + e.message)
-            console.error("componant " + this.id.name + ((this.parent != null) ? (" from " + this.parent.name) : "") + ' {' + this.attributes.join(",") + '}' + " ; \n")
+            console.error("nodeType " + this.id.name + ((this.parentName != null) ? (" derived_from " + this.parentName.name) : "") + ' {' + this.attributes.join(",") + '}' + " ; \n")
         }
     }
 
@@ -170,40 +183,79 @@ export class Logo extends AttributeNode {
     }
 }
 
-export class Relationship extends InstructionNode {
-    constructor(name, parent, ctx) {
+export class RelationshipType extends InstructionNode {
+    constructor(name, derived, parentName, ctx) {
         super(ctx)
         this.id = name
-        this.parent = parent
+        this.derived = derived
+        this.parentName = parentName
+        this.parent = null
     }
 
-    errorRelationship() {
+    checkType(prog) {
+        if (this.parentName == null && this.derived == "derived_from") {
+            try {
+                throw new Error(" ==> problem about name of parent")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+        this.parent = prog.nodeTypes[this.parentName]
+        if (this.parent == null && this.derived == "derived_from") {
+            try {
+                throw new Error(" ==> relationshipType '" + this.parentName + "' is not defined.")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+    }
+
+    errorRelationshipType() {
         try {
-            throw new Error(" ==> cannot create a relationship, " + this.id + " already exists")
+            throw new Error(" ==> cannot create a relationshipType, " + this.id + " already exists, or " + this.parentName + " does not exist")
         } catch (e) {
             console.error(e.name + e.message)
-            console.error("relationship " + this.id.name + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + " ; \n")
+            console.error("relationshipType " + this.id.name + ((this.parentName != null) ? (" derived_from " + this.parentName.toString()) : "") + " ; \n")
         }
     }
 
     toString() {
-        return "relationship " + this.id.name + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + " ; "
+        return "relationshipType " + this.id.name + ((this.parent != null) ? (" from " + this.parent.toString()) : "") + " ; "
     }
 }
 
-export class Asset extends InstructionNode {
-    constructor(name, componant, ctx) {
+export class NodeTemplate extends InstructionNode {
+    constructor(name, parentName, ctx) {
         super(ctx)
         this.id = name
-        this.componant = componant
+        this.parentName = parentName
+        this.parent = null
     }
 
-    errorAsset() {
+    checkType(prog) {
+        if (this.parentName == null) {
+            try {
+                throw new Error(" ==> problem about name of parent")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+        this.parent = prog.nodeTypes[this.parentName]
+        if (this.parent == null) {
+            try {
+                throw new Error(" ==> nodeType '" + this.parentName + "' is not defined.")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+    }
+
+    errorNodeTemplate() {
         try {
-            throw new Error(" ==> cannot create an asset, check that the components exist : " + this.id + ", " + this.componant)
+            throw new Error(" ==> cannot create a nodeTemplate, check that the nodeType exist : " + this.parentName)
         } catch (e) {
             console.error(e.name + e.message)
-            console.error("asset " + this.id.name + " : " + this.componant.name + " ; \n")
+            console.error("nodeTemplate " + this.id.name + " type " + this.parentName.name + " ; \n")
         }
     }
 
@@ -212,30 +264,52 @@ export class Asset extends InstructionNode {
     }
 }
 
-export class Link extends InstructionNode {
-    constructor(src, dst, rel, ctx) {
+export class Relationship extends InstructionNode {
+    constructor(srcName, dstName, relName, ctx) {
         super(ctx)
-        this.src = src
-        this.dst = dst
-        this.rel = rel
+        this.srcName = srcName
+        this.dstName = dstName
+        this.relName = relName
         this.label = ""
-    }
-
-    errorLink() {
-        try {
-            throw new Error(" ==> cannot create a link, check that the relationship exist : " + this.src + ", " + this.dst)
-        } catch (e) {
-            console.error(e.name + e.message)
-            console.error("link " + this.src.name + " -> " + this.dst.name + " : " + this.rel.name + ";\n")
-        }
+        this.src = null
+        this.dst = null
+        this.rel = null
     }
 
     setLabel(str) {
         this.label = str
     }
 
+    checkType(prog) {
+        if (this.srcName == null || this.dstName == null || this.relName == null) {
+            try {
+                throw new Error(" ==> problem about name of parent")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+        this.src = prog.nodeTemplates[this.srcName]
+        this.dst = prog.nodeTemplates[this.dstName]
+        this.rel = prog.relationshipsTypes[this.relName]
+        if (this.src == null || this.dst == null || this.rel == null) {
+            try {
+                throw new Error(" ==> nodeTemplate :'" + this.src + "," + this.dst + ", or relationshipType :" + this.rel + "is not defined.")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+    }
+
+    errorRelationship() {
+        try {
+            throw new Error(" ==> cannot create a relationship, check that the relationship exist : " + this.src + ", " + this.dst)
+        } catch (e) {
+            console.error(e.name + e.message)
+        }
+    }
+
     toString() {
-        return "link " + this.src.name + " -> " + this.dst.name + " : " + this.rel.name + ";"
+        return "relationship " + this.src.name + " -> " + this.dst.name + " : " + this.rel.name + ";"
     }
 }
 

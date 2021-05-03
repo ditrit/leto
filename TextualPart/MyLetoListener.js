@@ -1,5 +1,5 @@
 import letoListener from './antlr/letoListener.js';
-import { Prog, Instructions, InstructionNode, IdVal, NumVal, CommentVal, Logo, Relationship, Asset, Link, Componant } from './model.js';
+import { Prog, Instructions, InstructionNode, IdVal, NumVal, CommentVal, Logo, RelationshipType, NodeTemplate, Relationship, NodeType } from './model.js';
 
 export default class MyLetoListener extends letoListener {
     constructor(nbError) {
@@ -30,24 +30,24 @@ export default class MyLetoListener extends letoListener {
         }
 
         if(this.nbError == 0) {
-            console.log('Componants ')
-            console.log(ctx.prog.componants)
+            console.log('NodeTypes ')
+            console.log(ctx.prog.nodeTypes)
 
+            console.log('RelationshipsTypes ')
+            console.log(ctx.prog.relationshipsTypes)
+
+            console.log('NodeTemplates ')
+            console.log(ctx.prog.nodeTemplates)
+            
             console.log('Relationships ')
             console.log(ctx.prog.relationships)
 
-            console.log('Assets ')
-            console.log(ctx.prog.assets)
-            
-            console.log('Links ')
-            console.log(ctx.prog.links)
-
             console.log("\n")
         } else {
-            ctx.prog.componants = {}
-            ctx.prog.relationships = {}
-            ctx.prog.links = {bySrc: {}, byDst: {}, byRel: {}}
-            ctx.prog.assets = {}
+            ctx.prog.nodeTypes = {}
+            ctx.prog.relationshipsTypes = {}
+            ctx.prog.relationships = {bySrc: {}, byDst: {}, byRel: {}}
+            ctx.prog.nodeTemplates = {}
             return;
         }
     }
@@ -112,34 +112,35 @@ export default class MyLetoListener extends letoListener {
     }
 
 
-    enterComponant(ctx) {
+    enterNodeType(ctx) {
         this.propagateProg(ctx)
     }
 
-    exitComponant(ctx) {
+    exitNodeType(ctx) {
         let id = ctx.getChild(1).model
         let parent = null
-        let attributes = null
+        let properties = null
         let index = 3
         let ele = ctx.getChild(index).model
+        let derived = ctx.getChild(2).getText()
         if(ele instanceof IdVal) {
             parent = ele
             index = 5
         } 
         ele = ctx.getChild(index).model
         if(ele != null) {
-            attributes = ele
+            properties = ele
         }
-        ctx.model = new Componant(id, parent, attributes, ctx)
-        if(ctx.prog.componants[id.name] != null) {
-            ctx.model.errorComponant()
+        ctx.model = new NodeType(id, derived, parent, properties, ctx)
+        if(ctx.prog.nodeTypes[id.name] != null || (parent != null && ctx.prog.nodeTypes[parent.name] == null)) {
+            ctx.model.errorNodeType()
             this.nbError ++
         } else {
-            ctx.prog.componants[id.name] = ctx.model
+            ctx.prog.nodeTypes[id.name] = ctx.model
         }
     }
 
-    exitComponant_attributes(ctx) {
+    exitProperties(ctx) {
         let nbChilds = ctx.getChildCount()
         ctx.model = []
         for(let i = 0; i<nbChilds; i++) {
@@ -148,7 +149,7 @@ export default class MyLetoListener extends letoListener {
         }
     }
 
-    exitComponant_attribute(ctx) {
+    exitProperty(ctx) {
         let attr = ctx.getChild(0).model
         ctx.model = attr
     }
@@ -158,44 +159,44 @@ export default class MyLetoListener extends letoListener {
         ctx.model = new Logo(path, ctx)
     }
 
-    exitRelationship(ctx) {
+    exitRelationshipType(ctx) {
         let id = ctx.getChild(1).model
         let parent = null
-        let ele = ctx.getChild(3)
+        let derived = ctx.getChild(2).getText()
+        let ele = ctx.getChild(3).model
         if (ele instanceof IdVal) {
             parent = ele
         }
-        ctx.model = new Relationship(id, parent, ctx)
-        if(ctx.prog.relationships[id.name] != null) {
-            ctx.model.errorRelationship()
+        ctx.model = new RelationshipType(id, derived, parent, ctx)
+        if(ctx.prog.relationshipsTypes[id.name] != null || ctx.prog.relationshipsTypes[parent.name] == null) {
+            ctx.model.errorRelationshipType()
             this.nbError ++
         } else {
-            ctx.prog.relationships[id.name] = ctx.model
+            ctx.prog.relationshipsTypes[id.name] = ctx.model
         }
-         
     }
 
-    exitAsset(ctx) {
+    exitNodeTemplate(ctx) {
         let id = ctx.getChild(1).model
-        let componant = ctx.getChild(3).model
-        ctx.model = new Asset(id, componant, ctx)
-        if(ctx.prog.componants[componant.name] != null) {
-            ctx.prog.assets[id.name] = ctx.model
+        let nodeType = ctx.getChild(3).model
+        ctx.model = new NodeTemplate(id, nodeType, ctx)
+        if(ctx.prog.nodeTypes[nodeType.name] != null) {
+            ctx.prog.nodeTemplates[id.name] = ctx.model
         } else {
-            ctx.model.errorAsset()
+            ctx.model.errorNodeTemplate()
             this.nbError ++
         }
     }
 
-    exitLink(ctx) {
+    exitRelationship(ctx) {
         let src = ctx.getChild(1).model
         let dst = ctx.getChild(3).model
         let rel = ctx.getChild(5).model
-        ctx.model = new Link(src, dst, rel, ctx) 
-        if(ctx.prog.relationships[src.name] != null && ctx.prog.relationships[dst.name] != null) {
-            ctx.prog.addLink(ctx.model)
+        ctx.model = new Relationship(src, dst, rel, ctx) 
+        if(ctx.prog.nodeTemplates[src.name] != null && ctx.prog.nodeTemplates[dst.name] != null) {
+            ctx.prog.addRelationship(ctx.model)
         } else {
-            ctx.model.errorLink()
+            ctx.model.errorRelationship()
             this.nbError ++
         }
     }
