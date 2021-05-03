@@ -168,7 +168,7 @@ export default class MyLetoListener extends letoListener {
             parent = ele
         }
         ctx.model = new RelationshipType(id, derived, parent, ctx)
-        if(ctx.prog.relationshipsTypes[id.name] != null || ctx.prog.relationshipsTypes[parent.name] == null) {
+        if(ctx.prog.relationshipsTypes[id.name] != null || ctx.prog.nodeTypes[parent.name] == null) {
             ctx.model.errorRelationshipType()
             this.nbError ++
         } else {

@@ -25,10 +25,16 @@ export class Prog extends ModelNode {
         for (var key in this.nodeTemplates) {
             this.nodeTemplates[key].checkType(this)
         }
-        for (var key in this.relationships.bySrc) {
-            for (var key2 in this.relationships.byDst) {
-                for (var key3 in this.relationships.byRel) {
-                    this.relationships[key][key2][key3].checkType(this)
+        let srcs = this.relationships.bySrc
+        for (var src in srcs) {
+            let dsts = srcs[src]
+            for(var dst in dsts) {
+                let rels = dsts[dst]
+                for(var rel in rels) {
+                    let labels = rels[rel]
+                    for(var label in labels) {
+                        this.relationships.bySrc[src][dst][rel][label].checkType(this)
+                    }
                 }
             }
         }
@@ -98,7 +104,6 @@ export class Prog extends ModelNode {
                 console.error(e.name + e.message)
             }
         }  
-        
     }
 }
 
@@ -270,7 +275,7 @@ export class Relationship extends InstructionNode {
         this.srcName = srcName
         this.dstName = dstName
         this.relName = relName
-        this.label = ""
+        this.label = '_default'
         this.src = null
         this.dst = null
         this.rel = null
@@ -302,7 +307,7 @@ export class Relationship extends InstructionNode {
 
     errorRelationship() {
         try {
-            throw new Error(" ==> cannot create a relationship, check that the relationship exist : " + this.src + ", " + this.dst)
+            throw new Error(" ==> cannot create a relationship, check that nodeTemplates exist : " + this.srcName + ", " + this.dstName + ", or if relationType " + this.relName + " exist")
         } catch (e) {
             console.error(e.name + e.message)
         }
