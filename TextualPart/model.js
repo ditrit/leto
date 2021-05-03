@@ -15,6 +15,21 @@ export class Prog extends ModelNode {
         this.instructions = []
     }
 
+    checkType() {
+        for (var key in this.componants) {
+            this.componants[key].checkType(this)
+        }
+        for (var key in this.relationships) {
+            this.componants[key].checkType(this)
+        }
+        for (var key in this.assets) {
+            this.componants[key].checkType(this)
+        }
+        for (var key in this.links) {
+            this.componants[key].checkType(this)
+        }
+    }
+
     addLink(link) {
         let src = link.src.name
         let dst = link.dst.name
@@ -105,11 +120,22 @@ export class InstructionNode extends ModelNode {
 }   
 
 export class Componant extends InstructionNode {
-    constructor(name, parent, attributes, ctx) {
+    constructor(name, parentName, attributes, ctx) {
         super(ctx)
         this.id = name
-        this.parent = parent
+        this.parentName = parentName
+        this.parent = null
         this.attributes = attributes
+    }
+
+    checkType(prog) {
+        if (parentName == null) {
+            throw Error("pas beau")
+        };
+        this.parent  = prog.componants[parentName]
+        if (parent == null ) {
+            throw Error("Error : Componant type '" + parentName + "' is not defined.")
+        }
     }
 
     errorComponant() {
