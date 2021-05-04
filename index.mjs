@@ -12,9 +12,11 @@ nodeTemplate serv type server;
 nodeTemplate serv2 type server;
 
 relationshipType ser derived_from server;
+relationshipType der derived_from server;
+
 
 relationship serv -> db type ser;
-relationship serv2 -> db type ser;
+relationship serv2 -> db type der;
 `) 
 /*
 console.log('TEST 2 :\n')

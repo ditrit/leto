@@ -40,66 +40,111 @@ export class Prog extends ModelNode {
         }
     }
 
-    addRelationship(link) {
-        let src = link.srcName.name
-        let dst = link.dstName.name
-        let rel = link.relName.name
-        let label  = link.label
-        let srcLinks = this.relationships.bySrc
-        let dstLinks = this.relationships.byDst
-        let relLinks = this.relationships.byRel
-        if(srcLinks[src] == null) {
-            srcLinks[src] = {}
-        }
-        if(srcLinks[src][dst] == null) {
-            srcLinks[src][dst] = {}
-        }
-        if(srcLinks[src][dst][rel] == null) {
-            srcLinks[src][dst][rel] = {}
-        }
-        if(srcLinks[src][dst][rel][label] == null) {
-            srcLinks[src][dst][rel][label] = link
+    addNodeType(nodeType) {
+        let id = nodeType.id.name
+        let nodeTypesList = this.nodeTypes
+
+        if(nodeTypesList[id] == null) {
+            nodeTypesList[id] = nodeType
         } else {
             try {
-                throw new Error(" ==> the link already exists")
+                throw new Error(" ==> the nodeType " + id + " already exists")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+    }
+
+    addNodeTemplate(nodeTemplate) {
+        let id = nodeTemplate.id.name
+        let nodeTemplatesList = this.nodeTemplates
+
+        if(nodeTemplatesList[id] == null) {
+            nodeTemplatesList[id] = nodeTemplate
+        } else {
+            try {
+                throw new Error(" ==> the nodeTemplate " + id + " already exists")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+    }
+
+    addRelationshipType(relationshipType) {
+        let id = relationshipType.id.name
+        let relationshipTypeList = this.relationshipsTypes
+
+        if(relationshipTypeList[id] == null) {
+            relationshipTypeList[id] = relationshipType
+        } else {
+            try {
+                throw new Error(" ==> the relationshipType " + id + " already exists")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+    }
+
+    addRelationship(relationship) {
+        let src = relationship.srcName.name
+        let dst = relationship.dstName.name
+        let rel = relationship.relName.name
+        let label  = relationship.label
+        let srcRelationships = this.relationships.bySrc
+        let dstRelationships = this.relationships.byDst
+        let relRelationships = this.relationships.byRel
+        if(srcRelationships[src] == null) {
+            srcRelationships[src] = {}
+        }
+        if(srcRelationships[src][dst] == null) {
+            srcRelationships[src][dst] = {}
+        }
+        if(srcRelationships[src][dst][rel] == null) {
+            srcRelationships[src][dst][rel] = {}
+        }
+        if(srcRelationships[src][dst][rel][label] == null) {
+            srcRelationships[src][dst][rel][label] = relationship
+        } else {
+            try {
+                throw new Error(" ==> the relationship already exists")
             } catch (e) {
                 console.error(e.name + e.message)
             }
         }
 
-        if(dstLinks[dst] == null) {
-            dstLinks[dst] = {}
+        if(dstRelationships[dst] == null) {
+            dstRelationships[dst] = {}
         }
-        if(dstLinks[dst][src] == null) {
-            dstLinks[dst][src] = {}
+        if(dstRelationships[dst][src] == null) {
+            dstRelationships[dst][src] = {}
         }
-        if(dstLinks[dst][src][rel] == null) {
-            dstLinks[dst][src][rel] = {}
+        if(dstRelationships[dst][src][rel] == null) {
+            dstRelationships[dst][src][rel] = {}
         }
-        if(dstLinks[dst][src][rel][label] == null) {
-            dstLinks[dst][src][rel][label] = link
+        if(dstRelationships[dst][src][rel][label] == null) {
+            dstRelationships[dst][src][rel][label] = relationship
         } else {
             try {
-                throw new Error(" ==> the link already exists")
+                throw new Error(" ==> the relationship already exists")
             } catch (e) {
                 console.error(e.name + e.message)
             }
         }
 
-        if(relLinks[rel] == null) {
-            relLinks[rel] = {}
+        if(relRelationships[rel] == null) {
+            relRelationships[rel] = {}
         }
-        if(relLinks[rel][src] == null) {
-            relLinks[rel][src] = {}
+        if(relRelationships[rel][src] == null) {
+            relRelationships[rel][src] = {}
         }
-        if(relLinks[rel][src][dst] == null) {
-            relLinks[rel][src][dst] = {}
+        if(relRelationships[rel][src][dst] == null) {
+            relRelationships[rel][src][dst] = {}
         }
-        if(relLinks[rel][src][dst][label] == null) {
-            relLinks[rel][src][dst][label] = link
+        if(relRelationships[rel][src][dst][label] == null) {
+            relRelationships[rel][src][dst][label] = relationship
         } else {
             try {
-                throw new Error(" ==> the link already exists")
+                throw new Error(" ==> the relationship already exists")
             } catch (e) {
                 console.error(e.name + e.message)
             }

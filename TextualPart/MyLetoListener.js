@@ -136,7 +136,7 @@ export default class MyLetoListener extends letoListener {
             ctx.model.errorNodeType()
             this.nbError ++
         } else {
-            ctx.prog.nodeTypes[id.name] = ctx.model
+            ctx.prog.addNodeType(ctx.model)
         }
     }
 
@@ -172,7 +172,7 @@ export default class MyLetoListener extends letoListener {
             ctx.model.errorRelationshipType()
             this.nbError ++
         } else {
-            ctx.prog.relationshipsTypes[id.name] = ctx.model
+            ctx.prog.addRelationshipType(ctx.model)
         }
     }
 
@@ -181,7 +181,7 @@ export default class MyLetoListener extends letoListener {
         let nodeType = ctx.getChild(3).model
         ctx.model = new NodeTemplate(id, nodeType, ctx)
         if(ctx.prog.nodeTypes[nodeType.name] != null) {
-            ctx.prog.nodeTemplates[id.name] = ctx.model
+            ctx.prog.addNodeTemplate(ctx.model)
         } else {
             ctx.model.errorNodeTemplate()
             this.nbError ++
