@@ -1,6 +1,5 @@
 import { parse } from "./TextualPart/index.js";
 
-
 console.log('TEST :\n')
 parse(`
 nodeType database {};
@@ -18,6 +17,7 @@ relationshipType der derived_from server;
 relationship serv -> db type ser;
 relationship serv2 -> db type der;
 `) 
+
 /*
 console.log('TEST 2 :\n')
 parse(`

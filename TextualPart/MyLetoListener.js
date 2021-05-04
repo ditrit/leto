@@ -29,21 +29,7 @@ export default class MyLetoListener extends letoListener {
             }
         }
 
-        if(this.nbError == 0) {
-            console.log('NodeTypes ')
-            console.log(ctx.prog.nodeTypes)
-
-            console.log('RelationshipsTypes ')
-            console.log(ctx.prog.relationshipsTypes)
-
-            console.log('NodeTemplates ')
-            console.log(ctx.prog.nodeTemplates)
-            
-            console.log('Relationships ')
-            console.log(ctx.prog.relationships)
-
-            console.log("\n")
-        } else {
+        if(this.nbError != 0) {
             ctx.prog.nodeTypes = {}
             ctx.prog.relationshipsTypes = {}
             ctx.prog.relationships = {bySrc: {}, byDst: {}, byRel: {}}

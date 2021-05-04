@@ -14,4 +14,12 @@ export function parse(input) {
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(myListener, tree)
     let myProg = tree.prog
     myProg.checkType()
+    console.log('NodeTypes ')
+    console.log(myProg.nodeTypes)
+    console.log('NodeTemplates ')
+    console.log(myProg.nodeTemplates)
+    console.log('RelationshipsTypes ')
+    console.log(myProg.relationshipsTypes)
+    console.log('Relationships ')
+    console.log(myProg.relationships)
 }
