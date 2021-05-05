@@ -174,8 +174,10 @@ export class InstructionNode extends ModelNode {
 }   
 
 export class NodeType extends InstructionNode {
-    constructor(name, derived, parentName, attributes, ctx) {
+    constructor(start, stop, name, derived, parentName, attributes, ctx) {
         super(ctx)
+        this.start = start
+        this.stop = stop
         this.id = name
         this.derived = derived
         this.parentName = parentName
@@ -234,8 +236,10 @@ export class Logo extends AttributeNode {
 }
 
 export class RelationshipType extends InstructionNode {
-    constructor(name, derived, parentName, ctx) {
+    constructor(start, stop, name, derived, parentName, ctx) {
         super(ctx)
+        this.start = start
+        this.stop = stop
         this.id = name
         this.derived = derived
         this.parentName = parentName
@@ -275,8 +279,10 @@ export class RelationshipType extends InstructionNode {
 }
 
 export class NodeTemplate extends InstructionNode {
-    constructor(name, parentName, ctx) {
+    constructor(start, stop, name, parentName, ctx) {
         super(ctx)
+        this.start = start
+        this.stop = stop
         this.id = name
         this.parentName = parentName
         this.parent = null
@@ -315,8 +321,10 @@ export class NodeTemplate extends InstructionNode {
 }
 
 export class Relationship extends InstructionNode {
-    constructor(srcName, dstName, relName, ctx) {
+    constructor(start, stop, srcName, dstName, relName, ctx) {
         super(ctx)
+        this.start = start
+        this.stop = stop
         this.srcName = srcName
         this.dstName = dstName
         this.relName = relName

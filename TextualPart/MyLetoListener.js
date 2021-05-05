@@ -103,6 +103,8 @@ export default class MyLetoListener extends letoListener {
     }
 
     exitNodeType(ctx) {
+        let start = ctx.start
+        let stop = ctx.stop
         let id = ctx.getChild(1).model
         let parent = null
         let properties = null
@@ -117,7 +119,7 @@ export default class MyLetoListener extends letoListener {
         if(ele != null) {
             properties = ele
         }
-        ctx.model = new NodeType(id, derived, parent, properties, ctx)
+        ctx.model = new NodeType(start, stop, id, derived, parent, properties, ctx)
         if(ctx.prog.nodeTypes[id.name] != null || (parent != null && ctx.prog.nodeTypes[parent.name] == null)) {
             ctx.model.errorNodeType()
             this.nbError ++
@@ -146,6 +148,8 @@ export default class MyLetoListener extends letoListener {
     }
 
     exitRelationshipType(ctx) {
+        let start = ctx.start
+        let stop = ctx.stop
         let id = ctx.getChild(1).model
         let parent = null
         let derived = ctx.getChild(2).getText()
@@ -153,7 +157,7 @@ export default class MyLetoListener extends letoListener {
         if (ele instanceof IdVal) {
             parent = ele
         }
-        ctx.model = new RelationshipType(id, derived, parent, ctx)
+        ctx.model = new RelationshipType(start, stop, id, derived, parent, ctx)
         if(ctx.prog.relationshipsTypes[id.name] != null || ctx.prog.nodeTypes[parent.name] == null) {
             ctx.model.errorRelationshipType()
             this.nbError ++
@@ -163,9 +167,11 @@ export default class MyLetoListener extends letoListener {
     }
 
     exitNodeTemplate(ctx) {
+        let start = ctx.start
+        let stop = ctx.stop
         let id = ctx.getChild(1).model
         let nodeType = ctx.getChild(3).model
-        ctx.model = new NodeTemplate(id, nodeType, ctx)
+        ctx.model = new NodeTemplate(start, stop, id, nodeType, ctx)
         if(ctx.prog.nodeTypes[nodeType.name] != null) {
             ctx.prog.addNodeTemplate(ctx.model)
         } else {
@@ -175,10 +181,12 @@ export default class MyLetoListener extends letoListener {
     }
 
     exitRelationship(ctx) {
+        let start = ctx.start
+        let stop = ctx.stop
         let src = ctx.getChild(1).model
         let dst = ctx.getChild(3).model
         let rel = ctx.getChild(5).model
-        ctx.model = new Relationship(src, dst, rel, ctx) 
+        ctx.model = new Relationship(start, stop, src, dst, rel, ctx) 
         if(ctx.prog.nodeTemplates[src.name] != null && ctx.prog.nodeTemplates[dst.name] != null) {
             ctx.prog.addRelationship(ctx.model)
         } else {
