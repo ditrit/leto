@@ -13,11 +13,12 @@ let camera, scene, renderer, orbitControls, dragControls, enableSelection = fals
 	selectedTool = 'eyeTool', paletteChild = null,selectedComponent = null, enableAutoFocus = false,
 	preventClick = false;
 let componentsList, sceneComponentsObj = new THREE.Group();	// Liste de tous les composants existants (palette); liste des composants de la Scene
+let nestingLevels = {level0: {nbEle: 0, width: 1.2, depth: 1.2}};
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
 // config
-let config_distance = 5, config_tolerance = 0.2, config_diviseurVitesse = 30, config_focusDistance = 7;
+let config_distance = 5, config_tolerance = 0.2, config_espacement = 1, config_diviseurVitesse = 30, config_focusDistance = 7;
 // Loaders
 const textureLoaderSky = new THREE.TextureLoader();
 textureLoaderSky.setPath( 'public/skybox/' );
@@ -102,10 +103,10 @@ function init(){
 		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
 		'router': { 'name': 'router', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png' },
 		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#8288a1', 'logo' : 'db.png' },
-		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#a82b18', 'logo' : 'apache.png' },
-		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#3065ba', 'logo' : 'php.png' },
-		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#db852a', 'logo' : 'db.png' },
-		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'child', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg' }
+		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png' },
+		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png' },
+		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#db852a', 'logo' : 'db.png' },
+		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg' }
 	};
 
 	// génération dynamique de la palette de composants
@@ -317,7 +318,7 @@ function onClick( event ) {
 		let componentType = paletteChild.userData.componentType;
 		selectedComponent.add(paletteChild);
 		selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
-		generateTexture(pComponentType, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, false);
+		generateTexture(pComponentType, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, 'createChild');
 		selectedComponent.position.y = (0.2 * selectedComponent.children.length);
 		let childIndex = selectedComponent.children.length - 1;
 		let arithmeticSeries = (0.2 * selectedComponent.children.length); // arithmeticSeries's Uo
@@ -414,7 +415,7 @@ function addSelectedObject( object ) {
 	selectedObjects.push( object );
 }
 
-function generateTexture(componentType, name, color, width, height, tagColor, logo, action) {
+function generateTexture(componentType, name, color, width, height, tagColor, logo, action, component = selectedComponent) {
 	width *= 500;
 	height *= 500;
 
@@ -453,12 +454,12 @@ function generateTexture(componentType, name, color, width, height, tagColor, lo
 			new THREE.MeshStandardMaterial({ map: texture }),	// Front side
 			new THREE.MeshStandardMaterial({ map: texture })	// Back side
 		];
-		if(componentsList[componentType]['derivedFrom'] === 'child')
+		if(action === 'createChild')
 			generateComponnentChildren(componentType, material);
-		else if(action)
+		else if(action === 'createComponent')
 			generateComponentParent(componentType, material);
-		else
-			regenerateTexture(material);
+		else if(action === 'updateTexture')
+			regenerateTexture(component, material);
 
 	}, false);
 	img.src = './public/textures/logos/'+logo;
@@ -475,11 +476,13 @@ function generateComponentParent(componentType, material) {
 	if(index > 0)
 		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 	sceneComponentsObj.add( new THREE.Mesh(geometry, material) );
-	sceneComponentsObj.children[index].position.set(Math.random(), 0, Math.random());
-	sceneComponentsObj.children[index].userData.componentType = componentType;
-	sceneComponentsObj.children[index].userData.componentID = ncID;
-	sceneComponentsObj.children[index].userData.componentName = componentType + ncID;
-	sceneComponentsObj.children[index].userData.derivedFrom = componentsList[componentType]['derivedFrom'];
+	const newObj = sceneComponentsObj.children[index];
+	newObj.position.set(Math.random(), 0, Math.random());
+	newObj.userData.componentType = componentType;
+	newObj.userData.componentID = ncID;
+	newObj.userData.componentName = componentType + ncID;
+	newObj.userData.derivedFrom = componentsList[componentType]['derivedFrom'];
+	newObj.position.y = -0.5 + (newObj.geometry.parameters.height/2);
 
 	sceneComponentList.append('<li class="componentlistItem" data-value="'+ncID+'">'+
 		'<div class="componentLabel" data-value="'+ncID+'" id="c'+ncID+'">'+componentType + ncID +'</div>'+
@@ -498,50 +501,36 @@ function generateComponnentChildren(componentType, material) {
 
 	paletteChild = new THREE.Mesh( new THREE.BoxGeometry( cWidth, cHeight, cDepht ), material );
 	paletteChild.userData.componentType = componentType;
-
+	paletteChild.userData.componentID = selectedComponent.children.length;
 	if(!selectedComponent)
 		return;
-
-	const pComponentType = selectedComponent.userData.componentType;
-	const pTagColor = '#7d2f9e';
-	const pColor = componentsList[pComponentType]['color'];
-	const pLogo = componentsList[pComponentType]['logo'];
-	const pName = selectedComponent.userData.componentName;
+	paletteChild.userData.componentName = componentsList[componentType]['name'] + selectedComponent.children.length;
 
 	selectedComponent.add(paletteChild);
-	//selectedComponent.position.y -= paletteChild.geometry.parameters.height*4;
-	//selectedComponent.children[childIndex].position.z += 0.3;
-	let arithmeticSeries = 0; // arithmeticSeries's Uo
 
-	//
-	/*const parent = selectedComponent;
-	if()*/
-	const nbLines = Math.ceil(Math.sqrt(selectedComponent.children.length));
-	const nbElemPerLine = Math.ceil(selectedComponent.children.length / nbLines);
-	const reste = selectedComponent.children.length % nbLines;
-
-	console.log('lignes: '+nbLines+' colones: '+nbElemPerLine);
-
-	selectedComponent.geometry = new THREE.BoxGeometry(componentsList[selectedComponent.userData.componentType]['width'] + (nbLines-1),
-														0.3,
-													componentsList[selectedComponent.userData.componentType]['depht'] + nbElemPerLine-1);
-	generateTexture(pComponentType, pName, pColor, selectedComponent.geometry.parameters.width, selectedComponent.geometry.parameters.height, pTagColor, pLogo, false);
-	paletteChild.position.y += paletteChild.scale.y/2;
-	selectedComponent.position.y = -0.5 + (selectedComponent.geometry.parameters.height/2);
+	paletteChild.position.y += (paletteChild.geometry.parameters.height/2) + (paletteChild.parent.geometry.parameters.height/2);
 	let childIndex = selectedComponent.children.length - 1;
-	//paletteChild.position.z += (1 * selectedComponent.children.length) % nbElemPerLine;
 
-	let count = 0;
-	selectedComponent.children.forEach(child => {
-		const ligneCourante = count % nbElemPerLine;
-		child.position.z = ligneCourante - (0.5*(nbElemPerLine-1));
-		child.position.x = Math.floor(count / nbElemPerLine) - (0.5*(nbLines-1));
-		count++;
-	});
+	let count = 1;
+	let cmpnt = selectedComponent;
+	while(cmpnt != sceneComponentsObj){
+		cmpnt = cmpnt.parent;
+		count ++;
+	}
+	if(count > nestingLevels){
+		nestingLevels["level"+count].push( {nbEle: 0, width: 1.2, depth: 1.2} );
+		console.log(nestingLevels);
+	}
+
+	cmpnt = selectedComponent;
+	while(cmpnt != sceneComponentsObj){
+		childrenSpacing(cmpnt);
+		cmpnt = cmpnt.parent;
+	}
 
 	$('#'+selectedComponent.userData.componentID).append(
-		'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+componentType+' '+childIndex+'">'
-		+componentType+
+		'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+paletteChild.userData.componentID+'">'
+		+paletteChild.userData.componentName+
 		'</li>'
 	);
 
@@ -555,8 +544,59 @@ function generateComponnentChildren(componentType, material) {
 	paletteChild = null;
 }
 
-function regenerateTexture(material){
-	selectedComponent.material = material;
+function childrenSpacing(parentComponent){
+	let config_espacement = 1;
+	const nbLines = Math.ceil(Math.sqrt(parentComponent.children.length));
+	const nbElemPerLine = Math.ceil(parentComponent.children.length / nbLines);
+	let childWidth = parentComponent.children[0].geometry.parameters.width;
+	let childDepth = parentComponent.children[0].geometry.parameters.depth;
+	let spacingX = config_espacement+childWidth;
+	let spacingZ = config_espacement+childDepth;
+
+	let parentWidth = componentsList[parentComponent.userData.componentType]['width'] + ((spacingX+childWidth) * (nbLines-1));
+	let parentHeight = componentsList[parentComponent.userData.componentType]['height'];
+	let parentDepht = componentsList[parentComponent.userData.componentType]['depht'] + ((spacingZ+childDepth) * (nbElemPerLine-1));
+
+	parentComponent.parent.children.forEach(brother => {
+		if(brother.geometry.parameters.width > parentWidth)
+			parentWidth = brother.geometry.parameters.width;
+		if(brother.geometry.parameters.depth > parentDepht)
+			parentDepht = brother.geometry.parameters.depth;
+	});
+
+	let pComponentType = parentComponent.userData.componentType;
+	let pTagColor = '#7d2f9e';
+	let pColor = componentsList[pComponentType]['color'];
+	let pLogo = componentsList[pComponentType]['logo'];
+	let pName = selectedComponent.userData.componentName;
+	parentComponent.geometry = new THREE.BoxGeometry(parentWidth, parentHeight, parentDepht);
+	generateTexture(pComponentType, pName, pColor, selectedComponent.geometry.parameters.width, selectedComponent.geometry.parameters.height, pTagColor, pLogo, 'updateTexture', parentComponent);
+
+	// Grossisement
+	parentComponent.parent.children.forEach(brother => {
+		let componentType = brother.userData.componentType;
+		let tagColor = '#7d2f9e';
+		let color = componentsList[componentType]['color'];
+		let logo = componentsList[componentType]['logo'];
+		let name = brother.userData.componentName;
+
+		brother.geometry = new THREE.BoxGeometry(parentWidth, parentHeight, parentDepht);
+		generateTexture(componentType, name, color, parentWidth, parentHeight, tagColor, logo, 'updateTexture', brother);
+	});
+
+	//placement & espacement
+	let count = 0;
+	parentComponent.children.forEach(child => {
+		const ligneCourante = count % nbElemPerLine;
+		const coloneCourante = Math.floor(count / nbElemPerLine);
+		child.position.z = ligneCourante - (0.5 * (((spacingZ+childDepth)/2)+1.3) * (nbElemPerLine-1)) + (spacingZ * ligneCourante);
+		child.position.x = coloneCourante - (0.5*(((spacingX+childWidth)/2)+1.3) * (nbLines-1)) + (spacingX * coloneCourante);
+		count++;
+	});
+}
+
+function regenerateTexture(component, material){
+	component.material = material;
 }
 
 /// EVENEMENTS ///
@@ -580,7 +620,7 @@ $('.addComponentButtons').on('click', function () {
 	if(index > 0)
 		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 
-	generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, true);
+	generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createComponent');
 });
 // select child to add to a Component
 htmlComponentList.on('click', '.addChildButtons', function () {
@@ -597,7 +637,7 @@ htmlComponentList.on('click', '.addChildButtons', function () {
 	if(index > 0)
 		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 
-	generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, false);
+	generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createChild');
 });
 $('#conponentsSection').on('click', '.selectedChild', function () {
 	$(this).removeClass("selectedChild").addClass( "addChildButtons" );
@@ -685,7 +725,7 @@ pannelSectionName.on('input', function(){
 	const cColor = componentsList[componentType]['color'];
 	const cTagColor = componentsList[componentType]['tagColor'];
 	const cLogo = componentsList[componentType]['logo'];
-	generateTexture(componentType, selectedComponent.userData.componentName, cColor, cWidth, cHeight, '#7d2f9e', cLogo, false);
+	generateTexture(componentType, selectedComponent.userData.componentName, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'updateTexture');
 });
 // supprimer un objet
 $('#deleteButton').on('click', function(){
@@ -693,7 +733,7 @@ $('#deleteButton').on('click', function(){
 		$('.componentlistItem').each(function(){
 			if( $(this).attr('data-value') == selectedComponent.userData.componentID ){
 				$(this).remove();
-				sceneComponentsObj.remove(selectedComponent);
+				selectedComponent.parent.remove(selectedComponent);
 				selectedComponent = null;
 				rightPannel.css('display', 'none');
 
@@ -701,8 +741,22 @@ $('#deleteButton').on('click', function(){
 				dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
 				if(selectedTool !== 'moveTool')
 					dragControls.deactivate();
+			}else{
+				if(selectedComponent.parent != sceneComponentsObj){
+					$(this).find('.childListItem').each(function (){
+						if( $(this).attr('data-value') == selectedComponent.userData.componentID ){
+							$(this).remove();
+							selectedComponent.parent.remove(selectedComponent);
+							selectedComponent = null;
+							rightPannel.css('display', 'none');
 
-				return false;
+							dragControls.dispose();
+							dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+							if(selectedTool !== 'moveTool')
+								dragControls.deactivate();
+						}
+					});
+				}
 			}
 		});
 	}
