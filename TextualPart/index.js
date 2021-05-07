@@ -27,14 +27,13 @@ export function parse(input) {
     
     model.modification(myProg)
     model.supression(myProg)
-    /*console.log('NodeTypes ')
+    console.log('NodeTypes ')
     console.log(model.progInter.nodeTypes)
     console.log('NodeTemplates ')
     console.log(model.progInter.nodeTemplates)
     console.log('RelationshipsTypes ')
     console.log(model.progInter.relationshipsTypes)
     console.log('Relationships ')
-    console.log(model.progInter.relationships)*/
-    console.log(model)
+    console.log(model.progInter.relationships)
 
 }

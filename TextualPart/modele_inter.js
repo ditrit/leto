@@ -106,7 +106,7 @@ export class modelInter extends Object {
             if(temp == -1) {
                 delete(this.progInter.nodeTypes[nodeTypeInter])
             } else {
-                temp = 0
+                temp = -1
             }
         }
         for(var nodeTemplateInter in this.progInter.nodeTemplates) {
@@ -118,7 +118,7 @@ export class modelInter extends Object {
             if(temp == -1) {
                 delete(this.progInter.nodeTemplates[nodeTemplateInter])
             } else {
-                temp = 0
+                temp = -1
             }
         }
         for(var relationshipTypeInter in this.progInter.relationshipsTypes) {
@@ -130,7 +130,7 @@ export class modelInter extends Object {
             if(temp == -1) {
                 delete(this.progInter.relationshipsTypes[relationshipTypeInter])
             } else {
-                temp = 0
+                temp = -1
             }
         }
     }
