@@ -92,4 +92,46 @@ export class modelInter extends Object {
             }
         }
     }
+
+
+
+    supression(prog) {
+        let temp = -1
+        for(var nodeTypeInter in this.progInter.nodeTypes) {
+            for(var nodeType in prog.nodeTypes) {
+                if(nodeTypeInter == nodeType) {
+                    temp = 0
+                }
+            }
+            if(temp == -1) {
+                delete(this.progInter.nodeTypes[nodeTypeInter])
+            } else {
+                temp = 0
+            }
+        }
+        for(var nodeTemplateInter in this.progInter.nodeTemplates) {
+            for(var nodeTemplate in prog.nodeTemplates) {
+                if(nodeTemplateInter == nodeTemplate) {
+                    temp = 0
+                }
+            }
+            if(temp == -1) {
+                delete(this.progInter.nodeTemplates[nodeTemplateInter])
+            } else {
+                temp = 0
+            }
+        }
+        for(var relationshipTypeInter in this.progInter.relationshipsTypes) {
+            for(var relationshipType in prog.relationshipsTypes) {
+                if(relationshipTypeInter == relationshipType) {
+                    temp = 0
+                }
+            }
+            if(temp == -1) {
+                delete(this.progInter.relationshipsTypes[relationshipTypeInter])
+            } else {
+                temp = 0
+            }
+        }
+    }
 }

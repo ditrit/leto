@@ -2,6 +2,7 @@ import { parse } from "./TextualPart/index.js";
 
 console.log('TEST :\n')
 parse(`nodeType test {};
+nodeType testyyy{};
 nodeType database derived_from test{};
 nodeType server {};
 nodeType bdd derived_from database {logo : test/test.txt};
@@ -17,9 +18,10 @@ relationship serv -> db type ser;
 relationship serv2 -> db type der;
 `) 
 
+console.log('\nTEST MODIFICATION :\n')
 parse(`nodeType test2 {};
 nodeType database derived_from test2{};
-nodeType server derived from test2{};
+nodeType server derived_from test2{};
 nodeType bdd derived_from database {logo : test/test.txt};
 
 nodeTemplate db type bdd;
