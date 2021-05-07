@@ -4,6 +4,8 @@ import MyGrammarParser from './antlr/letoParser.js';
 import MyLetoListener from './MyLetoListener.js';
 import {modelInter} from './modele_inter.js';
 
+let model = new modelInter()
+
 export function parse(input) {
     const chars = new antlr4.InputStream(input);
     const lexer = new MyGrammarLexer(chars);
@@ -14,8 +16,8 @@ export function parse(input) {
     const myListener = new MyLetoListener();
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(myListener, tree)
     let myProg = tree.prog
-    /*myProg.checkType()
-    console.log('NodeTypes ')
+    myProg.checkType()
+    /*console.log('NodeTypes ')
     console.log(myProg.nodeTypes)
     console.log('NodeTemplates ')
     console.log(myProg.nodeTemplates)
@@ -23,7 +25,7 @@ export function parse(input) {
     console.log(myProg.relationshipsTypes)
     console.log('Relationships ')
     console.log(myProg.relationships)*/
-    let model = new modelInter()
+    
     model.modification(myProg)
     console.log(model)
 }

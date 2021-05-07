@@ -12,23 +12,23 @@ export class modelInter extends Object {
             for(var nodeTypeInter in this.progInter.nodeTypes) {
                 if(nodeType == nodeTypeInter) {
                     temp = -1
-                    if(nodeType.start != nodeTypeInter.start) {
-                        this.progInter.nodeTypes[nodeType.name].start = nodeType.start
+                    if(prog.nodeTypes[nodeType].start != this.progInter.nodeTypes[nodeTypeInter].start) {
+                        this.progInter.nodeTypes[nodeTypeInter].start = prog.nodeTypes[nodeType].start
                     }
-                    if(nodeType.stop != nodeTypeInter.stop) {
-                        this.progInter.nodeTypes[nodeType.name].stop = nodeType.stop
-                    } 
-                    if(nodeType.derived != nodeTypeInter.derived) {
-                        this.progInter.nodeTypes[nodeType.name].derived = nodeType.derived
+                    if(prog.nodeTypes[nodeType].stop != this.progInter.nodeTypes[nodeTypeInter].stop) {
+                        this.progInter.nodeTypes[nodeTypeInter].stop = prog.nodeTypes[nodeType].stop
                     }
-                    if(nodeType.parentName != nodeTypeInter.parentName) {
-                        this.progInter.nodeTypes[nodeType.name].parentName = nodeType.parentName
+                    if(prog.nodeTypes[nodeType].derived != this.progInter.nodeTypes[nodeTypeInter].derived) {
+                        this.progInter.nodeTypes[nodeTypeInter].derived = prog.nodeTypes[nodeType].derived
                     }
-                    if(nodeType.parent != nodeTypeInter.parent) {
-                        this.progInter.nodeTypes[nodeType.name].parent = nodeType.parent
+                    if(prog.nodeTypes[nodeType].parentName != this.progInter.nodeTypes[nodeTypeInter].parentName) {
+                        this.progInter.nodeTypes[nodeTypeInter].parentName = prog.nodeTypes[nodeType].parentName
                     }
-                    if(nodeType.attributes != nodeTypeInter.attributes) {
-                        this.progInter.nodeTypes[nodeType.name].attributes = nodeType.attributes
+                    if(prog.nodeTypes[nodeType].parent != this.progInter.nodeTypes[nodeTypeInter].parent) {
+                        this.progInter.nodeTypes[nodeTypeInter].parent = prog.nodeTypes[nodeType].parent
+                    }
+                    if(prog.nodeTypes[nodeType].attributes != this.progInter.nodeTypes[nodeTypeInter].attributes) {
+                        this.progInter.nodeTypes[nodeTypeInter].attributes = prog.nodeTypes[nodeType].attributes
                     }
                 }
             }
@@ -43,20 +43,20 @@ export class modelInter extends Object {
             for(var relationshipTypeInter in this.progInter.relationshipsTypes) {
                 if(relationshipType == relationshipTypeInter) {
                     temp = -1
-                    if(relationshipType.start != relationshipTypeInter.start) {
-                        this.progInter.relationshipsTypes[relationshipType.name].start = relationshipType.start
+                    if(prog.relationshipsTypes[relationshipType].start != this.progInter.relationshipsTypes[relationshipTypeInter].start) {
+                        this.progInter.relationshipsTypes[relationshipTypeInter].start = prog.relationshipsTypes[relationshipType].start
                     }
-                    if(relationshipType.stop != relationshipTypeInter.stop) {
-                        this.progInter.relationshipsTypes[relationshipType.name].stop = relationshipType.stop
-                    } 
-                    if(relationshipType.derived != relationshipTypeInter.derived) {
-                        this.progInter.relationshipsTypes[relationshipType.name].derived = relationshipType.derived
+                    if(prog.relationshipsTypes[relationshipType].stop != this.progInter.relationshipsTypes[relationshipTypeInter].stop) {
+                        this.progInter.relationshipsTypes[relationshipTypeInter].stop = prog.relationshipsTypes[relationshipType].stop
                     }
-                    if(relationshipType.parentName != relationshipTypeInter.parentName) {
-                        this.progInter.relationshipsTypes[relationshipType.name].parentName = relationshipType.parentName
+                    if(prog.relationshipsTypes[relationshipType].derived != this.progInter.relationshipsTypes[relationshipTypeInter].derived) {
+                        this.progInter.relationshipsTypes[relationshipTypeInter].derived = prog.relationshipsTypes[relationshipType].derived
                     }
-                    if(relationshipType.parent != relationshipTypeInter.parent) {
-                        this.progInter.relationshipsTypes[relationshipType.name].parent = relationshipType.parent
+                    if(prog.relationshipsTypes[relationshipType].parentName != this.progInter.relationshipsTypes[relationshipTypeInter].parentName) {
+                        this.progInter.relationshipsTypes[relationshipTypeInter].parentName = prog.relationshipsTypes[relationshipType].parentName
+                    }
+                    if(prog.relationshipsTypes[relationshipType].parent != this.progInter.relationshipsTypes[relationshipTypeInter].parent) {
+                        this.progInter.relationshipsTypes[relationshipTypeInter].parent = prog.relationshipsTypes[relationshipType].parent
                     }
                 }
             }
@@ -71,17 +71,17 @@ export class modelInter extends Object {
             for(var nodeTemplateInter in this.progInter.nodeTemplates) {
                 if(nodeTemplate == nodeTemplateInter) {
                     temp = -1
-                    if(nodeTemplate.start != relationshipTypeInter.start) {
-                        this.progInter.relationshipsTypes[nodeTemplate.name].start = nodeTemplate.start
+                    if(prog.nodeTemplates[nodeTemplate].start != this.progInter.nodeTemplates[nodeTemplateInter].start) {
+                        this.progInter.nodeTemplates[nodeTemplateInter].start = prog.nodeTemplates[nodeTemplate].start
                     }
-                    if(nodeTemplate.stop != nodeTemplateInter.stop) {
-                        this.progInter.nodeTemplates[nodeTemplate.name].stop = nodeTemplate.stop
-                    } 
-                    if(nodeTemplate.parentName != nodeTemplateInter.parentName) {
-                        this.progInter.nodeTemplates[nodeTemplate.name].parentName = nodeTemplate.parentName
+                    if(prog.nodeTemplates[nodeTemplate].stop != this.progInter.nodeTemplates[nodeTemplateInter].stop) {
+                        this.progInter.nodeTemplates[nodeTemplateInter].stop = prog.nodeTemplates[nodeTemplate].stop
                     }
-                    if(nodeTemplate.parent != nodeTemplateInter.parent) {
-                        this.progInter.nodeTemplates[nodeTemplate.name].parent = nodeTemplate.parent
+                    if(prog.nodeTemplates[nodeTemplate].parentName != this.progInter.nodeTemplates[nodeTemplateInter].parentName) {
+                        this.progInter.nodeTemplates[nodeTemplateInter].parentName = prog.nodeTemplates[nodeTemplate].parentName
+                    }
+                    if(prog.nodeTemplates[nodeTemplate].parent != this.progInter.nodeTemplates[nodeTemplateInter].parent) {
+                        this.progInter.nodeTemplates[nodeTemplateInter].parent = prog.nodeTemplates[nodeTemplate].parent
                     }
                 }
             }
