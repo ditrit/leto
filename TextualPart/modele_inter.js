@@ -7,19 +7,9 @@ export class modelInter extends Object {
     }
 
     modification(prog) {
-        let testVide = Object.keys(this.progInter).length
-        if(this.progInter != null) {
+        if(Object.keys(this.progInter.nodeTypes).length == false) {
             for(var nodeType in prog.nodeTypes) {
                 this.progInter.nodeTypes[nodeType] = nodeType
-            }
-            for(var relationshipType in prog.relationshipsTypes) {
-                this.progInter.relationshipsTypes[relationshipType] = relationshipType
-            }
-            for(var nodeTemplate in prog.nodeTemplates) {
-                this.progInter.nodeTemplates[nodeTemplate] = nodeTemplate
-            }
-            for(var relationship in prog.relationships) {
-                this.progInter.relationships[relationship] = relationship
             }
         } else {
             for(var nodeType in prog.nodeTypes) {
@@ -29,6 +19,44 @@ export class modelInter extends Object {
                     }
                 }
             }
-        } 
+        }
+
+        if(Object.keys(this.progInter.relationshipsTypes).length == false) {
+            for(var relationshipType in prog.relationshipsTypes) {
+                this.progInter.relationshipsTypes[relationshipType] = relationshipType
+            }
+        } else {
+
+        }
+
+        if(Object.keys(this.progInter.nodeTemplates).length == false) {
+            for(var nodeTemplate in prog.nodeTemplates) {
+                this.progInter.nodeTemplates[nodeTemplate] = nodeTemplate
+            }
+        } else {
+
+        }
+
+        if(Object.keys(this.progInter.relationships.bySrc).length == false) {
+            for(var relationshipSrc in prog.relationships.bySrc) {
+                this.progInter.relationships.bySrc[relationshipSrc] = relationshipSrc
+            }
+        } else {
+
+        }
+        if(Object.keys(this.progInter.relationships.byDst).length == false) {
+            for(var relationshipDst in prog.relationships.byDst) {
+                this.progInter.relationships.byDst[relationshipDst] = relationshipDst
+            }
+        } else {
+
+        }
+        if(Object.keys(this.progInter.relationships.byRel).length == false) {
+            for(var relationshipRel in prog.relationships.byRel) {
+                this.progInter.relationships.byRel[relationshipRel] = relationshipRel
+            }
+        } else {
+
+        }
     }
 }
