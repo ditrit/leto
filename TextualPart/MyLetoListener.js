@@ -10,7 +10,7 @@ export default class MyLetoListener extends letoListener {
     propagateProg(ctx) { 
         for(let i=0; i<ctx.getChildCount(); i++) {
             let child = ctx.getChild(i)
-            child.prog =ctx.prog
+            child.prog = ctx.prog
         }
     }
 
