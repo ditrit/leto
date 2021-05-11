@@ -1,6 +1,10 @@
 import { parse } from "./TextualPart/index.js";
+import {prog } from "./TextualPart/model.js"
 
 console.log('TEST :\n')
+
+let modelIntermediaire = {}
+
 parse(`nodeType test {};
 nodeType testsupp{};
 nodeType database derived_from test{};
@@ -18,7 +22,7 @@ relationshipType der derived_from server;
 
 relationship serv -> db type ser;
 relationship serv2 -> db type der;
-`) 
+`, modelIntermediaire) 
 
 console.log('\nTEST MODIFICATION :\n')
 parse(`nodeType test2 {};
@@ -34,7 +38,7 @@ relationshipType ser derived_from database;
 relationshipType der derived_from server;
 
 relationship serv -> serv2 type der;
-relationship serv2 -> db type ser;`)
+relationship serv2 -> db type ser;`, modelIntermediaire)
 
 /*
 console.log('TEST 2 :\n')
