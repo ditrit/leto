@@ -1,3 +1,5 @@
+import { modelInter } from './modele_inter.js'
+
 export class ModelNode extends Object {
     constructor(ctx) {
         super();
@@ -6,13 +8,15 @@ export class ModelNode extends Object {
 }
 
 export class Prog extends ModelNode {
-    constructor(ctx) {
+    constructor(ctx, version) {
         super(ctx)
         this.nodeTypes = {}
         this.relationshipsTypes = {}
         this.nodeTemplates = {}
         this.relationships = {bySrc: {}, byDst: {}, byRel: {}}
         this.instructions = []
+        this.update = []
+        this.version = version
     }
 
     checkType() {
@@ -185,6 +189,14 @@ export class NodeType extends InstructionNode {
         this.attributes = attributes
     }
 
+    equals(prog) {
+        if(prog.nodeTypes[this.id.name] == null) {
+            prog.addNodeTypeInter(this)
+        } else {
+            //prog.update[] = 
+        }
+    }
+
     checkType(prog) {
         if (this.parentName == null && this.derived == "derived_from") {
             try {
@@ -246,6 +258,14 @@ export class RelationshipType extends InstructionNode {
         this.parent = null
     }
 
+    equals(prog) {
+        if(prog.relationshipsTypes[this.id] == null) {
+            prog.addRelationshipType(this)
+        } else {
+            //prog.update[] = 
+        }
+    }
+
     checkType(prog) {
         if (this.parentName == null && this.derived == "derived_from") {
             try {
@@ -286,6 +306,14 @@ export class NodeTemplate extends InstructionNode {
         this.id = name
         this.parentName = parentName
         this.parent = null
+    }
+
+    equals(prog) {
+        if(prog.nodeTemplates[this.id] == null) {
+            prog.addNodeTemplate(this)
+        } else {
+            //prog.update[] = 
+        }
     }
 
     checkType(prog) {
@@ -336,6 +364,14 @@ export class Relationship extends InstructionNode {
 
     setLabel(str) {
         this.label = str
+    }
+
+    equals(prog) {
+        if(prog.relationships[this.id] == null) {
+            prog.addRelationship(this)
+        } else {
+            //prog.update[] = 
+        }
     }
 
     checkType(prog) {

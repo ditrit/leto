@@ -2,9 +2,10 @@ import letoListener from './antlr/letoListener.js';
 import { Prog, Instructions, InstructionNode, IdVal, NumVal, CommentVal, Logo, RelationshipType, NodeTemplate, Relationship, NodeType } from './model.js';
 
 export default class MyLetoListener extends letoListener {
-    constructor(nbError) {
+    constructor() {
         super();
         this.nbError = 0
+        this.version = 0
     }
 
     propagateProg(ctx) { 
@@ -15,7 +16,7 @@ export default class MyLetoListener extends letoListener {
     }
 
     enterProg(ctx) {
-        ctx.prog = new Prog(ctx)
+        ctx.prog = new Prog(ctx, this.version)
         this.propagateProg(ctx)
     }
 
@@ -124,7 +125,9 @@ export default class MyLetoListener extends letoListener {
             ctx.model.errorNodeType()
             this.nbError ++
         } else {
-            ctx.prog.addNodeType(ctx.model)
+            ctx.model.equals(ctx.prog)
+            this.version ++
+            //ctx.prog.addNodeType(ctx.model)
         }
     }
 
@@ -162,7 +165,8 @@ export default class MyLetoListener extends letoListener {
             ctx.model.errorRelationshipType()
             this.nbError ++
         } else {
-            ctx.prog.addRelationshipType(ctx.model)
+            ctx.model.equals(ctx.prog)
+            //ctx.prog.addRelationshipType(ctx.model)
         }
     }
 
@@ -173,7 +177,8 @@ export default class MyLetoListener extends letoListener {
         let nodeType = ctx.getChild(3).model
         ctx.model = new NodeTemplate(start, stop, id, nodeType, ctx)
         if(ctx.prog.nodeTypes[nodeType.name] != null) {
-            ctx.prog.addNodeTemplate(ctx.model)
+            ctx.model.equals(ctx.prog)
+            //ctx.prog.addNodeTemplate(ctx.model)
         } else {
             ctx.model.errorNodeTemplate()
             this.nbError ++
@@ -188,7 +193,8 @@ export default class MyLetoListener extends letoListener {
         let rel = ctx.getChild(5).model
         ctx.model = new Relationship(start, stop, src, dst, rel, ctx) 
         if(ctx.prog.nodeTemplates[src.name] != null && ctx.prog.nodeTemplates[dst.name] != null) {
-            ctx.prog.addRelationship(ctx.model)
+            ctx.model.equals(ctx.prog)
+            //ctx.prog.addRelationship(ctx.model)
         } else {
             ctx.model.errorRelationship()
             this.nbError ++

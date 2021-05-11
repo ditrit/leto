@@ -6,6 +6,11 @@ export class modelInter extends Object {
         this.progInter = new Prog() 
     }
 
+    addNodeTypeInter(nodeType) {
+        this.progInter.nodeTypes[nodeType.id.name] = nodeType
+    } 
+
+    /*
     modification(prog) {
         let temp = 0
         for(var nodeType in prog.nodeTypes) {
@@ -91,6 +96,11 @@ export class modelInter extends Object {
                 temp = 0
             }
         }
+
+
+        for(var relationship in prog.relationships) {
+        }
+    
     }
 
 
@@ -133,5 +143,5 @@ export class modelInter extends Object {
                 temp = -1
             }
         }
-    }
+    }*/
 }
