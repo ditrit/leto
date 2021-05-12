@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/ditrit/leto#readme",
   "dependencies": {
-    "antlr4": "^4.9.2"
+    "antlr4": "^4.9.2",
+    "glob": "^7.1.7",
+    "jasmine": "^3.7.0"
   }
 }

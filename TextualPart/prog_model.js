@@ -63,7 +63,6 @@ export class ProgModel {
         }
     }
 
-
     addNodeTemplate(nodeTemplate) {
         let id = nodeTemplate.id.name
         let nodeTemplatesList = this.nodeTemplates
@@ -160,7 +159,6 @@ export class ProgModel {
         }  
     }*/
 }
-
 
 
 /*
