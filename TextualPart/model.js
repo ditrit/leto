@@ -1,158 +1,7 @@
-import { modelInter } from './modele_inter.js'
-
 export class ModelNode extends Object {
     constructor(ctx) {
         super();
         this.ctx = ctx
-    }
-}
-
-export class Prog extends ModelNode {
-    constructor(ctx, version) {
-        super(ctx)
-        this.nodeTypes = {}
-        this.relationshipsTypes = {}
-        this.nodeTemplates = {}
-        this.relationships = {bySrc: {}, byDst: {}, byRel: {}}
-        this.instructions = []
-        this.update = []
-        this.version = version
-    }
-
-    checkType() {
-        for (var key in this.nodeTypes) {
-            this.nodeTypes[key].checkType(this)
-        }
-        for (var key in this.relationshipsTypes) {
-            this.relationshipsTypes[key].checkType(this)
-        }
-        for (var key in this.nodeTemplates) {
-            this.nodeTemplates[key].checkType(this)
-        }
-        let srcs = this.relationships.bySrc
-        for (var src in srcs) {
-            let dsts = srcs[src]
-            for(var dst in dsts) {
-                let rels = dsts[dst]
-                for(var rel in rels) {
-                    let labels = rels[rel]
-                    for(var label in labels) {
-                        this.relationships.bySrc[src][dst][rel][label].checkType(this)
-                    }
-                }
-            }
-        }
-    }
-
-    addNodeType(nodeType) {
-        let id = nodeType.id.name
-        let nodeTypesList = this.nodeTypes
-
-        if(nodeTypesList[id] == null) {
-            nodeTypesList[id] = nodeType
-        } else {
-            try {
-                throw new Error(" ==> the nodeType " + id + " already exists")
-            } catch (e) {
-                console.error(e.name + e.message)
-            }
-        }
-    }
-
-    addNodeTemplate(nodeTemplate) {
-        let id = nodeTemplate.id.name
-        let nodeTemplatesList = this.nodeTemplates
-
-        if(nodeTemplatesList[id] == null) {
-            nodeTemplatesList[id] = nodeTemplate
-        } else {
-            try {
-                throw new Error(" ==> the nodeTemplate " + id + " already exists")
-            } catch (e) {
-                console.error(e.name + e.message)
-            }
-        }
-    }
-
-    addRelationshipType(relationshipType) {
-        let id = relationshipType.id.name
-        let relationshipTypeList = this.relationshipsTypes
-
-        if(relationshipTypeList[id] == null) {
-            relationshipTypeList[id] = relationshipType
-        } else {
-            try {
-                throw new Error(" ==> the relationshipType " + id + " already exists")
-            } catch (e) {
-                console.error(e.name + e.message)
-            }
-        }
-    }
-
-    addRelationship(relationship) {
-        let src = relationship.srcName.name
-        let dst = relationship.dstName.name
-        let rel = relationship.relName.name
-        let label  = relationship.label
-        let srcRelationships = this.relationships.bySrc
-        let dstRelationships = this.relationships.byDst
-        let relRelationships = this.relationships.byRel
-        if(srcRelationships[src] == null) {
-            srcRelationships[src] = {}
-        }
-        if(srcRelationships[src][dst] == null) {
-            srcRelationships[src][dst] = {}
-        }
-        if(srcRelationships[src][dst][rel] == null) {
-            srcRelationships[src][dst][rel] = {}
-        }
-        if(srcRelationships[src][dst][rel][label] == null) {
-            srcRelationships[src][dst][rel][label] = relationship
-        } else {
-            try {
-                throw new Error(" ==> the relationship already exists")
-            } catch (e) {
-                console.error(e.name + e.message)
-            }
-        }
-
-        if(dstRelationships[dst] == null) {
-            dstRelationships[dst] = {}
-        }
-        if(dstRelationships[dst][src] == null) {
-            dstRelationships[dst][src] = {}
-        }
-        if(dstRelationships[dst][src][rel] == null) {
-            dstRelationships[dst][src][rel] = {}
-        }
-        if(dstRelationships[dst][src][rel][label] == null) {
-            dstRelationships[dst][src][rel][label] = relationship
-        } else {
-            try {
-                throw new Error(" ==> the relationship already exists")
-            } catch (e) {
-                console.error(e.name + e.message)
-            }
-        }
-
-        if(relRelationships[rel] == null) {
-            relRelationships[rel] = {}
-        }
-        if(relRelationships[rel][src] == null) {
-            relRelationships[rel][src] = {}
-        }
-        if(relRelationships[rel][src][dst] == null) {
-            relRelationships[rel][src][dst] = {}
-        }
-        if(relRelationships[rel][src][dst][label] == null) {
-            relRelationships[rel][src][dst][label] = relationship
-        } else {
-            try {
-                throw new Error(" ==> the relationship already exists")
-            } catch (e) {
-                console.error(e.name + e.message)
-            }
-        }  
     }
 }
 
@@ -177,40 +26,55 @@ export class InstructionNode extends ModelNode {
     }
 }   
 
-export class NodeType extends InstructionNode {
-    constructor(start, stop, name, derived, parentName, attributes, ctx) {
+export function nodeTypeFactory(prog, ctx, id, parentName, properties) {
+    let name = id.name
+    let current = prog.nodeTypes[name]
+    if (current == null) {
+        current = new NodeType(prog.version, name, parentName, properties, ctx)
+        prog.nodeTypes[name] = current
+        ctx.model = current
+    } else {
+        if (parentName != current.parentName) {
+            current.parentName = parentName
+            current.parent = null
+            console.log("Event : nodeType " + name + " changed from parent")
+        }
+        if (properties != current.properties) {
+            current.properties = properties
+            console.log("Event : nodeType '${name}' changed its properties")
+        }
+    }
+    current.version = prog.version
+}
+
+class NodeType extends InstructionNode {
+    constructor(version, name, parentName, properties, ctx) {
         super(ctx)
-        this.start = start
-        this.stop = stop
+        this.version = version
+        this.start = ctx.start
+        this.stop = ctx.stop
         this.id = name
-        this.derived = derived
         this.parentName = parentName
         this.parent = null
-        this.attributes = attributes
-    }
-
-    equals(prog) {
-        if(prog.nodeTypes[this.id.name] == null) {
-            prog.addNodeTypeInter(this)
-        } else {
-            //prog.update[] = 
-        }
+        this.properties = properties
     }
 
     checkType(prog) {
-        if (this.parentName == null && this.derived == "derived_from") {
-            try {
-                throw new Error(" ==> problem about name of parent")
-            } catch (e) {
-                console.error(e.name + e.message)
+        if(this.parentName != '_default') {
+            if (this.parentName == null) {
+                try {
+                    throw new Error(" ==> problem about name of parent")
+                } catch (e) {
+                    console.error(e.name + e.message)
+                }
             }
-        }
-        this.parent = prog.nodeTypes[this.parentName]
-        if (this.parent == null && this.derived == "derived_from") {
-            try {
-                throw new Error(" ==> nodeType '" + this.parentName + "' is not defined.")
-            } catch (e) {
-                console.error(e.name + e.message)
+            this.parent = prog.nodeTypes[this.parentName]
+            if (this.parent == null) {
+                try {
+                    throw new Error(" ==> nodeType '" + this.parentName + "' is not defined.")
+                } catch (e) {
+                    console.error(e.name + e.message)
+                }
             }
         }
     }
@@ -247,27 +111,36 @@ export class Logo extends AttributeNode {
     }
 }
 
-export class RelationshipType extends InstructionNode {
-    constructor(start, stop, name, derived, parentName, ctx) {
+export function relationshipTypeFactory(prog, ctx, id, parentName) {
+    let name = id.name
+    let current = prog.relationshipsTypes[name]
+    if (current == null) {
+        current = new RelationshipType(prog.version, name, parentName, ctx)
+        prog.relationshipsTypes[name] = current
+        ctx.model = current
+    } else {
+        if (parentName != current.parentName) {
+            current.parentName = parentName
+            current.parent = null
+            console.log("Event : relationshipsTypes " + name + " changed from parent")
+        }
+    }
+    current.version = prog.version
+}
+
+class RelationshipType extends InstructionNode {
+    constructor(version, name, parentName, ctx) {
         super(ctx)
-        this.start = start
-        this.stop = stop
+        this.version = version
+        this.start = ctx.start
+        this.stop = ctx.stop
         this.id = name
-        this.derived = derived
         this.parentName = parentName
         this.parent = null
     }
 
-    equals(prog) {
-        if(prog.relationshipsTypes[this.id] == null) {
-            prog.addRelationshipType(this)
-        } else {
-            //prog.update[] = 
-        }
-    }
-
     checkType(prog) {
-        if (this.parentName == null && this.derived == "derived_from") {
+        if (this.parentName == null) {
             try {
                 throw new Error(" ==> problem about name of parent")
             } catch (e) {
@@ -275,7 +148,7 @@ export class RelationshipType extends InstructionNode {
             }
         }
         this.parent = prog.nodeTypes[this.parentName]
-        if (this.parent == null && this.derived == "derived_from") {
+        if (this.parent == null) {
             try {
                 throw new Error(" ==> relationshipType '" + this.parentName + "' is not defined.")
             } catch (e) {
@@ -298,22 +171,32 @@ export class RelationshipType extends InstructionNode {
     }
 }
 
-export class NodeTemplate extends InstructionNode {
-    constructor(start, stop, name, parentName, ctx) {
+export function nodeTemplateFactory(prog, ctx, id, parentName) {
+    let name = id.name
+    let current = prog.nodeTemplates[name]
+    if (current == null) {
+        current = new NodeTemplate(prog.version, name, parentName, ctx)
+        prog.nodeTemplates[name] = current
+        ctx.model = current
+    } else {
+        if (parentName != current.parentName) {
+            current.parentName = parentName
+            current.parent = null
+            console.log("Event : nodeTemplate " + name + " changed from parent")
+        }
+    }
+    current.version = prog.version
+}
+
+class NodeTemplate extends InstructionNode {
+    constructor(version, name, parentName, ctx) {
         super(ctx)
-        this.start = start
-        this.stop = stop
+        this.version = version
+        this.start = ctx.start
+        this.stop = ctx.stop
         this.id = name
         this.parentName = parentName
         this.parent = null
-    }
-
-    equals(prog) {
-        if(prog.nodeTemplates[this.id] == null) {
-            prog.addNodeTemplate(this)
-        } else {
-            //prog.update[] = 
-        }
     }
 
     checkType(prog) {
@@ -348,11 +231,36 @@ export class NodeTemplate extends InstructionNode {
     }
 }
 
-export class Relationship extends InstructionNode {
-    constructor(start, stop, srcName, dstName, relName, ctx) {
+export function relationshipFactory(prog, ctx, src, dst, rel) {
+    let srcName = src.name
+    let dstName = dst.name
+    let relName = rel.name
+    let current = prog.relationships[srcName]
+    if (current == null) {
+        current = new Relationship(prog.version, srcName, dstName, relName, ctx)
+        prog.relationships[srcName] = current
+        ctx.model = current
+    } else {
+        if (dstName != current.dstName) {
+            current.dstName = dstName
+            current.dst = null
+            console.log("Event : relationship " + srcName + " changed from destination")
+        }
+        if (relName != current.relName) {
+            current.relName = relName
+            current.rel = null
+            console.log("Event : relationship " + srcName + " changed from relation")
+        }
+    }
+    current.version = prog.version
+}
+
+class Relationship extends InstructionNode {
+    constructor(version, srcName, dstName, relName, ctx) {
         super(ctx)
-        this.start = start
-        this.stop = stop
+        this.version = version
+        this.start = ctx.start
+        this.stop = ctx.stop
         this.srcName = srcName
         this.dstName = dstName
         this.relName = relName
@@ -364,14 +272,6 @@ export class Relationship extends InstructionNode {
 
     setLabel(str) {
         this.label = str
-    }
-
-    equals(prog) {
-        if(prog.relationships[this.id] == null) {
-            prog.addRelationship(this)
-        } else {
-            //prog.update[] = 
-        }
     }
 
     checkType(prog) {

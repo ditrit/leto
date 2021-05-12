@@ -1,23 +1,11 @@
 import letoListener from './antlr/letoListener.js';
-import { Prog, Instructions, InstructionNode, IdVal, NumVal, CommentVal, Logo, RelationshipType, NodeTemplate, Relationship, NodeType } from './model.js';
+import { nodeTypeFactory, relationshipTypeFactory, nodeTemplateFactory, relationshipFactory, Instructions, InstructionNode, IdVal, NumVal, CommentVal, Logo } from './model.js';
 
 export default class MyLetoListener extends letoListener {
-    constructor() {
+    constructor(progModel) {
         super();
+        this.prog = progModel
         this.nbError = 0
-        this.version = 0
-    }
-
-    propagateProg(ctx) { 
-        for(let i=0; i<ctx.getChildCount(); i++) {
-            let child = ctx.getChild(i)
-            child.prog = ctx.prog
-        }
-    }
-
-    enterProg(ctx) {
-        ctx.prog = new Prog(ctx, this.version)
-        this.propagateProg(ctx)
     }
 
     exitProg(ctx) {
@@ -26,22 +14,14 @@ export default class MyLetoListener extends letoListener {
         for(let i = 0; i<nbChilds; i++) {
             let ele = ctx.getChild(i).model
             if (ele instanceof Array) {
-                ctx.prog.instructions = ctx.prog.instructions.concat(ele)
+                this.prog.instructions = this.prog.instructions.concat(ele)
             }
         }
 
         if(this.nbError != 0) {
-            ctx.prog.nodeTypes = {}
-            ctx.prog.relationshipsTypes = {}
-            ctx.prog.relationships = {bySrc: {}, byDst: {}, byRel: {}}
-            ctx.prog.nodeTemplates = {}
+            console.error("errors")
             return;
         }
-    }
-
-
-    enterLine(ctx) {
-        this.propagateProg(ctx)
     }
 
     exitLine(ctx) {
@@ -51,11 +31,6 @@ export default class MyLetoListener extends letoListener {
         } else {
             ctx.model = []
         }
-    }
-
-
-    enterInstructions(ctx) {
-        this.propagateProg(ctx)
     }
 
     exitInstructions(ctx) {
@@ -74,24 +49,12 @@ export default class MyLetoListener extends letoListener {
         }
     }
 
-    enterInstruction(ctx) {
-        this.propagateProg(ctx)
-    }
-
     exitInstruction(ctx) {
         ctx.model = ctx.getChild(0).model
     }
 
-    enterDefinition(ctx) {
-        this.propagateProg(ctx)
-    }
-
     exitDefinition(ctx) {
         ctx.model = ctx.getChild(0).model
-    }
-
-    enterInstantiation(ctx) {
-        this.propagateProg(ctx)
     }
 
     exitInstantiation(ctx) {
@@ -99,36 +62,21 @@ export default class MyLetoListener extends letoListener {
     }
 
 
-    enterNodeType(ctx) {
-        this.propagateProg(ctx)
-    }
-
     exitNodeType(ctx) {
-        let start = ctx.start
-        let stop = ctx.stop
         let id = ctx.getChild(1).model
-        let parent = null
-        let properties = null
+        let parentName = '_default'
         let index = 3
-        let ele = ctx.getChild(index).model
-        let derived = ctx.getChild(2).getText()
-        if(ele instanceof IdVal) {
-            parent = ele
+        let sep = ctx.getChild(2).getText()
+        if (sep == 'derived_from') {
+            parentName = ctx.getChild(3).model
             index = 5
-        } 
-        ele = ctx.getChild(index).model
-        if(ele != null) {
-            properties = ele
         }
-        ctx.model = new NodeType(start, stop, id, derived, parent, properties, ctx)
-        if(ctx.prog.nodeTypes[id.name] != null || (parent != null && ctx.prog.nodeTypes[parent.name] == null)) {
-            ctx.model.errorNodeType()
-            this.nbError ++
-        } else {
-            ctx.model.equals(ctx.prog)
-            this.version ++
-            //ctx.prog.addNodeType(ctx.model)
+        let properties = ctx.getChild(index).model
+        if(! (properties instanceof IdVal)) {
+            properties = null
         }
+
+        nodeTypeFactory(this.prog, ctx, id, parentName, properties)
     }
 
     exitProperties(ctx) {
@@ -151,54 +99,27 @@ export default class MyLetoListener extends letoListener {
     }
 
     exitRelationshipType(ctx) {
-        let start = ctx.start
-        let stop = ctx.stop
         let id = ctx.getChild(1).model
-        let parent = null
-        let derived = ctx.getChild(2).getText()
+        let parentName = null
         let ele = ctx.getChild(3).model
         if (ele instanceof IdVal) {
-            parent = ele
+            parentName = ele
         }
-        ctx.model = new RelationshipType(start, stop, id, derived, parent, ctx)
-        if(ctx.prog.relationshipsTypes[id.name] != null || ctx.prog.nodeTypes[parent.name] == null) {
-            ctx.model.errorRelationshipType()
-            this.nbError ++
-        } else {
-            ctx.model.equals(ctx.prog)
-            //ctx.prog.addRelationshipType(ctx.model)
-        }
+        
+        relationshipTypeFactory(this.prog, ctx, id, parentName)
     }
 
     exitNodeTemplate(ctx) {
-        let start = ctx.start
-        let stop = ctx.stop
         let id = ctx.getChild(1).model
         let nodeType = ctx.getChild(3).model
-        ctx.model = new NodeTemplate(start, stop, id, nodeType, ctx)
-        if(ctx.prog.nodeTypes[nodeType.name] != null) {
-            ctx.model.equals(ctx.prog)
-            //ctx.prog.addNodeTemplate(ctx.model)
-        } else {
-            ctx.model.errorNodeTemplate()
-            this.nbError ++
-        }
+        nodeTemplateFactory(this.prog, ctx, id, nodeType)
     }
 
     exitRelationship(ctx) {
-        let start = ctx.start
-        let stop = ctx.stop
         let src = ctx.getChild(1).model
         let dst = ctx.getChild(3).model
         let rel = ctx.getChild(5).model
-        ctx.model = new Relationship(start, stop, src, dst, rel, ctx) 
-        if(ctx.prog.nodeTemplates[src.name] != null && ctx.prog.nodeTemplates[dst.name] != null) {
-            ctx.model.equals(ctx.prog)
-            //ctx.prog.addRelationship(ctx.model)
-        } else {
-            ctx.model.errorRelationship()
-            this.nbError ++
-        }
+        relationshipFactory(this.prog, ctx, src, dst, rel)
     }
 
     exitNumber(ctx) {

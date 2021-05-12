@@ -1,16 +1,177 @@
-import { Prog } from './model.js'
+export class ProgModel {
+    constructor() {
+        this.nodeTypes = {}
+        this.relationshipsTypes = {}
+        this.nodeTemplates = {}
+        this.relationships = {bySrc: {}, byDst: {}, byRel: {}}
+        this.instructions = []
+        this.update = []
+        this.version = 0
+    }
 
+    checkType() {
+        for (var key in this.nodeTypes) {
+            this.nodeTypes[key].checkType(this)
+        }
+        for (var key in this.relationshipsTypes) {
+            this.relationshipsTypes[key].checkType(this)
+        }
+        for (var key in this.nodeTemplates) {
+            this.nodeTemplates[key].checkType(this)
+        }
+        let srcs = this.relationships.bySrc
+        for (var src in srcs) {
+            let dsts = srcs[src]
+            for(var dst in dsts) {
+                let rels = dsts[dst]
+                for(var rel in rels) {
+                    let labels = rels[rel]
+                    for(var label in labels) {
+                        this.relationships.bySrc[src][dst][rel][label].checkType(this)
+                    }
+                }
+            }
+        }
+    }
+
+    toString() {
+        return `
+    NodeTypes : ` +
+        this.nodeTypes + `
+    NodeTemplates : ` +
+        this.nodeTemplates + `
+    RelationshipsTypes : ` +
+        this.relationshipsTypes + `
+    Relationships : ` +
+        this.relationships + `
+    Version : ` +
+        this.version
+    }
+
+    /*
+    addNodeType(nodeType) {
+        let id = nodeType.id.name
+        let nodeTypesList = this.nodeTypes
+        if(nodeTypesList[id] == null) {
+            nodeTypesList[id] = nodeType
+        } else {
+            try {
+                throw new Error(" ==> the nodeType " + id + " already exists")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+    }
+
+
+    addNodeTemplate(nodeTemplate) {
+        let id = nodeTemplate.id.name
+        let nodeTemplatesList = this.nodeTemplates
+
+        if(nodeTemplatesList[id] == null) {
+            nodeTemplatesList[id] = nodeTemplate
+        } else {
+            try {
+                throw new Error(" ==> the nodeTemplate " + id + " already exists")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+    }
+
+    addRelationshipType(relationshipType) {
+        let id = relationshipType.id.name
+        let relationshipTypeList = this.relationshipsTypes
+
+        if(relationshipTypeList[id] == null) {
+            relationshipTypeList[id] = relationshipType
+        } else {
+            try {
+                throw new Error(" ==> the relationshipType " + id + " already exists")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+    }
+
+    addRelationship(relationship) {
+        let src = relationship.srcName.name
+        let dst = relationship.dstName.name
+        let rel = relationship.relName.name
+        let label  = relationship.label
+        let srcRelationships = this.relationships.bySrc
+        let dstRelationships = this.relationships.byDst
+        let relRelationships = this.relationships.byRel
+        if(srcRelationships[src] == null) {
+            srcRelationships[src] = {}
+        }
+        if(srcRelationships[src][dst] == null) {
+            srcRelationships[src][dst] = {}
+        }
+        if(srcRelationships[src][dst][rel] == null) {
+            srcRelationships[src][dst][rel] = {}
+        }
+        if(srcRelationships[src][dst][rel][label] == null) {
+            srcRelationships[src][dst][rel][label] = relationship
+        } else {
+            try {
+                throw new Error(" ==> the relationship already exists")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+
+        if(dstRelationships[dst] == null) {
+            dstRelationships[dst] = {}
+        }
+        if(dstRelationships[dst][src] == null) {
+            dstRelationships[dst][src] = {}
+        }
+        if(dstRelationships[dst][src][rel] == null) {
+            dstRelationships[dst][src][rel] = {}
+        }
+        if(dstRelationships[dst][src][rel][label] == null) {
+            dstRelationships[dst][src][rel][label] = relationship
+        } else {
+            try {
+                throw new Error(" ==> the relationship already exists")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }
+
+        if(relRelationships[rel] == null) {
+            relRelationships[rel] = {}
+        }
+        if(relRelationships[rel][src] == null) {
+            relRelationships[rel][src] = {}
+        }
+        if(relRelationships[rel][src][dst] == null) {
+            relRelationships[rel][src][dst] = {}
+        }
+        if(relRelationships[rel][src][dst][label] == null) {
+            relRelationships[rel][src][dst][label] = relationship
+        } else {
+            try {
+                throw new Error(" ==> the relationship already exists")
+            } catch (e) {
+                console.error(e.name + e.message)
+            }
+        }  
+    }*/
+}
+
+
+
+/*
 export class modelInter extends Object {
     constructor() {
         super()
         this.progInter = new Prog() 
     }
-
     addNodeTypeInter(nodeType) {
         this.progInter.nodeTypes[nodeType.id.name] = nodeType
     } 
-
-    /*
     modification(prog) {
         let temp = 0
         for(var nodeType in prog.nodeTypes) {
@@ -71,7 +232,6 @@ export class modelInter extends Object {
                 temp = 0
             }
         }
-
         for(var nodeTemplate in prog.nodeTemplates) {
             for(var nodeTemplateInter in this.progInter.nodeTemplates) {
                 if(nodeTemplate == nodeTemplateInter) {
@@ -96,15 +256,10 @@ export class modelInter extends Object {
                 temp = 0
             }
         }
-
-
         for(var relationship in prog.relationships) {
         }
     
     }
-
-
-
     supression(prog) {
         let temp = -1
         for(var nodeTypeInter in this.progInter.nodeTypes) {
@@ -143,5 +298,5 @@ export class modelInter extends Object {
                 temp = -1
             }
         }
-    }*/
-}
+    }
+}*/
