@@ -34,7 +34,42 @@ export class ProgModel {
         }
     }
 
+    remove() {
+        for(var nodetype in this.nodeTypes) {
+            let versionNode = this.nodeTypes[nodetype].version
+            let version = this.version
+            if(versionNode != version) {
+                delete(this.nodeTypes[nodetype])
+            }
+        }
+        for(var relationshipType in this.relationshipsTypes) {
+            let versionNode = this.relationshipsTypes[relationshipType].version
+            let version = this.version
+            if(versionNode != version) {
+                delete(this.relationshipsTypes[relationshipType])
+            }
+        }
+        for(var nodetemplate in this.nodeTemplates) {
+            let versionNode = this.nodeTemplates[nodetemplate].version
+            let version = this.version
+            if(versionNode != version) {
+                delete(this.nodeTemplates[nodetemplate])
+            }
+        }
+        for(var relationship in this.relationships) {
+            let versionNode = this.relationships[relationship].version
+            let version = this.version
+            if(versionNode != version) {
+                delete(this.relationships[relationship])
+            }
+        }
+    }
+
     toString() {
+        let nodetype = this.nodeTypes
+        let nodetemplate = this.nodeTemplates
+        let relationshiptype = this.relationshipsTypes
+        let relationship = this.relationships
         return `
     NodeTypes : ` +
         this.nodeTypes + `

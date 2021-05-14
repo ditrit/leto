@@ -30,19 +30,29 @@ export function nodeTypeFactory(prog, ctx, id, parentName, properties) {
     let name = id.name
     let current = prog.nodeTypes[name]
     if (current == null) {
-        current = new NodeType(prog.version, name, parentName, properties, ctx)
-        prog.nodeTypes[name] = current
-        ctx.model = current
+        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
+            console.log("Error ==> nodeType " + parentName + " does not exist")
+            return
+        } else {
+            current = new NodeType(prog.version, name, parentName, properties, ctx)
+            prog.nodeTypes[name] = current
+            ctx.model = current
+        }
     } else {
-        if (parentName != current.parentName) {
-            current.parentName = parentName
-            current.parent = null
-            console.log("Event : nodeType " + name + " changed from parent")
-        }
-        if (properties != current.properties) {
-            current.properties = properties
-            console.log("Event : nodeType '${name}' changed its properties")
-        }
+        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
+            console.log("Error ==> nodeType " + parentName + " does not exist")
+            return
+        } else {
+            if (parentName != current.parentName) {
+                current.parentName = parentName
+                current.parent = null
+                console.log("Event : nodeType " + name + " changed from parent")
+            }
+            if (properties != current.properties) {
+                current.properties = properties
+                console.log("Event : nodeType '${name}' changed its properties")
+            }
+        } 
     }
     current.version = prog.version
 }
@@ -115,14 +125,24 @@ export function relationshipTypeFactory(prog, ctx, id, parentName) {
     let name = id.name
     let current = prog.relationshipsTypes[name]
     if (current == null) {
-        current = new RelationshipType(prog.version, name, parentName, ctx)
-        prog.relationshipsTypes[name] = current
-        ctx.model = current
+        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
+            console.log("Error ==> nodeType " + parentName + " does not exist")
+            return
+        } else {
+            current = new RelationshipType(prog.version, name, parentName, ctx)
+            prog.relationshipsTypes[name] = current
+            ctx.model = current
+        }
     } else {
-        if (parentName != current.parentName) {
-            current.parentName = parentName
-            current.parent = null
-            console.log("Event : relationshipsTypes " + name + " changed from parent")
+        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
+            console.log("Error ==> nodeType " + parentName + " does not exist")
+            return
+        } else {
+            if (parentName != current.parentName) {
+                current.parentName = parentName
+                current.parent = null
+                console.log("Event : relationshipsTypes " + name + " changed from parent")
+            }
         }
     }
     current.version = prog.version
@@ -140,19 +160,21 @@ class RelationshipType extends InstructionNode {
     }
 
     checkType(prog) {
-        if (this.parentName == null) {
-            try {
-                throw new Error(" ==> problem about name of parent")
-            } catch (e) {
-                console.error(e.name + e.message)
+        if(this.parentName != '_default') {
+            if (this.parentName == null) {
+                try {
+                    throw new Error(" ==> problem about name of parent")
+                } catch (e) {
+                    console.error(e.name + e.message)
+                }
             }
-        }
-        this.parent = prog.nodeTypes[this.parentName]
-        if (this.parent == null) {
-            try {
-                throw new Error(" ==> relationshipType '" + this.parentName + "' is not defined.")
-            } catch (e) {
-                console.error(e.name + e.message)
+            this.parent = prog.nodeTypes[this.parentName]
+            if (this.parent == null) {
+                try {
+                    throw new Error(" ==> relationshipType '" + this.parentName + "' is not defined.")
+                } catch (e) {
+                    console.error(e.name + e.message)
+                }
             }
         }
     }
@@ -175,14 +197,25 @@ export function nodeTemplateFactory(prog, ctx, id, parentName) {
     let name = id.name
     let current = prog.nodeTemplates[name]
     if (current == null) {
-        current = new NodeTemplate(prog.version, name, parentName, ctx)
-        prog.nodeTemplates[name] = current
-        ctx.model = current
+        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
+            console.log("Error ==> nodeType " + parentName + " does not exist")
+            return 
+        } else {
+            current = new NodeTemplate(prog.version, name, parentName, ctx)
+            prog.nodeTemplates[name] = current
+            ctx.model = current
+        }
+        
     } else {
-        if (parentName != current.parentName) {
-            current.parentName = parentName
-            current.parent = null
-            console.log("Event : nodeTemplate " + name + " changed from parent")
+        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
+            console.log("Error ==> nodeType " + parentName + " does not exist")
+            return
+        } else {
+            if (parentName != current.parentName) {
+                current.parentName = parentName
+                current.parent = null
+                console.log("Event : nodeTemplate " + name + " changed from parent")
+            }
         }
     }
     current.version = prog.version
