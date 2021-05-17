@@ -37,6 +37,7 @@ export function nodeTypeFactory(prog, ctx, id, parentName, properties) {
             current = new NodeType(prog.version, name, parentName, properties, ctx)
             prog.nodeTypes[name] = current
             ctx.model = current
+            console.log("Creation : nodeType " + name)
         }
     } else {
         if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
@@ -50,7 +51,7 @@ export function nodeTypeFactory(prog, ctx, id, parentName, properties) {
             }
             if (properties != current.properties) {
                 current.properties = properties
-                console.log("Event : nodeType '${name}' changed its properties")
+                console.log("Event : nodeType " + name + " changed its properties")
             }
         } 
     }
@@ -132,6 +133,7 @@ export function relationshipTypeFactory(prog, ctx, id, parentName) {
             current = new RelationshipType(prog.version, name, parentName, ctx)
             prog.relationshipsTypes[name] = current
             ctx.model = current
+            console.log("Creation : relationshipType " + name)
         }
     } else {
         if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
@@ -204,6 +206,7 @@ export function nodeTemplateFactory(prog, ctx, id, parentName) {
             current = new NodeTemplate(prog.version, name, parentName, ctx)
             prog.nodeTemplates[name] = current
             ctx.model = current
+            console.log("Creation : nodeTemplate " + name)
         }
         
     } else {
@@ -273,6 +276,7 @@ export function relationshipFactory(prog, ctx, src, dst, rel) {
         current = new Relationship(prog.version, srcName, dstName, relName, ctx)
         prog.relationships[srcName] = current
         ctx.model = current
+        console.log("Creation : relationship from " + srcName + " to " + dstName)
     } else {
         if (dstName != current.dstName) {
             current.dstName = dstName

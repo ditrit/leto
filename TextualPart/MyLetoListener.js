@@ -72,7 +72,7 @@ export default class MyLetoListener extends letoListener {
             index = 5
         }
         let properties = ctx.getChild(index).model
-        if(! (properties instanceof IdVal)) {
+        if(properties.length == 0) {
             properties = null
         }
 

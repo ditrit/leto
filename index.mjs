@@ -4,7 +4,7 @@ console.log('TEST :\n')
 
 let leto = new letoModel()
 
-leto.parse(`nodeType test {};
+leto.parse(`nodeType test {logo : test/test.txt};
 nodeType testsupp {};
 nodeType database derived_from test {};
 nodeType server {};
@@ -38,7 +38,7 @@ leto.parse(`nodeType test {};
 nodeType testsupp {};
 nodeType database derived_from test {};
 nodeType server {};
-nodeType bdd derived_from database {logo : test/test.txt};
+nodeType bdd derived_from database {logo : test2/test2.txt};
 nodeTemplate testsuppr type bdd;
 nodeTemplate db type bdd;
 nodeTemplate serv type server;
