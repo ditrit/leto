@@ -53,10 +53,6 @@ nodeTemplate
 '}'
 ;
 
-number 
-: NUMBER
-;
-
 comment
 : COMMENT
 ;
@@ -66,7 +62,7 @@ id
 ;
 
 type
-: integer | float | boolean | ('"' string '"') 
+: integer | number | bool | ('"' string '"') 
 ;
 
 integer
@@ -77,11 +73,11 @@ string
 : STRING
 ;
 
-float
+number
 : FLOAT
 ;
 
-boolean
+bool
 : 'true' | 'false'
 ;
 
@@ -108,10 +104,6 @@ ID
 
 STRINGLITERAL
 : '"'~["\r\n]*'"'
-;
-
-NUMBER
-: ('0'..'9')+(('e'|'E')NUMBER)*
 ;
 
 COMMENT
