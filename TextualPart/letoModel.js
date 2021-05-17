@@ -23,7 +23,6 @@ export class letoModel {
         this.prog.remove()
     }
 
-
     toString() {
         return this.prog.toString()
     }

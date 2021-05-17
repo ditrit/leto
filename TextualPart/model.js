@@ -100,7 +100,7 @@ class NodeType extends InstructionNode {
     }
 
     toString() {
-        return "componant " + this.id.name + ((this.parent != null) ? (" from " + this.parent.name) : "") + ' {' + this.attributes.join(",") + '}' + " ; "
+        return "componant " + this.id.name + ((this.parent != null) ? (" from " + this.parent.name) : "") + ' {' + this.attributes + '}' + " ; "
     }
 }
 
