@@ -26,27 +26,27 @@ instruction
 nodeType 
 : 'nodeType' id ('derived_from' id)? '{' 
     ('properties {' 
-        propertiesNodeType
+        propertiesNodeType+
     '}')? 
     ('capabilities {' 
-        capabilitiesNodeType
+        capabilitiesNodeType+
     '}')? 
     ('requirement {' 
-        requirementNodeType 
+        requirementNodeType+
     '}')?  
 '}'
 ;
 
 propertiesNodeType
-: id ':' type (', 'id ':' type)*
+: id ':' type
 ;
 
 capabilitiesNodeType
-: id ' : ' ('host' | 'connectsTo') (', ' id ' : ' ('host' | 'connectsTo'))*
+: id ' : ' ('host' | 'connectsTo') 
 ;
 
 requirementNodeType
-: id ':' id (', ' id ':' id )*
+: id ':' id 
 ;
 
 nodeTemplate 
@@ -77,29 +77,15 @@ id
 ;
 
 type
-: integer | number | bool | ('"' string '"') 
+: 'integer' | 'float' | 'boolean' | 'string'
 ;
-
-integer
-: INTEGER
-;
-
-string 
-: STRING
-;
-
-number
-: FLOAT
-;
-
-bool
-: 'true' | 'false'
-;
-
 
 /*
 *	Regle Lexer 
 */
+ID
+: [a-zA-Z][a-z0-9_]*
+;
 
 FLOAT
 : ('0'..'9')*'.'('0'..'9')+(('e'|'E')('0'..'9')+)*
@@ -111,10 +97,6 @@ STRING
 
 INTEGER
 : ('0'..'9')+
-;
-
-ID
-: [a-zA-Z][a-z0-9_]*
 ;
 
 STRINGLITERAL
