@@ -20,44 +20,37 @@ instructions
 ;
 
 instruction 
-: definition | instantiation 
-;
-
-definition
-: nodeType | relationshipType
-;
-
-instantiation
-: nodeTemplate | relationship
+: nodeType | nodeTemplate 
 ;
 
 nodeType 
-: 'nodeType' id ('derived_from' id)? '{' properties '}'
-;
-
-properties
-: property (';' property)* ';'?  comment?
-| comment?
-;
-
-property
-: logo 
-;
-
-logo
-: 'logo' ':' PATH 
-;
-
-relationshipType
-: 'relationshipType' id ('derived_from' id)?
+: 'nodeType' id ('derived_from' id)? '{' 
+    ('properties {' 
+        id ':' type
+        (', 'id ':' type)*
+    '}')? 
+    ('capabilities {' 
+        id ' : ' ('host' | 'connectsTo')
+        (', ' id ' : ' ('host' | 'connectsTo'))*
+    '}')? 
+    ('requirement {' 
+        id ':' id
+        (', ' id ':' id )* 
+    '}')?  
+'}'
 ;
 
 nodeTemplate 
-: 'nodeTemplate' id 'type' id 
-;
-
-relationship 
-: 'relationship'  id '->' id 'type' id
+: 'nodeTemplate' id 'type' id '{'
+    ('properties {'
+        id ':' type 
+        (', ' id ':' type)*
+    '}')?
+    ('requirement {' 
+        id ':' id
+        (', ' id ':' id )* 
+    '}')?
+'}'
 ;
 
 number 
@@ -72,12 +65,41 @@ id
 : ID
 ;
 
+type
+: integer | float | boolean | ('"' string '"') 
+;
+
+integer
+: INTEGER
+;
+
+string 
+: STRING
+;
+
+float
+: FLOAT
+;
+
+boolean
+: 'true' | 'false'
+;
+
 
 /*
 *	Regle Lexer 
 */
-PATH
-: ( [a-zA-Z0-9_.-]+ '/' )+ [a-zA-Z0-9_.-]+
+
+FLOAT
+: ('0'..'9')*'.'('0'..'9')+(('e'|'E')('0'..'9')+)*
+;
+
+STRING
+: ('a'..'z'|'A'..'Z')+
+;
+
+INTEGER
+: ('0'..'9')+
 ;
 
 ID
@@ -87,15 +109,11 @@ ID
 STRINGLITERAL
 : '"'~["\r\n]*'"'
 ;
-LETTRE
-: ('a'..'z'|'A'..'Z')+
-;
+
 NUMBER
 : ('0'..'9')+(('e'|'E')NUMBER)*
 ;
-FLOAT
-: ('0'..'9')*'.'('0'..'9')+(('e'|'E')('0'..'9')+)*
-;
+
 COMMENT
 : '//'~[\r\n]*
 ;
