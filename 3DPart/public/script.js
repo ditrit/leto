@@ -247,7 +247,6 @@ function ajustementEspacement(){
 						spacingFinished = false;
 					} else if(distance >= config_distance - config_tolerance && distance <= config_distance + config_tolerance){
 						haveNeighbour = true;
-						spacingFinished = false;
 					}
 				}
 			});
@@ -310,8 +309,10 @@ function onKeyDown( event ) {
 }
 
 function onKeyUp() {
-	if(dragControls.enabled)
+	if(dragControls.enabled){
 		enableSelection = false;
+		needSpacing = true;
+	}
 }
 
 function onClick( event ) {
@@ -487,6 +488,7 @@ function generateComponentParent(componentType, material) {
 		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 	sceneComponentsObj.add( new THREE.Mesh(geometry, material) );
 	nestingLevels["level0"]['nbEle'] += 1;
+
 	const newObj = sceneComponentsObj.children[index];
 	newObj.position.set(Math.random(), 0, Math.random());
 	newObj.userData.componentType = componentType;
@@ -515,9 +517,9 @@ function generateComponnentChildren(componentType, material) {
 		count ++;
 	}
 	if(count >= Object.keys(nestingLevels).length){
-		nestingLevels["level"+count] = {nbEle: 1, width: 1.2, depth: 1.2};
+		nestingLevels["level"+count] = {nbEleMax: 1, width: 1.2, depth: 1.2};
 	}else{
-		nestingLevels["level"+count]['nbEle'] += 1;
+		nestingLevels["level"+count]['nbEleMax'] += 1;
 	}
 
 	const cWidth = nestingLevels['level'+count]['width'];
@@ -568,27 +570,25 @@ function childrenSpacing(parentComponent, couche, childAdded= false){
 		}
 	}
 	const coucheEnfant = couche+1;
-	config_espacement = nestingLevels['level'+coucheEnfant]['width'] / 4;//nestingLevels['level'+coucheEnfant]['width'] / 4;
+	config_espacement = 0.6;
 	let childWidth = nestingLevels['level'+coucheEnfant]['width'];
 	let childDepth = nestingLevels['level'+coucheEnfant]['depth'];
-	let spacingX = config_espacement+childWidth;
-	let spacingZ = config_espacement+childDepth;
+	let spacingX = (childWidth * 0.2) + config_espacement;
+	let spacingZ = (childDepth * 0.2) + config_espacement;
 
-	let parentWidth = 1.2 + ((spacingX+childWidth) * (nbLines-1));
-	let parentHeight = componentsList[parentComponent.userData.componentType]['height'];
-	let parentDepth = 1.2 + ((spacingZ+childDepth) * (nbColumn-1));
+	const newWidth = (childWidth * (nbLines)) + (spacingX * (nbLines-1)) + 0.6;
+	const newHeight = componentsList[parentComponent.userData.componentType]['height'];
+	const newDepth = (childDepth * (nbColumn)) + (spacingZ * (nbColumn-1)) + 0.6;
 
-	if(parentWidth > nestingLevels['level'+couche]['width'])
-		nestingLevels['level'+couche]['width'] = parentWidth;
-	else
-		parentWidth = nestingLevels['level'+couche]['width'];
+	if(newWidth > nestingLevels['level'+couche]['width']){
+		nestingLevels['level'+couche]['width'] = newWidth;
+		console.log('level'+couche+' new width: '+nestingLevels['level'+couche]['width']);
+	}
 
-	if(parentDepth > nestingLevels['level'+couche]['depth'])
-		nestingLevels['level'+couche]['depth'] = parentDepth;
-	else
-		parentDepth = nestingLevels['level'+couche]['depth'];
-
-	console.log(nestingLevels);
+	if(newDepth > nestingLevels['level'+couche]['depth']){
+		nestingLevels['level'+couche]['depth'] = newDepth;
+		console.log('level'+couche+' new depth: '+nestingLevels['level'+couche]['depth']);
+	}
 
 	let pComponentType = parentComponent.userData.componentType;
 	let pTagColor = '#7d2f9e';
@@ -605,34 +605,41 @@ function childrenSpacing(parentComponent, couche, childAdded= false){
 				level = level.children[0];
 		}
 		//redimentionnement
-		level.parent.children.forEach(child => {
-			const cComponentType = child.userData.componentType;
+		level.parent.children.forEach(brother => {
+			const cComponentType = brother.userData.componentType;
 			const cTagColor = '#7d2f9e';
 			const cColor = componentsList[cComponentType]['color'];
 			const cLogo = componentsList[cComponentType]['logo'];
-			const cName = child.userData.componentName;
+			const cName = brother.userData.componentName;
 
-			child.geometry = new THREE.BoxGeometry(parentWidth, parentHeight, parentDepth);
-			generateTexture(cComponentType, cName, cColor, selectedComponent.geometry.parameters.width, selectedComponent.geometry.parameters.height, cTagColor, cLogo, 'updateTexture', child);
+			brother.geometry = new THREE.BoxGeometry(nestingLevels['level'+couche]['width'], newHeight, nestingLevels['level'+couche]['depth']);
+			generateTexture(cComponentType, cName, cColor, nestingLevels['level'+couche]['width'], selectedComponent.geometry.parameters.height, cTagColor, cLogo, 'updateTexture', brother);
 		});
 	});
 
-	generateTexture(pComponentType, pName, pColor, selectedComponent.geometry.parameters.width, selectedComponent.geometry.parameters.height, pTagColor, pLogo, 'updateTexture', parentComponent);
+	//generateTexture(pComponentType, pName, pColor, selectedComponent.geometry.parameters.width, selectedComponent.geometry.parameters.height, pTagColor, pLogo, 'updateTexture', parentComponent);
 
 	//placement & espacement enfants
 	let count = 0;
 	parentComponent.children.forEach(child => {
 		const ligneCourante = count % nbColumn;
 		const coloneCourante = Math.floor(count / nbColumn);
-		child.position.z = ligneCourante - (0.5 * (((spacingZ+childDepth)/2)+1.3) * (nbColumn-1)) + (spacingZ * ligneCourante);
-		child.position.x = coloneCourante - (0.5*(((spacingX+childWidth)/2)+1.3) * (nbLines-1)) + (spacingX * coloneCourante);
+		console.log('added at line:'+ligneCourante+', column:'+coloneCourante);
+		child.position.z = (ligneCourante*childDepth) + (spacingZ*ligneCourante) - (nestingLevels['level'+couche]['depth']/2) + (childDepth/2) + (config_espacement/2);
+		child.position.x = (coloneCourante*childWidth) + (spacingX*coloneCourante) - (nestingLevels['level'+couche]['width']/2) + (childWidth/2) + (config_espacement/2);
 		count++;
 	});
-
 
 	if(parentComponent.parent != sceneComponentsObj){ //resizeParent &&
 		childrenSpacing(parentComponent.parent, couche-1);
 	}
+
+	if(nestingLevels['level'+coucheEnfant]['nbEleMax'] < parentComponent.children.length){
+		nestingLevels['level'+coucheEnfant]['nbEleMax'] = parentComponent.children.length;
+		childrenSpacing(parentComponent.parent, couche-1);
+
+	}
+
 	config_distance = nestingLevels['level0']['width'] + (nestingLevels['level0']['width']/2);
 	needSpacing = true;
 }
@@ -805,4 +812,4 @@ $('#deleteButton').on('click', function(){
 });
 
 // Affichage framerate (debug)
-//(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
