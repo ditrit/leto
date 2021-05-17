@@ -1,10 +1,10 @@
-import { letoModel } from "./letoModel.js"
+import { letoModel } from "./TextualPart/letoModel.js"
 
 console.log('TEST :\n')
 
 let leto = new letoModel()
 
-leto.parse(`nodeType test {};
+leto.parse(`nodeType test {logo : test/test.txt};
 nodeType testsupp {};
 nodeType database derived_from test {};
 nodeType server {};
@@ -33,15 +33,23 @@ relationshipType der derived_from server;
 relationship serv -> serv2 type der;
 relationship serv2 -> db type ser;`)
 
+console.log('\nTEST MODIFICATION :\n')
+leto.parse(`nodeType test {};
+nodeType testsupp {};
+nodeType database derived_from test {};
+nodeType server {};
+nodeType bdd derived_from database {logo : test2/test2.txt};
+nodeTemplate testsuppr type bdd;
+nodeTemplate db type bdd;
+nodeTemplate serv type server;
+nodeTemplate serv2 type server;
+relationshipType testsupp derived_from server;
+relationshipType ser derived_from server;
+relationshipType der derived_from server;
+relationship serv -> db type ser;
+relationship serv2 -> db type der;`)
+
 console.log(leto.toString())
 
-/*
-console.log('TEST 2 :\n')
-parse(`
-nodeType server {};
-nodeType server derived_from database {logo : test/test.txt};
-nodeTemplate db type bdd;   
-nodeTemplate serv type server;
-relationshipType ser derived_from database;
-//relationship serv -> db type ser;
-`) */
+
+
