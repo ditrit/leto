@@ -26,31 +26,46 @@ instruction
 nodeType 
 : 'nodeType' id ('derived_from' id)? '{' 
     ('properties {' 
-        id ':' type
-        (', 'id ':' type)*
+        propertiesNodeType
     '}')? 
     ('capabilities {' 
-        id ' : ' ('host' | 'connectsTo')
-        (', ' id ' : ' ('host' | 'connectsTo'))*
+        capabilitiesNodeType
     '}')? 
     ('requirement {' 
-        id ':' id
-        (', ' id ':' id )* 
+        requirementNodeType 
     '}')?  
 '}'
+;
+
+propertiesNodeType
+: id ':' type (', 'id ':' type)*
+;
+
+capabilitiesNodeType
+: id ' : ' ('host' | 'connectsTo') (', ' id ' : ' ('host' | 'connectsTo'))*
+;
+
+requirementNodeType
+: id ':' id (', ' id ':' id )*
 ;
 
 nodeTemplate 
 : 'nodeTemplate' id 'type' id '{'
     ('properties {'
-        id ':' type 
-        (', ' id ':' type)*
+        propertiesNodeTemplate
     '}')?
     ('requirement {' 
-        id ':' id
-        (', ' id ':' id )* 
+        requirementNodeTemplate
     '}')?
 '}'
+;
+
+propertiesNodeTemplate
+: id ':' id (', ' id ':' id)*
+;
+
+requirementNodeTemplate
+: id ':' id (', ' id ':' id )*
 ;
 
 comment
