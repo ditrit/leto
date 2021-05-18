@@ -13,7 +13,8 @@ let camera, scene, renderer, orbitControls, dragControls, enableSelection = fals
 	selectedTool = 'eyeTool', paletteChild = null,selectedComponent = null, enableAutoFocus = false,
 	preventClick = false, needSpacing = false;
 let componentsList, sceneComponentsObj = new THREE.Group();	// Liste de tous les composants existants (palette); liste des composants de la Scene
-let nestingLevels = {level0: {nbEle: 0, width: 1.2, depth: 1.2}};
+let nestingLevels = {level0: {width: 1.2, depth: 1.2}};
+let objectsPerLevels = new Array([]);
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
@@ -261,7 +262,6 @@ function ajustementEspacement(){
 		});
 		if(spacingFinished){
 			needSpacing = false;
-			console.log('finished spacing elements')
 		}
 	}
 }
@@ -363,7 +363,6 @@ function onClick( event ) {
 		if( enableSelection === true ) {
 			const draggableObjects = dragControls.getObjects();
 			draggableObjects.length = 0;
-			console.log(draggableObjects.length);
 
 			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -487,7 +486,6 @@ function generateComponentParent(componentType, material) {
 	if(index > 0)
 		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 	sceneComponentsObj.add( new THREE.Mesh(geometry, material) );
-	nestingLevels["level0"]['nbEle'] += 1;
 
 	const newObj = sceneComponentsObj.children[index];
 	newObj.position.set(Math.random(), 0, Math.random());
@@ -496,6 +494,7 @@ function generateComponentParent(componentType, material) {
 	newObj.userData.componentName = componentType + ncID;
 	newObj.userData.derivedFrom = componentsList[componentType]['derivedFrom'];
 	newObj.position.y = -0.5 + (newObj.geometry.parameters.height/2);
+	objectsPerLevels[0][objectsPerLevels[0].length] = newObj;
 
 	sceneComponentList.append('<li class="componentlistItem" data-value="'+ncID+'">'+
 		'<div class="componentLabel" data-value="'+ncID+'" id="c'+ncID+'">'+componentType + ncID +'</div>'+
@@ -510,16 +509,14 @@ function generateComponentParent(componentType, material) {
 }
 
 function generateComponnentChildren(componentType, material) {
-	let count = 0; // nesting level of children
+	let count = 0; // nesting level of added children
 	let cmpnt = selectedComponent;
 	while(cmpnt != sceneComponentsObj){
 		cmpnt = cmpnt.parent;
 		count ++;
 	}
 	if(count >= Object.keys(nestingLevels).length){
-		nestingLevels["level"+count] = {nbEleMax: 1, width: 1.2, depth: 1.2};
-	}else{
-		nestingLevels["level"+count]['nbEleMax'] += 1;
+		nestingLevels["level"+count] = {width: 1.2, depth: 1.2};
 	}
 
 	const cWidth = nestingLevels['level'+count]['width'];
@@ -534,14 +531,17 @@ function generateComponnentChildren(componentType, material) {
 	paletteChild.userData.componentName = componentsList[componentType]['name'] + selectedComponent.children.length;
 
 	selectedComponent.add(paletteChild);
+	if(objectsPerLevels[count] !== undefined) {
+		objectsPerLevels[count][objectsPerLevels[count].length] = paletteChild;
+	}else{
+		objectsPerLevels.push([]);
+		objectsPerLevels[count][0] = paletteChild;
+	}
 
 	paletteChild.position.y += (paletteChild.geometry.parameters.height/2) + (paletteChild.parent.geometry.parameters.height/2);
 	let childIndex = selectedComponent.children.length - 1;
 
-	//if(selectedComponent != sceneComponentsObj){
-		//console.log(count-1);
-		childrenSpacing(selectedComponent, count-1, true);
-	//}
+	childrenSpacing(selectedComponent, count-1, true);
 
 	$('#'+selectedComponent.userData.componentID).append(
 		'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+paletteChild.userData.componentID+'">'
@@ -558,17 +558,10 @@ function generateComponnentChildren(componentType, material) {
 	paletteChild = null;
 }
 
-function childrenSpacing(parentComponent, couche, childAdded= false){
-	let resizeParent = false;
+function childrenSpacing(parentComponent, couche){
+	let resizeLevel = false;
 	const nbLines = Math.ceil(Math.sqrt(parentComponent.children.length));
 	const nbColumn = Math.ceil(parentComponent.children.length / nbLines);
-	if(childAdded){
-		if( nbLines < Math.ceil(Math.sqrt(parentComponent.children.length-1)) ){
-			resizeParent = true;
-		}else if (nbColumn < Math.ceil(parentComponent.children.length-1 / nbLines)){
-			resizeParent = true;
-		}
-	}
 	const coucheEnfant = couche+1;
 	config_espacement = 0.6;
 	let childWidth = nestingLevels['level'+coucheEnfant]['width'];
@@ -576,61 +569,46 @@ function childrenSpacing(parentComponent, couche, childAdded= false){
 	let spacingX = (childWidth * 0.2) + config_espacement;
 	let spacingZ = (childDepth * 0.2) + config_espacement;
 
+	// new parent scale
 	const newWidth = (childWidth * (nbLines)) + (spacingX * (nbLines-1)) + 0.6;
 	const newHeight = componentsList[parentComponent.userData.componentType]['height'];
 	const newDepth = (childDepth * (nbColumn)) + (spacingZ * (nbColumn-1)) + 0.6;
 
 	if(newWidth > nestingLevels['level'+couche]['width']){
 		nestingLevels['level'+couche]['width'] = newWidth;
-		console.log('level'+couche+' new width: '+nestingLevels['level'+couche]['width']);
+		resizeLevel = true;
 	}
 
 	if(newDepth > nestingLevels['level'+couche]['depth']){
 		nestingLevels['level'+couche]['depth'] = newDepth;
-		console.log('level'+couche+' new depth: '+nestingLevels['level'+couche]['depth']);
+		resizeLevel = true;
 	}
 
-	let pComponentType = parentComponent.userData.componentType;
-	let pTagColor = '#7d2f9e';
-	let pColor = componentsList[pComponentType]['color'];
-	let pLogo = componentsList[pComponentType]['logo'];
-	let pName = selectedComponent.userData.componentName;
-
-	// Grossisement objets même niveau
-	sceneComponentsObj.children.forEach(component => {
-		let level = component;
-		//calcul niveau d'imbrication
-		for(let i=0;i<couche;i++){
-			if(level.children[0] !== undefined)
-				level = level.children[0];
-		}
-		//redimentionnement
-		level.parent.children.forEach(brother => {
-			const cComponentType = brother.userData.componentType;
+	// grossissement des composants du même niveau
+	if(resizeLevel){
+		for (const object of objectsPerLevels[couche]) {
+			const cComponentType = object.userData.componentType;
 			const cTagColor = '#7d2f9e';
 			const cColor = componentsList[cComponentType]['color'];
 			const cLogo = componentsList[cComponentType]['logo'];
-			const cName = brother.userData.componentName;
-
-			brother.geometry = new THREE.BoxGeometry(nestingLevels['level'+couche]['width'], newHeight, nestingLevels['level'+couche]['depth']);
-			generateTexture(cComponentType, cName, cColor, nestingLevels['level'+couche]['width'], selectedComponent.geometry.parameters.height, cTagColor, cLogo, 'updateTexture', brother);
-		});
-	});
-
-	//generateTexture(pComponentType, pName, pColor, selectedComponent.geometry.parameters.width, selectedComponent.geometry.parameters.height, pTagColor, pLogo, 'updateTexture', parentComponent);
+			const cName = object.userData.componentName;
+			object.geometry = new THREE.BoxGeometry(nestingLevels['level'+couche]['width'], newHeight, nestingLevels['level'+couche]['depth']);
+			generateTexture(cComponentType, cName, cColor, nestingLevels['level'+couche]['width'], selectedComponent.geometry.parameters.height, cTagColor, cLogo, 'updateTexture', object);
+			childrenSpacing(object, couche);
+		}
+	}
 
 	//placement & espacement enfants
 	let count = 0;
 	parentComponent.children.forEach(child => {
 		const ligneCourante = count % nbColumn;
 		const coloneCourante = Math.floor(count / nbColumn);
-		console.log('added at line:'+ligneCourante+', column:'+coloneCourante);
 		child.position.z = (ligneCourante*childDepth) + (spacingZ*ligneCourante) - (nestingLevels['level'+couche]['depth']/2) + (childDepth/2) + (config_espacement/2);
 		child.position.x = (coloneCourante*childWidth) + (spacingX*coloneCourante) - (nestingLevels['level'+couche]['width']/2) + (childWidth/2) + (config_espacement/2);
 		count++;
 	});
 
-	if(parentComponent.parent != sceneComponentsObj){ //resizeParent &&
+	if(parentComponent.parent != sceneComponentsObj){
 		childrenSpacing(parentComponent.parent, couche-1);
 	}
 
