@@ -67,11 +67,11 @@ function init(){
 	// Controles camera
 	orbitControls = new OrbitControls( camera, renderer.domElement );
 	orbitControls.mouseButtons = {
-		LEFT: THREE.MOUSE.PAN,
+		LEFT: THREE.MOUSE.ROTATE,
 		MIDDLE: THREE.MOUSE.DOLLY,
-		RIGHT: THREE.MOUSE.ROTATE
+		RIGHT: THREE.MOUSE.PAN
 	}
-	orbitControls.enablePan = false;
+	//orbitControls.enablePan = false;
 	orbitControls.enableDamping = true;
 	orbitControls.minDistance = 2;
 	orbitControls.maxDistance = 200;
@@ -82,6 +82,7 @@ function init(){
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement);
 	dragControls.deactivate();
 	document.addEventListener( 'click', onClick );
+	document.addEventListener( 'onmouseup', onMouseRealease );
 	window.addEventListener( 'keydown', onKeyDown );
 	window.addEventListener( 'keyup', onKeyUp );
 
@@ -103,7 +104,7 @@ function init(){
 		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
 		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
 		'router': { 'name': 'router', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png' },
-		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 0.8, 'height' : 0.8, 'depht' : 0.8, 'color' : '#8288a1', 'logo' : 'db.png' },
+		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'db.png' },
 		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png' },
 		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png' },
 		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#db852a', 'logo' : 'db.png' },
@@ -309,10 +310,7 @@ function onKeyDown( event ) {
 }
 
 function onKeyUp() {
-	if(dragControls.enabled){
-		enableSelection = false;
-		needSpacing = true;
-	}
+	enableSelection = true;
 }
 
 function onClick( event ) {
@@ -388,6 +386,7 @@ function onClick( event ) {
 				dragControls.transformGroup = false;
 				draggableObjects.push( ...sceneComponentsObj.children );
 			}
+			needSpacing = true;
 		}
 	}else if(selectedTool === 'eyeTool'){
 		if(!enableAutoFocus){
@@ -399,6 +398,7 @@ function onClick( event ) {
 				selectedComponent = intersects[0].object;
 				addSelectedObject( selectedComponent );
 				outlinePass.selectedObjects = selectedObjects;
+				// right panel completion
 				const componentId = selectedComponent.userData.componentID;
 				$('.componentLabel').removeClass('selectedComponent');
 				sceneComponentList.find('#c'+componentId).addClass('selectedComponent');
@@ -417,6 +417,12 @@ function onClick( event ) {
 				rightPannel.css('display', 'none');
 			}
 		}
+	}
+}
+function onMouseRealease() {
+	console.log('mouse released');
+	if(dragControls.enabled){
+		needSpacing = true;
 	}
 }
 
