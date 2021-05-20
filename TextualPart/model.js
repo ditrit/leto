@@ -53,6 +53,14 @@ export function nodeTypeFactory(prog, ctx, id, parentName, properties, capabilit
                 current.properties = properties
                 console.log("Event : nodeType " + name + " changed its properties")
             }
+            if (capabilities != current.capabilities) {
+                current.capabilities = capabilities
+                console.log("Event : nodeType " + name + " changed its capabilities")
+            }
+            if (requirements != current.requirements) {
+                current.requirements = requirements
+                console.log("Event : nodeType " + name + " changed its requirements")
+            }
         } 
     }
     current.version = prog.version
@@ -154,6 +162,14 @@ export function nodeTemplateFactory(prog, ctx, id, parentName, properties, requi
                 current.parentName = parentName
                 current.parent = null
                 console.log("Event : nodeTemplate " + name + " changed from parent")
+            }
+            if (properties != current.properties) {
+                current.properties = properties
+                console.log("Event : nodeTemplate " + name + " changed its properties")
+            }
+            if (requirements != current.requirements) {
+                current.requirements = requirements
+                console.log("Event : nodeTemplate " + name + " changed its requirements")
             }
         }
     }
