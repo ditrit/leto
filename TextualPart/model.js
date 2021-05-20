@@ -26,7 +26,7 @@ export class InstructionNode extends ModelNode {
     }
 }   
 
-export function nodeTypeFactory(prog, ctx, id, parentName, properties) {
+export function nodeTypeFactory(prog, ctx, id, parentName, properties, capabilities, requirements) {
     let name = id.name
     let current = prog.nodeTypes[name]
     if (current == null) {
@@ -34,7 +34,7 @@ export function nodeTypeFactory(prog, ctx, id, parentName, properties) {
             console.log("Error ==> nodeType " + parentName + " does not exist")
             return
         } else {
-            current = new NodeType(prog.version, name, parentName, properties, ctx)
+            current = new NodeType(prog.version, name, parentName, properties, capabilities, requirements, ctx)
             prog.nodeTypes[name] = current
             ctx.model = current
             console.log("Creation : nodeType " + name)
@@ -59,7 +59,7 @@ export function nodeTypeFactory(prog, ctx, id, parentName, properties) {
 }
 
 class NodeType extends InstructionNode {
-    constructor(version, name, parentName, properties, ctx) {
+    constructor(version, name, parentName, properties, capabilities, requirements, ctx) {
         super(ctx)
         this.version = version
         this.start = ctx.start
@@ -68,6 +68,8 @@ class NodeType extends InstructionNode {
         this.parentName = parentName
         this.parent = null
         this.properties = properties
+        this.capabilities = capabilities
+        this.requirements = requirements
     }
 
     checkType(prog) {
@@ -108,7 +110,7 @@ export class CapabilityNodeType extends InstructionNode{
     constructor(id, type, ctx) {
         super(ctx)
         this.name = id.name
-        this.typeName = type.name
+        this.typeName = type
     }
 }
 
@@ -129,7 +131,7 @@ export class RequirementNodeType extends InstructionNode {
 }
 
 
-export function nodeTemplateFactory(prog, ctx, id, parentName) {
+export function nodeTemplateFactory(prog, ctx, id, parentName, properties, requirements) {
     let name = id.name
     let current = prog.nodeTemplates[name]
     if (current == null) {
@@ -137,7 +139,7 @@ export function nodeTemplateFactory(prog, ctx, id, parentName) {
             console.log("Error ==> nodeType " + parentName + " does not exist")
             return 
         } else {
-            current = new NodeTemplate(prog.version, name, parentName, ctx)
+            current = new NodeTemplate(prog.version, name, parentName, properties, requirements, ctx)
             prog.nodeTemplates[name] = current
             ctx.model = current
             console.log("Creation : nodeTemplate " + name)
@@ -159,7 +161,7 @@ export function nodeTemplateFactory(prog, ctx, id, parentName) {
 }
 
 class NodeTemplate extends InstructionNode {
-    constructor(version, name, parentName, ctx) {
+    constructor(version, name, parentName, properties, requirements, ctx) {
         super(ctx)
         this.version = version
         this.start = ctx.start
@@ -167,6 +169,8 @@ class NodeTemplate extends InstructionNode {
         this.id = name
         this.parentName = parentName
         this.parent = null
+        this.properties = properties
+        this.requirements = requirements
     }
 
     checkType(prog) {

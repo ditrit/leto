@@ -7,7 +7,7 @@ let leto = new letoModel()
 leto.parse(`
 nodeType server {
     properties {
-      num_cpus : integer
+      num_cpus : integer,
       os : string
     }
     capabilities {
@@ -17,7 +17,7 @@ nodeType server {
    
 nodeType softwareComponent {
     requirements {
-      host : server
+      host1 : server
     }
 };
 
@@ -32,36 +32,38 @@ nodeType BD derived_from softwareComponent {
       dataSource : connectsTo     
     }
 };
- 
+
 nodeTemplate myAppliServer type server {
-    properties {
-      num_cpus : 2
-      os : "linux"
-    }
+  properties {
+    num_cpus : 2,
+    os : "linux"
+  }
 };
- 
+
 nodeTemplate myDBServer type server {
-    properties {
-      num_cpus : 4
-      os : "linux"
-    }
+  properties {
+    num_cpus : 4,
+    os : "linux"
+  }
 };
-  
+
 nodeTemplate myDB type BD {
-    requirements {
-      host : myDBServer
-    }
+  requirements {
+    host1 : myDBServer
+  }
+};
+
+nodeTemplate myTomcat type tomcat {
+  requirements {
+    host1 : myAppliServer,
+    dataSource : myDBServer 
+  }
 };
  
-nodeTemplate myTomcat type tomcat {
-    requirements {
-      host : myAppliServer
-      dataSource : myDBServer 
-    }
-};
 `) 
 
 console.log(leto.toString())
+
 
 
 

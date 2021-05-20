@@ -62,21 +62,24 @@ export default class MyLetoListener extends letoListener {
         let requirements = null
         let sep = ctx.getChild(2).getText()
         if (sep == 'derived_from') {
-            parentName = ctx.getChild(index+2).model
+            parentName = ctx.getChild(3).model
             index = 5
         }
         sep = ctx.getChild(index).getText()
-        if(sep == 'properties {') {
-            properties = ctx.getChild(index+2).model
-            index = 8
-        }
-        else if(sep == 'capabilities {') {
-            properties = ctx.getChild(index+2).model
-            index = 8
-        }
-        else if(sep == 'requirements {') {
-            properties = ctx.getChild(index+2).model
-            index = 8
+        for(let i=0; i<3; i++){
+            if(sep == 'properties {') {
+                properties = ctx.getChild(index+1).model
+                index = index+3
+            }
+            else if(sep == 'capabilities {') {
+                capabilities = ctx.getChild(index+1).model
+                index = index+3
+            }
+            else if(sep == 'requirements {') {
+                requirements = ctx.getChild(index+1).model
+                index = index+3
+            }
+            sep = ctx.getChild(index).getText()
         }
         nodeTypeFactory(this.prog, ctx, id, parentName, properties, capabilities, requirements)
     }
@@ -85,8 +88,10 @@ export default class MyLetoListener extends letoListener {
         let nbChilds = ctx.getChildCount()
         ctx.model = []
         for(let i = 0; i<nbChilds; i++) {
-            let property = ctx.getChild(i).model
-            ctx.model.push(property)
+            if(ctx.getChild(i).model instanceof PropertyNodeType) {
+                let property = ctx.getChild(i).model
+                ctx.model.push(property)
+            }   
         }
     }
 
@@ -128,25 +133,26 @@ export default class MyLetoListener extends letoListener {
 
     exitNodeTemplate(ctx) {
         let id = ctx.getChild(1).model
-        let parentName =  ctx.getChild(2).model
+        let parentName = '_default'
+        let index = 3
         let properties = null
         let requirements = null
-        let index = 5
-        let sep = ctx.getChild(index).getText()
-        if(sep == 'properties {') {
-            properties = ctx.getChild(6).model
-            index = 8
-        }
-        else if(sep == 'requirements {') {
-            requirements = ctx.getChild(6).model
-            index = 8
+        let sep = ctx.getChild(2).getText()
+        if (sep == 'type') {
+            parentName = ctx.getChild(3).model
+            index = 5
         }
         sep = ctx.getChild(index).getText()
-        if(sep == 'properties {') {
-            properties = ctx.getChild(6).model
-        }
-        else if(sep == 'requirements {') {
-            requirements = ctx.getChild(6).model
+        for(let i=0; i<2; i++){
+            if(sep == 'properties {') {
+                properties = ctx.getChild(index+1).model
+                index = index+3
+            }
+            else if(sep == 'requirements {') {
+                requirements = ctx.getChild(index+1).model
+                index = index+3
+            }
+            sep = ctx.getChild(index).getText()
         }
         nodeTemplateFactory(this.prog, ctx, id, parentName, properties, requirements)
     }
@@ -154,9 +160,11 @@ export default class MyLetoListener extends letoListener {
     exitPropertiesNodeTemplate(ctx) {
         let nbChilds = ctx.getChildCount()
         ctx.model = []
-        for(let i=0; i<nbChilds; i++) {
-            let property = ctx.getChild(i).model
-            ctx.model.push(property)
+        for(let i = 0; i<nbChilds; i++) {
+            if(ctx.getChild(i).model instanceof PropertyNodeTemplate) {
+                let property = ctx.getChild(i).model
+                ctx.model.push(property)
+            }   
         }
     }
 
@@ -169,9 +177,11 @@ export default class MyLetoListener extends letoListener {
     exitRequirementsNodeTemplate(ctx) {
         let nbChilds = ctx.getChildCount()
         ctx.model = []
-        for(let i=0; i<nbChilds; i++) {
-            let requirement = ctx.getChild(i).model
-            ctx.model.push(requirement)
+        for(let i = 0; i<nbChilds; i++) {
+            if(ctx.getChild(i).model instanceof RequirementNodeTemplate) {
+                let requirement = ctx.getChild(i).model
+                ctx.model.push(requirement)
+            }   
         }
 	}
 
