@@ -1,5 +1,5 @@
 import letoListener from './antlr/letoListener.js';
-import { nodeTypeFactory, relationshipTypeFactory, nodeTemplateFactory, relationshipFactory, Instructions, InstructionNode, IdVal, NumVal, CommentVal, Logo } from './model.js';
+import { CapabilityNodeType, PropertyNodeType, RequirementNodeType, nodeTypeFactory, nodeTemplateFactory, RequirementNodeTemplate, PropertyNodeTemplate, Instructions, InstructionNode, IdVal, TypeVal, CommentVal } from './model.js';
 
 export default class MyLetoListener extends letoListener {
     constructor(progModel) {
@@ -53,81 +53,133 @@ export default class MyLetoListener extends letoListener {
         ctx.model = ctx.getChild(0).model
     }
 
-    exitDefinition(ctx) {
-        ctx.model = ctx.getChild(0).model
-    }
-
-    exitInstantiation(ctx) {
-        ctx.model = ctx.getChild(0).model
-    }
-
-
     exitNodeType(ctx) {
         let id = ctx.getChild(1).model
         let parentName = '_default'
         let index = 3
+        let properties = null
+        let capabilities = null
+        let requirements = null
         let sep = ctx.getChild(2).getText()
         if (sep == 'derived_from') {
-            parentName = ctx.getChild(3).model
+            parentName = ctx.getChild(index+2).model
             index = 5
         }
-        let properties = ctx.getChild(index).model
-        if(properties.length == 0) {
-            properties = null
+        sep = ctx.getChild(index).getText()
+        if(sep == 'properties {') {
+            properties = ctx.getChild(index+2).model
+            index = 8
         }
-
-        nodeTypeFactory(this.prog, ctx, id, parentName, properties)
+        else if(sep == 'capabilities {') {
+            properties = ctx.getChild(index+2).model
+            index = 8
+        }
+        else if(sep == 'requirements {') {
+            properties = ctx.getChild(index+2).model
+            index = 8
+        }
+        nodeTypeFactory(this.prog, ctx, id, parentName, properties, capabilities, requirements)
     }
 
-    exitProperties(ctx) {
+    exitPropertiesNodeType(ctx) {
         let nbChilds = ctx.getChildCount()
         ctx.model = []
         for(let i = 0; i<nbChilds; i++) {
-            let attr = ctx.getChild(i).model
-            ctx.model.push(attr)
+            let property = ctx.getChild(i).model
+            ctx.model.push(property)
         }
     }
 
-    exitProperty(ctx) {
-        let attr = ctx.getChild(0).model
-        ctx.model = attr
+    exitPropertyNodeType(ctx) {
+        let id = ctx.getChild(0).model
+        let type = ctx.getChild(2).model
+        ctx.model = new PropertyNodeType(id, type, ctx)
     }
 
-    exitLogo(ctx) {
-        let path = ctx.getChild(2).getText()
-        ctx.model = new Logo(path, ctx)
-    }
-
-    exitRelationshipType(ctx) {
-        let id = ctx.getChild(1).model
-        let parentName = null
-        let ele = ctx.getChild(3).model
-        if (ele instanceof IdVal) {
-            parentName = ele
+    exitCapabilitiesNodeType(ctx) {
+        let nbChilds = ctx.getChildCount()
+        ctx.model = []
+        for(let i=0; i<nbChilds; i++) {
+            let requirement = ctx.getChild(i).model
+            ctx.model.push(requirement)
         }
-        
-        relationshipTypeFactory(this.prog, ctx, id, parentName)
+    }
+
+    exitCapabilityNodeType(ctx) {
+        let id = ctx.getChild(0).model
+        let type = ctx.getChild(2).getText()
+        ctx.model = new CapabilityNodeType(id, type, ctx)
+    }
+
+    exitRequirementsNodeType(ctx) {
+        let nbChilds = ctx.getChildCount()
+        ctx.model = []
+        for(let i=0; i<nbChilds; i++) {
+            let requirement = ctx.getChild(i).model
+            ctx.model.push(requirement)
+        }
+    }
+
+    exitRequirementNodeType(ctx) {
+        let id = ctx.getChild(0).model
+        let node = ctx.getChild(2).model
+        ctx.model = new RequirementNodeType(id, node, ctx)
     }
 
     exitNodeTemplate(ctx) {
         let id = ctx.getChild(1).model
-        let nodeType = ctx.getChild(3).model
-        nodeTemplateFactory(this.prog, ctx, id, nodeType)
+        let parentName =  ctx.getChild(2).model
+        let properties = null
+        let requirements = null
+        let index = 5
+        let sep = ctx.getChild(index).getText()
+        if(sep == 'properties {') {
+            properties = ctx.getChild(6).model
+            index = 8
+        }
+        else if(sep == 'requirements {') {
+            requirements = ctx.getChild(6).model
+            index = 8
+        }
+        sep = ctx.getChild(index).getText()
+        if(sep == 'properties {') {
+            properties = ctx.getChild(6).model
+        }
+        else if(sep == 'requirements {') {
+            requirements = ctx.getChild(6).model
+        }
+        nodeTemplateFactory(this.prog, ctx, id, parentName, properties, requirements)
     }
 
-    exitRelationship(ctx) {
-        let src = ctx.getChild(1).model
-        let dst = ctx.getChild(3).model
-        let rel = ctx.getChild(5).model
-        relationshipFactory(this.prog, ctx, src, dst, rel)
-    }
-
-    exitNumber(ctx) {
-        if ( ctx.getChildCount() == 1 ) {
-            ctx.model = new NumVal(ctx.getChild(0).getText(), ctx)
+    exitPropertiesNodeTemplate(ctx) {
+        let nbChilds = ctx.getChildCount()
+        ctx.model = []
+        for(let i=0; i<nbChilds; i++) {
+            let property = ctx.getChild(i).model
+            ctx.model.push(property)
         }
     }
 
+    exitPropertyNodeTemplate(ctx) {
+        let id = ctx.getChild(0).model
+        let type = ctx.getChild(2).model
+        ctx.model = new PropertyNodeTemplate(id, type, ctx)
+	}
+
+    exitRequirementsNodeTemplate(ctx) {
+        let nbChilds = ctx.getChildCount()
+        ctx.model = []
+        for(let i=0; i<nbChilds; i++) {
+            let requirement = ctx.getChild(i).model
+            ctx.model.push(requirement)
+        }
+	}
+
+    exitRequirementNodeTemplate(ctx) {
+        let id = ctx.getChild(0).model
+        let node = ctx.getChild(2).model
+        ctx.model = new RequirementNodeTemplate(id, node, ctx)
+	}
 
     exitComment(ctx) {
         if ( ctx.getChildCount() == 1 ) {
@@ -140,5 +192,11 @@ export default class MyLetoListener extends letoListener {
             ctx.model = new IdVal(ctx.getChild(0).getText(), ctx)
         }
     }
+
+    exitType(ctx) {
+        if( ctx.getChildCount() == 1 ) {
+            ctx.model = new TypeVal(ctx.getChild(0).getText(), ctx)
+        }
+	}
 
 }

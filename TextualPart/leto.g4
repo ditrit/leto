@@ -24,48 +24,58 @@ instruction
 ;
 
 nodeType 
-: 'nodeType' id ('derived_from' id)? '{' 
-    ('properties {' 
-        propertiesNodeType+
-    '}')? 
-    ('capabilities {' 
-        capabilitiesNodeType+
-    '}')? 
-    ('requirement {' 
-        requirementNodeType+
-    '}')?  
+: 'nodeType' id ('derived_from' id)? ' {' 
+    ('properties {' propertiesNodeType '}')? 
+    ('capabilities {' capabilitiesNodeType '}')? 
+    ('requirements {' requirementsNodeType '}')?  
 '}'
 ;
 
 propertiesNodeType
-: id ':' type
+: propertyNodeType (',' propertyNodeType)* ','?
+;
+
+propertyNodeType
+: id ' : ' type
 ;
 
 capabilitiesNodeType
+: capabilityNodeType (',' capabilityNodeType)* ','?
+;
+
+capabilityNodeType
 : id ' : ' ('host' | 'connectsTo') 
 ;
 
+requirementsNodeType
+: requirementNodeType (',' requirementNodeType)* ','?
+;
+
 requirementNodeType
-: id ':' id 
+: id ' : ' id 
 ;
 
 nodeTemplate 
-: 'nodeTemplate' id 'type' id '{'
-    ('properties {'
-        propertiesNodeTemplate
-    '}')?
-    ('requirement {' 
-        requirementNodeTemplate
-    '}')?
+: 'nodeTemplate' id 'type' id ' {'
+    ('properties {' propertiesNodeTemplate '}')?
+    ('requirements {' requirementsNodeTemplate '}')?
 '}'
 ;
 
 propertiesNodeTemplate
-: id ':' id (', ' id ':' id)*
+: propertyNodeTemplate (',' propertyNodeTemplate)* ','?
+;
+
+propertyNodeTemplate
+: id ' : ' id
+;
+
+requirementsNodeTemplate
+: requirementNodeTemplate (',' requirementNodeTemplate)* ','?
 ;
 
 requirementNodeTemplate
-: id ':' id (', ' id ':' id )*
+: id ' : ' id 
 ;
 
 comment
@@ -84,7 +94,7 @@ type
 *	Regle Lexer 
 */
 ID
-: [a-zA-Z][a-z0-9_]*
+: ('a'..'z'|'A'..'Z'|'0'..'9'|[_"])+
 ;
 
 FLOAT
@@ -108,5 +118,5 @@ COMMENT
 ;
 
 WS
-: [ \t\r\n]->skip
+: [ \t\r\n"]->skip
 ;

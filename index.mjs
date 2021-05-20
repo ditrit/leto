@@ -4,50 +4,62 @@ console.log('TEST :\n')
 
 let leto = new letoModel()
 
-leto.parse(`nodeType test {logo : test/test.txt};
-nodeType testsupp {};
-nodeType database derived_from test {};
-nodeType server {};
-nodeType bdd derived_from database {logo : test/test.txt};
-nodeTemplate testsuppr type bdd;
-nodeTemplate db type bdd;
-nodeTemplate serv type server;
-nodeTemplate serv2 type server;
-relationshipType testsupp derived_from server;
-relationshipType ser derived_from server;
-relationshipType der derived_from server;
-relationship serv -> db type ser;
-relationship serv2 -> db type der;
+leto.parse(`
+nodeType server {
+    properties {
+      num_cpus : integer
+      os : string
+    }
+    capabilities {
+      container : host
+    }
+};
+   
+nodeType softwareComponent {
+    requirements {
+      host : server
+    }
+};
+
+nodeType tomcat derived_from softwareComponent {
+    requirements {
+      dataSource : BD
+    }
+};
+ 
+nodeType BD derived_from softwareComponent {
+    capabilities {
+      dataSource : connectsTo     
+    }
+};
+ 
+nodeTemplate myAppliServer type server {
+    properties {
+      num_cpus : 2
+      os : "linux"
+    }
+};
+ 
+nodeTemplate myDBServer type server {
+    properties {
+      num_cpus : 4
+      os : "linux"
+    }
+};
+  
+nodeTemplate myDB type BD {
+    requirements {
+      host : myDBServer
+    }
+};
+ 
+nodeTemplate myTomcat type tomcat {
+    requirements {
+      host : myAppliServer
+      dataSource : myDBServer 
+    }
+};
 `) 
-
-console.log('\nTEST MODIFICATION :\n')
-leto.parse(`nodeType test2 {};
-nodeType database derived_from test2{};
-nodeType server derived_from test2{};
-nodeType bdd derived_from database {logo : test/test.txt};
-nodeTemplate db type bdd;
-nodeTemplate serv type test2;
-nodeTemplate serv2 type server;
-relationshipType ser derived_from database;
-relationshipType der derived_from server;
-relationship serv -> serv2 type der;
-relationship serv2 -> db type ser;`)
-
-console.log('\nTEST MODIFICATION :\n')
-leto.parse(`nodeType test {};
-nodeType testsupp {};
-nodeType database derived_from test {};
-nodeType server {};
-nodeType bdd derived_from database {logo : test2/test2.txt};
-nodeTemplate testsuppr type bdd;
-nodeTemplate db type bdd;
-nodeTemplate serv type server;
-nodeTemplate serv2 type server;
-relationshipType testsupp derived_from server;
-relationshipType ser derived_from server;
-relationshipType der derived_from server;
-relationship serv -> db type ser;
-relationship serv2 -> db type der;`)
 
 console.log(leto.toString())
 
