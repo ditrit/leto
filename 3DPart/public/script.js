@@ -31,6 +31,8 @@ const pannelSectionName = $('#componentName');
 const pannelSectionType = $('#componentType');
 const rightPannel = $('#rightPannel');
 const toolButtons = $('.toolButtons');
+const messageBox = $('#messageBox');
+messageBox.fadeOut();
 
 
 /// FONCTIONS DE BASE ///
@@ -93,22 +95,22 @@ function init(){
 	//textures
 	// les composants doivent tous avoir des noms différents et hériter de composants existants (ou ne pas hériter du tout)
 	componentsList = {
-		'serveur' : { 'name': 'serveur', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png' },
-		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp' },
-		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'dns.png' },
-		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png' },
-		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg' },
-		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png' },
-		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg' },
-		'router': { 'name': 'router', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png' },
-		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'db.png' },
-		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png' },
-		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png' },
-		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#db852a', 'logo' : 'db.png' },
-		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg' }
+		'serveur' : { 'name': 'serveur', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'dns.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'router': { 'name': 'router', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'db.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png', 'requirements': {'nestedOn': ['serveur', 'jetty', 'serveurVirtuel'], 'linkedTo': []} },
+		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png', 'requirements': {'nestedOn': ['serveur', 'jetty', 'serveurVirtuel'], 'linkedTo': []} },
+		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#db852a', 'logo' : 'db.png', 'requirements': {'nestedOn': ['serveur', 'jetty', 'serveurVirtuel'], 'linkedTo': []} },
+		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'requirements': {'nestedOn': ['serveur', 'jetty', 'serveurVirtuel'], 'linkedTo': []} }
 	};
 
 	// génération dynamique de la palette de composants
@@ -642,7 +644,7 @@ window.addEventListener('resize', function(){
 	effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
 });
 // add Component
-$('.addComponentButtons').on('click', function () {
+htmlComponentList.on('click', '.paletteComponent', function () {
 	const componentType = this.dataset.value;
 	const cWidth = nestingLevels['level0']['width'];
 	const cHeight = componentsList[componentType]['height'];
@@ -653,10 +655,28 @@ $('.addComponentButtons').on('click', function () {
 	if(index > 0)
 		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 
-	generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createComponent');
+	if(selectedComponent == null){
+		if(componentsList[componentType]['requirements']['nestedOn'].includes('')){
+			generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createComponent');
+		}else{
+			messageBox.css('opacity', 1);
+			messageBox.fadeToggle(100);
+			messageBox.html('Ce composant doit être imbriqué');
+			messageBox.fadeToggle(2000);
+		}
+	}else{
+		if( componentsList[componentType]['requirements']['nestedOn'].includes(selectedComponent.userData.componentType) ){
+			generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createChild');
+		}else{
+			messageBox.css('opacity', 1);
+			messageBox.fadeToggle(100);
+			messageBox.html('Ce ne peut pas être imbriqué sur un '+componentsList[selectedComponent.userData.componentType]['name']);
+			messageBox.fadeToggle(2000);
+		}
+	}
 });
 // select child to add to a Component
-htmlComponentList.on('click', '.addChildButtons', function () {
+/*htmlComponentList.on('click', '.addChildButtons', function () {
 	$('.selectedChild').removeClass("selectedChild").addClass( "addChildButtons" );
 	$(this).removeClass("addChildButtons").addClass( "selectedChild" );
 
@@ -671,7 +691,7 @@ htmlComponentList.on('click', '.addChildButtons', function () {
 		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 
 	generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createChild');
-});
+});*/
 $('#conponentsSection').on('click', '.selectedChild', function () {
 	$(this).removeClass("selectedChild").addClass( "addChildButtons" );
 	paletteChild = null;
@@ -796,4 +816,4 @@ $('#deleteButton').on('click', function(){
 });
 
 // Affichage framerate (debug)
-(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+//(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()

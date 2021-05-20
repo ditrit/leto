@@ -4,10 +4,22 @@ h2{ margin-left: 10px; font-size: 18px; }
 
 canvas{ width:100%; height:100%; }
 
+#messageBox{
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    padding: 20px;
+    background: #2f4353;
+    color: #fff;
+    opacity: 0;
+}
+
 #leftPannel {
     width: 290px;
     height: 100%;
-    background-color: rgba(170,170,170,0.5);
+    background-color: rgba(47, 67, 83,0.5);
     left: 0;
     z-index: 2;
     position: absolute;
@@ -17,9 +29,6 @@ canvas{ width:100%; height:100%; }
 }
 
 #componentsSection{
-    /*display: flex;
-    flex-direction: column;
-    justify-content: flex-start;*/
     height: auto;
     overflow-y: auto;
 }
@@ -58,14 +67,6 @@ canvas{ width:100%; height:100%; }
 
 .addComponentButtons{
 }
-
-/*.derivedComponent{
-    border: none;
-}
-
-.derivedComponent2{
-    border: none;
-}*/
 
 .addChildButtons{
     color: #EEE;
@@ -132,8 +133,9 @@ canvas{ width:100%; height:100%; }
 
 #bottomToolBar{
     width: 290px;
-    background-color: rgba(170,170,170,0.9);
+    background-color: rgba(47, 67, 83, 0.9);
     border-radius: 8px;
+    padding: 10px 0;
     left: 50%;
     transform: translateX(-50%);
     bottom: 20px;
@@ -147,10 +149,9 @@ canvas{ width:100%; height:100%; }
 
 .toolButtons{
     padding: 6px 10px;
-    margin: 10px 0;
     border-radius: 6px;
-    color: #EEE;
-    background-color: #2f4353;
+    color: #262626;
+    background-color: rgba(170,170,170,0.9);
     font: 16px "Fira Sans", sans-serif;
     font-weight: bold;
 }
@@ -158,11 +159,10 @@ canvas{ width:100%; height:100%; }
 #rightPannel {
     width: 290px;
     height: 100%;
-    background-color: rgba(170,170,170,0.5);
+    background-color: rgba(47, 67, 83,0.5);
     right: 0;
     z-index: 2;
     position: absolute;
-    display: flex;
     flex-direction: column;
     justify-content: flex-start;
     display: none;
