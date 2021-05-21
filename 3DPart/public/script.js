@@ -10,11 +10,12 @@ import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
 /// VARIABLES ///
 
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
-	selectedTool = 'eyeTool', paletteChild = null,selectedComponent = null, enableAutoFocus = false,
+	selectedTool = 'eyeTool',selectedComponent = null, enableAutoFocus = false,
 	preventClick = false, needSpacing = false;
 let componentsList, sceneComponentsObj = new THREE.Group();	// Liste de tous les composants existants (palette); liste des composants de la Scene
 let nestingLevels = {level0: {width: 1.2, depth: 1.2}};
 let objectsPerLevels = new Array([]);
+let lastID = 0, realeaseTimer = null;
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
@@ -25,7 +26,7 @@ const textureLoaderSky = new THREE.TextureLoader();
 textureLoaderSky.setPath( 'public/skybox/' );
 // JQuery
 const htmlComponentList = $('#componentsSection');
-const sceneComponentList = $('#sceneComponentslist');
+const sceneComponentList = $('.sceneComponentslist');
 const pannelSectionID = $('#componentID');
 const pannelSectionName = $('#componentName');
 const pannelSectionType = $('#componentType');
@@ -74,7 +75,7 @@ function init(){
 		RIGHT: THREE.MOUSE.PAN
 	}
 	//orbitControls.enablePan = false;
-	orbitControls.enableDamping = true;
+	orbitControls.enableDamping = false;
 	orbitControls.minDistance = 2;
 	orbitControls.maxDistance = 200;
 	orbitControls.target = new THREE.Vector3(0, 1, 0);
@@ -84,7 +85,8 @@ function init(){
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement);
 	dragControls.deactivate();
 	document.addEventListener( 'click', onClick );
-	document.addEventListener( 'onmouseup', onMouseRealease );
+	document.addEventListener( 'mousedown', onMouseDown);
+	document.addEventListener( 'mouseup', onMouseUp);
 	window.addEventListener( 'keydown', onKeyDown );
 	window.addEventListener( 'keyup', onKeyUp );
 
@@ -216,7 +218,7 @@ function animate(){
 
 
 /// FONCTIONS ADDITIONNELLES ///
-// espace les composants entre eux
+// espace les composants du niveau 0 entre eux
 function ajustementEspacement(){
 	if (needSpacing){
 		let spacingFinished = true;
@@ -320,48 +322,11 @@ function onClick( event ) {
 		preventClick = false;
 		return;
 	}
-	if(paletteChild && selectedComponent){
-		/*const pComponentType = selectedComponent.userData.componentType;
-		const pTagColor = '#7d2f9e';
-		const pColor = componentsList[pComponentType]['color'];
-		const pLogo = componentsList[pComponentType]['logo'];
-
-		let componentType = paletteChild.userData.componentType;
-		selectedComponent.add(paletteChild);
-		selectedComponent.geometry = new THREE.BoxGeometry(1, 1 + (0.4*selectedComponent.children.length), 1);
-		generateTexture(pComponentType, pColor, 1, 1 + (0.4*selectedComponent.children.length), pTagColor, pLogo, 'createChild');
-		selectedComponent.position.y = (0.2 * selectedComponent.children.length);
-		let childIndex = selectedComponent.children.length - 1;
-		let arithmeticSeries = (0.2 * selectedComponent.children.length); // arithmeticSeries's Uo
-
-		selectedComponent.children.forEach(child => {
-			child.position.y = arithmeticSeries;
-			// Un = (Un-1) - r - 0.2
-			arithmeticSeries = arithmeticSeries - (0.2) - 0.2;
-		});
-
-		$('#'+selectedComponent.userData.componentID).append(
-			'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+componentType+' '+childIndex+'">'
-			+componentType+
-			'</li>'
-		);
-
-		dragControls.dispose();
-		dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
-		if(selectedTool !== 'moveTool')
-			dragControls.deactivate();
-
-
-		$('.selectedChild').removeClass('selectedChild').addClass( 'addChildButtons' );
-		paletteChild = null;
-
-		return;*/
-	}
 	if(selectedTool === 'moveTool'){
-		event.preventDefault();
+		//event.preventDefault();
 
 		if( enableSelection === true ) {
-			const draggableObjects = dragControls.getObjects();
+			/*const draggableObjects = dragControls.getObjects();
 			draggableObjects.length = 0;
 
 			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -373,21 +338,21 @@ function onClick( event ) {
 			if ( intersections.length > 0 ) {
 				const object = intersections[ 0 ].object;
 
-				if ( group.children.includes( object ) === true ) {
+				if ( sceneComponentsObj.children.includes( object ) === true ) {
 					object.material.emissive.set( 0x000000 );
 					scene.attach( object );
 				} else {
 					object.material.emissive.set( 0xaaaaaa );
-					group.attach( object );
+					sceneComponentsObj.attach( object );
 				}
 				dragControls.transformGroup = true;
-				draggableObjects.push( group );
+				draggableObjects.push( sceneComponentsObj );
 			}
 
-			if ( group.children.length === 0 ) {
+			if ( sceneComponentsObj.children.length === 0 ) {
 				dragControls.transformGroup = false;
 				draggableObjects.push( ...sceneComponentsObj.children );
-			}
+			}*/
 			needSpacing = true;
 		}
 	}else if(selectedTool === 'eyeTool'){
@@ -421,13 +386,17 @@ function onClick( event ) {
 		}
 	}
 }
-function onMouseRealease() {
-	console.log('mouse released');
-	if(dragControls.enabled){
-		needSpacing = true;
-	}
+
+function onMouseDown(event){
+	realeaseTimer = Date.now();
 }
 
+function onMouseUp() {
+	const delay = Date.now() - realeaseTimer;
+	console.log(delay);
+}
+
+// add object to apply outline effect
 function addSelectedObject( object ) {
 	selectedObjects = [];
 	selectedObjects.push( object );
@@ -490,24 +459,23 @@ function generateComponentParent(componentType, material) {
 
 	const geometry = new THREE.BoxGeometry( cWidth, cHeight, cDepht );
 	const index = sceneComponentsObj.children.length;
-	let ncID = 0;
-	if(index > 0)
-		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
 	sceneComponentsObj.add( new THREE.Mesh(geometry, material) );
 
 	const newObj = sceneComponentsObj.children[index];
 	newObj.position.set(Math.random(), 0, Math.random());
+	newObj.userData.nestingLevel = 0;
 	newObj.userData.componentType = componentType;
-	newObj.userData.componentID = ncID;
-	newObj.userData.componentName = componentType + ncID;
+	newObj.userData.componentID = lastID;
+	newObj.userData.componentName = componentType + lastID;
 	newObj.userData.derivedFrom = componentsList[componentType]['derivedFrom'];
 	newObj.position.y = -0.5 + (newObj.geometry.parameters.height/2);
 	objectsPerLevels[0][objectsPerLevels[0].length] = newObj;
 
-	sceneComponentList.append('<li class="componentlistItem" data-value="'+ncID+'">'+
-		'<div class="componentLabel" data-value="'+ncID+'" id="c'+ncID+'">'+componentType + ncID +'</div>'+
-		'<ul class="childList" id="'+ncID+'"></ul>'+
-		'</li>');
+	sceneComponentList.append('<li class="componentlistItem" id="'+lastID+'">'+
+		'<div class="componentLabel" id="c'+lastID+'">'+newObj.userData.componentName+'</div>'+
+		'<ul class="sceneComponentslist" id="l'+lastID+'"></ul>'+
+		'</li><br/>');
+	lastID++;
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
 	if(selectedTool !== 'moveTool')
@@ -531,12 +499,13 @@ function generateComponnentChildren(componentType, material) {
 	const cHeight = componentsList[componentType]['height'];
 	const cDepht = nestingLevels['level'+count]['depth'];
 
-	paletteChild = new THREE.Mesh( new THREE.BoxGeometry( cWidth, cHeight, cDepht ), material );
+	let paletteChild = new THREE.Mesh( new THREE.BoxGeometry( cWidth, cHeight, cDepht ), material );
+	paletteChild.userData.nestingLevel = count;
 	paletteChild.userData.componentType = componentType;
-	paletteChild.userData.componentID = selectedComponent.children.length;
+	paletteChild.userData.componentID = lastID;
 	if(!selectedComponent)
 		return;
-	paletteChild.userData.componentName = componentsList[componentType]['name'] + selectedComponent.children.length;
+	paletteChild.userData.componentName = componentsList[componentType]['name'] + lastID;
 
 	selectedComponent.add(paletteChild);
 	if(objectsPerLevels[count] !== undefined) {
@@ -551,19 +520,18 @@ function generateComponnentChildren(componentType, material) {
 
 	childrenSpacing(selectedComponent, count-1, true);
 
-	$('#'+selectedComponent.userData.componentID).append(
-		'<li class="childListItem" id="p'+selectedComponent.userData.componentID+'c'+childIndex+'" data-value="'+paletteChild.userData.componentID+'">'
-		+paletteChild.userData.componentName+
+	$('#l'+selectedComponent.userData.componentID).append(
+		'<li class="componentlistItem" id="'+lastID+'">'+
+			'<div class="componentLabel" id="c'+lastID+'">'+paletteChild.userData.componentName+'</div>'+
+			'<ul class="sceneComponentslist" id="l'+lastID+'"></ul>'+
 		'</li>'
 	);
+	lastID++;
 
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
 	if(selectedTool !== 'moveTool')
 		dragControls.deactivate();
-
-	$('.selectedChild').removeClass('selectedChild').addClass( 'addChildButtons' );
-	paletteChild = null;
 }
 
 function childrenSpacing(parentComponent, couche){
@@ -634,6 +602,25 @@ function regenerateTexture(component, material){
 	component.material = material;
 }
 
+function deleteObjectHierarchie(component){
+	component.children.forEach(function(child){
+		deleteObjectHierarchie(child);
+	});
+
+	const lv = component.userData.nestingLevel;
+	for( let i = 0; i < objectsPerLevels[lv].length; i++){
+		if ( objectsPerLevels[lv][i] === component) {
+			objectsPerLevels[lv].splice(i, 1);
+		}
+	}
+	//delete from sceneComponentsObj
+	for( let i = 0; i < sceneComponentsObj.length; i++){
+		if ( sceneComponentsObj[i] === selectedComponent) {
+			sceneComponentsObj.splice(i, 1);
+		}
+	}
+}
+
 /// EVENEMENTS ///
 // Met à jour la taille de la vue si la fenêtre est redimentionée
 window.addEventListener('resize', function(){
@@ -675,71 +662,35 @@ htmlComponentList.on('click', '.paletteComponent', function () {
 		}
 	}
 });
-// select child to add to a Component
-/*htmlComponentList.on('click', '.addChildButtons', function () {
-	$('.selectedChild').removeClass("selectedChild").addClass( "addChildButtons" );
-	$(this).removeClass("addChildButtons").addClass( "selectedChild" );
-
-	const componentType = this.dataset.value;
-	const cWidth = componentsList[componentType]['width'];
-	const cHeight = componentsList[componentType]['height'];
-	const cColor = componentsList[componentType]['color'];
-	const cLogo = componentsList[componentType]['logo'];
-	const index = sceneComponentsObj.children.length;
-	let ncID = 0;
-	if(index > 0)
-		ncID = sceneComponentsObj.children[index-1].userData.componentID+1;
-
-	generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createChild');
-});*/
-$('#conponentsSection').on('click', '.selectedChild', function () {
-	$(this).removeClass("selectedChild").addClass( "addChildButtons" );
-	paletteChild = null;
-});
 // Select component (activate auto-focus)
-sceneComponentList.on('click', "div.componentLabel", function () {
-	let cpID = $(this).attr('data-value');
-	let cIndex = 0;
+$('#hierarchieSection').on('click', "li", function () {
+	const cpID = $(this).attr('id');
 
-	sceneComponentsObj.children.forEach(function(component){
-		if( cpID == component.userData.componentID ){
-			selectedComponent = sceneComponentsObj.children[cIndex];
+	objectsPerLevels.forEach(function(level){
+		level.forEach(function(component){
+			if( cpID == component.userData.componentID ){
+				selectedComponent = component;
 
-			addSelectedObject( selectedComponent );
-			outlinePass.selectedObjects = selectedObjects;
-			orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
+				addSelectedObject( selectedComponent );
+				outlinePass.selectedObjects = selectedObjects;
+				orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
 
-			$('.componentLabel').removeClass('selectedComponent');
-			sceneComponentList.find('#c'+selectedComponent.userData.componentID).addClass('selectedComponent');
-			pannelSectionID.html(selectedComponent.userData.componentID);
-			pannelSectionName.val(selectedComponent.userData.componentName);
-			let derivationInfo = '';
-			if(selectedComponent.userData.derivedFrom !== '')
-				derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
-			pannelSectionType.html(selectedComponent.userData.componentType + derivationInfo);
-			rightPannel.css('display', 'block');
-			enableAutoFocus = true;
+				$('.componentLabel').removeClass('selectedComponent');
+				$('#c'+cpID).addClass('selectedComponent');
+				pannelSectionID.html(selectedComponent.userData.componentID);
+				pannelSectionName.val(selectedComponent.userData.componentName);
+				let derivationInfo = '';
+				if(selectedComponent.userData.derivedFrom !== '')
+					derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
+				pannelSectionType.html(selectedComponent.userData.componentType + derivationInfo);
+				rightPannel.css('display', 'block');
+				enableAutoFocus = true;
 
-			return false;
-		}
-		cIndex++;
+				return false;
+			}
+		});
 	});
 });
-// Select child (activate auto-focus)
-/*sceneComponentList.on('click', "li.childListItem", function () {
-	console.log('child clicked !');
-	let parentIndex = this.id.charAt(1);
-	let childIndex = this.dataset.value.split(' ')[1];
-	console.log('ParentId :' + parentIndex + '; ChildId :' +childIndex);
-
-	selectedComponent = sceneComponents[parentIndex].children[childIndex];
-	console.log('component :'+selectedComponent);
-
-	addSelectedObject( selectedComponent );
-	outlinePass.selectedObjects = selectedObjects;
-	orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
-	enableAutoFocus = true;
-});*/
 // switch selected tool
 toolButtons.on('click', function () {
 	selectedTool = $(this).attr("id");
@@ -783,35 +734,19 @@ pannelSectionName.on('input', function(){
 // supprimer un objet
 $('#deleteButton').on('click', function(){
 	if(selectedComponent){
-		$('.componentlistItem').each(function(){
-			if( $(this).attr('data-value') == selectedComponent.userData.componentID ){
-				$(this).remove();
-				selectedComponent.parent.remove(selectedComponent);
-				selectedComponent = null;
-				rightPannel.css('display', 'none');
+		$('#'+selectedComponent.userData.componentID).remove();
+		//delete from objectsPerLevels
+		deleteObjectHierarchie(selectedComponent);
 
-				dragControls.dispose();
-				dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
-				if(selectedTool !== 'moveTool')
-					dragControls.deactivate();
-			}else{
-				if(selectedComponent.parent != sceneComponentsObj){
-					$(this).find('.childListItem').each(function (){
-						if( $(this).attr('data-value') == selectedComponent.userData.componentID ){
-							$(this).remove();
-							selectedComponent.parent.remove(selectedComponent);
-							selectedComponent = null;
-							rightPannel.css('display', 'none');
+		selectedComponent.parent.remove(selectedComponent);
 
-							dragControls.dispose();
-							dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
-							if(selectedTool !== 'moveTool')
-								dragControls.deactivate();
-						}
-					});
-				}
-			}
-		});
+		selectedComponent = null;
+		rightPannel.css('display', 'none');
+
+		dragControls.dispose();
+		dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+		if(selectedTool !== 'moveTool')
+			dragControls.deactivate();
 	}
 });
 
