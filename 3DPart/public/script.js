@@ -8,14 +8,13 @@ import { OutlinePass } from './libs/three.js/examples/jsm/postprocessing/Outline
 import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
 
 /// VARIABLES ///
-
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
 	selectedTool = 'eyeTool',selectedComponent = null, enableAutoFocus = false,
-	preventClick = false, needSpacing = false;
-let componentsList, sceneComponentsObj = new THREE.Group();	// Liste de tous les composants existants (palette); liste des composants de la Scene
+	preventClick = false, needSpacing = false, needRelink = false;
+let componentsList, sceneComponentsObj = new THREE.Group(), sceneLinksObj = new THREE.Group();	// Liste de tous les composants existants (palette); liste des composants de la Scene
 let nestingLevels = {level0: {width: 1.2, depth: 1.2}};
 let objectsPerLevels = new Array([]);
-let lastID = 0, realeaseTimer = null;
+let lastID = 0, lastLinkID = 0, realeaseTimer = null;
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
@@ -30,6 +29,7 @@ const sceneComponentList = $('.sceneComponentslist');
 const pannelSectionID = $('#componentID');
 const pannelSectionName = $('#componentName');
 const pannelSectionType = $('#componentType');
+const pannelSectionLinks = $('#componentLinks');
 const rightPannel = $('#rightPannel');
 const toolButtons = $('.toolButtons');
 const messageBox = $('#messageBox');
@@ -51,6 +51,7 @@ function init(){
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setClearColor(0x132644);
+	renderer.id = 'viewCanvas';
 
 	mouse = new THREE.Vector2();
 	raycaster = new THREE.Raycaster();
@@ -85,19 +86,21 @@ function init(){
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement);
 	dragControls.deactivate();
 	document.addEventListener( 'click', onClick );
-	document.addEventListener( 'mousedown', onMouseDown);
-	document.addEventListener( 'mouseup', onMouseUp);
+	document.addEventListener( 'pointerdown', onMouseDown);
+	document.addEventListener( 'pointerup', onMouseUp);
 	window.addEventListener( 'keydown', onKeyDown );
 	window.addEventListener( 'keyup', onKeyUp );
 
 	// ----------------------------------------------
 	//initialisation de la liste des composants
 	scene.add(sceneComponentsObj);
+	scene.add(sceneLinksObj);
 
 	//textures
 	// les composants doivent tous avoir des noms différents et hériter de composants existants (ou ne pas hériter du tout)
 	componentsList = {
-		'serveur' : { 'name': 'serveur', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'root' : { 'name': 'root', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [], 'linkedTo': []} },
+		'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': ['serveur']} },
 		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
@@ -105,36 +108,26 @@ function init(){
 		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'router': { 'name': 'router', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'child' : { 'name': 'child', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'db.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'apache': { 'name': 'apache', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png', 'requirements': {'nestedOn': ['serveur', 'jetty', 'serveurVirtuel'], 'linkedTo': []} },
-		'php': { 'name': 'php', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png', 'requirements': {'nestedOn': ['serveur', 'jetty', 'serveurVirtuel'], 'linkedTo': []} },
-		'database': { 'name': 'database', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#db852a', 'logo' : 'db.png', 'requirements': {'nestedOn': ['serveur', 'jetty', 'serveurVirtuel'], 'linkedTo': []} },
-		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'child', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'requirements': {'nestedOn': ['serveur', 'jetty', 'serveurVirtuel'], 'linkedTo': []} }
+		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [], 'linkedTo': []} },
+		'router': { 'name': 'router', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'apache': { 'name': 'apache', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'php': { 'name': 'php', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'database': { 'name': 'database', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#db852a', 'logo' : 'db.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} }
 	};
 
 	// génération dynamique de la palette de composants
 	let i = 0;
 	Object.entries(componentsList).forEach(function(component) {
-		if(component[1]['derivedFrom'] === 'child'){
-			$('#child').append('<div class="paletteComponent addChildButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
+		if(component[1]['derivedFrom'] === 'root'){
+			htmlComponentList.append('<div class="paletteComponent addComponentButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
 				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
 				'<span>'+component[1]['name']+'</span>'+
 				'</div>'+
 				'<button id="showHide'+component[0]+'">+</button>'+
 				'<ul id="'+component[0]+'"></ul>');
-		}
-		else if(component[1]['derivedFrom'] === ''){
-			htmlComponentList.append('<br/><div class="paletteComponent addComponentButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
-				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
-				'<span>'+component[1]['name']+'</span>'+
-				'</div>'+
-				'<button id="showHide'+component[0]+'">+</button>'+
-				'<ul id="'+component[0]+'"></ul>');
-		}
-		else{
+		}else if(component[1]['derivedFrom'] !== ''){
 			$('#'+component[1]['derivedFrom']).append('<div class="paletteComponent addComponentButtons" data-value="'+component[0]+'" style="background-color: '+component[1]['color']+'">' +
 				'<img src="./public/textures/logos/'+component[1]['logo']+'">'+
 				'<span>'+component[1]['name']+'</span>'+
@@ -202,6 +195,12 @@ function init(){
 function update(){
 	autoFocus();
 	ajustementEspacement();
+	if(needRelink){
+		sceneLinksObj.children.forEach(function(link){
+			relink(link);
+		});
+		needRelink = false;
+	}
 	orbitControls.update();
 }
 
@@ -267,6 +266,7 @@ function ajustementEspacement(){
 		});
 		if(spacingFinished){
 			needSpacing = false;
+			needRelink = true;
 		}
 	}
 }
@@ -318,82 +318,99 @@ function onKeyUp() {
 }
 
 function onClick( event ) {
-	if(preventClick){
+	/*if(preventClick){
 		preventClick = false;
 		return;
 	}
 	if(selectedTool === 'moveTool'){
-		//event.preventDefault();
-
-		if( enableSelection === true ) {
-			/*const draggableObjects = dragControls.getObjects();
-			draggableObjects.length = 0;
-
-			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-			raycaster.setFromCamera( mouse, camera );
-			const intersections = raycaster.intersectObjects( sceneComponentsObj.children, true );
-
-			if ( intersections.length > 0 ) {
-				const object = intersections[ 0 ].object;
-
-				if ( sceneComponentsObj.children.includes( object ) === true ) {
-					object.material.emissive.set( 0x000000 );
-					scene.attach( object );
-				} else {
-					object.material.emissive.set( 0xaaaaaa );
-					sceneComponentsObj.attach( object );
-				}
-				dragControls.transformGroup = true;
-				draggableObjects.push( sceneComponentsObj );
-			}
-
-			if ( sceneComponentsObj.children.length === 0 ) {
-				dragControls.transformGroup = false;
-				draggableObjects.push( ...sceneComponentsObj.children );
-			}*/
-			needSpacing = true;
-		}
+		needSpacing = true;
 	}else if(selectedTool === 'eyeTool'){
-		if(!enableAutoFocus){
-			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-			raycaster.setFromCamera(mouse, camera);
-			let intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
-			if(intersects.length > 0) {
-				selectedComponent = intersects[0].object;
-				addSelectedObject( selectedComponent );
-				outlinePass.selectedObjects = selectedObjects;
-				// right panel completion
-				const componentId = selectedComponent.userData.componentID;
-				$('.componentLabel').removeClass('selectedComponent');
-				sceneComponentList.find('#c'+componentId).addClass('selectedComponent');
-				pannelSectionID.html(selectedComponent.userData.componentID);
-				pannelSectionName.val(selectedComponent.userData.componentName);
-				let derivationInfo = '';
-				if(selectedComponent.userData.derivedFrom !== '')
-					derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
-				pannelSectionType.html(selectedComponent.userData.componentType + derivationInfo);
-				rightPannel.css('display', 'block');
-			}else{
-				outlinePass.selectedObjects = [];
-				selectedComponent = null;
-				$('.componentLabel').removeClass('selectedComponent');
-				$('.addChildButtons').removeClass('selectedChild');
-				rightPannel.css('display', 'none');
-			}
+		selectObject(event);
+	}else if(selectedTool === 'linkTool'){
+		if(selectedComponent != null){
+			const cmpnt1 = selectedComponent;
+			selectObject(event);
+			const cmpnt2 = selectedComponent;
+			drawLink(cmpnt1, cmpnt2);
+		}else{
+			selectObject(event);
 		}
-	}
+	}*/
 }
 
 function onMouseDown(event){
 	realeaseTimer = Date.now();
 }
 
-function onMouseUp() {
+function onMouseUp(event) {
 	const delay = Date.now() - realeaseTimer;
-	console.log(delay);
+
+	if(preventClick){
+		preventClick = false;
+		return;
+	}
+	if(selectedTool === 'moveTool'){
+		needSpacing = true;
+	}else if(selectedTool === 'eyeTool'){
+		if(delay < 200)
+			selectObject(event);
+	}else if(selectedTool === 'linkTool'){
+		if(selectedComponent != null){
+			const cmpnt1 = selectedComponent;
+			if(delay < 200){
+				selectObject(event);
+				if(selectedComponent != null) {
+					const cmpnt2 = selectedComponent;
+					const link = drawLink(cmpnt1, cmpnt2);
+					pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
+					selectedTool = 'eyeTool';
+					dragControls.deactivate();
+					orbitControls.enableRotate = true;
+					toolButtons.removeClass('selectedTool');
+					$('#eyeTool').addClass('selectedTool');
+				}
+			}
+		}else{
+			if(delay < 200)
+				selectObject(event);
+		}
+	}
+
+}
+
+function selectObject(event){
+	if(!enableAutoFocus){
+		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		raycaster.setFromCamera(mouse, camera);
+		let intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
+		if(intersects.length > 0) {
+			selectedComponent = intersects[0].object;
+			addSelectedObject( selectedComponent );
+			outlinePass.selectedObjects = selectedObjects;
+			// right panel completion
+			const componentId = selectedComponent.userData.componentID;
+			$('.componentLabel').removeClass('selectedComponent');
+			sceneComponentList.find('#c'+componentId).addClass('selectedComponent');
+			pannelSectionID.html(selectedComponent.userData.componentID);
+			pannelSectionName.val(selectedComponent.userData.componentName);
+			let derivationInfo = '';
+			if(selectedComponent.userData.derivedFrom !== '')
+				derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
+			pannelSectionType.html(selectedComponent.userData.componentType + derivationInfo);
+			pannelSectionLinks.html('');
+			selectedComponent.userData.links.forEach(function(link){
+				pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
+			});
+			pannelSectionLinks
+			rightPannel.css('display', 'block');
+		}else{
+			outlinePass.selectedObjects = [];
+			selectedComponent = null;
+			$('.componentLabel').removeClass('selectedComponent');
+			rightPannel.css('display', 'none');
+		}
+	}
 }
 
 // add object to apply outline effect
@@ -441,10 +458,8 @@ function generateTexture(componentType, name, color, width, height, tagColor, lo
 			new THREE.MeshStandardMaterial({ map: texture }),	// Front side
 			new THREE.MeshStandardMaterial({ map: texture })	// Back side
 		];
-		if(action === 'createChild')
-			generateComponnentChildren(componentType, material);
-		else if(action === 'createComponent')
-			generateComponentParent(componentType, material);
+		if(action === 'createComponent')
+			generateComponent(componentType, material);
 		else if(action === 'updateTexture')
 			regenerateTexture(component, material);
 
@@ -452,42 +467,10 @@ function generateTexture(componentType, name, color, width, height, tagColor, lo
 	img.src = './public/textures/logos/'+logo;
 }
 
-function generateComponentParent(componentType, material) {
-	const cWidth = nestingLevels['level0']['width'];
-	const cHeight = componentsList[componentType]['height'];
-	const cDepht = nestingLevels['level0']['depth'];
-
-	const geometry = new THREE.BoxGeometry( cWidth, cHeight, cDepht );
-	const index = sceneComponentsObj.children.length;
-	sceneComponentsObj.add( new THREE.Mesh(geometry, material) );
-
-	const newObj = sceneComponentsObj.children[index];
-	newObj.position.set(Math.random(), 0, Math.random());
-	newObj.userData.nestingLevel = 0;
-	newObj.userData.componentType = componentType;
-	newObj.userData.componentID = lastID;
-	newObj.userData.componentName = componentType + lastID;
-	newObj.userData.derivedFrom = componentsList[componentType]['derivedFrom'];
-	newObj.position.y = -0.5 + (newObj.geometry.parameters.height/2);
-	objectsPerLevels[0][objectsPerLevels[0].length] = newObj;
-
-	sceneComponentList.append('<li class="componentlistItem" id="'+lastID+'">'+
-		'<div class="componentLabel" id="c'+lastID+'">'+newObj.userData.componentName+'</div>'+
-		'<ul class="sceneComponentslist" id="l'+lastID+'"></ul>'+
-		'</li><br/>');
-	lastID++;
-	dragControls.dispose();
-	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
-	if(selectedTool !== 'moveTool')
-		dragControls.deactivate();
-
-	needSpacing = true;
-}
-
-function generateComponnentChildren(componentType, material) {
+function generateComponent(componentType, material) {
 	let count = 0; // nesting level of added children
 	let cmpnt = selectedComponent;
-	while(cmpnt != sceneComponentsObj){
+	while(cmpnt != sceneComponentsObj && cmpnt != null){
 		cmpnt = cmpnt.parent;
 		count ++;
 	}
@@ -499,39 +482,49 @@ function generateComponnentChildren(componentType, material) {
 	const cHeight = componentsList[componentType]['height'];
 	const cDepht = nestingLevels['level'+count]['depth'];
 
-	let paletteChild = new THREE.Mesh( new THREE.BoxGeometry( cWidth, cHeight, cDepht ), material );
-	paletteChild.userData.nestingLevel = count;
-	paletteChild.userData.componentType = componentType;
-	paletteChild.userData.componentID = lastID;
+	let newCmpnt = new THREE.Mesh( new THREE.BoxGeometry( cWidth, cHeight, cDepht ), material );
+	newCmpnt.userData.nestingLevel = count;
+	newCmpnt.userData.componentType = componentType;
+	newCmpnt.userData.componentID = lastID;
+	newCmpnt.userData.links = [];
+	newCmpnt.userData.componentName = componentsList[componentType]['name'] + lastID;
 	if(!selectedComponent)
-		return;
-	paletteChild.userData.componentName = componentsList[componentType]['name'] + lastID;
+		sceneComponentsObj.add(newCmpnt);
+	else
+		selectedComponent.add(newCmpnt);
 
-	selectedComponent.add(paletteChild);
 	if(objectsPerLevels[count] !== undefined) {
-		objectsPerLevels[count][objectsPerLevels[count].length] = paletteChild;
+		objectsPerLevels[count][objectsPerLevels[count].length] = newCmpnt;
 	}else{
 		objectsPerLevels.push([]);
-		objectsPerLevels[count][0] = paletteChild;
+		objectsPerLevels[count][0] = newCmpnt;
 	}
 
-	paletteChild.position.y += (paletteChild.geometry.parameters.height/2) + (paletteChild.parent.geometry.parameters.height/2);
-	let childIndex = selectedComponent.children.length - 1;
 
-	childrenSpacing(selectedComponent, count-1, true);
-
-	$('#l'+selectedComponent.userData.componentID).append(
-		'<li class="componentlistItem" id="'+lastID+'">'+
-			'<div class="componentLabel" id="c'+lastID+'">'+paletteChild.userData.componentName+'</div>'+
+	if(selectedComponent !== null) {
+		newCmpnt.position.y += (newCmpnt.geometry.parameters.height/2) + (newCmpnt.parent.geometry.parameters.height/2);
+		childrenSpacing(selectedComponent, count - 1, true);
+		$('#l' + selectedComponent.userData.componentID).append(
+			'<li class="componentlistItem" id="' + lastID + '">' +
+			'<div class="componentLabel" id="c' + lastID + '">' + newCmpnt.userData.componentName + '</div>' +
+			'<ul class="sceneComponentslist" id="l' + lastID + '"></ul>' +
+			'</li>'
+		);
+	}else{
+		newCmpnt.position.set(Math.random(), 0, Math.random());
+		sceneComponentList.append('<li class="componentlistItem" id="'+lastID+'">'+
+			'<div class="componentLabel" id="c'+lastID+'">'+newCmpnt.userData.componentName+'</div>'+
 			'<ul class="sceneComponentslist" id="l'+lastID+'"></ul>'+
-		'</li>'
-	);
+			'</li><br/>');
+	}
 	lastID++;
 
 	dragControls.dispose();
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
 	if(selectedTool !== 'moveTool')
 		dragControls.deactivate();
+
+	needSpacing = true;
 }
 
 function childrenSpacing(parentComponent, couche){
@@ -598,10 +591,12 @@ function childrenSpacing(parentComponent, couche){
 	needSpacing = true;
 }
 
+// reaffect a new texture to an existing component
 function regenerateTexture(component, material){
 	component.material = material;
 }
 
+// delete an object with all its children
 function deleteObjectHierarchie(component){
 	component.children.forEach(function(child){
 		deleteObjectHierarchie(child);
@@ -619,6 +614,80 @@ function deleteObjectHierarchie(component){
 			sceneComponentsObj.splice(i, 1);
 		}
 	}
+}
+
+function drawLink(cmpnt1, cmpnt2){
+	const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );const points = [];
+	points.push( new THREE.Vector3( cmpnt1.position.x, cmpnt1.position.y, cmpnt1.position.z ) );
+	points.push( new THREE.Vector3( cmpnt2.position.x, cmpnt2.position.y, cmpnt2.position.z ) );
+
+	const geometry = new THREE.BufferGeometry().setFromPoints( points );
+	const line = new THREE.Line( geometry, material );
+
+	line.userData.linkId = lastLinkID;
+	lastLinkID++;
+	line.userData.hoster1 = cmpnt1;
+	line.userData.hoster2 = cmpnt2;
+	cmpnt1.userData.links.push(line);
+	cmpnt2.userData.links.push(line);
+	sceneLinksObj.add(line);
+
+	return line;
+}
+
+// replace a link after the parents moved position
+function relink(link){
+	const host1 = link.userData.hoster1;
+	const host2 = link.userData.hoster2;
+
+	// remove the link in host 1 & 2 's userData.links
+	let count = 0
+	let linkIndex1 = 0;
+	let linkIndex2 = 0;
+	host1.userData.links.forEach(function(alink){
+		if(alink == link)
+			linkIndex1 = count;
+		count++;
+	});
+	count = 0;
+	host2.userData.links.forEach(function(alink){
+		if(alink == link)
+			linkIndex2 = count;
+		count++;
+	});
+	host1.userData.links = host1.userData.links.splice(linkIndex1, 1);
+	host2.userData.links = host2.userData.links.splice(linkIndex2, 1);
+	sceneLinksObj.remove(link);
+	drawLink(host1, host2);
+}
+
+// show a stylised alert
+function customAlert(message){
+	messageBox.css('opacity', 1);
+	messageBox.fadeToggle(100);
+	messageBox.html(message);
+	messageBox.fadeToggle(2500);
+}
+
+// gather the component nesting compatibilities with the ones inherited by its parent
+function getNestingCompatibilities(componentType, cmptCompatibilities = []){
+	componentsList[componentType]['requirements']['nestedOn'].forEach(function(compatibility){
+		cmptCompatibilities.push(compatibility);
+	});
+	if(componentsList[componentType]['derivedFrom'] !== ''){
+		cmptCompatibilities = getNestingCompatibilities(componentsList[componentType]['derivedFrom'], cmptCompatibilities);
+	}
+	return cmptCompatibilities;
+}
+
+// get all derived types of an object
+function getAllObjectTypes(componentType){
+	let types = [componentType];
+	while(componentsList[componentType]['derivedFrom'] !== ''){
+		types.push(componentsList[componentType]['derivedFrom']);
+		componentType = componentsList[componentType]['derivedFrom'];
+	}
+	return types;
 }
 
 /// EVENEMENTS ///
@@ -646,19 +715,23 @@ htmlComponentList.on('click', '.paletteComponent', function () {
 		if(componentsList[componentType]['requirements']['nestedOn'].includes('')){
 			generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createComponent');
 		}else{
-			messageBox.css('opacity', 1);
-			messageBox.fadeToggle(100);
-			messageBox.html('Ce composant doit être imbriqué');
-			messageBox.fadeToggle(2000);
+			customAlert('Ce composant doit être imbriqué');
 		}
 	}else{
-		if( componentsList[componentType]['requirements']['nestedOn'].includes(selectedComponent.userData.componentType) ){
-			generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createChild');
+		// gather the component compatibilities with the ones inherited by its parent
+		const cmptCompatibilities = getNestingCompatibilities(componentType);
+		const parentTypes = getAllObjectTypes(selectedComponent.userData.componentType);
+
+		let compatible = false;
+		for(let compatibility of cmptCompatibilities){
+			if(parentTypes.includes(compatibility))
+				compatible = true;
+		}
+
+		if( compatible ){
+			generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createComponent');
 		}else{
-			messageBox.css('opacity', 1);
-			messageBox.fadeToggle(100);
-			messageBox.html('Ce ne peut pas être imbriqué sur un '+componentsList[selectedComponent.userData.componentType]['name']);
-			messageBox.fadeToggle(2000);
+			customAlert('Ce ne peut pas être imbriqué sur un '+componentsList[selectedComponent.userData.componentType]['name']);
 		}
 	}
 });
@@ -698,24 +771,28 @@ toolButtons.on('click', function () {
 	switch($(this).attr("id")){
 		case 'eyeTool':
 			dragControls.deactivate();
+			orbitControls.enableRotate = true;
 			toolButtons.removeClass('selectedTool');
 			$('#eyeTool').addClass('selectedTool');
 			break;
 		case 'moveTool':
 			dragControls.activate();
+			orbitControls.enableRotate = false;
 			toolButtons.removeClass('selectedTool');
 			$('#moveTool').addClass('selectedTool');
 			break;
 		case 'linkTool':
 			dragControls.deactivate();
+			orbitControls.enableRotate = true;
 			toolButtons.removeClass('selectedTool');
 			$('#linkTool').addClass('selectedTool');
 			break;
 	}
 });
 // prevent UI's clicks to have effects on the scene
-$('.UI').on('click', function(){
+$('.UI').on('pointerdown', function(){
 	preventClick = true;
+	//event.stopPropagation()
 });
 // update name when input
 pannelSectionName.on('input', function(){
