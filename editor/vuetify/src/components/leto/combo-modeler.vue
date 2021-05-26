@@ -1,42 +1,41 @@
 <template>
-  <div class="grid row">
-    <div class="flex xs12">
-      <v-card class="fill-height" style="overflow-x: auto;">
-        <v-card-title></v-card-title>
-        <v-card-content>
-          <div class="row">
+  <v-card>
+    <v-card-title></v-card-title>
+    <v-card-text>
+      <v-row>
 
-            <div class="flex xs12">
-              <v-tabs center v-model="tabValue" style="width: 100%; min-width: 250px;">
-                <template #tabs>
-                  <v-tab
-                    key="text"
-                  >
-                    Texte
-                  </v-tab>
-                  <v-tab
-                    key="3d"
-                  >
-                    3D
-                  </v-tab>
-                </template>
-              </v-tabs>
-            </div>
-          </div>
-          <v-row>
-            <v-col cols="12" v-if="tabValue==1">
+        <div class="flex xs12">
+          <v-tabs center v-model="tabValue" style="width: 100%; min-width: 250px;">
+            <v-tab
+                key="text"
+            >
+              Texte
+            </v-tab>
+            <v-tab
+                key="3d"
+            >
+              3D
+            </v-tab>
+          </v-tabs>
+        </div>
+      </v-row>
+      <v-row>
+        <v-tabs-items v-model="tabValue">
+          <v-tab-item key="text">
+            <v-card flat>
               <v-btn @click="clickHandler">++++</v-btn> {{cubeCount}}
               <editor></editor>
-            </v-col>
-            <v-col cols="12" v-if="tabValue==2">
-              <three-dee ref="thd" :cube-count="cubeCount"></three-dee>
-            </v-col>
-          </v-row>
-        </v-card-content>
-      </v-card>
-
-    </div>
-  </div>
+            </v-card>
+          </v-tab-item>
+          <v-tab-item key="3d">
+            <v-card flat>
+              <three-dee v-if="tabValue == 1" ref="thd" :key="GraphKey" :cube-count="cubeCount"></three-dee>
+            </v-card>
+          </v-tab-item>
+        </v-tabs-items>
+      </v-row>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -48,14 +47,20 @@ export default {
   components: {ThreeDee, Editor},
   data() {
     return {
-      tabValue: 1,
+      tabValue: 0,
       cubeCount: 0,
+      GraphKey: Math.random().toString()
     }
   },
   methods: {
     clickHandler() {
       console.log('this.$refs', this.$refs)
       this.cubeCount++
+    }
+  },
+  watch: {
+    tabValue() {
+      this.GraphKey = Math.random().toString()
     }
   }
 }

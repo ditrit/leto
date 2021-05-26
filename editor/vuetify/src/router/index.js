@@ -13,7 +13,7 @@ const routes = [
   },
   {
     path: '/modeler',
-    name: 'modeler',
+    name: 'Modeler',
     component: Modeler
 
   },

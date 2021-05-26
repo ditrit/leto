@@ -6,6 +6,11 @@
         class="pt-4"
         color="grey lighten-3"
     >
+      <v-list>
+        <v-list-item :to="{name: 'Modeler'}">
+          <v-list-item-title>Modeleur</v-list-item-title>
+        </v-list-item>
+      </v-list>
       <v-avatar
           v-for="n in 6"
           :key="n"
@@ -27,6 +32,7 @@ export default {
   name: 'App',
 
   data: () => ({
+    drawer: true
     //
   }),
 };
