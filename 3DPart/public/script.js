@@ -350,6 +350,8 @@ function onMouseUp(event) {
 		return;
 	}
 	if(selectedTool === 'moveTool'){
+		if(delay < 200)
+			selectObject(event);
 		needSpacing = true;
 	}else if(selectedTool === 'eyeTool'){
 		if(delay < 200)
@@ -388,22 +390,7 @@ function selectObject(event){
 			selectedComponent = intersects[0].object;
 			addSelectedObject( selectedComponent );
 			outlinePass.selectedObjects = selectedObjects;
-			// right panel completion
-			const componentId = selectedComponent.userData.componentID;
-			$('.componentLabel').removeClass('selectedComponent');
-			sceneComponentList.find('#c'+componentId).addClass('selectedComponent');
-			pannelSectionID.html(selectedComponent.userData.componentID);
-			pannelSectionName.val(selectedComponent.userData.componentName);
-			let derivationInfo = '';
-			if(selectedComponent.userData.derivedFrom !== '')
-				derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
-			pannelSectionType.html(selectedComponent.userData.componentType + derivationInfo);
-			pannelSectionLinks.html('');
-			selectedComponent.userData.links.forEach(function(link){
-				pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
-			});
-			pannelSectionLinks
-			rightPannel.css('display', 'block');
+			showComponentInfo(selectedComponent);
 		}else{
 			outlinePass.selectedObjects = [];
 			selectedComponent = null;
@@ -411,6 +398,24 @@ function selectObject(event){
 			rightPannel.css('display', 'none');
 		}
 	}
+}
+
+function showComponentInfo(component){
+// right panel completion
+	const componentId = selectedComponent.userData.componentID;
+	$('.componentLabel').removeClass('selectedComponent');
+	sceneComponentList.find('#c'+componentId).addClass('selectedComponent');
+	pannelSectionID.html(component.userData.componentID);
+	pannelSectionName.val(component.userData.componentName);
+	let derivationInfo = '';
+	if(component.userData.derivedFrom !== '')
+		derivationInfo = ' (from '+component.userData.derivedFrom+ ')';
+	pannelSectionType.html(component.userData.componentType + derivationInfo);
+	pannelSectionLinks.html('');
+	component.userData.links.forEach(function(link){
+		pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
+	});
+	rightPannel.css('display', 'block');
 }
 
 // add object to apply outline effect
@@ -617,7 +622,8 @@ function deleteObjectHierarchie(component){
 }
 
 function drawLink(cmpnt1, cmpnt2){
-	const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );const points = [];
+	const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+	const points = [];
 	points.push( new THREE.Vector3( cmpnt1.position.x, cmpnt1.position.y, cmpnt1.position.z ) );
 	points.push( new THREE.Vector3( cmpnt2.position.x, cmpnt2.position.y, cmpnt2.position.z ) );
 
@@ -640,25 +646,11 @@ function relink(link){
 	const host1 = link.userData.hoster1;
 	const host2 = link.userData.hoster2;
 
-	// remove the link in host 1 & 2 's userData.links
-	let count = 0
-	let linkIndex1 = 0;
-	let linkIndex2 = 0;
-	host1.userData.links.forEach(function(alink){
-		if(alink == link)
-			linkIndex1 = count;
-		count++;
-	});
-	count = 0;
-	host2.userData.links.forEach(function(alink){
-		if(alink == link)
-			linkIndex2 = count;
-		count++;
-	});
-	host1.userData.links = host1.userData.links.splice(linkIndex1, 1);
-	host2.userData.links = host2.userData.links.splice(linkIndex2, 1);
-	sceneLinksObj.remove(link);
-	drawLink(host1, host2);
+	const points = [];
+	points.push( new THREE.Vector3( host1.position.x, host1.position.y, host1.position.z ) );
+	points.push( new THREE.Vector3( host2.position.x, host2.position.y, host2.position.z ) );
+
+	link.geometry = new THREE.BufferGeometry().setFromPoints( points );
 }
 
 // show a stylised alert
@@ -748,15 +740,7 @@ $('#hierarchieSection').on('click', "li", function () {
 				outlinePass.selectedObjects = selectedObjects;
 				orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
 
-				$('.componentLabel').removeClass('selectedComponent');
-				$('#c'+cpID).addClass('selectedComponent');
-				pannelSectionID.html(selectedComponent.userData.componentID);
-				pannelSectionName.val(selectedComponent.userData.componentName);
-				let derivationInfo = '';
-				if(selectedComponent.userData.derivedFrom !== '')
-					derivationInfo = ' (from '+selectedComponent.userData.derivedFrom+ ')';
-				pannelSectionType.html(selectedComponent.userData.componentType + derivationInfo);
-				rightPannel.css('display', 'block');
+				showComponentInfo(selectedComponent);
 				enableAutoFocus = true;
 
 				return false;
