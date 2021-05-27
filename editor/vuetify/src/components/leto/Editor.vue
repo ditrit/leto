@@ -9,10 +9,11 @@ import * as monaco from 'monaco-editor'
 export default {
   data() {
     return {
+      editor: null,
       options: {
         value: "test",
         language: 'javascript',
-        theme: 'vs-dark'
+        theme: this.$vuetify.theme.dark? 'vs-dark' : 'vs-light',
         //Monaco Editor Options
       }
     }
@@ -20,9 +21,18 @@ export default {
   name: "Editor",
   components: {
   },
+  computed: {
+    darkMode() {
+      return this.$vuetify.theme.dark
+    }
+  },
   watch: {
     code(newVal) {
       console.log('newVal', newVal)
+    },
+    darkMode(newVal) {
+      const theme = newVal? 'vs-dark' : 'vs-light'
+      monaco.editor.setTheme(theme)
     }
   },
   mounted() {
@@ -44,11 +54,9 @@ export default {
       editor.onDidScrollChange(e => {
         console.log(e)
       })
-      editor.setValue('test2')
     },
     editorDidMount(editor) {
       // Listen to `scroll` event
-      console.log('editor', editor)
       editor.onDidChangeModelContent(e => {
         console.log(e)
         console.log(editor.getValue())
