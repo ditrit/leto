@@ -6,6 +6,7 @@ import { RenderPass } from './libs/three.js/examples/jsm/postprocessing/RenderPa
 import { ShaderPass } from './libs/three.js/examples/jsm/postprocessing/ShaderPass.js';
 import { OutlinePass } from './libs/three.js/examples/jsm/postprocessing/OutlinePass.js';
 import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
+import {Object3D, Vector3} from "./libs/three.js/build/three.module.js";
 
 /// VARIABLES ///
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
@@ -624,8 +625,10 @@ function deleteObjectHierarchie(component){
 function drawLink(cmpnt1, cmpnt2){
 	const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
 	const points = [];
-	points.push( new THREE.Vector3( cmpnt1.position.x, cmpnt1.position.y, cmpnt1.position.z ) );
-	points.push( new THREE.Vector3( cmpnt2.position.x, cmpnt2.position.y, cmpnt2.position.z ) );
+	let globalPos1 = new Vector3();
+	let globalPos2 = new Vector3();
+	points.push( cmpnt1.getWorldPosition(globalPos1) );
+	points.push( cmpnt2.getWorldPosition(globalPos2) );
 
 	const geometry = new THREE.BufferGeometry().setFromPoints( points );
 	const line = new THREE.Line( geometry, material );
@@ -647,8 +650,10 @@ function relink(link){
 	const host2 = link.userData.hoster2;
 
 	const points = [];
-	points.push( new THREE.Vector3( host1.position.x, host1.position.y, host1.position.z ) );
-	points.push( new THREE.Vector3( host2.position.x, host2.position.y, host2.position.z ) );
+	let globalPos1 = new Vector3();
+	let globalPos2 = new Vector3();
+	points.push( host1.getWorldPosition(globalPos1) );
+	points.push( host2.getWorldPosition(globalPos2) );
 
 	link.geometry = new THREE.BufferGeometry().setFromPoints( points );
 }
@@ -776,7 +781,6 @@ toolButtons.on('click', function () {
 // prevent UI's clicks to have effects on the scene
 $('.UI').on('pointerdown', function(){
 	preventClick = true;
-	//event.stopPropagation()
 });
 // update name when input
 pannelSectionName.on('input', function(){
@@ -790,7 +794,7 @@ pannelSectionName.on('input', function(){
 	const cColor = componentsList[componentType]['color'];
 	const cTagColor = componentsList[componentType]['tagColor'];
 	const cLogo = componentsList[componentType]['logo'];
-	generateTexture(componentType, selectedComponent.userData.componentName, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'updateTexture');
+	generateTexture(componentType, selectedComponent.userData.componentName, cColor, cWidth, cHeight, cTagColor, cLogo, 'updateTexture');
 });
 // supprimer un objet
 $('#deleteButton').on('click', function(){
@@ -798,7 +802,6 @@ $('#deleteButton').on('click', function(){
 		$('#'+selectedComponent.userData.componentID).remove();
 		//delete from objectsPerLevels
 		deleteObjectHierarchie(selectedComponent);
-
 		selectedComponent.parent.remove(selectedComponent);
 
 		selectedComponent = null;
