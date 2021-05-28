@@ -297,8 +297,11 @@ function autoFocus(){
 
 function onKeyDown( event ) {
 	// reset camera's rotation pivot
+	/*
 	if(event.keyCode === 32)
 		orbitControls.target = new THREE.Vector3(0, 1, 0);
+
+	 */
 	// camera movements (future enhancement)
 	if(selectedComponent){
 		if(event.keyCode === 38 ){
@@ -364,13 +367,15 @@ function onMouseUp(event) {
 				selectObject(event);
 				if(selectedComponent != null) {
 					const cmpnt2 = selectedComponent;
-					const link = drawLink(cmpnt1, cmpnt2);
-					pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
-					selectedTool = 'eyeTool';
-					dragControls.deactivate();
-					orbitControls.enableRotate = true;
-					toolButtons.removeClass('selectedTool');
-					$('#eyeTool').addClass('selectedTool');
+					if(cmpnt1 != cmpnt2){
+						const link = drawLink(cmpnt1, cmpnt2);
+						pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
+						selectedTool = 'eyeTool';
+						dragControls.deactivate();
+						orbitControls.enableRotate = true;
+						toolButtons.removeClass('selectedTool');
+						$('#eyeTool').addClass('selectedTool');
+					}
 				}
 			}
 		}else{
@@ -489,11 +494,18 @@ function generateComponent(componentType, material) {
 	const cDepht = nestingLevels['level'+count]['depth'];
 
 	let newCmpnt = new THREE.Mesh( new THREE.BoxGeometry( cWidth, cHeight, cDepht ), material );
+
 	newCmpnt.userData.nestingLevel = count;
 	newCmpnt.userData.componentType = componentType;
 	newCmpnt.userData.componentID = lastID;
 	newCmpnt.userData.links = [];
-	newCmpnt.userData.componentName = componentsList[componentType]['name'] + lastID;
+	const cName = newCmpnt.userData.componentName = componentsList[componentType]['name'] + lastID;
+	const cColor = componentsList[componentType]['color'];
+	const cLogo = componentsList[componentType]['logo'];
+	const cTagColor = '#7D2F9E';
+
+	generateTexture(componentType, cName, cColor, cWidth, cHeight, cTagColor, cLogo, 'updateTexture', newCmpnt);
+
 	if(!selectedComponent)
 		sceneComponentsObj.add(newCmpnt);
 	else
@@ -602,11 +614,13 @@ function regenerateTexture(component, material){
 	component.material = material;
 }
 
-// delete an object with all its children
+// delete an object with all its children and their links
 function deleteObjectHierarchie(component){
 	component.children.forEach(function(child){
+		deleteLinks(child);
 		deleteObjectHierarchie(child);
 	});
+	deleteLinks(component);
 
 	const lv = component.userData.nestingLevel;
 	for( let i = 0; i < objectsPerLevels[lv].length; i++){
@@ -620,6 +634,32 @@ function deleteObjectHierarchie(component){
 			sceneComponentsObj.splice(i, 1);
 		}
 	}
+}
+
+// delete all links of a single component
+function deleteLinks(component){
+	component.userData.links.forEach(function(link){
+		let index = null;
+		let count = 0;
+		if(link.userData.hoster1 != component){
+			link.userData.hoster1.userData.links.forEach(function(alink){
+				if(alink.userData.hoster1 == link.userData.hoster1 && alink.userData.hoster2 == link.userData.hoster2)
+					index = count;
+				count++;
+			});
+			if(index != null)
+				link.userData.hoster1.userData.links.splice(index,1);
+		}else{
+			link.userData.hoster2.userData.links.forEach(function(alink){
+				if(alink.userData.hoster1 == link.userData.hoster1 && alink.userData.hoster2 == link.userData.hoster2)
+					index = count;
+				count++;
+			});
+			if(index != null)
+				link.userData.hoster2.userData.links.splice(index,1);
+		}
+		sceneLinksObj.remove(link);
+	});
 }
 
 function drawLink(cmpnt1, cmpnt2){
@@ -789,10 +829,11 @@ pannelSectionName.on('input', function(){
 	selectedComponent.userData.componentName = newLabel;
 
 	const componentType = selectedComponent.userData.componentType;
-	const cWidth = componentsList[componentType]['width'];
+	const level = selectedComponent.userData.nestingLevel;
+	const cWidth = nestingLevels['level'+level]['width'];
 	const cHeight = componentsList[componentType]['height'];
 	const cColor = componentsList[componentType]['color'];
-	const cTagColor = componentsList[componentType]['tagColor'];
+	const cTagColor = '#7d2f9e';
 	const cLogo = componentsList[componentType]['logo'];
 	generateTexture(componentType, selectedComponent.userData.componentName, cColor, cWidth, cHeight, cTagColor, cLogo, 'updateTexture');
 });
