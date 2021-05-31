@@ -4,33 +4,38 @@ console.log('TEST :\n')
 
 let leto = new letoModel()
 
+ 
 leto.parse(`
 nodeType server {
-    properties {
-      num_cpus : integer,
-      os : string
-    }
-    capabilities {
-      container : host
-    }
+  properties {
+    num_cpus : integer,
+    os : string
+  }
+  capabilities {
+    container : host
+  }
 };
-
 nodeType softwareComponent {
-    requirements {
-      host1 : server
-    }
-};
+  requirements {
+    host : server
+  }
 
-nodeType tomcat derived_from softwareComponent {
-    requirements {
-      dataSource : BD
-    }
+  capabilities {
+    container : host
+  }
 };
  
+
+nodeType tomcat derived_from softwareComponent {
+  requirements {
+    dataSource : BD
+  }
+};
+
 nodeType BD derived_from softwareComponent {
-    capabilities {
-      dataSource : connectsTo     
-    }
+  capabilities {
+    dataSource : connectsTo     
+  }
 };
 
 nodeTemplate myAppliServer type server {
@@ -49,13 +54,13 @@ nodeTemplate myDBServer type server {
 
 nodeTemplate myDB type BD {
   requirements {
-    host1 : myDBServer
+    host : myDBServer
   }
 };
 
 nodeTemplate myTomcat type tomcat {
   requirements {
-    host1 : myAppliServer,
+    host : myAppliServer,
     dataSource : myDBServer 
   }
 };
@@ -65,31 +70,34 @@ console.log('\nTEST MODIFICATION :\n')
 
 leto.parse(`
 nodeType server {
-    properties {
-      num_cpus_test : integer,
-      os : string
-    }
-    capabilities {
-      container : host
-    }
-};
-   
-nodeType softwareComponent {
-    requirements {
-      host1 : server
-    }
-};
-
-nodeType tomcat derived_from server {
-    requirements {
-      dataSource : BD
-    }
+  properties {
+    num_cpus : integer,
+    os : string
+  }
+  capabilities {
+    container : host
+  }
+  requirements {
+    host : server
+  }
 };
  
+nodeType softwareComponent {
+  requirements {
+    host : server
+  }
+};
+ 
+nodeType tomcat derived_from server {
+  requirements {
+    dataSource : BD
+  }
+};
+
 nodeType BD derived_from softwareComponent {
-    capabilities {
-      dataSource : connectsTo     
-    }
+  capabilities {
+    dataSource : connectsTo     
+  }
 };
 
 nodeTemplate myAppliServer type server {
@@ -108,18 +116,21 @@ nodeTemplate myDBServer type server {
 
 nodeTemplate myDB type BD {
   requirements {
-    host1 : myDBServer
+    host : myDBServer
   }
 };
 
 nodeTemplate myTomcat type tomcat {
   requirements {
-    host1 : myAppliServer,
+    host : myAppliServer,
     dataSource : myDBServer 
   }
+  properties {
+    host : server
+  }
 };
- 
-`) 
+`)
+
 
 console.log(leto.toString())
 
