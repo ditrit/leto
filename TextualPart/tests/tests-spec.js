@@ -1,103 +1,182 @@
 import { letoModel } from '../letoModel.js'
 
 let leto = new letoModel()
-leto.parse(`nodeType test {logo : test/test.txt};
-nodeType testsupp {};
-nodeType database derived_from test {};
-nodeType server {};
-nodeType bdd derived_from database {logo : test/test.txt};
-nodeTemplate testsuppr type bdd;
-nodeTemplate db type bdd;
-nodeTemplate serv type server;
-nodeTemplate serv2 type server;
-relationshipType testsupp derived_from server;
-relationshipType ser derived_from server;
-relationshipType der derived_from server;
-relationship serv -> db type ser;
-relationship serv2 -> db type der;
-`) 
+leto.parse(`
+nodeType server {
+  properties {
+    num_cpus : integer,
+    os : string
+  }
+  capabilities {
+    container : host
+  }
+};
+nodeType softwareComponent {
+  requirements {
+    host : server
+  }
+
+  capabilities {
+    container : host
+  }
+};
+ 
+
+nodeType tomcat derived_from softwareComponent {
+  requirements {
+    dataSource : BD
+  }
+};
+
+nodeType BD derived_from softwareComponent {
+  capabilities {
+    dataSource : connectsTo     
+  }
+};
+
+nodeTemplate myAppliServer type server {
+  properties {
+    num_cpus : 2,
+    os : "linux"
+  }
+};
+
+nodeTemplate myDBServer type server {
+  properties {
+    num_cpus : 4,
+    os : "linux"
+  }
+};
+
+nodeTemplate myDB type BD {
+  requirements {
+    host : myDBServer
+  }
+};
+
+nodeTemplate myTomcat type tomcat {
+  requirements {
+    host : myAppliServer,
+    dataSource : myDBServer 
+  }
+};
+`)
 
 console.log('\nTEST MODIFICATION :\n')
-leto.parse(`nodeType test2 {};
-nodeType database derived_from test2{};
-nodeType server derived_from test2{};
-nodeType bdd derived_from database {logo : test/test.txt};
-nodeTemplate db type bdd;
-nodeTemplate serv type test2;
-nodeTemplate serv2 type server;
-relationshipType ser derived_from database;
-relationshipType der derived_from server;
-relationship serv -> serv2 type der;
-relationship serv2 -> db type ser;`)
 
-console.log('\nTEST MODIFICATION :\n')
-leto.parse(`nodeType test {};
-nodeType testsupp {};
-nodeType database derived_from test {};
-nodeType server {};
-nodeType bdd derived_from database {logo : test2/test2.txt};
-nodeTemplate testsuppr type bdd;
-nodeTemplate db type bdd;
-nodeTemplate serv type server;
-nodeTemplate serv2 type server;
-relationshipType testsupp derived_from server;
-relationshipType ser derived_from server;
-relationshipType der derived_from server;
-relationship serv -> db type ser;
-relationship serv2 -> db type der;`)
+leto.parse(`
+nodeType server {
+  properties {
+    num_cpus : integer,
+    os : string
+  }
+  capabilities {
+    container : host
+  }
+  requirements {
+    host : server
+  }
+};
+ 
+nodeType softwareComponent {
+  requirements {
+    host : server
+  }
+};
+ 
+nodeType tomcat derived_from server {
+  requirements {
+    dataSource : BD
+  }
+};
+
+nodeType BD derived_from softwareComponent {
+  capabilities {
+    dataSource : connectsTo     
+  }
+};
+
+nodeTemplate myAppliServer type server {
+  properties {
+    num_cpus : 3,
+    os : "linux"
+  }
+};
+
+nodeTemplate myDBServer type server {
+  properties {
+    num_cpus : 4,
+    os : "linux"
+  }
+};
+
+nodeTemplate myDB type BD {
+  requirements {
+    host : myDBServer
+  }
+};
+
+nodeTemplate myTomcat type tomcat {
+  requirements {
+    host : myAppliServer,
+    dataSource : myDBServer 
+  }
+  properties {
+    host : server
+  }
+};
+`)
+
+console.log('\n')
 
 describe("Leto TextualPart -> ", function() {
 
     describe("test nodeType id : ", function() {
-        it("bdd", 
-            function () {expect(leto.prog.nodeTypes['bdd'].id).toEqual("bdd")})
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTypes['tomcat'].id).toEqual("tomcat")})
     })
     describe("test nodeType parent : ", function() {
-        it("bdd", 
-            function () {expect(leto.prog.nodeTypes['bdd'].parentName.name).toEqual("database")})
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTypes['tomcat'].parentName.name).toEqual("server")})
     })
-    /*describe("test nodeType properties : ", function() {
-        it("bdd", 
-            function () {expect(leto.prog.nodeTypes['bdd'].properties).toEqual("[ logo : test2/test2.txt; ]")})
-    })*/
+    describe("test nodeType capabilities : ", function() {
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTypes['tomcat'].capabilities).toEqual(null)})
+    })
+    describe("test nodeType properties : ", function() {
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTypes['tomcat'].properties).toEqual(null)})
+    })
+    describe("test nodeType requirements : ", function() {
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTypes['tomcat'].requirements['dataSource'].name).toEqual('dataSource')})
+    })
+    describe("test nodeType version : ", function() {
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTypes['tomcat'].version).toEqual(2)})
+    })
 })
 
 describe("Leto TextualPart -> ", function() {
 
     describe("test nodeTemplate id : ", function() {
-        it("serv", 
-            function () {expect(leto.prog.nodeTemplates['serv'].id).toEqual("serv")})
+        it("myTomcat", 
+            function () {expect(leto.prog.nodeTemplates['myTomcat'].id).toEqual("myTomcat")})
     })
     describe("test nodeTemplate parent : ", function() {
-        it("serv", 
-            function () {expect(leto.prog.nodeTemplates['serv'].parentName.name).toEqual("server")})
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTemplates['myTomcat'].parentName.name).toEqual("tomcat")})
+    })
+    describe("test nodetemplate properties : ", function() {
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTemplates['myTomcat'].properties['host'].typeName).toEqual('server')})
+    })
+    describe("test nodetemplate requirements : ", function() {
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTemplates['myTomcat'].requirements['dataSource'].nodeName).toEqual('myDBServer')})
+    })
+    describe("test nodetemplate version : ", function() {
+        it("tomcat", 
+            function () {expect(leto.prog.nodeTemplates['myTomcat'].version).toEqual(2)})
     })
 })
-
-describe("Leto TextualPart -> ", function() {
-
-    describe("test relationshipType id : ", function() {
-        it("der", 
-            function () {expect(leto.prog.relationshipsTypes['der'].id).toEqual("der")})
-    })
-    describe("test relationshipType parent : ", function() {
-        it("der", 
-            function () {expect(leto.prog.relationshipsTypes['der'].parentName.name).toEqual("server")})
-    })
-})
-
-/*describe("Leto TextualPart -> ", function() {
-
-    describe("test relationship source : ", function() {
-        it("serv2", 
-            function () {expect(leto.prog.relationships['der'].srcName).toEqual("serv2")})
-    })
-    describe("test relationship destination : ", function() {
-        it("serv2", 
-            function () {expect(leto.prog.relationships['der'].dstName).toEqual("db")})
-    })
-    describe("test relationship relation : ", function() {
-        it("serv2", 
-            function () {expect(leto.prog.relationships['der'].relName).toEqual("serv")})
-    })
-})*/

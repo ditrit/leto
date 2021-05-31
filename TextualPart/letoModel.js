@@ -19,8 +19,8 @@ export class letoModel {
         const tree = parser.prog();
         const myListener = new MyLetoListener(this.prog);
         antlr4.tree.ParseTreeWalker.DEFAULT.walk(myListener, tree)
-        this.prog.checkType()
         this.prog.remove()
+        this.prog.checkType()
     }
 
     toString() {

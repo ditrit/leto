@@ -1,5 +1,5 @@
 import letoListener from './antlr/letoListener.js';
-import { CapabilityNodeType, PropertyNodeType, RequirementNodeType, nodeTypeFactory, nodeTemplateFactory, RequirementNodeTemplate, PropertyNodeTemplate, Instructions, InstructionNode, IdVal, TypeVal, CommentVal } from './model.js';
+import { Capability, Requirement, Property, nodeTypeFactory, nodeTemplateFactory, Instructions, InstructionNode, IdVal, TypeVal, CommentVal } from './model.js';
 
 export default class MyLetoListener extends letoListener {
     constructor(progModel) {
@@ -55,42 +55,54 @@ export default class MyLetoListener extends letoListener {
 
     exitNodeType(ctx) {
         let id = ctx.getChild(1).model
-        let parentName = '_default'
+        let parentName = null
         let index = 3
-        let properties = null
-        let capabilities = null
-        let requirements = null
+        let clauses = null
         let sep = ctx.getChild(2).getText()
         if (sep == 'derived_from') {
             parentName = ctx.getChild(3).model
             index = 5
         }
-        sep = ctx.getChild(index).getText()
-        for(let i=0; i<3; i++){
-            if(sep == 'properties {') {
+        clauses = ctx.getChild(index).model
+        nodeTypeFactory(this.prog, ctx, id, parentName, clauses)
+    }
+
+    exitClausesNodeType(ctx) {
+        let nbChilds = ctx.getChildCount()
+        let properties = null
+        let capabilities = null
+        let requirements = null
+        let index = 0
+        let sep = ctx.getChild(index).getText()
+        for(let i=0; i<nbChilds; i++) {
+            if(sep == 'properties {'){
                 properties = ctx.getChild(index+1).model
                 index = index+3
             }
-            else if(sep == 'capabilities {') {
+            if(sep == 'capabilities {'){
                 capabilities = ctx.getChild(index+1).model
                 index = index+3
             }
-            else if(sep == 'requirements {') {
+            if(sep == 'requirements {'){
                 requirements = ctx.getChild(index+1).model
                 index = index+3
             }
-            sep = ctx.getChild(index).getText()
+            if(index < nbChilds) {
+                sep = ctx.getChild(index).getText()
+            } else {
+                sep = null
+            }
         }
-        nodeTypeFactory(this.prog, ctx, id, parentName, properties, capabilities, requirements)
-    }
+        ctx.model = {properties, capabilities, requirements}
+	}
 
     exitPropertiesNodeType(ctx) {
         let nbChilds = ctx.getChildCount()
-        ctx.model = []
+        ctx.model = {}
         for(let i = 0; i<nbChilds; i++) {
-            if(ctx.getChild(i).model instanceof PropertyNodeType) {
+            if(ctx.getChild(i).model instanceof Property) {
                 let property = ctx.getChild(i).model
-                ctx.model.push(property)
+                ctx.model[property.name] = property
             }   
         }
     }
@@ -98,72 +110,88 @@ export default class MyLetoListener extends letoListener {
     exitPropertyNodeType(ctx) {
         let id = ctx.getChild(0).model
         let type = ctx.getChild(2).model
-        ctx.model = new PropertyNodeType(id, type, ctx)
+        ctx.model = new Property('nodeType', id, type, ctx)
     }
 
     exitCapabilitiesNodeType(ctx) {
         let nbChilds = ctx.getChildCount()
-        ctx.model = []
+        ctx.model = {}
         for(let i=0; i<nbChilds; i++) {
-            let requirement = ctx.getChild(i).model
-            ctx.model.push(requirement)
+            if(ctx.getChild(i).model instanceof Capability) {
+                let capability = ctx.getChild(i).model
+                ctx.model[capability.name] = capability
+            }
         }
     }
 
     exitCapabilityNodeType(ctx) {
         let id = ctx.getChild(0).model
-        let type = ctx.getChild(2).getText()
-        ctx.model = new CapabilityNodeType(id, type, ctx)
+        let type = ctx.getChild(2).model
+        ctx.model = new Capability(id, type, ctx)
     }
 
     exitRequirementsNodeType(ctx) {
         let nbChilds = ctx.getChildCount()
-        ctx.model = []
+        ctx.model = {}
         for(let i=0; i<nbChilds; i++) {
-            let requirement = ctx.getChild(i).model
-            ctx.model.push(requirement)
+            if(ctx.getChild(i).model instanceof Requirement) {
+                let requirement = ctx.getChild(i).model
+                ctx.model[requirement.name] = requirement
+            }
         }
     }
 
     exitRequirementNodeType(ctx) {
         let id = ctx.getChild(0).model
         let node = ctx.getChild(2).model
-        ctx.model = new RequirementNodeType(id, node, ctx)
+        ctx.model = new Requirement('nodeType', id, node, ctx)
     }
 
     exitNodeTemplate(ctx) {
         let id = ctx.getChild(1).model
-        let parentName = '_default'
+        let parentName = null
         let index = 3
-        let properties = null
-        let requirements = null
+        let clauses = null
         let sep = ctx.getChild(2).getText()
         if (sep == 'type') {
             parentName = ctx.getChild(3).model
             index = 5
         }
-        sep = ctx.getChild(index).getText()
-        for(let i=0; i<2; i++){
-            if(sep == 'properties {') {
+        clauses = ctx.getChild(index).model
+        nodeTemplateFactory(this.prog, ctx, id, parentName, clauses)
+    }
+
+    exitClausesNodeTemplate(ctx) {
+        let nbChilds = ctx.getChildCount()
+        let properties = null
+        let requirements = null
+        let index = 0
+        let sep = ctx.getChild(index).getText()
+        for(let i=0; i<nbChilds; i++) {
+            if(sep == 'properties {'){
                 properties = ctx.getChild(index+1).model
                 index = index+3
             }
-            else if(sep == 'requirements {') {
+            if(sep == 'requirements {'){
                 requirements = ctx.getChild(index+1).model
                 index = index+3
             }
-            sep = ctx.getChild(index).getText()
+            if(index < nbChilds) {
+                sep = ctx.getChild(index).getText()
+            } else {
+                sep = null
+            }
         }
-        nodeTemplateFactory(this.prog, ctx, id, parentName, properties, requirements)
+        ctx.model = {properties, requirements}
     }
 
     exitPropertiesNodeTemplate(ctx) {
         let nbChilds = ctx.getChildCount()
-        ctx.model = []
+        ctx.model = {}
         for(let i = 0; i<nbChilds; i++) {
-            if(ctx.getChild(i).model instanceof PropertyNodeTemplate) {
+            if(ctx.getChild(i).model instanceof Property) {
                 let property = ctx.getChild(i).model
-                ctx.model.push(property)
+                ctx.model[property.name] = property
             }   
         }
     }
@@ -171,25 +199,25 @@ export default class MyLetoListener extends letoListener {
     exitPropertyNodeTemplate(ctx) {
         let id = ctx.getChild(0).model
         let type = ctx.getChild(2).model
-        ctx.model = new PropertyNodeTemplate(id, type, ctx)
+        ctx.model = new Property('nodeTemplate', id, type, ctx)
 	}
 
     exitRequirementsNodeTemplate(ctx) {
         let nbChilds = ctx.getChildCount()
-        ctx.model = []
-        for(let i = 0; i<nbChilds; i++) {
-            if(ctx.getChild(i).model instanceof RequirementNodeTemplate) {
+        ctx.model = {}
+        for(let i=0; i<nbChilds; i++) {
+            if(ctx.getChild(i).model instanceof Requirement) {
                 let requirement = ctx.getChild(i).model
-                ctx.model.push(requirement)
-            }   
+                ctx.model[requirement.name] = requirement
+            }
         }
 	}
 
     exitRequirementNodeTemplate(ctx) {
         let id = ctx.getChild(0).model
         let node = ctx.getChild(2).model
-        ctx.model = new RequirementNodeTemplate(id, node, ctx)
-	}
+        ctx.model = new Requirement('nodeTemplate', id, node, ctx)
+    }
 
     exitComment(ctx) {
         if ( ctx.getChildCount() == 1 ) {
@@ -203,7 +231,7 @@ export default class MyLetoListener extends letoListener {
         }
     }
 
-    exitType(ctx) {
+    exitBaseTypes(ctx) {
         if( ctx.getChildCount() == 1 ) {
             ctx.model = new TypeVal(ctx.getChild(0).getText(), ctx)
         }

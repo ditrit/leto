@@ -24,11 +24,13 @@ instruction
 ;
 
 nodeType 
-: 'nodeType' id ('derived_from' id)? ' {' 
-    ('properties {' propertiesNodeType '}')? 
-    ('capabilities {' capabilitiesNodeType '}')? 
-    ('requirements {' requirementsNodeType '}')?  
-'}'
+: 'nodeType' id ('derived_from' id)? ' {' clausesNodeType '}'
+;
+
+clausesNodeType 
+: (('properties {' propertiesNodeType '}') 
+| ('capabilities {' capabilitiesNodeType '}')
+| ('requirements {' requirementsNodeType '}') )*
 ;
 
 propertiesNodeType
@@ -36,7 +38,7 @@ propertiesNodeType
 ;
 
 propertyNodeType
-: id ' : ' type
+: id ' : ' baseTypes
 ;
 
 capabilitiesNodeType
@@ -44,7 +46,7 @@ capabilitiesNodeType
 ;
 
 capabilityNodeType
-: id ' : ' ('host' | 'connectsTo') 
+: id ' : ' id 
 ;
 
 requirementsNodeType
@@ -56,10 +58,12 @@ requirementNodeType
 ;
 
 nodeTemplate 
-: 'nodeTemplate' id 'type' id ' {'
-    ('properties {' propertiesNodeTemplate '}')?
-    ('requirements {' requirementsNodeTemplate '}')?
-'}'
+: 'nodeTemplate' id 'type' id ' {' clausesNodeTemplate '}'
+;
+
+clausesNodeTemplate
+: (('properties {' propertiesNodeTemplate '}')
+| ('requirements {' requirementsNodeTemplate '}'))*
 ;
 
 propertiesNodeTemplate
@@ -86,7 +90,7 @@ id
 : ID
 ;
 
-type
+baseTypes
 : 'integer' | 'float' | 'boolean' | 'string'
 ;
 
@@ -94,7 +98,7 @@ type
 *	Regle Lexer 
 */
 ID
-: ('a'..'z'|'A'..'Z'|'0'..'9'|[_"])+
+: ('a'..'z'|'A'..'Z'|'0'..'9'|[_".])+
 ;
 
 FLOAT

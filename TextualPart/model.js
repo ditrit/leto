@@ -24,67 +24,107 @@ export class InstructionNode extends ModelNode {
         super(ctx)
         this.nodeType = "Instruction"
     }
-}   
+} 
 
-export function nodeTypeFactory(prog, ctx, id, parentName, properties, capabilities, requirements) {
+function updateMaps(prog, node, nodeName, current, other, libelle) {
+    for(let c in current) {
+        try {
+            let currentC = current[c]
+            let newC = other[c]
+            if(newC == null) {
+                console.log('Event : the ' + libelle + currentC.name + ' of nodeType ' + nodeName + ' has been deleted')
+                delete(current[c])
+            } else {
+                currentC.update(newC)
+            }
+        } catch(error){
+            console.log('Event : the ' + libelle + 'of nodeType ' + nodeName + ' has been deleted')
+            delete(current[c])
+        }
+    }
+
+    for(let c in other) {
+        try {
+            let currentC = current[c]
+            let newC = other[c]
+            if(currentC == null) {
+                current[c] = newC
+                console.log('Event : the ' + libelle + current[c].name + ' of nodeType ' + nodeName + ' has been added')
+            }
+        } catch(error){
+            if(node == 'nodeType'){
+                if(libelle == 'requirement '){
+                    prog.nodeTypes[nodeName].requirements = other
+                }
+                if(libelle == 'capability '){
+                    prog.nodeTypes[nodeName].capabilities = other
+                }
+                if(libelle == 'property '){
+                    prog.nodeTypes[nodeName].properties = other
+                }
+                console.log('Event : the ' + libelle + 'of nodeType ' + nodeName + ' has been added')
+            } 
+            if(node == 'nodeTemplate') {
+                if(libelle == 'requirement '){
+                    prog.nodeTemplates[nodeName].requirements = other
+                }
+                if(libelle == 'property '){
+                    prog.nodeTemplates[nodeName].properties = other
+                }
+                console.log('Event : the ' + libelle + 'of nodeTemplate ' + nodeName + ' has been added')
+            }   
+        } 
+    }
+}
+
+export function nodeTypeFactory(prog, ctx, id, parentName, clauses) {
     let name = id.name
     let current = prog.nodeTypes[name]
     if (current == null) {
-        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
-            console.log("Error ==> nodeType " + parentName + " does not exist")
-            return
-        } else {
-            current = new NodeType(prog.version, name, parentName, properties, capabilities, requirements, ctx)
-            prog.nodeTypes[name] = current
-            ctx.model = current
-            console.log("Creation : nodeType " + name)
-        }
+        current = new NodeType(prog, prog.version, name, parentName, clauses, ctx)
+        prog.nodeTypes[name] = current
+        ctx.model = current
+        console.log("Creation : nodeType " + name)
+        return current
     } else {
-        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
-            console.log("Error ==> nodeType " + parentName + " does not exist")
-            return
-        } else {
-            if (parentName != current.parentName) {
-                current.parentName = parentName
-                current.parent = null
-                console.log("Event : nodeType " + name + " changed from parent")
-            }
-            if (properties != current.properties) {
-                current.properties = properties
-                console.log("Event : nodeType " + name + " changed its properties")
-            }
-            if (capabilities != current.capabilities) {
-                current.capabilities = capabilities
-                console.log("Event : nodeType " + name + " changed its capabilities")
-            }
-            if (requirements != current.requirements) {
-                current.requirements = requirements
-                console.log("Event : nodeType " + name + " changed its requirements")
-            }
-        } 
+        return current.update(prog.version, parentName, clauses)
     }
-    current.version = prog.version
 }
 
 class NodeType extends InstructionNode {
-    constructor(version, name, parentName, properties, capabilities, requirements, ctx) {
+    constructor(prog, version, name, parentName, clauses, ctx) {
         super(ctx)
+        this.prog = prog
         this.version = version
         this.start = ctx.start
         this.stop = ctx.stop
         this.id = name
         this.parentName = parentName
         this.parent = null
-        this.properties = properties
-        this.capabilities = capabilities
-        this.requirements = requirements
+        this.properties = clauses.properties
+        this.capabilities = clauses.capabilities
+        this.requirements = clauses.requirements
+    }
+
+    update(version, parentName, clauses) {
+        this.version = version
+        if(parentName != null && this.parentName != null) {
+            if(parentName.name != this.parentName.name) {
+                this.parentName = parentName
+                console.log('Event : nodeType ' + this.id + ' changed from parent')
+            }
+        }
+
+        updateMaps(this.prog, 'nodeType', this.id, this.properties, clauses.properties, 'property ')
+        updateMaps(this.prog, 'nodeType', this.id, this.capabilities, clauses.capabilities, 'capability ')
+        updateMaps(this.prog, 'nodeType', this.id, this.requirements, clauses.requirements, 'requirement ')
     }
 
     checkType(prog) {
-        if(this.parentName != '_default') {
+        if(this.parentName != null) {
             if (this.parentName == null) {
                 try {
-                    throw new Error(" ==> problem about name of parent")
+                    throw new Error(" : problem about name of parent")
                 } catch (e) {
                     console.error(e.name + e.message)
                 }
@@ -92,9 +132,10 @@ class NodeType extends InstructionNode {
             this.parent = prog.nodeTypes[this.parentName]
             if (this.parent == null) {
                 try {
-                    throw new Error(" ==> nodeType '" + this.parentName + "' is not defined.")
+                    throw new Error(" : nodeType '" + this.parentName + "' is not defined.")
                 } catch (e) {
                     console.error(e.name + e.message)
+                    delete(prog.nodeTypes[this.id])
                 }
             }
         }
@@ -108,91 +149,126 @@ class NodeType extends InstructionNode {
             console.error("nodeType " + this.id.name + ((this.parentName != null) ? (" derived_from " + this.parentName.name) : "") + ' {' + this.attributes.join(",") + '}' + " ; \n")
         }
     }
-
-    toString() {
-        return "nodeType " + this.id + ((this.parentName != '_default') ? (" from " + this.parentName) : "") + ((this.properties != null) ? (" {" + this.properties + " }") : " {}") + " ;"
-    }
 }
 
-export class CapabilityNodeType extends InstructionNode{
-    constructor(id, type, ctx) {
+export class Capability extends InstructionNode{
+    constructor(id, typeName, ctx) {
         super(ctx)
         this.name = id.name
-        this.typeName = type
+        this.typeName = typeName.name
+    }
+
+    update(other) {
+        if(this.name == other.name) {
+            if(this.equals(other)) {
+                this.typeName = other.typeName
+                console.log('Event : nodeType ' + this.name + ' changed from capability')
+            }
+        }
+    }
+
+    equals(other) {
+        return (this.typeName != other.typeName) || (this.name != other.name)
     }
 }
 
-export class PropertyNodeType extends InstructionNode {
-    constructor(id, type, ctx) {
+export class Property extends InstructionNode {
+    constructor(type, id, typeName, ctx) {
         super(ctx)
+        this.type = type
         this.name = id.name
-        this.typeName = type.name
+        this.typeName = typeName.name
+    }
+
+    update(other) {
+        if(this.name == other.name) {
+            if(this.equals(other)) {
+                this.typeName = other.typeName
+                if(this.type == 'nodeType') {
+                    console.log('Event : nodeType ' + this.name + ' changed from property')
+                } else if(this.type == 'nodeTemplate') {
+                    console.log('Event : nodeTemplate ' + this.name + ' changed from property')
+                }
+            }
+        }
+    }
+
+    equals(other) {
+        return (this.typeName != other.typeName) || (this.name != other.name)
     }
 }
 
-export class RequirementNodeType extends InstructionNode {
-    constructor(id, node, ctx) {
+export class Requirement extends InstructionNode {
+    constructor(type, id, node, ctx) {
         super(ctx)
+        this.type = type
         this.name = id.name
         this.nodeName = node.name
     }
-}
 
-
-export function nodeTemplateFactory(prog, ctx, id, parentName, properties, requirements) {
-    let name = id.name
-    let current = prog.nodeTemplates[name]
-    if (current == null) {
-        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
-            console.log("Error ==> nodeType " + parentName + " does not exist")
-            return 
-        } else {
-            current = new NodeTemplate(prog.version, name, parentName, properties, requirements, ctx)
-            prog.nodeTemplates[name] = current
-            ctx.model = current
-            console.log("Creation : nodeTemplate " + name)
-        }
-        
-    } else {
-        if(parentName != '_default' && prog.nodeTypes[parentName] == null) {
-            console.log("Error ==> nodeType " + parentName + " does not exist")
-            return
-        } else {
-            if (parentName != current.parentName) {
-                current.parentName = parentName
-                current.parent = null
-                console.log("Event : nodeTemplate " + name + " changed from parent")
-            }
-            if (properties != current.properties) {
-                current.properties = properties
-                console.log("Event : nodeTemplate " + name + " changed its properties")
-            }
-            if (requirements != current.requirements) {
-                current.requirements = requirements
-                console.log("Event : nodeTemplate " + name + " changed its requirements")
+    update(other) {
+        if(this.name == other.name) {
+            if(this.equals(other)) {
+                this.nodeName = other.nodeName
+                if(this.type == 'nodeType') {
+                    console.log('Event : nodeType ' + this.name + ' changed from requirement')
+                } else if(this.type == 'nodeTemplate') {
+                    console.log('Event : nodeTemplate ' + this.name + ' changed from requirement')
+                }
             }
         }
     }
-    current.version = prog.version
+
+    equals(other) {
+        return (this.nodeName != other.nodeName) || (this.name != other.name)
+    }
+}
+
+export function nodeTemplateFactory(prog, ctx, id, parentName, clauses) {
+    let name = id.name
+    let current = prog.nodeTemplates[name]
+    if (current == null) {
+        current = new NodeTemplate(prog, prog.version, name, parentName, clauses, ctx)
+        prog.nodeTemplates[name] = current
+        ctx.model = current
+        console.log("Creation : nodeTemplate " + name)
+        return current
+    } else {
+        return current.update(prog.version, parentName, clauses)    
+    }
 }
 
 class NodeTemplate extends InstructionNode {
-    constructor(version, name, parentName, properties, requirements, ctx) {
+    constructor(prog, version, name, parentName, clauses, ctx) {
         super(ctx)
+        this.prog = prog
         this.version = version
         this.start = ctx.start
         this.stop = ctx.stop
         this.id = name
         this.parentName = parentName
         this.parent = null
-        this.properties = properties
-        this.requirements = requirements
+        this.properties = clauses.properties
+        this.requirements = clauses.requirements
+    }
+
+    update(version, parentName, clauses) {
+        this.version = version
+        let c = clauses
+        if(parentName != null && this.parentName != null) {
+            if(parentName.name != this.parentName.name) {
+                this.parentName = parentName
+                console.log('Event : nodeTemplate ' + this.id + ' changed from type')
+            }
+        }
+        updateMaps(this.prog, 'nodeTemplate', this.id, this.properties, clauses.properties, 'property ')
+        updateMaps(this.prog, 'nodeTemplate', this.id, this.requirements, clauses.requirements, 'requirement ')
     }
 
     checkType(prog) {
         if (this.parentName == null) {
             try {
-                throw new Error(" ==> problem about name of parent")
+                throw new Error(" : problem about name of parent")
             } catch (e) {
                 console.error(e.name + e.message)
             }
@@ -200,11 +276,90 @@ class NodeTemplate extends InstructionNode {
         this.parent = prog.nodeTypes[this.parentName]
         if (this.parent == null) {
             try {
-                throw new Error(" ==> nodeType '" + this.parentName + "' is not defined.")
+                throw new Error(" : nodeType '" + this.parentName + "' is not defined.")
             } catch (e) {
                 console.error(e.name + e.message)
+                delete(prog.nodeTemplates[this.id])
             }
         }
+        
+        if(this.parent != null) {
+            let i = 0
+            for(let p in this.parent.properties) {
+                i+=1
+                for(let p2 in this.properties) {
+                    if(p == p2) {
+                        i+=-1
+                    }
+                }
+            }
+            if(i!=0) {
+                try {
+                    throw new Error(" : the properties of " + this.id + ' are different from the properties of parents ' + this.parentName)
+                } catch (e) {
+                    console.error(e.name + e.message)
+                    delete(prog.nodeTemplates[this.id])
+                }
+            }
+
+            for(let p in this.parent.properties) {
+                let type = this.parent.properties[p].typeName
+                let test = this.properties[p].typeName
+                if(type == 'boolean') {
+                    if(test != '0' && test != '1') {
+                        try {
+                            throw new Error(" : property " + this.properties[p].name + ' about nodeTemplate ' + this.id + ' is not a boolean type')
+                        } catch (e) {
+                            console.error(e.name + e.message)
+                            delete(prog.nodeTemplates[this.id])
+                        }
+                    }
+                }
+                if(type == 'integer') {
+                    for(let i=0; i<test.length-1; i++) {
+                        if(test[i] == '.') {
+                            try {
+                                throw new Error(" : property " + this.properties[p].name + ' about nodeTemplate ' + this.id + ' is not an integer type')
+                            } catch (e) {
+                                console.error(e.name + e.message)
+                                delete(prog.nodeTemplates[this.id])
+                            }
+                            return
+                        }
+                    }
+                    test = parseInt(test)
+                    if(isNaN(test)) {
+                        try {
+                            throw new Error(" : property " + this.properties[p].name + ' about nodeTemplate ' + this.id + ' is not an integer type')
+                        } catch (e) {
+                            console.error(e.name + e.message)
+                            delete(prog.nodeTemplates[this.id])
+                        }
+                    }
+                }
+                if(type == 'string') {
+                    if(test[0] != '"' || test[test.length-1] != '"') {
+                        try {
+                            throw new Error(" : property " + this.properties[p].name + ' about nodeTemplate ' + this.id + ' is not an string type')
+                        } catch (e) {
+                            console.error(e.name + e.message)
+                            delete(prog.nodeTemplates[this.id])
+                        }
+                    }
+                }
+                if(type == 'float') {
+                    test = parseFloat(test)
+                    if(isNaN(test)) {
+                        try {
+                            throw new Error(" : property " + this.properties[p].name + ' about nodeTemplate ' + this.id + ' is not a float type')
+                        } catch (e) {
+                            console.error(e.name + e.message)
+                            delete(prog.nodeTemplates[this.id])
+                        }
+                    }
+                }
+            }
+        }  
     }
 
     errorNodeTemplate() {
@@ -215,28 +370,7 @@ class NodeTemplate extends InstructionNode {
             console.error("nodeTemplate " + this.id.name + " type " + this.parentName.name + " ; \n")
         }
     }
-
-    toString() {
-        return "asset " + this.id.name + " : " + this.componant.name + " ; "
-    }
 }
-
-export class RequirementNodeTemplate extends InstructionNode {
-    constructor(id, node, ctx) {
-        super(ctx)
-        this.name = id.name
-        this.nodeName = node.name
-    }
-}
-
-export class PropertyNodeTemplate extends InstructionNode{
-    constructor(id, type, ctx) {
-        super(ctx)
-        this.name = id.name
-        this.typeName = type.name
-    }
-}
-
 
 export class TerminalNode extends ModelNode {
     constructor(ctx) {
