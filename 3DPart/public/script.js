@@ -6,7 +6,7 @@ import { RenderPass } from './libs/three.js/examples/jsm/postprocessing/RenderPa
 import { ShaderPass } from './libs/three.js/examples/jsm/postprocessing/ShaderPass.js';
 import { OutlinePass } from './libs/three.js/examples/jsm/postprocessing/OutlinePass.js';
 import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
-import {Object3D, Vector3} from "./libs/three.js/build/three.module.js";
+import {Vector3} from "./libs/three.js/build/three.module.js";
 
 /// VARIABLES ///
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
@@ -86,7 +86,6 @@ function init(){
 	// Drag control
 	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement);
 	dragControls.deactivate();
-	document.addEventListener( 'click', onClick );
 	document.addEventListener( 'pointerdown', onMouseDown);
 	document.addEventListener( 'pointerup', onMouseUp);
 	window.addEventListener( 'keydown', onKeyDown );
@@ -100,22 +99,22 @@ function init(){
 	//textures
 	// les composants doivent tous avoir des noms différents et hériter de composants existants (ou ne pas hériter du tout)
 	componentsList = {
-		'root' : { 'name': 'root', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [], 'linkedTo': []} },
-		'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': ['serveur']} },
-		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'dns.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [], 'linkedTo': []} },
-		'router': { 'name': 'router', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'apache': { 'name': 'apache', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'php': { 'name': 'php', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'database': { 'name': 'database', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#db852a', 'logo' : 'db.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depht' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} }
+		'root' : { 'name': 'root', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [], 'linkedTo': []} },
+		'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': ['serveur']} },
+		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'dns.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [], 'linkedTo': []} },
+		'router': { 'name': 'router', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'apache': { 'name': 'apache', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'php': { 'name': 'php', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'database': { 'name': 'database', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#db852a', 'logo' : 'db.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} }
 	};
 
 	// génération dynamique de la palette de composants
@@ -321,27 +320,6 @@ function onKeyUp() {
 	enableSelection = true;
 }
 
-function onClick( event ) {
-	/*if(preventClick){
-		preventClick = false;
-		return;
-	}
-	if(selectedTool === 'moveTool'){
-		needSpacing = true;
-	}else if(selectedTool === 'eyeTool'){
-		selectObject(event);
-	}else if(selectedTool === 'linkTool'){
-		if(selectedComponent != null){
-			const cmpnt1 = selectedComponent;
-			selectObject(event);
-			const cmpnt2 = selectedComponent;
-			drawLink(cmpnt1, cmpnt2);
-		}else{
-			selectObject(event);
-		}
-	}*/
-}
-
 function onMouseDown(event){
 	realeaseTimer = Date.now();
 }
@@ -417,6 +395,7 @@ function showComponentInfo(component){
 	if(component.userData.derivedFrom !== '')
 		derivationInfo = ' (from '+component.userData.derivedFrom+ ')';
 	pannelSectionType.html(component.userData.componentType + derivationInfo);
+	$('#componentLevel').html(component.userData.nestingLevel);
 	pannelSectionLinks.html('');
 	component.userData.links.forEach(function(link){
 		pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
@@ -521,7 +500,7 @@ function generateComponent(componentType, material) {
 
 	if(selectedComponent !== null) {
 		newCmpnt.position.y += (newCmpnt.geometry.parameters.height/2) + (newCmpnt.parent.geometry.parameters.height/2);
-		childrenSpacing(selectedComponent, count - 1, true);
+		checkStrechNeeds(selectedComponent);
 		$('#l' + selectedComponent.userData.componentID).append(
 			'<li class="componentlistItem" id="' + lastID + '">' +
 			'<div class="componentLabel" id="c' + lastID + '">' + newCmpnt.userData.componentName + '</div>' +
@@ -533,7 +512,7 @@ function generateComponent(componentType, material) {
 		sceneComponentList.append('<li class="componentlistItem" id="'+lastID+'">'+
 			'<div class="componentLabel" id="c'+lastID+'">'+newCmpnt.userData.componentName+'</div>'+
 			'<ul class="sceneComponentslist" id="l'+lastID+'"></ul>'+
-			'</li><br/>');
+			'<br/></li>');
 	}
 	lastID++;
 
@@ -545,27 +524,31 @@ function generateComponent(componentType, material) {
 	needSpacing = true;
 }
 
-function childrenSpacing(parentComponent, couche){
+// adjust children spacement within a component and resize it (stretch or shrink)
+function checkStrechNeeds(parentComponent){
 	let resizeLevel = false;
 	const nbLines = Math.ceil(Math.sqrt(parentComponent.children.length));
 	const nbColumn = Math.ceil(parentComponent.children.length / nbLines);
+	const couche = parentComponent.userData.nestingLevel
 	const coucheEnfant = couche+1;
 	config_espacement = 0.6;
+
 	let childWidth = nestingLevels['level'+coucheEnfant]['width'];
 	let childDepth = nestingLevels['level'+coucheEnfant]['depth'];
 	let spacingX = (childWidth * 0.2) + config_espacement;
 	let spacingZ = (childDepth * 0.2) + config_espacement;
 
 	// new parent scale
-	const newWidth = (childWidth * (nbLines)) + (spacingX * (nbLines-1)) + 0.6;
+	let newWidth;
 	const newHeight = componentsList[parentComponent.userData.componentType]['height'];
-	const newDepth = (childDepth * (nbColumn)) + (spacingZ * (nbColumn-1)) + 0.6;
+	let newDepth;
+		newWidth = (childWidth * (nbLines)) + (spacingX * (nbLines-1)) + 0.6;
+		newDepth = (childDepth * (nbColumn)) + (spacingZ * (nbColumn-1)) + 0.6;
 
 	if(newWidth > nestingLevels['level'+couche]['width']){
 		nestingLevels['level'+couche]['width'] = newWidth;
 		resizeLevel = true;
 	}
-
 	if(newDepth > nestingLevels['level'+couche]['depth']){
 		nestingLevels['level'+couche]['depth'] = newDepth;
 		resizeLevel = true;
@@ -581,7 +564,7 @@ function childrenSpacing(parentComponent, couche){
 			const cName = object.userData.componentName;
 			object.geometry = new THREE.BoxGeometry(nestingLevels['level'+couche]['width'], newHeight, nestingLevels['level'+couche]['depth']);
 			generateTexture(cComponentType, cName, cColor, nestingLevels['level'+couche]['width'], selectedComponent.geometry.parameters.height, cTagColor, cLogo, 'updateTexture', object);
-			childrenSpacing(object, couche);
+			checkStrechNeeds(object);
 		}
 	}
 
@@ -594,22 +577,97 @@ function childrenSpacing(parentComponent, couche){
 		child.position.x = (coloneCourante*childWidth) + (spacingX*coloneCourante) - (nestingLevels['level'+couche]['width']/2) + (childWidth/2) + (config_espacement/2);
 		count++;
 	});
+	// respace at level0
+	config_distance = nestingLevels['level0']['width'] + (nestingLevels['level0']['width']/2);
+	needSpacing = true;
 
-	if(parentComponent.parent != sceneComponentsObj){
-		childrenSpacing(parentComponent.parent, couche-1);
+	if(parentComponent.parent != sceneComponentsObj && resizeLevel){
+		checkStrechNeeds(parentComponent.parent);
 	}
+}
 
-	if(nestingLevels['level'+coucheEnfant]['nbEleMax'] < parentComponent.children.length){
-		nestingLevels['level'+coucheEnfant]['nbEleMax'] = parentComponent.children.length;
-		childrenSpacing(parentComponent.parent, couche-1);
+// check if components have to be resized after a component was deleted and respace it's children
+function checkShrinkNeeds(){
+	// parcours de tous les niveaux d'imbrication en partant du plus haut
+	for(let level = (objectsPerLevels.length)-1; level >= 0; level--){
 
+		let resizeLevel = false;	// pass it to true if shrinking is needed
+		let biggestComponent = null;
+		// get The biggest component of the level
+		objectsPerLevels[level].forEach(function(component){
+			if(biggestComponent === null)
+				biggestComponent = component;
+			else if(component.children.length > biggestComponent.children.length)
+				biggestComponent = component;
+		});
+
+		// If there is at list one component on this level
+		if(biggestComponent !== null){
+			let newWidth, newHeight, newDepth;
+			const nbLines = Math.ceil(Math.sqrt(biggestComponent.children.length));
+			const nbColumn = Math.ceil(biggestComponent.children.length / nbLines);
+			const coucheEnfant = level +1;
+			let childWidth = 1.2, childDepth = 1.2;
+			if(coucheEnfant < Object.keys(nestingLevels).length){
+				childWidth = nestingLevels['level'+coucheEnfant]['width'];
+				childDepth = nestingLevels['level'+coucheEnfant]['depth'];
+			}
+			let spacingX = (childWidth * 0.2) + config_espacement;
+			let spacingZ = (childDepth * 0.2) + config_espacement;
+
+			// calcul new component's level dimensions
+			if(biggestComponent.children.length === 0){
+				newWidth = componentsList[biggestComponent.userData.componentType]['width'];
+				newHeight = componentsList[biggestComponent.userData.componentType]['height'];
+				newDepth = componentsList[biggestComponent.userData.componentType]['depth'];
+			}else{
+				newWidth = (childWidth * (nbLines)) + (spacingX * (nbLines-1)) + 0.6;
+				newHeight = componentsList[biggestComponent.userData.componentType]['height'];
+				newDepth = (childDepth * (nbColumn)) + (spacingZ * (nbColumn-1)) + 0.6;
+			}
+			// Update the level information array "nestingLevels"
+			if(newWidth < nestingLevels['level'+level]['width']){
+				nestingLevels['level'+level]['width'] = newWidth;
+				resizeLevel = true;
+			}
+			if(newDepth < nestingLevels['level'+level]['depth']){
+				nestingLevels['level'+level]['depth'] = newDepth;
+				resizeLevel = true;
+			}
+
+			// rétressisement des composants du même niveau
+			if(resizeLevel){
+				objectsPerLevels[level].forEach(function(component){
+					const cComponentType = component.userData.componentType;
+					const cTagColor = '#7d2f9e';
+					const cColor = componentsList[cComponentType]['color'];
+					const cLogo = componentsList[cComponentType]['logo'];
+					const cName = component.userData.componentName;
+					component.geometry = new THREE.BoxGeometry(nestingLevels['level' + level]['width'], newHeight, nestingLevels['level' + level]['depth']);
+					generateTexture(cComponentType, cName, cColor, nestingLevels['level' + level]['width'], biggestComponent.geometry.parameters.height, cTagColor, cLogo, 'updateTexture', component);
+
+					//placement & espacement enfants
+					let count = 0;
+					component.children.forEach(child => {
+						const ligneCourante = count % nbColumn;
+						const coloneCourante = Math.floor(count / nbColumn);
+						child.position.z = (ligneCourante*childDepth) + (spacingZ*ligneCourante) - (nestingLevels['level'+level]['depth']/2) + (childDepth/2) + (config_espacement/2);
+						child.position.x = (coloneCourante*childWidth) + (spacingX*coloneCourante) - (nestingLevels['level'+level]['width']/2) + (childWidth/2) + (config_espacement/2);
+						count++;
+					});
+				});
+			}
+		}else{	//if there is no component on the level
+			nestingLevels['level'+level]['width'] = 1.2;
+			nestingLevels['level'+level]['depth'] = 1.2;
+		}
 	}
-
+	// respace at level0
 	config_distance = nestingLevels['level0']['width'] + (nestingLevels['level0']['width']/2);
 	needSpacing = true;
 }
 
-// reaffect a new texture to an existing component
+// reaffect a new material(with a new texture) to an existing component
 function regenerateTexture(component, material){
 	component.material = material;
 }
@@ -840,10 +898,14 @@ pannelSectionName.on('input', function(){
 // supprimer un objet
 $('#deleteButton').on('click', function(){
 	if(selectedComponent){
+		const parent = selectedComponent.parent;
 		$('#'+selectedComponent.userData.componentID).remove();
 		//delete from objectsPerLevels
 		deleteObjectHierarchie(selectedComponent);
-		selectedComponent.parent.remove(selectedComponent);
+		parent.remove(selectedComponent);
+
+		//childrenSpacing(parent, parent.userData.nestingLevel, false, true);
+		checkShrinkNeeds();
 
 		selectedComponent = null;
 		rightPannel.css('display', 'none');
