@@ -4,7 +4,6 @@ console.log('TEST :\n')
 
 let leto = new letoModel()
 
- 
 leto.parse(`
 nodeType server {
   properties {
@@ -69,7 +68,7 @@ nodeTemplate myTomcat type tomcat {
 console.log('\nTEST MODIFICATION :\n')
 
 leto.parse(`
-nodeType server {
+nodeType server2 {
   properties {
     num_cpus : integer,
     os : string
@@ -88,7 +87,7 @@ nodeType softwareComponent {
   }
 };
  
-nodeType tomcat derived_from server {
+nodeType tomcat derived_from server2 {
   requirements {
     dataSource : BD
   }
@@ -100,7 +99,7 @@ nodeType BD derived_from softwareComponent {
   }
 };
 
-nodeTemplate myAppliServer type server {
+nodeTemplate myAppliServer type server2 {
   properties {
     num_cpus : 3,
     os : "linux"

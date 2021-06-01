@@ -15,11 +15,12 @@ export class ProgModel {
         }
     }
 
-    remove() {
+    remove(event) {
         for(var nodetype in this.nodeTypes) {
             let versionNode = this.nodeTypes[nodetype].version
             let version = this.version
             if(versionNode != version) {
+                event.deleted[nodetype] = this.nodeTypes[nodetype]
                 delete(this.nodeTypes[nodetype])
             }
         }
@@ -27,6 +28,7 @@ export class ProgModel {
             let versionNode = this.nodeTemplates[nodetemplate].version
             let version = this.version
             if(versionNode != version) {
+                event.deleted[nodetemplate] = this.nodeTemplates[nodetemplate]
                 delete(this.nodeTemplates[nodetemplate])
             }
         }

@@ -26,7 +26,7 @@ export class InstructionNode extends ModelNode {
     }
 } 
 
-function updateMaps(prog, node, nodeName, current, other, libelle) {
+function updateMaps(prog, event, node, nodeName, current, other, libelle) {
     for(let c in current) {
         try {
             let currentC = current[c]
@@ -34,10 +34,12 @@ function updateMaps(prog, node, nodeName, current, other, libelle) {
             if(newC == null) {
                 console.log('Event : the ' + libelle + currentC.name + ' of nodeType ' + nodeName + ' has been deleted')
                 delete(current[c])
+                event.update(nodeName, libelle, current)
             } else {
                 currentC.update(newC)
             }
         } catch(error){
+            event.update(nodeName, libelle, current)
             console.log('Event : the ' + libelle + 'of nodeType ' + nodeName + ' has been deleted')
             delete(current[c])
         }
@@ -50,6 +52,7 @@ function updateMaps(prog, node, nodeName, current, other, libelle) {
             if(currentC == null) {
                 current[c] = newC
                 console.log('Event : the ' + libelle + current[c].name + ' of nodeType ' + nodeName + ' has been added')
+                event.update(nodeName, libelle, current)
             }
         } catch(error){
             if(node == 'nodeType'){
@@ -63,6 +66,7 @@ function updateMaps(prog, node, nodeName, current, other, libelle) {
                     prog.nodeTypes[nodeName].properties = other
                 }
                 console.log('Event : the ' + libelle + 'of nodeType ' + nodeName + ' has been added')
+                event.update(nodeName, libelle, current)
             } 
             if(node == 'nodeTemplate') {
                 if(libelle == 'requirement '){
@@ -72,12 +76,13 @@ function updateMaps(prog, node, nodeName, current, other, libelle) {
                     prog.nodeTemplates[nodeName].properties = other
                 }
                 console.log('Event : the ' + libelle + 'of nodeTemplate ' + nodeName + ' has been added')
+                event.update(nodeName, libelle, current)
             }   
         } 
     }
 }
 
-export function nodeTypeFactory(prog, ctx, id, parentName, clauses) {
+export function nodeTypeFactory(prog, event, ctx, id, parentName, clauses) {
     let name = id.name
     let current = prog.nodeTypes[name]
     if (current == null) {
@@ -85,9 +90,10 @@ export function nodeTypeFactory(prog, ctx, id, parentName, clauses) {
         prog.nodeTypes[name] = current
         ctx.model = current
         console.log("Creation : nodeType " + name)
+        event.added(name, current)
         return current
     } else {
-        return current.update(prog.version, parentName, clauses)
+        return current.update(event, current, prog.version, parentName, clauses)
     }
 }
 
@@ -106,18 +112,19 @@ class NodeType extends InstructionNode {
         this.requirements = clauses.requirements
     }
 
-    update(version, parentName, clauses) {
+    update(event, current, version, parentName, clauses) {
         this.version = version
         if(parentName != null && this.parentName != null) {
             if(parentName.name != this.parentName.name) {
                 this.parentName = parentName
                 console.log('Event : nodeType ' + this.id + ' changed from parent')
+                event.update(this.id, 'parentName', current)
             }
         }
 
-        updateMaps(this.prog, 'nodeType', this.id, this.properties, clauses.properties, 'property ')
-        updateMaps(this.prog, 'nodeType', this.id, this.capabilities, clauses.capabilities, 'capability ')
-        updateMaps(this.prog, 'nodeType', this.id, this.requirements, clauses.requirements, 'requirement ')
+        updateMaps(this.prog, event, 'nodeType', this.id, this.properties, clauses.properties, 'property ')
+        updateMaps(this.prog, event, 'nodeType', this.id, this.capabilities, clauses.capabilities, 'capability ')
+        updateMaps(this.prog, event, 'nodeType', this.id, this.requirements, clauses.requirements, 'requirement ')
     }
 
     checkType(prog) {
@@ -224,7 +231,7 @@ export class Requirement extends InstructionNode {
     }
 }
 
-export function nodeTemplateFactory(prog, ctx, id, parentName, clauses) {
+export function nodeTemplateFactory(prog, event, ctx, id, parentName, clauses) {
     let name = id.name
     let current = prog.nodeTemplates[name]
     if (current == null) {
@@ -232,9 +239,10 @@ export function nodeTemplateFactory(prog, ctx, id, parentName, clauses) {
         prog.nodeTemplates[name] = current
         ctx.model = current
         console.log("Creation : nodeTemplate " + name)
+        event.added(name, current)
         return current
     } else {
-        return current.update(prog.version, parentName, clauses)    
+        return current.update(event, current, prog.version, parentName, clauses)    
     }
 }
 
@@ -252,17 +260,17 @@ class NodeTemplate extends InstructionNode {
         this.requirements = clauses.requirements
     }
 
-    update(version, parentName, clauses) {
+    update(event, current, version, parentName, clauses) {
         this.version = version
-        let c = clauses
         if(parentName != null && this.parentName != null) {
             if(parentName.name != this.parentName.name) {
                 this.parentName = parentName
                 console.log('Event : nodeTemplate ' + this.id + ' changed from type')
+                event.update(this.id, 'parentName', current)
             }
         }
-        updateMaps(this.prog, 'nodeTemplate', this.id, this.properties, clauses.properties, 'property ')
-        updateMaps(this.prog, 'nodeTemplate', this.id, this.requirements, clauses.requirements, 'requirement ')
+        updateMaps(this.prog, event, 'nodeTemplate', this.id, this.properties, clauses.properties, 'property ')
+        updateMaps(this.prog, event, 'nodeTemplate', this.id, this.requirements, clauses.requirements, 'requirement ')
     }
 
     checkType(prog) {

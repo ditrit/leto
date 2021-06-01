@@ -1,11 +1,13 @@
 import letoListener from './antlr/letoListener.js';
 import { Capability, Requirement, Property, nodeTypeFactory, nodeTemplateFactory, Instructions, InstructionNode, IdVal, TypeVal, CommentVal } from './model.js';
+import { eventModel } from './model_event.js';
 
 export default class MyLetoListener extends letoListener {
     constructor(progModel) {
         super();
         this.prog = progModel
         this.nbError = 0
+        this.event = new eventModel(this.prog)
     }
 
     exitProg(ctx) {
@@ -22,6 +24,8 @@ export default class MyLetoListener extends letoListener {
             console.error("errors")
             return;
         }
+
+        this.event.toString()
     }
 
     exitLine(ctx) {
@@ -64,7 +68,7 @@ export default class MyLetoListener extends letoListener {
             index = 5
         }
         clauses = ctx.getChild(index).model
-        nodeTypeFactory(this.prog, ctx, id, parentName, clauses)
+        nodeTypeFactory(this.prog, this.event, ctx, id, parentName, clauses)
     }
 
     exitClausesNodeType(ctx) {
@@ -158,7 +162,7 @@ export default class MyLetoListener extends letoListener {
             index = 5
         }
         clauses = ctx.getChild(index).model
-        nodeTemplateFactory(this.prog, ctx, id, parentName, clauses)
+        nodeTemplateFactory(this.prog, this.event, ctx, id, parentName, clauses)
     }
 
     exitClausesNodeTemplate(ctx) {
