@@ -106,7 +106,7 @@ nodeTemplate myAppliServer type server2 {
   }
 };
 
-nodeTemplate myDBServer type server {
+nodeTemplate myDBServer type server2 {
   properties {
     num_cpus : 4,
     os : "linux"

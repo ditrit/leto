@@ -3,7 +3,6 @@ export class eventModel {
         this.add = []
         this.deleted = []
         this.updated = []
-        this.error = []
         this.prog = prog
     }
 
@@ -15,8 +14,8 @@ export class eventModel {
         this.deleted[name] = current
     }
 
-    update(name, changed, current) {
-        this.updated[name] = [changed, current]
+    update(name, changed) {
+        this.updated[name] = changed
     }
 
     toString() {
@@ -24,16 +23,15 @@ export class eventModel {
         let add = this.add
         let up = this.updated
         let del = this.deleted
-        let err = this.error
+
         return `
     Added : ` +
         this.add + `
     Deleted : ` +
         this.deleted + `
     Updated : ` +
-        this.updated + `
-    Error : ` +
-        this.error
+        this.updated 
+
     }
 
 }
