@@ -14,8 +14,8 @@ export class eventModel {
         this.deleted[name] = current
     }
 
-    update(name, changed) {
-        this.updated[name] = changed
+    update(name, current) {
+        this.updated[name] = current
     }
 
     toString() {

@@ -32,14 +32,14 @@ function updateMaps(prog, event, node, nodeName, current, other, libelle) {
             let currentC = current[c]
             let newC = other[c]
             if(newC == null) {
-                event.update(nodeName, libelle)
+                event.update(nodeName, currentC)
                 console.log('Event : the ' + libelle + currentC.name + ' of nodeType ' + nodeName + ' has been deleted')
                 delete(current[c])
             } else {
                 currentC.update(newC)
             }
         } catch(error){
-            event.update(nodeName, libelle)
+            event.update(nodeName, current)
             console.log('Event : the ' + libelle + 'of nodeType ' + nodeName + ' has been deleted')
             delete(current[c])
         }
@@ -52,7 +52,7 @@ function updateMaps(prog, event, node, nodeName, current, other, libelle) {
             if(currentC == null) {
                 current[c] = newC
                 console.log('Event : the ' + libelle + current[c].name + ' of nodeType ' + nodeName + ' has been added')
-                event.update(nodeName, libelle)
+                event.update(nodeName, current[c])
             }
         } catch(error){
             if(node == 'nodeType'){
@@ -66,7 +66,7 @@ function updateMaps(prog, event, node, nodeName, current, other, libelle) {
                     prog.nodeTypes[nodeName].properties = other
                 }
                 console.log('Event : the ' + libelle + 'of nodeType ' + nodeName + ' has been added')
-                event.update(nodeName, libelle)
+                event.update(nodeName, prog.nodeTypes[nodeName].properties)
             } 
             if(node == 'nodeTemplate') {
                 if(libelle == 'requirement '){
@@ -76,7 +76,7 @@ function updateMaps(prog, event, node, nodeName, current, other, libelle) {
                     prog.nodeTemplates[nodeName].properties = other
                 }
                 console.log('Event : the ' + libelle + 'of nodeTemplate ' + nodeName + ' has been added')
-                event.update(nodeName, libelle)
+                event.update(nodeName, prog.nodeTemplates[nodeName].properties)
             }   
         } 
     }
@@ -118,7 +118,7 @@ class NodeType extends InstructionNode {
             if(parentName.name != this.parentName.name) {
                 this.parentName = parentName
                 console.log('Event : nodeType ' + this.id + ' changed from parent')
-                event.update(this.id, 'parentName')
+                event.update(this.id, current)
             }
         }
 
@@ -266,7 +266,7 @@ class NodeTemplate extends InstructionNode {
             if(parentName.name != this.parentName.name) {
                 this.parentName = parentName
                 console.log('Event : nodeTemplate ' + this.id + ' changed from type')
-                event.update(this.id, 'parentName')
+                event.update(this.id, current)
             }
         }
         updateMaps(this.prog, event, 'nodeTemplate', this.id, this.properties, clauses.properties, 'property ')
