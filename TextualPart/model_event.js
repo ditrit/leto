@@ -18,6 +18,12 @@ export class eventModel {
         this.updated[name] = current
     }
 
+    checkType() {
+        for (var key in this.updated) {
+            this.updated[key]
+        }
+    }
+
     toString() {
         this.prog.remove(this)
         let add = this.add

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My first Vue app</title>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="./letoModel.js"></script>
+</head>
+<body>
+  <div id="app">
+    <p>{{ message }}</p>
+    <textarea id="val" v-model="input" cols="40" rows="30"></textarea>
+    </br>
+    <button v-on:click="text">Parse</button>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Textual Part'
+      },
+      methods: {
+        text: function(event) {
+          let leto = new letoModel()
+          var input = document.getElementById('val').value
+          leto.parse(input)
+          var test = leto.toString()
+          alert(test)
+        }
+      }
+    })
+  </script>
+</body>
+</html>

@@ -19,6 +19,7 @@
   "dependencies": {
     "antlr4": "^4.9.2",
     "glob": "^7.1.7",
-    "jasmine": "^3.7.0"
+    "jasmine": "^3.7.0",
+    "vue": "^2.6.13"
   }
 }

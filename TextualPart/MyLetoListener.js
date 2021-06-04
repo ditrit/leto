@@ -25,6 +25,7 @@ export default class MyLetoListener extends letoListener {
             return;
         }
 
+        this.event.checkType()
         this.event.toString()
     }
 
