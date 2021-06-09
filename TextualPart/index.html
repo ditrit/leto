@@ -3,7 +3,7 @@
 <head>
   <title>My first Vue app</title>
   <script src="https://unpkg.com/vue"></script>
-  <script src="./letoModel.js"></script>
+  <script src="../index.mjs"></script>
 </head>
 <body>
   <div id="app">
@@ -11,6 +11,7 @@
     <textarea id="val" v-model="input" cols="40" rows="30"></textarea>
     </br>
     <button v-on:click="text">Parse</button>
+    <div id="tableWrapper"></div>
   </div>
 
   <script>
@@ -21,11 +22,10 @@
       },
       methods: {
         text: function(event) {
-          let leto = new letoModel()
-          var input = document.getElementById('val').value
-          leto.parse(input)
-          var test = leto.toString()
-          alert(test)
+          const input = document.getElementById('val').value
+          const tableWrapper = document.getElementById("tableWrapper") 
+          tableWrapper.innerHTML = Index.lancement(input)
+          alert(input)
         }
       }
     })

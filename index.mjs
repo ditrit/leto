@@ -4,12 +4,7 @@ console.log('TEST :\n')
 
 let leto = new letoModel()
 
-leto.parse(input)
-
-console.log(leto.toString())
-
-
-/*leto.parse(`
+leto.parse(`
 nodeType server {
   properties {
     num_cpus : integer,
@@ -133,7 +128,10 @@ nodeTemplate myTomcat type tomcat {
     host : server
   }
 };
-`)*/
+`)
+
+console.log(leto.toString())
+
 
 
 
