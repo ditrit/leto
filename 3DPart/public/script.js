@@ -342,6 +342,8 @@ function placeParent(component){
 		component.userData.grid.x = index_x;
 		component.userData.grid.y = index_z;
 
+		needRelink = true;
+
 		//realignerGrille();
 	}else{
 		component.position.x = (component.userData.grid.x - GRID_START) * (CELL_SPACEMENT+CELL_WIDTH);
