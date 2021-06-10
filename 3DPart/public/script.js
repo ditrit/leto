@@ -20,6 +20,21 @@ let position_array = [];
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
+// shader
+/*let shader =
+	'outline' :
+vertex_shader: [
+	"uniform float offset;",
+	"void main() {",
+	"vec4 pos = modelViewMatrix * vec4( position + normal * offset, 1.0 );",
+	"gl_Position = projectionMatrix * pos;",
+	"}"
+].join("\n"),
+	fragment_shader: [
+	"void main(){",
+	"gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );",
+	"}"
+].join("\n");*/
 // config
 let config_distance = 5, config_tolerance = 0.2, config_espacement = 1, config_diviseurVitesse = 30, config_focusDistance = 7;
 // Loaders
@@ -231,7 +246,8 @@ function initDragControls(){
 		cmpnt.position.x = 0;
 		cmpnt.position.y = 0;
 		cmpnt.position.z = 0;
-		placeParent(cmpnt.parent);
+		if(cmpnt.parent.userData.grid != null)
+			placeParent(cmpnt.parent);
 	} );
 }
 
