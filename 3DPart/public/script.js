@@ -6,7 +6,7 @@ import { RenderPass } from './libs/three.js/examples/jsm/postprocessing/RenderPa
 import { ShaderPass } from './libs/three.js/examples/jsm/postprocessing/ShaderPass.js';
 import { OutlinePass } from './libs/three.js/examples/jsm/postprocessing/OutlinePass.js';
 import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
-import {Vector3} from "./libs/three.js/build/three.module.js";
+import {Group, Vector2, Vector3} from "./libs/three.js/build/three.module.js";
 
 /// VARIABLES ///
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
@@ -16,6 +16,7 @@ let componentsList, sceneComponentsObj = new THREE.Group(), sceneLinksObj = new 
 let nestingLevels = {level0: {width: 1.2, depth: 1.2}};
 let objectsPerLevels = new Array([]);
 let lastID = 0, lastLinkID = 0, realeaseTimer = null;
+let position_array = [];
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
@@ -84,8 +85,7 @@ function init(){
 	orbitControls.update();
 
 	// Drag control
-	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement);
-	dragControls.deactivate();
+	initDragControls();
 	document.addEventListener( 'pointerdown', onMouseDown);
 	document.addEventListener( 'pointerup', onMouseUp);
 	window.addEventListener( 'keydown', onKeyDown );
@@ -99,22 +99,22 @@ function init(){
 	//textures
 	// les composants doivent tous avoir des noms différents et hériter de composants existants (ou ne pas hériter du tout)
 	componentsList = {
-		'root' : { 'name': 'root', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [], 'linkedTo': []} },
-		'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': ['serveur']} },
-		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'dns.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'requirements': {'nestedOn': [], 'linkedTo': []} },
-		'router': { 'name': 'router', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'apache': { 'name': 'apache', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'php': { 'name': 'php', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'database': { 'name': 'database', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#db852a', 'logo' : 'db.png', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.3, 'depth' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} }
+		'root' : { 'name': 'root', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
+		'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': ['serveur']} },
+		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'dns.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
+		'router': { 'name': 'router', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'apache': { 'name': 'apache', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'php': { 'name': 'php', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'database': { 'name': 'database', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#db852a', 'logo' : 'db.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+		'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} }
 	};
 
 	// génération dynamique de la palette de composants
@@ -194,7 +194,7 @@ function init(){
 // Mises à jour de l'application
 function update(){
 	autoFocus();
-	ajustementEspacement();
+	//ajustementEspacement();
 	if(needRelink){
 		sceneLinksObj.children.forEach(function(link){
 			relink(link);
@@ -215,66 +215,145 @@ function animate(){
 	requestAnimationFrame(animate);
 }
 
+function initDragControls(){
+	dragControls = new DragControls(sceneComponentsObj.children, camera, renderer.domElement);
+	dragControls.deactivate();
+	dragControls.addEventListener( 'drag', function ( event ) {
+		event.object.position.y = -0.5 + (event.object.geometry.parameters.height/2);
+	} );
+	dragControls.addEventListener( 'dragend', function ( event ) {
+		const cmpnt = event.object;
+		const position = new THREE.Vector3();
+		cmpnt.getWorldPosition ( position );
+
+		cmpnt.parent.position.x = position.x;
+		cmpnt.parent.position.z = position.z;
+		cmpnt.position.x = 0;
+		cmpnt.position.y = 0;
+		cmpnt.position.z = 0;
+		placeParent(cmpnt.parent);
+	} );
+}
+
 
 /// FONCTIONS ADDITIONNELLES ///
 // espace les composants du niveau 0 entre eux
-function ajustementEspacement(){
-	if (needSpacing){
-		let spacingFinished = true;
-		sceneComponentsObj.children.forEach(component => {
-			let haveNeighbour = false;
-			let lastDistance = null;
-			let nearestNeighbour = null;
-			component.position.y = -0.5 + (component.geometry.parameters.height/2);
-			sceneComponentsObj.children.forEach(neighbour => {
-				if(component !== neighbour){
-					let distance = Math.sqrt(
-						Math.pow((component.position.x - neighbour.position.x), 2) +
-						Math.pow((component.position.z - neighbour.position.z), 2)
-					);
-					if(nearestNeighbour == null){
-						lastDistance = distance;
-						nearestNeighbour = neighbour;
-					}else if(distance < lastDistance){
-						lastDistance = distance;
-						nearestNeighbour = neighbour;
-					}
-
-					if(distance === 0){
-						component.position.x += Math.random();
-						component.position.z += Math.random();
-						spacingFinished = false;
-						haveNeighbour = true;
-					}else if(distance <= config_distance){		// eloignement
-						component.position.x += (component.position.x - neighbour.position.x) / config_diviseurVitesse;
-						component.position.z += (component.position.z - neighbour.position.z) / config_diviseurVitesse;
-						haveNeighbour = true;
-						spacingFinished = false;
-					} else if(distance >= config_distance - config_tolerance && distance <= config_distance + config_tolerance){
-						haveNeighbour = true;
-					}
-				}
-			});
-			// rapprochement
-			if(!haveNeighbour && nearestNeighbour){	// nearestNeighbour will be replaced with parent element in futur update
-				if(lastDistance > config_distance + config_tolerance){
-					component.position.x -= (component.position.x - nearestNeighbour.position.x) / config_diviseurVitesse;
-					component.position.z -= (component.position.z - nearestNeighbour.position.z) / config_diviseurVitesse;
-				}
-				spacingFinished = false;
-			}
-		});
-		if(spacingFinished){
-			needSpacing = false;
-			needRelink = true;
+function realignerGrille(){
+	const GRID_MARGIN = 10;
+	const GRID_START = 5;	// half of grid margin
+	const CELL_WIDTH = nestingLevels['level0']['width'];
+	const CELL_DEPTH = nestingLevels['level0']['depth'];
+	const CELL_SPACEMENT = 2;
+	const NB_COLUMNS = Math.ceil(Math.sqrt(objectsPerLevels[0].length));
+	const NB_LINES = Math.ceil(objectsPerLevels[0].length / NB_COLUMNS);
+	// initializing a 2D array which describe objects position in our grid
+	position_array = Array(NB_COLUMNS + GRID_MARGIN);
+	for (let i = 0; i < NB_COLUMNS + GRID_MARGIN; i++) {
+		position_array[i] = new Array(NB_LINES + GRID_MARGIN);
+		for (let j = 0; j < NB_LINES + GRID_MARGIN; j++) {
+			position_array[i][j] = 0;
 		}
 	}
+
+	// replacing objects
+	objectsPerLevels[0].forEach( function(component) {
+		// getting object current position
+		let pos_x = component.position.x;
+		let pos_z = component.position.z;
+		let index_x = 0;
+		let index_z = 0;
+
+		// if component position is good
+		if ((pos_x % (CELL_SPACEMENT+CELL_WIDTH)) == 0 && (pos_z % (CELL_SPACEMENT+CELL_DEPTH)) == 0){
+			index_x = (pos_x / (CELL_SPACEMENT+CELL_WIDTH)) + GRID_START;
+			index_z = (pos_z / (CELL_SPACEMENT+CELL_DEPTH)) + GRID_START;
+			component.position.y = -0.5 + (component.children[0].geometry.parameters.height/2);
+		}else{	// if the object are not aligned with the grid
+			// move component to the nearest blank grid cell
+			// find and move component to the first blank grid cell
+			index_x = GRID_START-1;
+			let trouve = false;
+			while (index_x < (NB_COLUMNS+GRID_START) && trouve === false){
+				index_x++;
+				index_z = GRID_START-1;
+				while (index_z < (NB_LINES+GRID_START) && trouve === false){
+					index_z++;
+					if(position_array[index_x][index_z] === 0)
+						trouve = true;
+				}
+			}
+			// move component
+			component.position.x = (index_x - GRID_START) * (CELL_SPACEMENT+CELL_WIDTH);
+			component.position.y = -0.5 + (component.children[0].geometry.parameters.height/2);
+			component.position.z = (index_z - GRID_START) * (CELL_SPACEMENT+CELL_DEPTH);
+		}
+		// save position in array
+		component.userData.grid = new Vector2(index_x, index_z);
+		position_array[index_x][index_z] ++;
+
+		// if the cell is already occupied
+		if(position_array[index_x][index_z] >= 2){
+			position_array[index_x][index_z] --;
+			// find and move component to the first blank grid cell
+			index_x = GRID_START-1;
+			let trouve = false;
+			while (index_x < (NB_COLUMNS+GRID_START) && trouve === false){
+				index_x++;
+				index_z = GRID_START-1;
+				while (index_z < (NB_LINES+GRID_START) && trouve === false){
+					index_z++;
+					if(position_array[index_x][index_z] === 0)
+						trouve = true;
+				}
+			}
+			// save position in array
+			position_array[index_x][index_z] ++;
+			// move component
+			component.position.x = (index_x - GRID_START) * (CELL_SPACEMENT+CELL_WIDTH);
+			component.position.z = (index_z - GRID_START) * (CELL_SPACEMENT+CELL_DEPTH);
+		}
+	});
+	needRelink = true;
+}
+
+// realign a single object with the grid after moving it
+function placeParent(component){
+	const GRID_START = 5;	// half of grid margin
+	const CELL_WIDTH = nestingLevels['level0']['width'];
+	const CELL_DEPTH = nestingLevels['level0']['depth'];
+	const CELL_SPACEMENT = 2;
+	const pos_x = component.position.x;
+	const pos_z = component.position.z;
+	// trouver pos_x et pos_z les plus proche tel que :
+	// ((pos_x % (CELL_SPACEMENT+CELL_WIDTH)) === 0 && (pos_z % (CELL_SPACEMENT+CELL_DEPTH)) === 0)
+	const index_x = Math.round(pos_x / (CELL_SPACEMENT + CELL_WIDTH)) + GRID_START;
+	const index_z = Math.round(pos_z / (CELL_SPACEMENT + CELL_DEPTH)) + GRID_START;
+
+	// check if cell is in array, otherwise check nearest border
+
+	// if cell is not occupied : move component
+	if(position_array[index_x][index_z] == 0){
+		// update component position in array
+		position_array[component.userData.grid.x][component.userData.grid.y] --;
+		position_array[index_x][index_z] ++;
+		// update component position
+		component.position.x = (index_x - GRID_START) * (CELL_SPACEMENT+CELL_WIDTH);
+		component.position.z = (index_z - GRID_START) * (CELL_SPACEMENT+CELL_DEPTH);
+		component.userData.grid.x = index_x;
+		component.userData.grid.y = index_z;
+
+		//realignerGrille();
+	}else{
+		component.position.x = (component.userData.grid.x - GRID_START) * (CELL_SPACEMENT+CELL_WIDTH);
+		component.position.z = (component.userData.grid.y - GRID_START) * (CELL_SPACEMENT+CELL_DEPTH);
+	}
+
 }
 
 // zoom sur l'objet séléctionné
 function autoFocus(){
 	if(enableAutoFocus && selectedComponent){
-		let distanceFromeTarget = Math.sqrt(
+		const distanceFromeTarget = Math.sqrt(
 			Math.pow((camera.position.x - selectedComponent.position.x), 2) +
 			Math.pow((camera.position.y - selectedComponent.position.y), 2) +
 			Math.pow((camera.position.z - selectedComponent.position.z), 2)
@@ -322,6 +401,16 @@ function onKeyUp() {
 
 function onMouseDown(event){
 	realeaseTimer = Date.now();
+	/*if(selectedTool === 'moveTool'){
+		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		raycaster.setFromCamera(mouse, camera);
+		let intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
+		if(intersects.length > 0) {
+			let component = intersects[0].object;
+			component.position.y = -0.5 + (component.geometry.parameters.height/2);
+		}
+	}*/
 }
 
 function onMouseUp(event) {
@@ -334,7 +423,6 @@ function onMouseUp(event) {
 	if(selectedTool === 'moveTool'){
 		if(delay < 200)
 			selectObject(event);
-		needSpacing = true;
 	}else if(selectedTool === 'eyeTool'){
 		if(delay < 200)
 			selectObject(event);
@@ -371,7 +459,7 @@ function selectObject(event){
 		raycaster.setFromCamera(mouse, camera);
 		let intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
 		if(intersects.length > 0) {
-			selectedComponent = intersects[0].object;
+			selectedComponent = intersects[0].object.parent;
 			addSelectedObject( selectedComponent );
 			outlinePass.selectedObjects = selectedObjects;
 			showComponentInfo(selectedComponent);
@@ -386,7 +474,7 @@ function selectObject(event){
 
 function showComponentInfo(component){
 // right panel completion
-	const componentId = selectedComponent.userData.componentID;
+	const componentId = component.userData.componentID;
 	$('.componentLabel').removeClass('selectedComponent');
 	sceneComponentList.find('#c'+componentId).addClass('selectedComponent');
 	pannelSectionID.html(component.userData.componentID);
@@ -396,6 +484,7 @@ function showComponentInfo(component){
 		derivationInfo = ' (from '+component.userData.derivedFrom+ ')';
 	pannelSectionType.html(component.userData.componentType + derivationInfo);
 	$('#componentLevel').html(component.userData.nestingLevel);
+	$('#componentGridPosition').html('(' +component.position.x+ ';' +component.position.z+ ')');
 	pannelSectionLinks.html('');
 	component.userData.links.forEach(function(link){
 		pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
@@ -423,10 +512,15 @@ function generateTexture(componentType, name, color, width, height, tagColor, lo
 	ctx.fillStyle = color;
 	ctx.fill();
 	ctx.closePath();
-	// Label
-	ctx.font = '90px serif';
+	// Label Type
+	ctx.font = '70pt Calibri';
+	ctx.textAlign = 'left';
 	ctx.fillStyle = '#FFFFFF';
-	ctx.fillText(name, 105, 70, width-110);
+	ctx.fillText(componentsList[componentType]['name'], (height/3)+10, height/6, width-(height/3)-120);
+	// Label Name
+	ctx.font = '90pt Calibri';
+	ctx.textAlign = 'center';
+	ctx.fillText(name, width/2, height/2, width-20);
 	// TagColor
 	ctx.beginPath();
 	ctx.rect(width-100, 0, 100, 100);
@@ -436,7 +530,7 @@ function generateTexture(componentType, name, color, width, height, tagColor, lo
 	// Logo
 	const img = new Image();   // Crée un nouvel élément Image
 	img.addEventListener('load', function() {
-		ctx.drawImage(img, 0, 0, 100, 100);
+		ctx.drawImage(img, 0, 0, height/3, height/3);
 
 		const texture = new THREE.CanvasTexture(canvas);
 
@@ -460,8 +554,10 @@ function generateTexture(componentType, name, color, width, height, tagColor, lo
 function generateComponent(componentType, material) {
 	let count = 0; // nesting level of added children
 	let cmpnt = selectedComponent;
-	while(cmpnt != sceneComponentsObj && cmpnt != null){
-		cmpnt = cmpnt.parent;
+	if(cmpnt !== null)
+		cmpnt = cmpnt;
+	while(cmpnt != scene && cmpnt !== null){
+		cmpnt = cmpnt.parent.parent;
 		count ++;
 	}
 	if(count >= Object.keys(nestingLevels).length){
@@ -472,64 +568,67 @@ function generateComponent(componentType, material) {
 	const cHeight = componentsList[componentType]['height'];
 	const cDepht = nestingLevels['level'+count]['depth'];
 
+	const finalObject = new THREE.Group();
 	let newCmpnt = new THREE.Mesh( new THREE.BoxGeometry( cWidth, cHeight, cDepht ), material );
 
-	newCmpnt.userData.nestingLevel = count;
-	newCmpnt.userData.componentType = componentType;
-	newCmpnt.userData.componentID = lastID;
-	newCmpnt.userData.links = [];
-	const cName = newCmpnt.userData.componentName = componentsList[componentType]['name'] + lastID;
+	finalObject.userData.nestingLevel = count;
+	finalObject.userData.componentType = componentType;
+	finalObject.userData.componentID = lastID;
+	finalObject.userData.links = [];
+	const cName = finalObject.userData.componentName = componentsList[componentType]['name'] + lastID;
 	const cColor = componentsList[componentType]['color'];
 	const cLogo = componentsList[componentType]['logo'];
-	const cTagColor = '#7D2F9E';
+	const cTagColor = '#70bf3b';
 
-	generateTexture(componentType, cName, cColor, cWidth, cHeight, cTagColor, cLogo, 'updateTexture', newCmpnt);
+	finalObject.add(newCmpnt);
+
+	generateTexture(componentType, cName, cColor, cWidth, cHeight, cTagColor, cLogo, 'updateTexture', finalObject);
 
 	if(!selectedComponent)
-		sceneComponentsObj.add(newCmpnt);
+		sceneComponentsObj.add(finalObject);
 	else
-		selectedComponent.add(newCmpnt);
+		selectedComponent.children[0].add(finalObject);
 
 	if(objectsPerLevels[count] !== undefined) {
-		objectsPerLevels[count][objectsPerLevels[count].length] = newCmpnt;
+		objectsPerLevels[count][objectsPerLevels[count].length] = finalObject;
 	}else{
 		objectsPerLevels.push([]);
-		objectsPerLevels[count][0] = newCmpnt;
+		objectsPerLevels[count][0] = finalObject;
 	}
 
 
 	if(selectedComponent !== null) {
-		newCmpnt.position.y += (newCmpnt.geometry.parameters.height/2) + (newCmpnt.parent.geometry.parameters.height/2);
+		finalObject.position.y += newCmpnt.geometry.parameters.height;
 		checkStrechNeeds(selectedComponent);
 		$('#l' + selectedComponent.userData.componentID).append(
 			'<li class="componentlistItem" id="' + lastID + '">' +
-			'<div class="componentLabel" id="c' + lastID + '">' + newCmpnt.userData.componentName + '</div>' +
+			'<div class="componentLabel" id="c' + lastID + '">' + finalObject.userData.componentName + '</div>' +
 			'<ul class="sceneComponentslist" id="l' + lastID + '"></ul>' +
 			'</li>'
 		);
 	}else{
-		newCmpnt.position.set(Math.random(), 0, Math.random());
+		finalObject.position.set(0, 0, 0.1);
 		sceneComponentList.append('<li class="componentlistItem" id="'+lastID+'">'+
-			'<div class="componentLabel" id="c'+lastID+'">'+newCmpnt.userData.componentName+'</div>'+
+			'<div class="componentLabel" id="c'+lastID+'">'+finalObject.userData.componentName+'</div>'+
 			'<ul class="sceneComponentslist" id="l'+lastID+'"></ul>'+
 			'<br/></li>');
 	}
 	lastID++;
 
-	dragControls.dispose();
-	dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+	initDragControls();
 	if(selectedTool !== 'moveTool')
 		dragControls.deactivate();
 
-	needSpacing = true;
+	realignerGrille();
 }
 
 // adjust children spacement within a component and resize it (stretch or shrink)
 function checkStrechNeeds(parentComponent){
 	let resizeLevel = false;
-	const nbLines = Math.ceil(Math.sqrt(parentComponent.children.length));
-	const nbColumn = Math.ceil(parentComponent.children.length / nbLines);
-	const couche = parentComponent.userData.nestingLevel
+	const nbChildren = parentComponent.children[0].children.length+1;
+	const nbLines = Math.ceil(Math.sqrt(nbChildren));
+	const nbColumn = Math.ceil(nbChildren / nbLines);
+	const couche = parentComponent.userData.nestingLevel;
 	const coucheEnfant = couche+1;
 	config_espacement = 0.6;
 
@@ -542,8 +641,8 @@ function checkStrechNeeds(parentComponent){
 	let newWidth;
 	const newHeight = componentsList[parentComponent.userData.componentType]['height'];
 	let newDepth;
-		newWidth = (childWidth * (nbLines)) + (spacingX * (nbLines-1)) + 0.6;
-		newDepth = (childDepth * (nbColumn)) + (spacingZ * (nbColumn-1)) + 0.6;
+	newWidth = (childWidth * (nbLines)) + (spacingX * (nbLines-1)) + 0.6;
+	newDepth = (childDepth * (nbColumn)) + (spacingZ * (nbColumn-1)) + 0.6;
 
 	if(newWidth > nestingLevels['level'+couche]['width']){
 		nestingLevels['level'+couche]['width'] = newWidth;
@@ -558,19 +657,19 @@ function checkStrechNeeds(parentComponent){
 	if(resizeLevel){
 		for (const object of objectsPerLevels[couche]) {
 			const cComponentType = object.userData.componentType;
-			const cTagColor = '#7d2f9e';
+			const cTagColor = '#70bf3b';
 			const cColor = componentsList[cComponentType]['color'];
 			const cLogo = componentsList[cComponentType]['logo'];
 			const cName = object.userData.componentName;
-			object.geometry = new THREE.BoxGeometry(nestingLevels['level'+couche]['width'], newHeight, nestingLevels['level'+couche]['depth']);
-			generateTexture(cComponentType, cName, cColor, nestingLevels['level'+couche]['width'], selectedComponent.geometry.parameters.height, cTagColor, cLogo, 'updateTexture', object);
+			object.children[0].geometry = new THREE.BoxGeometry(nestingLevels['level'+couche]['width'], newHeight, nestingLevels['level'+couche]['depth']);
+			generateTexture(cComponentType, cName, cColor, nestingLevels['level'+couche]['width'], object.children[0].geometry.parameters.height, cTagColor, cLogo, 'updateTexture', object);
 			checkStrechNeeds(object);
 		}
 	}
 
 	//placement & espacement enfants
-	let count = 0;
-	parentComponent.children.forEach(child => {
+	let count = 1;
+	parentComponent.children[0].children.forEach(child => {
 		const ligneCourante = count % nbColumn;
 		const coloneCourante = Math.floor(count / nbColumn);
 		child.position.z = (ligneCourante*childDepth) + (spacingZ*ligneCourante) - (nestingLevels['level'+couche]['depth']/2) + (childDepth/2) + (config_espacement/2);
@@ -578,11 +677,11 @@ function checkStrechNeeds(parentComponent){
 		count++;
 	});
 	// respace at level0
-	config_distance = nestingLevels['level0']['width'] + (nestingLevels['level0']['width']/2);
-	needSpacing = true;
+	//config_distance = nestingLevels['level0']['width'] + (nestingLevels['level0']['width']/2);
+	realignerGrille();
 
-	if(parentComponent.parent != sceneComponentsObj && resizeLevel){
-		checkStrechNeeds(parentComponent.parent);
+	if(parentComponent.parent.parent != scene && resizeLevel){
+		checkStrechNeeds(parentComponent.parent.parent);
 	}
 }
 
@@ -597,15 +696,15 @@ function checkShrinkNeeds(){
 		objectsPerLevels[level].forEach(function(component){
 			if(biggestComponent === null)
 				biggestComponent = component;
-			else if(component.children.length > biggestComponent.children.length)
+			else if(component.children[0].children.length > biggestComponent.children[0].children.length)
 				biggestComponent = component;
 		});
 
 		// If there is at list one component on this level
 		if(biggestComponent !== null){
 			let newWidth, newHeight, newDepth;
-			const nbLines = Math.ceil(Math.sqrt(biggestComponent.children.length));
-			const nbColumn = Math.ceil(biggestComponent.children.length / nbLines);
+			const nbLines = Math.ceil(Math.sqrt(biggestComponent.children[0].children.length));
+			const nbColumn = Math.ceil(biggestComponent.children[0].children.length / nbLines);
 			const coucheEnfant = level +1;
 			let childWidth = 1.2, childDepth = 1.2;
 			if(coucheEnfant < Object.keys(nestingLevels).length){
@@ -616,7 +715,7 @@ function checkShrinkNeeds(){
 			let spacingZ = (childDepth * 0.2) + config_espacement;
 
 			// calcul new component's level dimensions
-			if(biggestComponent.children.length === 0){
+			if(biggestComponent.children[0].children.length === 0){
 				newWidth = componentsList[biggestComponent.userData.componentType]['width'];
 				newHeight = componentsList[biggestComponent.userData.componentType]['height'];
 				newDepth = componentsList[biggestComponent.userData.componentType]['depth'];
@@ -639,16 +738,16 @@ function checkShrinkNeeds(){
 			if(resizeLevel){
 				objectsPerLevels[level].forEach(function(component){
 					const cComponentType = component.userData.componentType;
-					const cTagColor = '#7d2f9e';
+					const cTagColor = '#70bf3b';
 					const cColor = componentsList[cComponentType]['color'];
 					const cLogo = componentsList[cComponentType]['logo'];
 					const cName = component.userData.componentName;
-					component.geometry = new THREE.BoxGeometry(nestingLevels['level' + level]['width'], newHeight, nestingLevels['level' + level]['depth']);
-					generateTexture(cComponentType, cName, cColor, nestingLevels['level' + level]['width'], biggestComponent.geometry.parameters.height, cTagColor, cLogo, 'updateTexture', component);
+					component.children[0].geometry = new THREE.BoxGeometry(nestingLevels['level' + level]['width'], newHeight, nestingLevels['level' + level]['depth']);
+					generateTexture(cComponentType, cName, cColor, nestingLevels['level' + level]['width'], biggestComponent.children[0].geometry.parameters.height, cTagColor, cLogo, 'updateTexture', component);
 
 					//placement & espacement enfants
 					let count = 0;
-					component.children.forEach(child => {
+					component.children[0].children.forEach(child => {
 						const ligneCourante = count % nbColumn;
 						const coloneCourante = Math.floor(count / nbColumn);
 						child.position.z = (ligneCourante*childDepth) + (spacingZ*ligneCourante) - (nestingLevels['level'+level]['depth']/2) + (childDepth/2) + (config_espacement/2);
@@ -664,17 +763,17 @@ function checkShrinkNeeds(){
 	}
 	// respace at level0
 	config_distance = nestingLevels['level0']['width'] + (nestingLevels['level0']['width']/2);
-	needSpacing = true;
+	//realignerGrille();
 }
 
 // reaffect a new material(with a new texture) to an existing component
 function regenerateTexture(component, material){
-	component.material = material;
+	component.children[0].material = material;
 }
 
 // delete an object with all its children and their links
 function deleteObjectHierarchie(component){
-	component.children.forEach(function(child){
+	component.children[0].children.forEach(function(child){
 		deleteLinks(child);
 		deleteObjectHierarchie(child);
 	});
@@ -826,7 +925,7 @@ htmlComponentList.on('click', '.paletteComponent', function () {
 		if( compatible ){
 			generateTexture(componentType, componentType+ncID, cColor, cWidth, cHeight, '#7d2f9e', cLogo, 'createComponent');
 		}else{
-			customAlert('Ce ne peut pas être imbriqué sur un '+componentsList[selectedComponent.userData.componentType]['name']);
+			customAlert('Ce composant ne peut pas être imbriqué sur '+componentsList[selectedComponent.userData.componentType]['name']);
 		}
 	}
 });
@@ -841,9 +940,9 @@ $('#hierarchieSection').on('click', "li", function () {
 
 				addSelectedObject( selectedComponent );
 				outlinePass.selectedObjects = selectedObjects;
-				orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
+				orbitControls.target = new THREE.Vector3(component.position.x, component.position.y, component.position.z);
 
-				showComponentInfo(selectedComponent);
+				showComponentInfo(component);
 				enableAutoFocus = true;
 
 				return false;
@@ -891,27 +990,23 @@ pannelSectionName.on('input', function(){
 	const cWidth = nestingLevels['level'+level]['width'];
 	const cHeight = componentsList[componentType]['height'];
 	const cColor = componentsList[componentType]['color'];
-	const cTagColor = '#7d2f9e';
+	const cTagColor = '#70bf3b';
 	const cLogo = componentsList[componentType]['logo'];
-	generateTexture(componentType, selectedComponent.userData.componentName, cColor, cWidth, cHeight, cTagColor, cLogo, 'updateTexture');
+	generateTexture(componentType, selectedComponent.userData.componentName, cColor, cWidth, cHeight, cTagColor, cLogo, 'updateTexture', selectedComponent);
 });
 // supprimer un objet
 $('#deleteButton').on('click', function(){
 	if(selectedComponent){
-		const parent = selectedComponent.parent;
 		$('#'+selectedComponent.userData.componentID).remove();
 		//delete from objectsPerLevels
 		deleteObjectHierarchie(selectedComponent);
-		parent.remove(selectedComponent);
-
-		//childrenSpacing(parent, parent.userData.nestingLevel, false, true);
-		checkShrinkNeeds();
-
+		selectedComponent.parent.remove(selectedComponent);
 		selectedComponent = null;
 		rightPannel.css('display', 'none');
 
-		dragControls.dispose();
-		dragControls = new DragControls( [ ... sceneComponentsObj.children ], camera, renderer.domElement );
+		checkShrinkNeeds();
+
+		initDragControls();
 		if(selectedTool !== 'moveTool')
 			dragControls.deactivate();
 	}
