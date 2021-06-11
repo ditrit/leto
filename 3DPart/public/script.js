@@ -334,21 +334,33 @@ function realignerGrille(){
 
 // realign a single object with the grid after moving it
 function placeParent(component){
+	const GRID_MARGIN = 10;
 	const GRID_START = 5;	// half of grid margin
 	const CELL_WIDTH = nestingLevels['level0']['width'];
 	const CELL_DEPTH = nestingLevels['level0']['depth'];
 	const CELL_SPACEMENT = 2;
+	const NB_COLUMNS = Math.ceil(Math.sqrt(objectsPerLevels[0].length));
+	const NB_LINES = Math.ceil(objectsPerLevels[0].length / NB_COLUMNS);
 	const pos_x = component.position.x;
 	const pos_z = component.position.z;
 	// trouver pos_x et pos_z les plus proche tel que :
 	// ((pos_x % (CELL_SPACEMENT+CELL_WIDTH)) === 0 && (pos_z % (CELL_SPACEMENT+CELL_DEPTH)) === 0)
-	const index_x = Math.round(pos_x / (CELL_SPACEMENT + CELL_WIDTH)) + GRID_START;
-	const index_z = Math.round(pos_z / (CELL_SPACEMENT + CELL_DEPTH)) + GRID_START;
+	let index_x = Math.round(pos_x / (CELL_SPACEMENT + CELL_WIDTH)) + GRID_START;
+	let index_z = Math.round(pos_z / (CELL_SPACEMENT + CELL_DEPTH)) + GRID_START;
 
-	// check if cell is in array, otherwise check nearest border
+	// check if grid overflow, if so check nearest grid border
+	if (index_x < 0)
+		index_x = 0;
+	else if (index_x >= NB_COLUMNS+GRID_MARGIN)
+		index_x = (NB_COLUMNS+GRID_MARGIN)-1;
+	if (index_z < 0)
+		index_z = 0;
+	else if (index_z >= NB_LINES+GRID_MARGIN)
+		index_z = (NB_LINES+GRID_MARGIN)-1;
 
 	// if cell is not occupied : move component
 	if(position_array[index_x][index_z] == 0){
+
 		// update component position in array
 		position_array[component.userData.grid.x][component.userData.grid.y] --;
 		position_array[index_x][index_z] ++;
