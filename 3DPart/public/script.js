@@ -101,6 +101,8 @@ function init(){
 
 	// Drag control
 	initDragControls();
+	dragControls.enabled = false;
+	dragControls.deactivate();
 	document.addEventListener( 'pointerdown', onMouseDown);
 	document.addEventListener( 'pointerup', onMouseUp);
 	window.addEventListener( 'keydown', onKeyDown );
@@ -231,26 +233,63 @@ function animate(){
 }
 
 function initDragControls(){
+	if(dragControls){
+		dragControls.deactivate();
+		dragControls.enable = false;
+	}
 	dragControls = new DragControls(sceneComponentsObj.children, camera, renderer.domElement);
-	dragControls.deactivate();
-	dragControls.addEventListener( 'drag', function ( event ) {
-		event.object.position.y = -0.5 + (event.object.geometry.parameters.height/2);
-	} );
-	dragControls.addEventListener( 'dragend', function ( event ) {
-		const cmpnt = event.object;
-		const position = new THREE.Vector3();
-		cmpnt.getWorldPosition ( position );
-
-		cmpnt.parent.position.x = position.x;
-		cmpnt.parent.position.z = position.z;
-		cmpnt.position.x = 0;
-		cmpnt.position.y = 0;
-		cmpnt.position.z = 0;
-		if(cmpnt.parent.userData.grid != null)
-			placeParent(cmpnt.parent);
-	} );
+	dragControls.addEventListener( 'dragstart', onStartDragging );
+	dragControls.addEventListener( 'drag', onDraging );
+	dragControls.addEventListener( 'dragend', onDragEnd );
 }
 
+function onStartDragging(event){
+	const cmptCompatibilities = getNestingCompatibilities(event.object.parent.userData.componentType);
+	objectsPerLevels.forEach(function(level){
+		level.forEach(function(component){
+			const parentTypes = getAllObjectTypes(component.userData.componentType);
+
+			let compatible = false;
+			for(let compatibility of cmptCompatibilities){
+				if(parentTypes.includes(compatibility))
+					compatible = true;
+			}
+			if(!compatible){
+				component.children[0].material.forEach(function(face){
+					face.transparent = true;
+					face.opacity = 0.5;
+				});
+			}
+		});
+	});
+}
+
+function onDraging(event){
+	event.object.position.y = -0.5 + (event.object.geometry.parameters.height/2);
+}
+
+function onDragEnd(event) {
+	objectsPerLevels.forEach(function(level){
+		level.forEach(function(component){
+			component.children[0].material.forEach(function(face){
+				face.opacity = 1;
+			});
+		});
+	});
+	const cmpnt = event.object;
+	let position = new THREE.Vector3();
+	cmpnt.getWorldPosition( position );
+
+	if(cmpnt.userData.nestingLevel !== 0)
+		position = cmpnt.parent.parent.worldToLocal(position);
+	cmpnt.parent.position.x = position.x;
+	cmpnt.parent.position.z = position.z;
+	cmpnt.position.x = 0;
+	cmpnt.position.y = 0;
+	cmpnt.position.z = 0;
+	if(cmpnt.parent.userData.grid != null)
+		placeParent(cmpnt.parent);
+}
 
 /// FONCTIONS ADDITIONNELLES ///
 // espace les composants du niveau 0 entre eux
@@ -360,7 +399,6 @@ function placeParent(component){
 
 	// if cell is not occupied : move component
 	if(position_array[index_x][index_z] == 0){
-
 		// update component position in array
 		position_array[component.userData.grid.x][component.userData.grid.y] --;
 		position_array[index_x][index_z] ++;
@@ -467,7 +505,6 @@ function onMouseUp(event) {
 						const link = drawLink(cmpnt1, cmpnt2);
 						pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
 						selectedTool = 'eyeTool';
-						dragControls.deactivate();
 						orbitControls.enableRotate = true;
 						toolButtons.removeClass('selectedTool');
 						$('#eyeTool').addClass('selectedTool');
@@ -646,8 +683,10 @@ function generateComponent(componentType, material) {
 	lastID++;
 
 	initDragControls();
-	if(selectedTool !== 'moveTool')
+	if(selectedTool !== 'moveTool'){
+		dragControls.enabled = false;
 		dragControls.deactivate();
+	}
 
 	realignerGrille();
 }
@@ -984,20 +1023,23 @@ $('#hierarchieSection').on('click', "li", function () {
 toolButtons.on('click', function () {
 	selectedTool = $(this).attr("id");
 
-	switch($(this).attr("id")){
+	switch(selectedTool){
 		case 'eyeTool':
+			dragControls.enabled = false;
 			dragControls.deactivate();
 			orbitControls.enableRotate = true;
 			toolButtons.removeClass('selectedTool');
 			$('#eyeTool').addClass('selectedTool');
 			break;
 		case 'moveTool':
+			dragControls.enabled = true;
 			dragControls.activate();
 			orbitControls.enableRotate = false;
 			toolButtons.removeClass('selectedTool');
 			$('#moveTool').addClass('selectedTool');
 			break;
 		case 'linkTool':
+			dragControls.enabled = false;
 			dragControls.deactivate();
 			orbitControls.enableRotate = true;
 			toolButtons.removeClass('selectedTool');
@@ -1037,8 +1079,10 @@ $('#deleteButton').on('click', function(){
 		checkShrinkNeeds();
 
 		initDragControls();
-		if(selectedTool !== 'moveTool')
+		if(selectedTool !== 'moveTool'){
+			dragControls.enabled = false;
 			dragControls.deactivate();
+		}
 	}
 });
 
