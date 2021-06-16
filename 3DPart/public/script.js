@@ -10,7 +10,7 @@ import {Group, Vector2, Vector3} from "./libs/three.js/build/three.module.js";
 
 /// VARIABLES ///
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
-	selectedTool = 'eyeTool',selectedComponent = null, enableAutoFocus = false,
+	selectedTool = 'eyeTool',selectedComponent = null, movingComponent = null, enableAutoFocus = false,
 	preventClick = false, needSpacing = false, needRelink = false;
 let componentsList, sceneComponentsObj = new THREE.Group(), sceneLinksObj = new THREE.Group();	// Liste de tous les composants existants (palette); liste des composants de la Scene
 let nestingLevels = {level0: {width: 1.2, depth: 1.2}};
@@ -20,21 +20,6 @@ let position_array = [];
 // postprocessing
 let composer, effectFXAA, outlinePass;
 let selectedObjects = [];
-// shader
-/*let shader =
-	'outline' :
-vertex_shader: [
-	"uniform float offset;",
-	"void main() {",
-	"vec4 pos = modelViewMatrix * vec4( position + normal * offset, 1.0 );",
-	"gl_Position = projectionMatrix * pos;",
-	"}"
-].join("\n"),
-	fragment_shader: [
-	"void main(){",
-	"gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );",
-	"}"
-].join("\n");*/
 // config
 let config_distance = 5, config_tolerance = 0.2, config_espacement = 1, config_diviseurVitesse = 30, config_focusDistance = 7;
 // Loaders
@@ -107,6 +92,9 @@ function init(){
 	document.addEventListener( 'pointerup', onMouseUp);
 	window.addEventListener( 'keydown', onKeyDown );
 	window.addEventListener( 'keyup', onKeyUp );
+
+	//mouse position
+	window.addEventListener( 'mousemove', onMouseMove, false );
 
 	// ----------------------------------------------
 	//initialisation de la liste des composants
@@ -244,6 +232,8 @@ function initDragControls(){
 }
 
 function onStartDragging(event){
+	movingComponent = event.object;
+	// Make transparent incompatible objects
 	const cmptCompatibilities = getNestingCompatibilities(event.object.parent.userData.componentType);
 	objectsPerLevels.forEach(function(level){
 		level.forEach(function(component){
@@ -264,11 +254,26 @@ function onStartDragging(event){
 	});
 }
 
+function arrayRemove(arr, value) {
+	return arr.filter(function(ele){
+		return ele != value;
+	});
+}
+
 function onDraging(event){
-	event.object.position.y = -0.5 + (event.object.geometry.parameters.height/2);
+	const cmpnt = event.object;
+	//const intersectElements = arrayRemove(sceneComponentsObj.children, cmpnt);
+	if(cmpnt.parent.userData.nestingLevel === 0)
+		cmpnt.position.y = -0.5 + (cmpnt.geometry.parameters.height/2);
+
+	/*
+	if(cmpnt.position.y < -0.5)
+		cmpnt.position.y = -0.5;
+	 */
 }
 
 function onDragEnd(event) {
+	// Make opaque all objects
 	objectsPerLevels.forEach(function(level){
 		level.forEach(function(component){
 			component.children[0].material.forEach(function(face){
@@ -276,19 +281,186 @@ function onDragEnd(event) {
 			});
 		});
 	});
-	const cmpnt = event.object;
-	let position = new THREE.Vector3();
-	cmpnt.getWorldPosition( position );
+}
 
-	if(cmpnt.userData.nestingLevel !== 0)
-		position = cmpnt.parent.parent.worldToLocal(position);
-	cmpnt.parent.position.x = position.x;
-	cmpnt.parent.position.z = position.z;
-	cmpnt.position.x = 0;
-	cmpnt.position.y = 0;
-	cmpnt.position.z = 0;
-	if(cmpnt.parent.userData.grid != null)
-		placeParent(cmpnt.parent);
+// calculate mouse position in normalized device coordinates
+function onMouseMove( event ) {
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}
+
+function onKeyDown( event ) {
+	// reset camera's rotation pivot
+	/*
+	if(event.keyCode === 32)
+		orbitControls.target = new THREE.Vector3(0, 1, 0);
+
+	 */
+	// camera movements (future enhancement)
+	if(selectedComponent){
+		if(event.keyCode === 38 ){
+			orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
+			camera.position.x -= (camera.position.x - selectedComponent.position.x) / config_diviseurVitesse;
+			camera.position.z -= (camera.position.z - selectedComponent.position.z) / config_diviseurVitesse;
+		}
+		if(event.keyCode === 40){
+			orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
+			camera.position.x += (camera.position.x - selectedComponent.position.x) / config_diviseurVitesse;
+			camera.position.z += (camera.position.z - selectedComponent.position.z) / config_diviseurVitesse;
+		}
+	}
+}
+
+function onKeyUp() {
+	enableSelection = true;
+}
+
+function onMouseDown(event){
+	realeaseTimer = Date.now();
+	/*if(selectedTool === 'moveTool'){
+		raycaster.setFromCamera(mouse, camera);
+		let intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
+		if(intersects.length > 0) {
+			let component = intersects[0].object;
+			component.position.y = -0.5 + (component.geometry.parameters.height/2);
+		}
+	}*/
+}
+
+function onMouseUp(event) {
+	const delay = Date.now() - realeaseTimer;
+
+	if(preventClick){
+		preventClick = false;
+		return;
+	}
+	if(selectedTool === 'moveTool'){
+		if(delay < 200){
+			selectObject(event);
+		}else{	// Attach moving object to a new parent if found
+			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+			raycaster.setFromCamera(mouse, camera);
+			const intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
+
+			if(intersects.length > 1){	// put component on another
+				let itersectIndex = 1;
+				if(intersects[0].object != movingComponent){
+					itersectIndex = 0;
+				}
+				// check compatibility
+				const cmptCompatibilities = getNestingCompatibilities(movingComponent.parent.userData.componentType);
+				const parentTypes = getAllObjectTypes(intersects[itersectIndex].object.parent.userData.componentType);
+				let compatible = false;
+
+				for(let compatibility of cmptCompatibilities){
+					if(parentTypes.includes(compatibility))
+						compatible = true;
+				}
+				// attach to the new parent
+				if(compatible){
+					console.log("attach " +movingComponent.parent.userData.componentName+ " to " +intersects[itersectIndex].object.parent.userData.componentName);
+					movingComponent.parent.parent.remove(movingComponent.parent);
+					intersects[itersectIndex].object.add(movingComponent.parent);
+					const oldLevel = movingComponent.parent.userData.nestingLevel;
+					objectsPerLevels[oldLevel] = arrayRemove(objectsPerLevels[oldLevel], movingComponent.parent);
+					const newLevel = intersects[itersectIndex].object.parent.userData.nestingLevel +1;
+					movingComponent.parent.userData.nestingLevel = newLevel;
+					if(objectsPerLevels.length <= newLevel){
+						objectsPerLevels.push([]);
+					}
+					objectsPerLevels[newLevel].push(movingComponent.parent);
+				}
+				// call organizing function
+				checkStrechNeeds(intersects[itersectIndex].object.parent);
+			}else if(movingComponent.parent.userData.grid != null){
+				// align to grid
+				let pos = new THREE.Vector3();
+				movingComponent.getWorldPosition(pos);
+				pos = movingComponent.parent.parent.worldToLocal(pos);
+
+				movingComponent.parent.position.x = pos.x;
+				movingComponent.parent.position.y = -0.5 + (movingComponent.geometry.parameters.height/2);
+				movingComponent.parent.position.z = pos.z;
+				placeParent(movingComponent.parent);
+			}
+			// center geometry
+			movingComponent.position.x = 0;
+			movingComponent.position.y = 0;
+			movingComponent.position.z = 0;
+
+			checkShrinkNeeds();
+		}
+	}else if(selectedTool === 'eyeTool'){
+		if(delay < 200)
+			selectObject(event);
+	}else if(selectedTool === 'linkTool'){
+		if(selectedComponent != null){
+			const cmpnt1 = selectedComponent;
+			if(delay < 200){
+				selectObject(event);
+				if(selectedComponent != null) {
+					const cmpnt2 = selectedComponent;
+					if(cmpnt1 != cmpnt2){
+						const link = drawLink(cmpnt1, cmpnt2);
+						pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
+						selectedTool = 'eyeTool';
+						orbitControls.enableRotate = true;
+						toolButtons.removeClass('selectedTool');
+						$('#eyeTool').addClass('selectedTool');
+					}
+				}
+			}
+		}else{
+			if(delay < 200)
+				selectObject(event);
+		}
+	}
+
+}
+
+function selectObject(event){
+	if(!enableAutoFocus){
+		raycaster.setFromCamera(mouse, camera);
+		let intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
+		if(intersects.length > 0) {
+			selectedComponent = intersects[0].object.parent;
+			addSelectedObject( selectedComponent );
+			outlinePass.selectedObjects = selectedObjects;
+			showComponentInfo(selectedComponent);
+		}else{
+			outlinePass.selectedObjects = [];
+			selectedComponent = null;
+			$('.componentLabel').removeClass('selectedComponent');
+			rightPannel.css('display', 'none');
+		}
+	}
+}
+
+function showComponentInfo(component){
+// right panel completion
+	const componentId = component.userData.componentID;
+	$('.componentLabel').removeClass('selectedComponent');
+	sceneComponentList.find('#c'+componentId).addClass('selectedComponent');
+	pannelSectionID.html(component.userData.componentID);
+	pannelSectionName.val(component.userData.componentName);
+	let derivationInfo = '';
+	if(component.userData.derivedFrom !== '')
+		derivationInfo = ' (from '+component.userData.derivedFrom+ ')';
+	pannelSectionType.html(component.userData.componentType + derivationInfo);
+	$('#componentLevel').html(component.userData.nestingLevel);
+	$('#componentGridPosition').html('(' +Math.round(component.position.x)+ ';' +Math.round(component.position.y)+ ';' +Math.round(component.position.z)+ ')');
+	pannelSectionLinks.html('');
+	component.userData.links.forEach(function(link){
+		pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
+	});
+	rightPannel.css('display', 'block');
+}
+
+// add object to apply outline effect
+function addSelectedObject( object ) {
+	selectedObjects = [];
+	selectedObjects.push( object );
 }
 
 /// FONCTIONS ADDITIONNELLES ///
@@ -441,130 +613,6 @@ function autoFocus(){
 	}
 }
 
-function onKeyDown( event ) {
-	// reset camera's rotation pivot
-	/*
-	if(event.keyCode === 32)
-		orbitControls.target = new THREE.Vector3(0, 1, 0);
-
-	 */
-	// camera movements (future enhancement)
-	if(selectedComponent){
-		if(event.keyCode === 38 ){
-			orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
-			camera.position.x -= (camera.position.x - selectedComponent.position.x) / config_diviseurVitesse;
-			camera.position.z -= (camera.position.z - selectedComponent.position.z) / config_diviseurVitesse;
-		}
-		if(event.keyCode === 40){
-			orbitControls.target = new THREE.Vector3(selectedComponent.position.x, selectedComponent.position.y, selectedComponent.position.z);
-			camera.position.x += (camera.position.x - selectedComponent.position.x) / config_diviseurVitesse;
-			camera.position.z += (camera.position.z - selectedComponent.position.z) / config_diviseurVitesse;
-		}
-	}
-}
-
-function onKeyUp() {
-	enableSelection = true;
-}
-
-function onMouseDown(event){
-	realeaseTimer = Date.now();
-	/*if(selectedTool === 'moveTool'){
-		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-		raycaster.setFromCamera(mouse, camera);
-		let intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
-		if(intersects.length > 0) {
-			let component = intersects[0].object;
-			component.position.y = -0.5 + (component.geometry.parameters.height/2);
-		}
-	}*/
-}
-
-function onMouseUp(event) {
-	const delay = Date.now() - realeaseTimer;
-
-	if(preventClick){
-		preventClick = false;
-		return;
-	}
-	if(selectedTool === 'moveTool'){
-		if(delay < 200)
-			selectObject(event);
-	}else if(selectedTool === 'eyeTool'){
-		if(delay < 200)
-			selectObject(event);
-	}else if(selectedTool === 'linkTool'){
-		if(selectedComponent != null){
-			const cmpnt1 = selectedComponent;
-			if(delay < 200){
-				selectObject(event);
-				if(selectedComponent != null) {
-					const cmpnt2 = selectedComponent;
-					if(cmpnt1 != cmpnt2){
-						const link = drawLink(cmpnt1, cmpnt2);
-						pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
-						selectedTool = 'eyeTool';
-						orbitControls.enableRotate = true;
-						toolButtons.removeClass('selectedTool');
-						$('#eyeTool').addClass('selectedTool');
-					}
-				}
-			}
-		}else{
-			if(delay < 200)
-				selectObject(event);
-		}
-	}
-
-}
-
-function selectObject(event){
-	if(!enableAutoFocus){
-		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-		raycaster.setFromCamera(mouse, camera);
-		let intersects = raycaster.intersectObjects(sceneComponentsObj.children, true);
-		if(intersects.length > 0) {
-			selectedComponent = intersects[0].object.parent;
-			addSelectedObject( selectedComponent );
-			outlinePass.selectedObjects = selectedObjects;
-			showComponentInfo(selectedComponent);
-		}else{
-			outlinePass.selectedObjects = [];
-			selectedComponent = null;
-			$('.componentLabel').removeClass('selectedComponent');
-			rightPannel.css('display', 'none');
-		}
-	}
-}
-
-function showComponentInfo(component){
-// right panel completion
-	const componentId = component.userData.componentID;
-	$('.componentLabel').removeClass('selectedComponent');
-	sceneComponentList.find('#c'+componentId).addClass('selectedComponent');
-	pannelSectionID.html(component.userData.componentID);
-	pannelSectionName.val(component.userData.componentName);
-	let derivationInfo = '';
-	if(component.userData.derivedFrom !== '')
-		derivationInfo = ' (from '+component.userData.derivedFrom+ ')';
-	pannelSectionType.html(component.userData.componentType + derivationInfo);
-	$('#componentLevel').html(component.userData.nestingLevel);
-	$('#componentGridPosition').html('(' +component.position.x+ ';' +component.position.z+ ')');
-	pannelSectionLinks.html('');
-	component.userData.links.forEach(function(link){
-		pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
-	});
-	rightPannel.css('display', 'block');
-}
-
-// add object to apply outline effect
-function addSelectedObject( object ) {
-	selectedObjects = [];
-	selectedObjects.push( object );
-}
-
 function generateTexture(componentType, name, color, width, height, tagColor, logo, action, component = selectedComponent) {
 	width *= 500;
 	height *= 500;
@@ -699,6 +747,9 @@ function checkStrechNeeds(parentComponent){
 	const nbColumn = Math.ceil(nbChildren / nbLines);
 	const couche = parentComponent.userData.nestingLevel;
 	const coucheEnfant = couche+1;
+	if(coucheEnfant >= Object.keys(nestingLevels).length){
+		nestingLevels["level"+coucheEnfant] = {width: 1.2, depth: 1.2};
+	}
 	config_espacement = 0.6;
 
 	let childWidth = nestingLevels['level'+coucheEnfant]['width'];
@@ -741,8 +792,9 @@ function checkStrechNeeds(parentComponent){
 	parentComponent.children[0].children.forEach(child => {
 		const ligneCourante = count % nbColumn;
 		const coloneCourante = Math.floor(count / nbColumn);
-		child.position.z = (ligneCourante*childDepth) + (spacingZ*ligneCourante) - (nestingLevels['level'+couche]['depth']/2) + (childDepth/2) + (config_espacement/2);
 		child.position.x = (coloneCourante*childWidth) + (spacingX*coloneCourante) - (nestingLevels['level'+couche]['width']/2) + (childWidth/2) + (config_espacement/2);
+		child.position.y = 0 + child.children[0].geometry.parameters.height;
+		child.position.z = (ligneCourante*childDepth) + (spacingZ*ligneCourante) - (nestingLevels['level'+couche]['depth']/2) + (childDepth/2) + (config_espacement/2);
 		count++;
 	});
 	// respace at level0
@@ -752,6 +804,18 @@ function checkStrechNeeds(parentComponent){
 	if(parentComponent.parent.parent != scene && resizeLevel){
 		checkStrechNeeds(parentComponent.parent.parent);
 	}
+}
+
+// for debugging purpose, print 2D array of components into the console
+function showArrayComponents(array2D){
+	let count = 0;
+	array2D.forEach(function (level){
+		console.log(count);
+		count++;
+		level.forEach(function (component){
+			console.log("	" +component.userData.componentName);
+		});
+	});
 }
 
 // check if components have to be resized after a component was deleted and respace it's children
@@ -771,9 +835,10 @@ function checkShrinkNeeds(){
 
 		// If there is at list one component on this level
 		if(biggestComponent !== null){
+			const nbChild = biggestComponent.children[0].children.length + 1;
 			let newWidth, newHeight, newDepth;
-			const nbLines = Math.ceil(Math.sqrt(biggestComponent.children[0].children.length));
-			const nbColumn = Math.ceil(biggestComponent.children[0].children.length / nbLines);
+			const nbLines = Math.ceil(Math.sqrt(nbChild));
+			const nbColumn = Math.ceil(nbChild / nbLines);
 			const coucheEnfant = level +1;
 			let childWidth = 1.2, childDepth = 1.2;
 			if(coucheEnfant < Object.keys(nestingLevels).length){
@@ -784,7 +849,7 @@ function checkShrinkNeeds(){
 			let spacingZ = (childDepth * 0.2) + config_espacement;
 
 			// calcul new component's level dimensions
-			if(biggestComponent.children[0].children.length === 0){
+			if((nbChild-1) === 0){
 				newWidth = componentsList[biggestComponent.userData.componentType]['width'];
 				newHeight = componentsList[biggestComponent.userData.componentType]['height'];
 				newDepth = componentsList[biggestComponent.userData.componentType]['depth'];
@@ -804,7 +869,6 @@ function checkShrinkNeeds(){
 			}
 
 			// rétressisement des composants du même niveau
-			if(resizeLevel){
 				objectsPerLevels[level].forEach(function(component){
 					const cComponentType = component.userData.componentType;
 					const cTagColor = '#70bf3b';
@@ -815,7 +879,7 @@ function checkShrinkNeeds(){
 					generateTexture(cComponentType, cName, cColor, nestingLevels['level' + level]['width'], biggestComponent.children[0].geometry.parameters.height, cTagColor, cLogo, 'updateTexture', component);
 
 					//placement & espacement enfants
-					let count = 0;
+					let count = 1;
 					component.children[0].children.forEach(child => {
 						const ligneCourante = count % nbColumn;
 						const coloneCourante = Math.floor(count / nbColumn);
@@ -824,7 +888,6 @@ function checkShrinkNeeds(){
 						count++;
 					});
 				});
-			}
 		}else{	//if there is no component on the level
 			nestingLevels['level'+level]['width'] = 1.2;
 			nestingLevels['level'+level]['depth'] = 1.2;
