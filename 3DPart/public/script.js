@@ -6,7 +6,8 @@ import { RenderPass } from './libs/three.js/examples/jsm/postprocessing/RenderPa
 import { ShaderPass } from './libs/three.js/examples/jsm/postprocessing/ShaderPass.js';
 import { OutlinePass } from './libs/three.js/examples/jsm/postprocessing/OutlinePass.js';
 import { FXAAShader } from './libs/three.js/examples/jsm/shaders/FXAAShader.js';
-import {Group, Vector2, Vector3} from "./libs/three.js/build/three.module.js";
+import {Vector2, Vector3} from "./libs/three.js/build/three.module.js";
+import { FBXLoader } from "./libs/three.js/examples/jsm/loaders/FBXLoader.js";
 
 /// VARIABLES ///
 let camera, scene, renderer, orbitControls, dragControls, enableSelection = false, mouse, raycaster,
@@ -105,17 +106,17 @@ function init(){
 	// les composants doivent tous avoir des noms différents et hériter de composants existants (ou ne pas hériter du tout)
 	componentsList = {
 		'root' : { 'name': 'root', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
-		'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': ['serveur']} },
+		'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': ['router']} },
 		'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'dns.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg', 'capacities': {'nestedOn': [], 'linkedTo': ['database']}, 'requirements': {'nestedOn': [''], 'linkedTo': ['apache', 'php']} },
 		'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
 		'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
-		'router': { 'name': 'router', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+		'router': { 'name': 'router', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'capacities': {'nestedOn': [], 'linkedTo': ['serveur']}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
 		'apache': { 'name': 'apache', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
 		'php': { 'name': 'php', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
 		'database': { 'name': 'database', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#db852a', 'logo' : 'db.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
@@ -266,9 +267,19 @@ function onDraging(event){
 	if(cmpnt.parent.userData.nestingLevel === 0)
 		cmpnt.position.y = -0.5 + (cmpnt.geometry.parameters.height/2);
 
+	// align to grid
 	/*
-	if(cmpnt.position.y < -0.5)
-		cmpnt.position.y = -0.5;
+	let pos = new THREE.Vector3();
+	cmpnt.getWorldPosition(pos);
+	pos = cmpnt.parent.parent.worldToLocal(pos);
+
+	cmpnt.parent.position.x = pos.x;
+	//cmpnt.parent.position.y = -0.5 + (cmpnt.geometry.parameters.height/2);
+	cmpnt.parent.position.z = pos.z;
+	// center geometry
+	cmpnt.position.x = 0;
+	cmpnt.position.y = 0;
+	cmpnt.position.z = 0;
 	 */
 }
 
@@ -362,17 +373,14 @@ function onMouseUp(event) {
 					console.log("attach " +movingComponent.parent.userData.componentName+ " to " +intersects[itersectIndex].object.parent.userData.componentName);
 					movingComponent.parent.parent.remove(movingComponent.parent);
 					intersects[itersectIndex].object.add(movingComponent.parent);
+
 					const oldLevel = movingComponent.parent.userData.nestingLevel;
-					objectsPerLevels[oldLevel] = arrayRemove(objectsPerLevels[oldLevel], movingComponent.parent);
 					const newLevel = intersects[itersectIndex].object.parent.userData.nestingLevel +1;
-					movingComponent.parent.userData.nestingLevel = newLevel;
-					if(objectsPerLevels.length <= newLevel){
-						objectsPerLevels.push([]);
-					}
-					objectsPerLevels[newLevel].push(movingComponent.parent);
+
+					updateObjectLevel(oldLevel, movingComponent, newLevel);
+					// call organizing function
+					checkStrechNeeds(intersects[itersectIndex].object.parent);
 				}
-				// call organizing function
-				checkStrechNeeds(intersects[itersectIndex].object.parent);
 			}else if(movingComponent.parent.userData.grid != null){
 				// align to grid
 				let pos = new THREE.Vector3();
@@ -419,6 +427,23 @@ function onMouseUp(event) {
 
 }
 
+// After moving a component modify it's reference in arrays for it and it's children
+function updateObjectLevel(oldLevel, movingComponent, newLevel){
+	objectsPerLevels[oldLevel] = arrayRemove(objectsPerLevels[oldLevel], movingComponent.parent);
+	movingComponent.parent.userData.nestingLevel = newLevel;
+	if(objectsPerLevels.length <= newLevel){
+		objectsPerLevels.push([]);
+	}
+	if(nestingLevels.length <= newLevel){
+		nestingLevels.push([]);
+	}
+	objectsPerLevels[newLevel].push(movingComponent.parent);
+
+	movingComponent.children.forEach(function(child){
+		updateObjectLevel(oldLevel+1, child.children[0], newLevel+1)
+	});
+}
+
 function selectObject(event){
 	if(!enableAutoFocus){
 		raycaster.setFromCamera(mouse, camera);
@@ -453,6 +478,11 @@ function showComponentInfo(component){
 	pannelSectionLinks.html('');
 	component.userData.links.forEach(function(link){
 		pannelSectionLinks.append('<li>'+link.userData.hoster1.userData.componentName+' - '+link.userData.hoster2.userData.componentName+'</li>');
+	});
+	const pannelSectionChildren = $('#componentChildren');
+	pannelSectionChildren.html('');
+	component.children[0].children.forEach(function(child){
+		pannelSectionChildren.append('<li>' +child.userData.componentName+ '</li>');
 	});
 	rightPannel.css('display', 'block');
 }
@@ -495,9 +525,16 @@ function realignerGrille(){
 			index_x = (pos_x / (CELL_SPACEMENT+CELL_WIDTH)) + GRID_START;
 			index_z = (pos_z / (CELL_SPACEMENT+CELL_DEPTH)) + GRID_START;
 			component.position.y = -0.5 + (component.children[0].geometry.parameters.height/2);
+		}else if(component.userData.grid != null) {
+			index_x = component.userData.grid.x;
+			index_z = component.userData.grid.y;
+			// move component
+			component.position.x = (index_x - GRID_START) * (CELL_SPACEMENT+CELL_WIDTH);
+			component.position.y = -0.5 + (component.children[0].geometry.parameters.height/2);
+			component.position.z = (index_z - GRID_START) * (CELL_SPACEMENT+CELL_DEPTH);
 		}else{	// if the object are not aligned with the grid
-			// move component to the nearest blank grid cell
-			// find and move component to the first blank grid cell
+				// move component to the nearest blank grid cell
+				// find and move component to the first blank grid cell
 			index_x = GRID_START-1;
 			let trouve = false;
 			while (index_x < (NB_COLUMNS+GRID_START) && trouve === false){
@@ -697,6 +734,33 @@ function generateComponent(componentType, material) {
 
 	finalObject.add(newCmpnt);
 
+	const types = getAllObjectTypes(componentType);
+	const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.1, 8 );
+	const capMaterial = new THREE.MeshStandardMaterial({ color : '#209b20' });
+	const reqMaterial = new THREE.MeshStandardMaterial({ color : '#a50404' });
+	const capacities = new THREE.Group();
+	const requirements = new THREE.Group();
+	finalObject.add(capacities);
+	finalObject.add(requirements);
+
+	types.forEach(function(type){
+		componentsList[type]['capacities']['linkedTo'].forEach(function(capacity){
+			const cylinder = new THREE.Mesh( geometry, capMaterial );
+			cylinder.userData.capacityName = capacity;
+			capacities.add(cylinder);
+			cylinder.position.y = -0.3;
+			cylinder.rotateX(THREE.Math.degToRad(90));
+		});
+		componentsList[type]['requirements']['linkedTo'].forEach(function(requirement){
+			const cylinder = new THREE.Mesh( geometry, reqMaterial );
+			cylinder.userData.requirmentName = requirement;
+			requirements.add(cylinder);
+			cylinder.position.y = -0.3;
+			cylinder.rotateX(THREE.Math.degToRad(90)); // Math.PI / 2; // cylinder.rotation.x = degrees * Math.PI / 180;
+		});
+	});
+
+
 	generateTexture(componentType, cName, cColor, cWidth, cHeight, cTagColor, cLogo, 'updateTexture', finalObject);
 
 	if(!selectedComponent)
@@ -714,6 +778,7 @@ function generateComponent(componentType, material) {
 
 	if(selectedComponent !== null) {
 		finalObject.position.y += newCmpnt.geometry.parameters.height;
+		placeRequAndCap(finalObject);
 		checkStrechNeeds(selectedComponent);
 		$('#l' + selectedComponent.userData.componentID).append(
 			'<li class="componentlistItem" id="' + lastID + '">' +
@@ -722,6 +787,7 @@ function generateComponent(componentType, material) {
 			'</li>'
 		);
 	}else{
+		placeRequAndCap(finalObject);
 		finalObject.position.set(0, 0, 0.1);
 		sceneComponentList.append('<li class="componentlistItem" id="'+lastID+'">'+
 			'<div class="componentLabel" id="c'+lastID+'">'+finalObject.userData.componentName+'</div>'+
@@ -737,6 +803,26 @@ function generateComponent(componentType, material) {
 	}
 
 	realignerGrille();
+}
+
+// adapt the requirments and capacities's position proportionally to the components size
+function placeRequAndCap(cmpnt){
+	let positionX = - (cmpnt.children[0].geometry.parameters.width / 2) + 0.2;
+	const positionZ = cmpnt.children[0].geometry.parameters.depth / 2;
+	// update positoion of capacities
+	cmpnt.children[1].children.forEach(function(capacity){
+		capacity.position.x = positionX;
+		capacity.position.y = -0.3;
+		capacity.position.z = positionZ + (capacity.geometry.parameters.height / 2);
+		positionX += 0.25;
+	});
+	// update positoion of requirments
+	cmpnt.children[2].children.forEach(function(requirement){
+		requirement.position.x = positionX;
+		requirement.position.y = -0.3;
+		requirement.position.z = positionZ + (requirement.geometry.parameters.height / 2);
+		positionX += 0.25;
+	});
 }
 
 // adjust children spacement within a component and resize it (stretch or shrink)
@@ -782,6 +868,7 @@ function checkStrechNeeds(parentComponent){
 			const cLogo = componentsList[cComponentType]['logo'];
 			const cName = object.userData.componentName;
 			object.children[0].geometry = new THREE.BoxGeometry(nestingLevels['level'+couche]['width'], newHeight, nestingLevels['level'+couche]['depth']);
+			placeRequAndCap(object);
 			generateTexture(cComponentType, cName, cColor, nestingLevels['level'+couche]['width'], object.children[0].geometry.parameters.height, cTagColor, cLogo, 'updateTexture', object);
 			checkStrechNeeds(object);
 		}
@@ -876,6 +963,7 @@ function checkShrinkNeeds(){
 					const cLogo = componentsList[cComponentType]['logo'];
 					const cName = component.userData.componentName;
 					component.children[0].geometry = new THREE.BoxGeometry(nestingLevels['level' + level]['width'], newHeight, nestingLevels['level' + level]['depth']);
+					placeRequAndCap(component);
 					generateTexture(cComponentType, cName, cColor, nestingLevels['level' + level]['width'], biggestComponent.children[0].geometry.parameters.height, cTagColor, cLogo, 'updateTexture', component);
 
 					//placement & espacement enfants
@@ -906,7 +994,7 @@ function regenerateTexture(component, material){
 // delete an object with all its children and their links
 function deleteObjectHierarchie(component){
 	component.children[0].children.forEach(function(child){
-		deleteLinks(child);
+		//deleteLinks(child);
 		deleteObjectHierarchie(child);
 	});
 	deleteLinks(component);
@@ -956,35 +1044,245 @@ function drawLink(cmpnt1, cmpnt2){
 	const points = [];
 	let globalPos1 = new Vector3();
 	let globalPos2 = new Vector3();
-	points.push( cmpnt1.getWorldPosition(globalPos1) );
-	points.push( cmpnt2.getWorldPosition(globalPos2) );
 
-	const geometry = new THREE.BufferGeometry().setFromPoints( points );
-	const line = new THREE.Line( geometry, material );
+	// cmpnt1 compatible avec cmpnt2 ?
+	let hub1 = null;
+	let hub2 = null;
+	//const types1 = getAllObjectTypes(cmpnt1);
+	//const types2 = getAllObjectTypes(cmpnt2);
 
-	line.userData.linkId = lastLinkID;
-	lastLinkID++;
-	line.userData.hoster1 = cmpnt1;
-	line.userData.hoster2 = cmpnt2;
-	cmpnt1.userData.links.push(line);
-	cmpnt2.userData.links.push(line);
-	sceneLinksObj.add(line);
+	let i = 0;
+	let j = 0;
+	let trouve = false;
+	// check each capacities of cmpnt1
+	while(i < cmpnt1.children[1].children.length && trouve === false){
+		// get all types of current cmpnt1's hub capacities
+		let types1 = getAllObjectSuccessor(cmpnt1.children[1].children[i].userData.capacityName);
+		let cName1 = cmpnt1.userData.componentType;
+		let cName2 = cmpnt2.userData.componentType;
+		if(types1.includes(cName2)){
+			hub1 = cmpnt1.children[1].children[i];
 
-	return line;
+			while(j < cmpnt2.children[1].children.length && trouve === false){
+				let types2 = getAllObjectSuccessor(cmpnt2.children[1].children[j].userData.capacityName);
+				if(types2.includes(cName1)){
+					hub2 = cmpnt2.children[1].children[j];
+					trouve = true;
+					console.log('C to C cor');
+				}
+				j++;
+			}
+			j = 0;
+			while(j < cmpnt2.children[2].children.length && trouve === false){
+				let types2 = getAllObjectSuccessor(cmpnt2.children[2].children[j].userData.requirmentName);
+				if(types2.includes(cName1)){
+					hub2 = cmpnt2.children[2].children[j];
+					trouve = true;
+					console.log('C to R cor');
+				}
+				j++;
+			}
+			j = 0;
+		}
+		i++;
+	}
+	i = 0;
+	j = 0;
+	// check each requirements of cmpnt1
+	while(i < cmpnt1.children[2].children.length && trouve === false){
+		// get all types of current cmpnt1's hub capacities
+		let types1 = getAllObjectSuccessor(cmpnt1.children[2].children[i].userData.requirmentName);
+		let cName1 = cmpnt1.userData.componentType;
+		let cName2 = cmpnt2.userData.componentType;
+		if(types1.includes(cName2)){
+			hub1 = cmpnt1.children[2].children[i];
+
+			while(j < cmpnt2.children[1].children.length && trouve === false){
+				let types2 = getAllObjectSuccessor(cmpnt2.children[1].children[j].userData.capacityName);
+				if(types2.includes(cName1)){
+					hub2 = cmpnt2.children[1].children[j];
+					trouve = true;
+					console.log('R to C cor');
+				}
+				j++;
+			}
+			j = 0;
+			while(j < cmpnt2.children[2].children.length && trouve === false){
+				let types2 = getAllObjectSuccessor(cmpnt2.children[2].children[j].userData.requirmentName);
+				if(types2.includes(cName1)){
+					hub2 = cmpnt2.children[2].children[j];
+					trouve = true;
+					console.log('R to R cor');
+				}
+				j++;
+			}
+			j = 0;
+		}
+		i++;
+	}
+
+	if(hub1 != null && hub2 != null){
+		const xMoves = cmpnt1.userData.grid.x - cmpnt2.userData.grid.x;
+		const zMoves = cmpnt1.userData.grid.y - cmpnt2.userData.grid.y;
+
+		console.log(xMoves+ ' ; ' +zMoves);
+
+		let startPos = new Vector3();
+		let endPos = new Vector3();
+		let hub1Pos = new Vector3();
+		let hub2Pos = new Vector3();
+		let xPos = 0;
+		let xTarget = 0;
+		let zPos = 0;
+		let zTarget = 0;
+		let link = new THREE.Group();
+
+		// determine start and target position then draw link in two fragment
+		cmpnt1.getWorldPosition(startPos);
+		cmpnt2.getWorldPosition(endPos);
+		hub1.getWorldPosition(hub1Pos);
+		hub2.getWorldPosition(hub2Pos);
+
+		zPos = startPos.z + 1 + (cmpnt1.children[0].geometry.parameters.depth / 2);
+		zTarget = endPos.z + 1 + (cmpnt2.children[0].geometry.parameters.depth / 2);
+
+		if(xMoves > 0){
+			console.log('xMoves > 0');
+			xPos = startPos.x - 1 - (cmpnt1.children[0].geometry.parameters.width / 2);
+			xTarget = endPos.x + 1 + (cmpnt2.children[0].geometry.parameters.width / 2);
+			addCornerPipe(new Vector3(hub1Pos.x, hub1Pos.y, hub1Pos.z + 1 - 0.05), link, false);
+			addCornerPipe(new Vector3(hub2Pos.x, hub2Pos.y, hub2Pos.z + 1 - 0.05), link, true);
+			// pipe that link corners & middle path
+			addStraightPipe(new Vector3(hub1Pos.x - 0.36, hub1Pos.y, hub1Pos.z + 1 - 0.05), new Vector3(xPos, hub1Pos.y, zPos), link, true);
+			addStraightPipe(new Vector3(hub2Pos.x + 0.36, hub2Pos.y, hub2Pos.z + 1 - 0.05), new Vector3(xTarget, hub2Pos.y, zTarget), link, true);
+		}else if (xMoves < 0){
+			console.log('xMoves < 0');
+			xPos = startPos.x + 1 + (cmpnt1.children[0].geometry.parameters.width / 2);
+			xTarget = endPos.x - 1 - (cmpnt2.children[0].geometry.parameters.width / 2);
+			addCornerPipe(new Vector3(hub1Pos.x, hub1Pos.y, hub1Pos.z + 1 - 0.05), link, true);
+			addCornerPipe(new Vector3(hub2Pos.x, hub2Pos.y, hub2Pos.z + 1 - 0.05), link, false);
+			// pipe that link corners & middle path
+			addStraightPipe(new Vector3(hub1Pos.x + 0.36, hub1Pos.y, hub1Pos.z + 1 - 0.05), new Vector3(xPos, hub1Pos.y, zPos), link, true);
+			addStraightPipe(new Vector3(hub2Pos.x - 0.36, hub2Pos.y, hub2Pos.z + 1 - 0.05), new Vector3(xTarget, hub2Pos.y, zTarget), link, true);
+		}else{	// xMoves === 0
+			console.log('xMoves === 0');
+			xPos = startPos.x - 1 - (cmpnt1.children[0].geometry.parameters.width / 2);
+			xTarget = endPos.x - 1 - (cmpnt2.children[0].geometry.parameters.width / 2);
+			addCornerPipe(new Vector3(hub1Pos.x, hub1Pos.y, hub1Pos.z + 1 - 0.05), link, false);
+			addCornerPipe(new Vector3(hub2Pos.x, hub2Pos.y, hub2Pos.z + 1 - 0.05), link, false);
+			// pipe that link corners & middle path
+			addStraightPipe(new Vector3(hub1Pos.x - 0.36, hub1Pos.y, hub1Pos.z + 1 - 0.05), new Vector3(xPos, hub1Pos.y, zPos), link, true);
+			addStraightPipe(new Vector3(hub2Pos.x - 0.36, hub2Pos.y, hub2Pos.z + 1 - 0.05), new Vector3(xTarget, hub2Pos.y, zTarget), link, true);
+		}
+
+		startPos.x = xPos;
+		startPos.y = hub1Pos.y;
+		startPos.z = zPos;
+		endPos.x = xTarget;
+		endPos.y = hub2Pos.y;
+		endPos.z = zTarget;
+		// pipe that link corners & hubs
+		addStraightPipe(new Vector3(hub1Pos.x, hub1Pos.y, hub1Pos.z + 0.05), new Vector3(hub1Pos.x, hub1Pos.y, hub1Pos.z + 0.6), link, false);
+		addStraightPipe(new Vector3(hub2Pos.x, hub2Pos.y, hub2Pos.z + 0.05), new Vector3(hub2Pos.x, hub2Pos.y, hub2Pos.z + 0.6), link, false);
+
+		/*while(xPos !== xTarget || zPos !== zTarget){
+
+		}*/
+		//path
+		addStraightPipe(startPos, new Vector3(endPos.x, endPos.y, startPos.z), link, true);
+		addStraightPipe(new Vector3(endPos.x, endPos.y, startPos.z), endPos, link, false);
+
+		if(link){
+			//const line = loadStraightPipe(hub1.getWorldPosition(globalPos1), hub2.getWorldPosition(globalPos2));
+			link.userData.linkId = lastLinkID;
+			lastLinkID++;
+			link.userData.hoster1 = cmpnt1;
+			link.userData.hub1 = hub1;
+			link.userData.hoster2 = cmpnt2;
+			link.userData.hub2 = hub2;
+			cmpnt1.userData.links.push(link);
+			cmpnt2.userData.links.push(link);
+			sceneLinksObj.add(link);
+		}
+		return link;
+	}else{
+		customAlert('impossible de lier ' +cmpnt1.userData.componentName+ ' et ' +cmpnt2.userData.componentName);
+	}
+
+}
+
+// load the link's 3D model at the right position
+function addStraightPipe(point1, point2, link, isOnXAxis){
+	let distance;
+	if (isOnXAxis){
+		distance = point1.x - point2.x;
+	}else{
+		distance = point1.z - point2.z;
+	}
+
+	const geometry = new THREE.CylinderGeometry( 0.1, 0.1, distance, 8 );
+	const material = new THREE.MeshStandardMaterial({ color : '#0365ff', side: THREE.DoubleSide });
+	const line = new THREE.Mesh( geometry, material );
+	line.position.x = (point1.x + point2.x) / 2;
+	line.position.y = (point1.y + point2.y) / 2;
+	line.position.z = (point1.z + point2.z) / 2;
+	line.rotateX(THREE.Math.degToRad(90));
+	if(isOnXAxis)
+		line.rotateZ(THREE.Math.degToRad(90));
+
+	link.add(line);
+}
+
+// load the link's 3D model at the right position
+function addCornerPipe(position, link, faceRight){
+	const loader = new FBXLoader();
+	loader.load( './public/3DModels/Pipes_Corner_baseV3.fbx', function ( object ) {
+
+		object.traverse( function ( child ) {
+			if ( child.isMesh ) {
+				child.castShadow = true;
+				child.receiveShadow = true;
+				child.material = new THREE.MeshStandardMaterial({ color : '#0365ff', side: THREE.DoubleSide });
+			}
+		} );
+
+		object.rotateX(THREE.Math.degToRad(90));
+		if(!faceRight)
+			object.rotateY(THREE.Math.degToRad(180));
+		object.position.x = position.x;
+		object.position.y = position.y;
+		object.position.z = position.z;
+		object.scale.x = 0.001;
+		object.scale.y = 0.001;
+		object.scale.z = 0.001;
+
+		link.add(object);
+	}, undefined, function ( error ) {
+		console.error( error );
+	} );
 }
 
 // replace a link after the parents moved position
 function relink(link){
-	const host1 = link.userData.hoster1;
-	const host2 = link.userData.hoster2;
+	/*
+	const hub1 = link.userData.hub1;
+	const hub2 = link.userData.hub2;
 
-	const points = [];
 	let globalPos1 = new Vector3();
 	let globalPos2 = new Vector3();
-	points.push( host1.getWorldPosition(globalPos1) );
-	points.push( host2.getWorldPosition(globalPos2) );
-
-	link.geometry = new THREE.BufferGeometry().setFromPoints( points );
+	const point1 = hub1.getWorldPosition(globalPos1);
+	const point2 = hub2.getWorldPosition(globalPos2);
+	let distance = Math.sqrt(
+		Math.pow((point1.x - point2.x), 2) +
+		Math.pow((point1.y - point2.y), 2)+
+		Math.pow((point1.z - point2.z), 2)
+	);
+	const geometry = new THREE.CylinderGeometry( 0.1, 0.1, distance, 8 );
+	link.geometry = geometry;
+	link.position.x = (point1.x + point2.x) / 2;
+	link.position.y = (point1.y + point2.y) / 2;
+	link.position.z = (point1.z + point2.z) / 2;
+	*/
 }
 
 // show a stylised alert
@@ -996,8 +1294,25 @@ function customAlert(message){
 }
 
 // gather the component nesting compatibilities with the ones inherited by its parent
+function getlinkingCompatibilities(componentType, cmptCompatibilities = []){
+	componentsList[componentType]['requirements']['linkedTo'].forEach(function(compatibility){
+		cmptCompatibilities.push(compatibility);
+	});
+	componentsList[componentType]['capacities']['linkedTo'].forEach(function(compatibility){
+		cmptCompatibilities.push(compatibility);
+	});
+	if(componentsList[componentType]['derivedFrom'] !== ''){
+		cmptCompatibilities = getlinkingCompatibilities(componentsList[componentType]['derivedFrom'], cmptCompatibilities);
+	}
+	return cmptCompatibilities;
+}
+
+// gather the component nesting compatibilities with the ones inherited by its parent
 function getNestingCompatibilities(componentType, cmptCompatibilities = []){
 	componentsList[componentType]['requirements']['nestedOn'].forEach(function(compatibility){
+		cmptCompatibilities.push(compatibility);
+	});
+	componentsList[componentType]['capacities']['nestedOn'].forEach(function(compatibility){
 		cmptCompatibilities.push(compatibility);
 	});
 	if(componentsList[componentType]['derivedFrom'] !== ''){
@@ -1013,6 +1328,19 @@ function getAllObjectTypes(componentType){
 		types.push(componentsList[componentType]['derivedFrom']);
 		componentType = componentsList[componentType]['derivedFrom'];
 	}
+	return types;
+}
+
+// get all object types that inherit from componentType
+function getAllObjectSuccessor(componentType, types = []){
+	types.push(componentType);
+
+	Object.entries(componentsList).forEach(function(entry){
+		if(entry[1]['derivedFrom'] === componentType){
+			types = getAllObjectSuccessor(entry[0], types);
+		}
+	});
+
 	return types;
 }
 
