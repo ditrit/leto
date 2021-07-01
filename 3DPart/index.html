@@ -7,30 +7,86 @@
 	<link rel="stylesheet" href="./public/style.css">
 </head>
 <body>
-	<div id="leftBar">
-		<div id="conponentsSection">
-			<h2>Components :</h2>
-			<button class="addComponentButtons" data-value="serveur"> Serveur </button><br/>
-				<button class="addChildButtons" data-value="apache"> Apache </button><br/>
-				<button class="addChildButtons" data-value="php"> PHP </button><br/>
-				<button class="addChildButtons" data-value="database"> Database </button><br/>
-				<button class="addChildButtons" data-value="nodejs"> Node.js </button><br/>
-			<button class="addComponentButtons" data-value="router"> Router </button><br/>
+	<div id="leftPannel" class="UI">
+		<div>
+			<input id="paletteSearchField" type="text" placeholder="Chercher un composant" />
+			<div id="componentsSection">
+				<h2>Composants :</h2>
+			</div>
 		</div>
 		<div id="hierarchieSection">
-			<h2>hierarchie :</h2>
-			<ul id="sceneComponentslist">
+			<h2>Hierarchie :</h2>
+			<ul class="sceneComponentslist">
 			</ul>
 		</div>
 	</div>
 
-	<div id="bottomToolBar">
-		<button id="eyeTool" class="toolButtons"> Oeuil </button><br/>
-		<button id="moveTool" class="toolButtons"> Déplacer </button><br/>
-		<button id="linkTool" class="toolButtons"> Liaisons </button><br/>
+	<div id="bottomToolBar" class="UI">
+		<button id="eyeTool" class="toolButtons selectedTool"> Oeuil </button>
+		<button id="moveTool" class="toolButtons"> Déplacer </button>
+		<button id="linkTool" class="toolButtons"> Liaisons </button>
+	</div>
+
+	<div id="rightPannel" class="UI">
+		<a id="deleteButton">supprimer</a>
+		<ul id="attributesList">
+			<li>ID : <span id="componentID"></span></li>
+			<li>Nom : <input id="componentName"></span></li>
+			<li>Type : <span id="componentType"></span></li>
+			<li>Niveau d'imbrication : <span id="componentLevel"></span></li>
+			<li>Position : <span id="componentGridPosition"></span></li>
+			<li>liens : <ul id="componentLinks"></ul></li>
+			<li>enfants : <ul id="componentChildren"></ul></li>
+		</ul>
+	</div>
+
+	<div id="messageBox">
+		Ce composant blblaajbfd
 	</div>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script type="module" src="./public/script.js"></script>
+
+	<!-- Handle secondary and independant events -->
+	<script>
+		// find component type by name
+		const palette = $('#componentsSection');
+
+		$('#paletteSearchField').on('input', function(){
+			const stringQuery = $(this).val().toLowerCase();
+			const buttons = palette.find('button');
+			const lists = palette.find('ul');
+			const components = $('.paletteComponent');
+
+			if(stringQuery !== ''){
+				buttons.css('display', 'none');
+				lists.css('display', 'block');
+
+				components.each(function(){
+					if( !$(this).html().toLowerCase().includes(stringQuery) ){
+						$(this).css('display', 'none');
+					}else{
+						$(this).css('display', 'flex');
+					}
+				});
+			}else{
+				buttons.css('display', 'block').html('+');
+				lists.css('display', 'none');
+
+				lists.each(function(){
+					const associatedButton = $( '#showHide'+$(this).attr('id') );
+					const list = $(this);
+
+					if ( list.html() === '' ){
+						associatedButton.css('display', 'none');	// hide 'show/hide' button if list's empty
+					}else{
+						list.css('display', 'none');	// hide list if not empty
+						associatedButton.css('display', 'block');	// display 'show/hide' button if list isn't empty
+					}
+				});
+				components.css('display', 'flex');
+			}
+		});
+	</script>
 </body>
 </html>
