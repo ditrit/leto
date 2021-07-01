@@ -1189,8 +1189,10 @@ function drawLink(cmpnt1, cmpnt2){
 
 		}*/
 		//path
-		addStraightPipe(startPos, new Vector3(endPos.x, endPos.y, startPos.z), link, true);
-		addStraightPipe(new Vector3(endPos.x, endPos.y, startPos.z), endPos, link, false);
+		if(xMoves > 1)
+			addStraightPipe(startPos, new Vector3(endPos.x, endPos.y, startPos.z), link, true);
+		if(zMoves > 1)
+			addStraightPipe(new Vector3(endPos.x, endPos.y, startPos.z), endPos, link, false);
 
 		if(link){
 			//const line = loadStraightPipe(hub1.getWorldPosition(globalPos1), hub2.getWorldPosition(globalPos2));
