@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page padding class="flex flex-center">
     <h2>The Tool Two Viewer</h2>
   </q-page>
 </template>

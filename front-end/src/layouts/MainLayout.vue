@@ -48,16 +48,16 @@
     >
       <div class="row full_height">
         <q-list bordered class="width_19">
-          <q-item-label header class="text-grey-8"> </q-item-label>
           <EssentialTools
             v-for="link in EssentialToolss"
             :key="link.title"
             v-bind="link"
           />
         </q-list>
-        <div padding class="viewer_navigation">
+        <div padding class="viewer_navigation col">
           <q-item-label header class="text-grey-8">
             Menu de l'outil
+            <Accordion />
           </q-item-label>
         </div>
       </div>
@@ -72,6 +72,7 @@
 <script>
 import EssentialTools from "components/EssentialTools.vue";
 import MainMenu from "components/MainMenu";
+import Accordion from "components/TabsPanels/Accordion";
 
 const linksToolsList = [
   {
@@ -128,6 +129,7 @@ export default defineComponent({
   name: "MainLayout",
   components: {
     EssentialTools,
+    Accordion,
   },
 
   setup() {

@@ -1,13 +1,15 @@
 <template>
-  <q-page class="flex flex-center">
-    <h2>The Tool One Viewer</h2>
+  <q-page padding>
+    <tPanel />
   </q-page>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import tPanel from "../components/TabsPanels/TPanel";
 
 export default defineComponent({
   name: "PageToolOneViewer",
+  components: { tPanel },
 });
 </script>
