@@ -1,27 +1,41 @@
 <template>
   <q-layout view="hhh lpR fff">
     <q-header>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-        <q-tabs
-          no-caps
-          active-color="white"
-          indicator-color="transparent"
-          class="text-white"
-          v-model="tab"
-        >
-          <q-tab name="Fichier" label="Fichier" />
-          <q-tab name="Edition" label="Edition" />
-          <q-tab name="Selection" label="Selection" />
-          <q-tab name="Affichage" label="Affichage" />
-        </q-tabs>
+      <q-toolbar class="justify-between">
+        <div class="row">
+          <q-btn
+            flat
+            dense
+            round
+            icon="menu"
+            aria-label="Menu"
+            @click="toggleLeftDrawer"
+          />
+
+          <q-tabs
+            no-caps
+            active-color="white"
+            indicator-color="transparent"
+            class="text-white"
+            v-model="tab"
+          >
+            <q-tab name="Fichier" label="Fichier" />
+            <q-tab name="Edition" label="Edition" />
+            <q-tab name="Selection" label="Selection" />
+            <q-tab name="Affichage" label="Affichage" />
+          </q-tabs>
+        </div>
+        <q-item clickable v-ripple>
+          <q-item-section>
+            <q-avatar round size="30px">
+              <img src="https://cdn.quasar.dev/img/avatar.png" />
+              <q-badge floating rounded color="teal">1</q-badge>
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Nom</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-toolbar>
     </q-header>
 
@@ -33,7 +47,7 @@
       class="bg-grey-1"
     >
       <div class="row full_height">
-        <q-list bordered class="width_18">
+        <q-list bordered class="width_19">
           <q-item-label header class="text-grey-8"> </q-item-label>
           <EssentialTools
             v-for="link in EssentialToolss"
@@ -42,7 +56,9 @@
           />
         </q-list>
         <div padding class="viewer_navigation">
-          <q-item-label header class="text-grey-8"> Composants </q-item-label>
+          <q-item-label header class="text-grey-8">
+            Menu de l'outil
+          </q-item-label>
         </div>
       </div>
     </q-drawer>
@@ -60,27 +76,27 @@ import MainMenu from "components/MainMenu";
 const linksToolsList = [
   {
     title: "",
-    caption: "",
+    caption: "tool1 ",
     icon: "edit",
-    link: "",
+    link: "#/tool-one",
   },
   {
     title: "",
-    caption: "",
+    caption: "tool2",
     icon: "download",
-    link: "",
+    link: "#/tool-two",
   },
   {
     title: "",
-    caption: "",
+    caption: "tool3",
     icon: "landscape",
-    link: "",
+    link: "#/tool-three",
   },
   {
     title: "",
-    caption: "",
+    caption: "tool4",
     icon: "settings",
-    link: "",
+    link: "#/tool-four",
   },
 ];
 const mainMenuList = [
@@ -130,6 +146,6 @@ export default defineComponent({
 .full_height
   height: inherit
 
-.width_18
-  width: 18%
+.width_19
+  width: 19%
 </style>
