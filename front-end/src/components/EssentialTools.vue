@@ -1,6 +1,6 @@
 <template>
   <q-item clickable tag="a" target="_self" :href="link">
-    <q-item-section v-if="icon" avatar>
+    <q-item-section v-if="icon" avatar class="centered">
       <q-icon :name="icon" />
       <q-item-label caption>
         {{ caption }}
@@ -41,3 +41,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped lang="sass">
+.centered
+  display: flex
+  align-items: center
+  padding-right: 0
+</style>

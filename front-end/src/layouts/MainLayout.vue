@@ -1,30 +1,14 @@
 <template>
-  <q-layout view="hhh lpR fff">
-    <q-header>
-      <q-toolbar class="justify-between">
-        <div class="row">
-          <q-btn
-            flat
-            dense
-            round
-            icon="menu"
-            aria-label="Menu"
-            @click="toggleLeftDrawer"
-          />
+  <q-layout view="hHh lpR fFf">
+    <q-header reveal elevated class="bg-primary text-white">
+      <q-tabs align="left">
+        <q-toolbar-title class="q-ml-md">
+          <!-- <q-avatar>
+            <img src="" />
+          </q-avatar> -->
+          Leto app
+        </q-toolbar-title>
 
-          <q-tabs
-            no-caps
-            active-color="white"
-            indicator-color="transparent"
-            class="text-white"
-            v-model="tab"
-          >
-            <q-tab name="Fichier" label="Fichier" />
-            <q-tab name="Edition" label="Edition" />
-            <q-tab name="Selection" label="Selection" />
-            <q-tab name="Affichage" label="Affichage" />
-          </q-tabs>
-        </div>
         <q-item clickable v-ripple>
           <q-item-section>
             <q-avatar round size="30px">
@@ -33,66 +17,27 @@
             </q-avatar>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Nom</q-item-label>
+            <q-item-label>Nom Prènom</q-item-label>
           </q-item-section>
         </q-item>
-      </q-toolbar>
+      </q-tabs>
     </q-header>
 
     <q-drawer
-      :width="400"
-      v-model="leftDrawerOpen"
       show-if-above
+      v-model="leftDrawerOpen"
+      side="left"
       bordered
-      class="bg-grey-1"
+      :width="60"
+      class="centered"
     >
-      <div class="row full_height">
-        <q-list bordered class="width_19">
-          <EssentialTools
-            v-for="link in EssentialToolss"
-            :key="link.title"
-            v-bind="link"
-          />
-        </q-list>
-        <div padding class="viewer_navigation col">
-          <q-item-label header class="text-grey-8">
-            <div>
-              <q-tabs
-                v-model="tab"
-                dense
-                class="text-grey"
-                active-color="primary"
-                indicator-color="primary"
-                align="justify"
-                narrow-indicator
-              >
-                <q-tab name="model" label="Model" />
-                <q-tab name="source" label="Source" />
-              </q-tabs>
+      <!-- drawer content -->
 
-              <q-separator />
-
-              <q-tab-panels v-model="tab">
-                <q-tab-panel name="model">
-                  <Accordion />
-                </q-tab-panel>
-
-                <q-tab-panel name="source">
-                  <q-list>
-                    <q-item>Item 1</q-item>
-                    <q-item>Item 2</q-item>
-                    <q-item>Item 3</q-item>
-                    <q-item>Item 4</q-item>
-                    <q-item>Item 5</q-item>
-                    <q-item>Item 6</q-item>
-                    <q-item>Item 7</q-item>
-                  </q-list>
-                </q-tab-panel>
-              </q-tab-panels>
-            </div>
-          </q-item-label>
-        </div>
-      </div>
+      <EssentialTools
+        v-for="link in linksToolsList"
+        :key="link.title"
+        v-bind="link"
+      />
     </q-drawer>
 
     <q-page-container>
@@ -102,9 +47,11 @@
 </template>
 
 <script>
+import { defineComponent, ref } from "vue";
+
 import EssentialTools from "components/EssentialTools.vue";
-import MainMenu from "components/MainMenu";
-import Accordion from "components/TabsPanels/Accordion";
+// import MainMenu from "components/MainMenu";
+// import Accordion from "components/TabsPanels/Accordion";
 
 const linksToolsList = [
   {
@@ -155,32 +102,35 @@ const mainMenuList = [
   },
 ];
 
-import { defineComponent, ref } from "vue";
-
 export default defineComponent({
   name: "MainLayout",
   components: {
     EssentialTools,
-    Accordion,
+    // Accordion,
   },
 
   setup() {
     const leftDrawerOpen = ref(false);
     return {
-      tab: ref("model"),
-      EssentialToolss: linksToolsList,
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
+      linksToolsList,
     };
   },
 });
 </script>
-<style scoped lang="sass">
+<style lang="sass">
 .full_height
   height: inherit
 
 .width_19
   width: 19%
+
+.centered
+  display: flex
+  align-items: center
+  flex-direction: column
+  justify-content: center
 </style>

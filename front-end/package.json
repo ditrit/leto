@@ -1,6 +1,6 @@
 {
   "name": "leto-quasar",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "User interface for the Leto project based on Vuejs/Quasar",
   "productName": "Quasar App",
   "author": "BS",
