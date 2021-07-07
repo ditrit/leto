@@ -12,8 +12,10 @@
         <q-item clickable v-ripple>
           <q-item-section>
             <q-avatar round size="30px">
-              <img src="https://cdn.quasar.dev/img/avatar.png" />
-              <q-badge floating rounded color="teal">1</q-badge>
+              <img
+                src="https://avatars.githubusercontent.com/u/7687826?s=60&v=4"
+              />
+              <q-badge floating rounded color="teal">3</q-badge>
             </q-avatar>
           </q-item-section>
           <q-item-section>
@@ -50,6 +52,7 @@
 import { defineComponent, ref } from "vue";
 
 import EssentialTools from "components/EssentialTools.vue";
+
 // import MainMenu from "components/MainMenu";
 // import Accordion from "components/TabsPanels/Accordion";
 
@@ -99,6 +102,15 @@ const mainMenuList = [
   {
     title: "",
     link: "",
+  },
+];
+const profil = [
+  {
+    id: 1,
+    firstName: "Bs",
+    lastName: "Sr",
+    notification: 2,
+    image: "https://avatars.githubusercontent.com/u/7687826?s=60&v=4",
   },
 ];
 
