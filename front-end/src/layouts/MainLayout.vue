@@ -40,7 +40,7 @@
     </q-header>
 
     <q-drawer
-      :width="300"
+      :width="400"
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -56,8 +56,40 @@
         </q-list>
         <div padding class="viewer_navigation col">
           <q-item-label header class="text-grey-8">
-            Menu de l'outil
-            <Accordion />
+            <div>
+              <q-tabs
+                v-model="tab"
+                dense
+                class="text-grey"
+                active-color="primary"
+                indicator-color="primary"
+                align="justify"
+                narrow-indicator
+              >
+                <q-tab name="model" label="Model" />
+                <q-tab name="source" label="Source" />
+              </q-tabs>
+
+              <q-separator />
+
+              <q-tab-panels v-model="tab">
+                <q-tab-panel name="model">
+                  <Accordion />
+                </q-tab-panel>
+
+                <q-tab-panel name="source">
+                  <q-list>
+                    <q-item>Item 1</q-item>
+                    <q-item>Item 2</q-item>
+                    <q-item>Item 3</q-item>
+                    <q-item>Item 4</q-item>
+                    <q-item>Item 5</q-item>
+                    <q-item>Item 6</q-item>
+                    <q-item>Item 7</q-item>
+                  </q-list>
+                </q-tab-panel>
+              </q-tab-panels>
+            </div>
           </q-item-label>
         </div>
       </div>
@@ -135,6 +167,7 @@ export default defineComponent({
   setup() {
     const leftDrawerOpen = ref(false);
     return {
+      tab: ref("model"),
       EssentialToolss: linksToolsList,
       leftDrawerOpen,
       toggleLeftDrawer() {
