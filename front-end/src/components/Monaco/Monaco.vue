@@ -2,7 +2,6 @@
   <div
     ref="monacoContainer"
     style="height: 1050px; width: 100%; verflow-y: hidden"
-    o
   ></div>
 </template>
 

@@ -22,6 +22,7 @@
       bordered
       class="bg-grey-3"
     >
+      <Search />
       <q-list v-for="item in sidebarItems" :key="item.id">
         <q-expansion-item
           group="somegroup"
@@ -61,6 +62,7 @@
 
 <script>
 import { ref } from "vue";
+import Search from "../components/Forms/Search.vue";
 
 const sidebarItems = [
   {
@@ -120,6 +122,7 @@ const sidebarItems = [
 ];
 
 export default {
+  components: { Search },
   setup() {
     return {
       drawer: ref(false),
