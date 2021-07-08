@@ -27,6 +27,7 @@
           group="somegroup"
           :icon="item.icon"
           :label="item.caption"
+          :data-id="item.attr"
           default-opened
           header-class="text-primary"
           style="font-weight: 600"
@@ -34,6 +35,7 @@
           <q-item
             v-for="child in item.children"
             :key="child.id"
+            :data-id="child.attr"
             clickable
             v-ripple
           >
@@ -65,10 +67,11 @@ const sidebarItems = [
     id: 1,
     caption: "Parent Item one",
     icon: "code",
+    attr: "Parentone",
     children: [
-      { id: 1, caption: "Child Item one", icon: "code" },
-      { id: 2, caption: "Child Item two", icon: "code" },
-      { id: 3, caption: "Child Item Three", icon: "code" },
+      { id: 1, caption: "Child Item one", icon: "code", attr: "childone" },
+      { id: 2, caption: "Child Item two", icon: "code", attr: "childtwo" },
+      { id: 3, caption: "Child Item Three", icon: "code", attr: "childthree" },
     ],
   },
   {
@@ -76,20 +79,22 @@ const sidebarItems = [
     itle: "",
     caption: "Parent Item two",
     icon: "code",
+    attr: "Parenttwo",
     children: [
-      { id: 1, caption: "Child Item one", icon: "code" },
-      { id: 2, caption: "Child Item two", icon: "code" },
-      { id: 3, caption: "Child Item Three", icon: "code" },
+      { id: 1, caption: "Child Item one", icon: "code", attr: "childone" },
+      { id: 2, caption: "Child Item two", icon: "code", attr: "childtwo" },
+      { id: 3, caption: "Child Item Three", icon: "code", attr: "childthree" },
     ],
   },
   {
     id: 3,
     caption: "Parent Item three",
     icon: "code",
+    attr: "Parentthree",
     children: [
-      { id: 1, caption: "Child Item one", icon: "code" },
-      { id: 2, caption: "Child Item two", icon: "code" },
-      { id: 3, caption: "Child Item Three", icon: "code" },
+      { id: 1, caption: "Child Item one", icon: "code", attr: "childone" },
+      { id: 2, caption: "Child Item two", icon: "code", attr: "childtwo" },
+      { id: 3, caption: "Child Item Three", icon: "code", attr: "childthree" },
     ],
   },
   {

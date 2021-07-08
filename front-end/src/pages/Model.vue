@@ -27,6 +27,7 @@
           group="somegroup"
           :icon="item.icon"
           :label="item.caption"
+          :data-id="item.attr"
           default-opened
           header-class="text-primary"
           style="font-weight: 600"
@@ -34,6 +35,7 @@
           <q-item
             v-for="child in item.children"
             :key="child.id"
+            :data-id="child.attr"
             clickable
             v-ripple
           >
@@ -65,10 +67,21 @@ const sidebarItems = [
     id: 1,
     caption: "Servers",
     icon: "dns",
+    attr: "servers",
     children: [
-      { id: 1, caption: "Serveur de fichier", icon: "folder" },
-      { id: 2, caption: "Serveur d’impression", icon: "print" },
-      { id: 3, caption: "Serveur d’application", icon: "apps" },
+      { id: 1, caption: "Serveur de fichier", icon: "folder", attr: "server1" },
+      {
+        id: 2,
+        caption: "Serveur d’impression",
+        icon: "print",
+        attr: "server2",
+      },
+      {
+        id: 3,
+        caption: "Serveur d’application",
+        icon: "apps",
+        attr: "server3",
+      },
     ],
   },
   {
@@ -76,20 +89,22 @@ const sidebarItems = [
     itle: "",
     caption: "Routers",
     icon: "router",
+    attr: "routers",
     children: [
-      { id: 1, caption: "Element one", icon: "router" },
-      { id: 2, caption: "Element two", icon: "router" },
-      { id: 3, caption: "Element three", icon: "router" },
+      { id: 1, caption: "Element one", icon: "router", attr: "router1" },
+      { id: 2, caption: "Element two", icon: "router", attr: "router2" },
+      { id: 3, caption: "Element three", icon: "router", attr: "router3" },
     ],
   },
   {
     id: 3,
     caption: "Database",
     icon: "storage",
+    attr: "storages",
     children: [
-      { id: 1, caption: "Element one", icon: "storage" },
-      { id: 2, caption: "Element two", icon: "storage" },
-      { id: 3, caption: "Element three", icon: "storage" },
+      { id: 1, caption: "Element one", icon: "storage", attr: "storage1" },
+      { id: 2, caption: "Element two", icon: "storage", attr: "storage2" },
+      { id: 3, caption: "Element three", icon: "storage", attr: "storage3" },
     ],
   },
   {

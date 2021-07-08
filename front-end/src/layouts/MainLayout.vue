@@ -17,6 +17,7 @@
               :name="item.name"
               :label="item.label"
               :to="item.link"
+              :data-id="item.name"
               exact
             />
           </q-tabs>
