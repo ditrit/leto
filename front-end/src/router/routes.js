@@ -12,10 +12,6 @@ const routes = [
         component: () => import("pages/Model.vue"),
       },
       {
-        path: "/tool-one/model",
-        component: () => import("pages/Model.vue"),
-      },
-      {
         path: "/tool-one/source",
         component: () => import("pages/Source.vue"),
       },

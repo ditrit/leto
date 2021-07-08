@@ -11,15 +11,13 @@
             class="text-white"
             v-model="tab"
           >
-            <q-tab
+            <q-route-tab
               v-for="item in essentialTablinks"
               :key="item.id"
               :name="item.name"
               :label="item.label"
-              clickable
-              tag="a"
-              target="_self"
-              :href="item.link"
+              :to="item.link"
+              exact
             />
           </q-tabs>
         </div>
@@ -92,13 +90,13 @@ const essentialTablinks = [
     id: 1,
     name: "modal",
     label: "Model",
-    link: "#/tool-one/model",
+    link: "/tool-one/model",
   },
   {
     id: 2,
     name: "source",
     label: "Source",
-    link: "#/tool-one/source",
+    link: "/tool-one/source",
   },
 ];
 const mainMenuList = [
