@@ -1,38 +1,43 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <q-header reveal elevated class="bg-primary text-white">
-      <q-tabs align="left">
-        <q-toolbar-title class="q-ml-md">
-          <!-- <q-avatar>
-            <img src="" />
-          </q-avatar> -->
-          Leto app
-        </q-toolbar-title>
-
+      <q-toolbar class="justify-between">
+        <div class="row">
+          <q-toolbar-title class="q-pa-md">Leto App</q-toolbar-title>
+          <q-tabs
+            no-caps
+            active-color="white"
+            indicator-color="transparent"
+            class="text-white"
+            v-model="tab"
+          >
+            <q-tab
+              v-for="item in essentialTablinks"
+              :key="item.id"
+              :name="item.name"
+              :label="item.label"
+              clickable
+              tag="a"
+              target="_self"
+              :href="item.link"
+            />
+          </q-tabs>
+        </div>
         <q-item clickable v-ripple>
           <q-item-section>
             <q-avatar round size="30px">
-              <img
-                src="https://avatars.githubusercontent.com/u/7687826?s=60&v=4"
-              />
-              <q-badge floating rounded color="teal">3</q-badge>
+              <img src="https://cdn.quasar.dev/img/avatar.png" />
+              <q-badge floating rounded color="teal">1</q-badge>
             </q-avatar>
           </q-item-section>
           <q-item-section>
-            <q-item-label>Nom Prènom</q-item-label>
+            <q-item-label>Nom</q-item-label>
           </q-item-section>
         </q-item>
-      </q-tabs>
+      </q-toolbar>
     </q-header>
 
-    <q-drawer
-      show-if-above
-      v-model="leftDrawerOpen"
-      side="left"
-      bordered
-      :width="60"
-      class="centered"
-    >
+    <q-drawer show-if-above side="left" bordered :width="70" class="centered">
       <!-- drawer content -->
 
       <EssentialTools
@@ -82,6 +87,20 @@ const linksToolsList = [
     link: "#/tool-four",
   },
 ];
+const essentialTablinks = [
+  {
+    id: 1,
+    name: "modal",
+    label: "Model",
+    link: "#/tool-one/model",
+  },
+  {
+    id: 2,
+    name: "source",
+    label: "Source",
+    link: "#/tool-one/source",
+  },
+];
 const mainMenuList = [
   {
     title: "Fichier",
@@ -125,6 +144,7 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
     return {
       leftDrawerOpen,
+      essentialTablinks,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
@@ -145,4 +165,7 @@ export default defineComponent({
   align-items: center
   flex-direction: column
   justify-content: center
+  box-sizing: border-box
+  overflow-x: hidden
+  background: #b0bec5
 </style>

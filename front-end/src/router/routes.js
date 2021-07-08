@@ -4,12 +4,20 @@ const routes = [
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {
-        path: "/",
-        component: () => import("pages/PageToolOneViewer.vue"),
+        path: "/tool-one/",
+        component: () => import("pages/Model.vue"),
       },
       {
-        path: "/tool-one",
-        component: () => import("pages/PageToolOneViewer.vue"),
+        path: "/tool-one/model",
+        component: () => import("pages/Model.vue"),
+      },
+      {
+        path: "/tool-one/model",
+        component: () => import("pages/Model.vue"),
+      },
+      {
+        path: "/tool-one/source",
+        component: () => import("pages/Source.vue"),
       },
       {
         path: "/tool-two",
