@@ -1,34 +1,38 @@
 <template>
-  <div id="app">
-    hello monaco
-    <MonacoEditor
-      width="800"
-      height="500"
-      theme="vs-dark"
-      language="javascript"
-      :options="options"
-      @change="onChange"
-    ></MonacoEditor>
-  </div>
+  <div
+    ref="monacoContainer"
+    style="height: 1050px; width: 100%; verflow-y: hidden"
+    o
+  ></div>
 </template>
 
 <script>
-import MonacoEditor from "monaco-editor-vue";
+import * as monaco from "monaco-editor";
 export default {
-  name: "App",
-  components: {
-    MonacoEditor,
-  },
   data() {
     return {
-      options: {
-        //Monaco Editor Options
-      },
+      monacoEditor: {},
     };
   },
+
+  mounted() {
+    // Initialize the editor, make sure the dom has been rendered, and the dialog should be written in opened
+    this.monacoEditor = monaco.editor.create(this.$refs.monacoContainer, {
+      value: "Content",
+      readOnly: true,
+      language: "yaml",
+      theme: "vs-dark",
+    });
+  },
   methods: {
-    onChange(value) {
-      console.log(value);
+    changeEditor() {
+      // change editor content
+      this.monacoEditor.setValue(result.data);
+      this.monacoEditor.getAction("editor.action.formatDocument")._run();
+    },
+    destroyEditor() {
+      // Destroy the editor
+      this.monacoEditor.dispose();
     },
   },
 };

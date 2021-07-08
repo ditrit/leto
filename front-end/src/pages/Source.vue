@@ -52,8 +52,8 @@
     </q-drawer>
 
     <q-page-container>
-      <q-page class="q-px-lg q-py-md">
-        <h1>the Source viewer</h1>
+      <q-page class="">
+        <monaco />
       </q-page>
     </q-page-container>
   </q-layout>
@@ -61,6 +61,7 @@
 
 <script>
 import { ref } from "vue";
+import Monaco from "../components/Monaco/Monaco.vue";
 
 const sidebarItems = [
   {
@@ -110,6 +111,7 @@ const sidebarItems = [
 ];
 
 export default {
+  components: { Monaco },
   setup() {
     return {
       drawer: ref(false),
