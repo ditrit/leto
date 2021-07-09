@@ -22,17 +22,7 @@
             />
           </q-tabs>
         </div>
-        <q-item clickable v-ripple>
-          <q-item-section>
-            <q-avatar round size="30px">
-              <img src="https://cdn.quasar.dev/img/avatar.png" />
-              <q-badge floating rounded color="teal">1</q-badge>
-            </q-avatar>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Nom</q-item-label>
-          </q-item-section>
-        </q-item>
+        <AccountSettings />
       </q-toolbar>
     </q-header>
 
@@ -56,6 +46,7 @@
 import { defineComponent, ref } from "vue";
 
 import EssentialTools from "components/EssentialTools.vue";
+import AccountSettings from "../components/Profil/AccountSettings.vue";
 
 // import MainMenu from "components/MainMenu";
 // import Accordion from "components/TabsPanels/Accordion";
@@ -136,6 +127,7 @@ export default defineComponent({
   name: "MainLayout",
   components: {
     EssentialTools,
+    AccountSettings,
     // Accordion,
   },
 

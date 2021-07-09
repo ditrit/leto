@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "monaco-editor-vue": "^1.0.10",
+    "monaco-editor-webpack-plugin": "^4.0.0"
+  }
+}
