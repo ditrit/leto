@@ -22,8 +22,21 @@
       bordered
       class="bg-grey-3"
     >
-      <Search :searchList="sourceSidebar" />
-      <q-list v-for="item in sourceSidebar" :key="item.id">
+      <div class="q-mt-md" style="max-width: 350px">
+        <div class="q-gutter-md">
+          <q-input
+            v-model="search"
+            debounce="500"
+            placeholder="Search"
+            class="search_input q-mb-lg q-pa-md"
+          >
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
+      </div>
+      <q-list v-for="item in filterdSidebarItem" :key="item.id">
         <q-expansion-item
           group="somegroup"
           :icon="item.icon"
@@ -61,63 +74,114 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import Monaco from "../components/Monaco/Monaco.vue";
-import Search from "../components/Forms/Search.vue";
-
-const sourceSidebar = [
-  {
-    id: 1,
-    caption: "Parent Item one",
-    icon: "code",
-    attr: "Parentone",
-    children: [
-      { id: 1, caption: "Child Item one", icon: "code", attr: "childone" },
-      { id: 2, caption: "Child Item two", icon: "code", attr: "childtwo" },
-      { id: 3, caption: "Child Item Three", icon: "code", attr: "childthree" },
-    ],
-  },
-  {
-    id: 2,
-    itle: "",
-    caption: "Parent Item two",
-    icon: "code",
-    attr: "Parenttwo",
-    children: [
-      { id: 1, caption: "Child Item one", icon: "code", attr: "childone" },
-      { id: 2, caption: "Child Item two", icon: "code", attr: "childtwo" },
-      { id: 3, caption: "Child Item Three", icon: "code", attr: "childthree" },
-    ],
-  },
-  {
-    id: 3,
-    caption: "Parent Item three",
-    icon: "code",
-    attr: "Parentthree",
-    children: [
-      { id: 1, caption: "Child Item one", icon: "code", attr: "childone" },
-      { id: 2, caption: "Child Item two", icon: "code", attr: "childtwo" },
-      { id: 3, caption: "Child Item Three", icon: "code", attr: "childthree" },
-    ],
-  },
-  {
-    id: 4,
-    caption: "Parent Item four",
-    icon: "code",
-    children: [
-      { id: 1, caption: "Element one", icon: "wifi" },
-      { id: 2, caption: "Element two", icon: "wifi" },
-      { id: 3, caption: "Element three", icon: "wifi" },
-    ],
-  },
-];
 
 export default {
-  components: { Monaco, Search },
+  components: { Monaco },
   setup() {
+    const search = ref("");
+    const sourceSidebar = ref([
+      {
+        id: 1,
+        caption: "Parent Item one",
+        icon: "code",
+        attr: "Parentone",
+        children: [
+          {
+            id: 1,
+            caption: "Child Item one",
+            icon: "code",
+            attr: "childone",
+          },
+          {
+            id: 2,
+            caption: "Child Item two",
+            icon: "code",
+            attr: "childtwo",
+          },
+          {
+            id: 3,
+            caption: "Child Item Three",
+            icon: "code",
+            attr: "childthree",
+          },
+        ],
+      },
+      {
+        id: 2,
+        itle: "",
+        caption: "Parent Item two",
+        icon: "code",
+        attr: "Parenttwo",
+        children: [
+          {
+            id: 1,
+            caption: "Child Item one",
+            icon: "code",
+            attr: "childone",
+          },
+          {
+            id: 2,
+            caption: "Child Item two",
+            icon: "code",
+            attr: "childtwo",
+          },
+          {
+            id: 3,
+            caption: "Child Item Three",
+            icon: "code",
+            attr: "childthree",
+          },
+        ],
+      },
+      {
+        id: 3,
+        caption: "Parent Item three",
+        icon: "code",
+        attr: "Parentthree",
+        children: [
+          {
+            id: 1,
+            caption: "Child Item one",
+            icon: "code",
+            attr: "childone",
+          },
+          {
+            id: 2,
+            caption: "Child Item two",
+            icon: "code",
+            attr: "childtwo",
+          },
+          {
+            id: 3,
+            caption: "Child Item Three",
+            icon: "code",
+            attr: "childthree",
+          },
+        ],
+      },
+      {
+        id: 4,
+        caption: "Parent Item four",
+        icon: "code",
+        children: [
+          { id: 1, caption: "Element one", icon: "wifi" },
+          { id: 2, caption: "Element two", icon: "wifi" },
+          { id: 3, caption: "Element three", icon: "wifi" },
+        ],
+      },
+    ]);
+    const filterdSidebarItem = computed(function () {
+      return sourceSidebar.value.filter((item) =>
+        item.caption.includes(search.value)
+      );
+    });
     return {
       drawer: ref(false),
+      search,
       sourceSidebar,
+      filterdSidebarItem,
     };
   },
 };

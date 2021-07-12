@@ -22,8 +22,21 @@
       bordered
       class="bg-grey-3"
     >
-      <Search :searchList="toolsSidebar" />
-      <q-list v-for="item in toolsSidebar" :key="item.id">
+      <div class="q-mt-md" style="max-width: 350px">
+        <div class="q-gutter-md">
+          <q-input
+            v-model="search"
+            debounce="500"
+            placeholder="Search"
+            class="search_input q-mb-lg q-pa-md"
+          >
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
+      </div>
+      <q-list v-for="item in filterdSidebarItem" :key="item.id">
         <q-expansion-item
           group="somegroup"
           :icon="item.icon"
@@ -61,73 +74,90 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import Search from "../components/Forms/Search.vue";
+import { ref, computed } from "vue";
 import ModelEdit from "../components/3dModals/ModelEdit.vue";
 
-const toolsSidebar = [
-  {
-    id: 1,
-    caption: "Servers",
-    icon: "dns",
-    attr: "servers",
-    children: [
-      { id: 1, caption: "Serveur de fichier", icon: "folder", attr: "server1" },
+export default {
+  components: { ModelEdit },
+
+  setup() {
+    const toolsSidebar = ref([
+      {
+        id: 1,
+        caption: "Servers",
+        icon: "dns",
+        attr: "servers",
+        children: [
+          {
+            id: 1,
+            caption: "Serveur de fichier",
+            icon: "folder",
+            attr: "server1",
+          },
+          {
+            id: 2,
+            caption: "Serveur d’impression",
+            icon: "print",
+            attr: "server2",
+          },
+          {
+            id: 3,
+            caption: "Serveur d’application",
+            icon: "apps",
+            attr: "server3",
+          },
+        ],
+      },
       {
         id: 2,
-        caption: "Serveur d’impression",
-        icon: "print",
-        attr: "server2",
+        itle: "",
+        caption: "Routers",
+        icon: "router",
+        attr: "routers",
+        children: [
+          { id: 1, caption: "Element one", icon: "router", attr: "router1" },
+          { id: 2, caption: "Element two", icon: "router", attr: "router2" },
+          { id: 3, caption: "Element three", icon: "router", attr: "router3" },
+        ],
       },
       {
         id: 3,
-        caption: "Serveur d’application",
-        icon: "apps",
-        attr: "server3",
+        caption: "Database",
+        icon: "storage",
+        attr: "storages",
+        children: [
+          { id: 1, caption: "Element one", icon: "storage", attr: "storage1" },
+          { id: 2, caption: "Element two", icon: "storage", attr: "storage2" },
+          {
+            id: 3,
+            caption: "Element three",
+            icon: "storage",
+            attr: "storage3",
+          },
+        ],
       },
-    ],
-  },
-  {
-    id: 2,
-    itle: "",
-    caption: "Routers",
-    icon: "router",
-    attr: "routers",
-    children: [
-      { id: 1, caption: "Element one", icon: "router", attr: "router1" },
-      { id: 2, caption: "Element two", icon: "router", attr: "router2" },
-      { id: 3, caption: "Element three", icon: "router", attr: "router3" },
-    ],
-  },
-  {
-    id: 3,
-    caption: "Database",
-    icon: "storage",
-    attr: "storages",
-    children: [
-      { id: 1, caption: "Element one", icon: "storage", attr: "storage1" },
-      { id: 2, caption: "Element two", icon: "storage", attr: "storage2" },
-      { id: 3, caption: "Element three", icon: "storage", attr: "storage3" },
-    ],
-  },
-  {
-    id: 4,
-    caption: "Network",
-    icon: "wifi",
-    children: [
-      { id: 1, caption: "Element one", icon: "wifi" },
-      { id: 2, caption: "Element two", icon: "wifi" },
-      { id: 3, caption: "Element three", icon: "wifi" },
-    ],
-  },
-];
-
-export default {
-  components: { Search, ModelEdit },
-  setup() {
+      {
+        id: 4,
+        caption: "Network",
+        icon: "wifi",
+        children: [
+          { id: 1, caption: "Element one", icon: "wifi" },
+          { id: 2, caption: "Element two", icon: "wifi" },
+          { id: 3, caption: "Element three", icon: "wifi" },
+        ],
+      },
+    ]);
+    const search = ref("");
+    const filterdSidebarItem = computed(function () {
+      return toolsSidebar.value.filter((item) =>
+        item.caption.includes(search.value)
+      );
+    });
     return {
       drawer: ref(false),
       toolsSidebar,
+      search,
+      filterdSidebarItem,
     };
   },
 };
