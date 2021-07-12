@@ -61,3 +61,37 @@ Avant d'installer et d'exécuter le projet, vous devez disposer des éléments s
 ## Installation du framework Quasar
 
 npm install -g @quasar/cli
+
+## Sélectionnez le répertoire principal
+
+```bash
+cd frontal
+```
+
+## Installer les dépendances
+
+```bash
+npm installer
+```
+
+### Démarrez l'application en mode développement (rechargement de code à chaud, rapport d'erreur, etc.)
+
+```bash
+développeur de quasar
+```
+
+### Lint les fichiers
+
+```bash
+npm courir les peluches
+```
+
+### Construire l'application pour la production
+
+```bash
+construction de quasar
+```
+
+### Personnaliser la configuration
+
+Voir [Configuration de quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
