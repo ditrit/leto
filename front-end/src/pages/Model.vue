@@ -1,5 +1,5 @@
 <template>
-  <q-layout container class="global">
+  <q-layout container class="global bg-black">
     <q-toolbar>
       <div class="row">
         <q-btn
@@ -53,8 +53,8 @@
     </q-drawer>
 
     <q-page-container>
-      <q-page class="q-px-lg q-py-md">
-        <h1>the Model viewer</h1>
+      <q-page class="">
+        <ModelEdit />
       </q-page>
     </q-page-container>
   </q-layout>
@@ -63,6 +63,7 @@
 <script>
 import { ref } from "vue";
 import Search from "../components/Forms/Search.vue";
+import ModelEdit from "../components/3dModals/ModelEdit.vue";
 
 const sidebarItems = [
   {
@@ -122,7 +123,7 @@ const sidebarItems = [
 ];
 
 export default {
-  components: { Search },
+  components: { Search, ModelEdit },
   setup() {
     return {
       drawer: ref(false),

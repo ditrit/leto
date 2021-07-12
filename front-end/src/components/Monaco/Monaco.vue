@@ -1,8 +1,5 @@
 <template>
-  <div
-    ref="monacoContainer"
-    style="height: 1050px; width: 100%; verflow-y: hidden"
-  ></div>
+  <div class="monaco" ref="monacoContainer"></div>
 </template>
 
 <script>
@@ -17,8 +14,8 @@ export default {
   mounted() {
     // Initialize the editor, make sure the dom has been rendered, and the dialog should be written in opened
     this.monacoEditor = monaco.editor.create(this.$refs.monacoContainer, {
-      value: "Content",
-      readOnly: true,
+      value: "json:- rigid - better for data interchange",
+      readOnly: false,
       language: "yaml",
       theme: "vs-dark",
     });
@@ -36,3 +33,9 @@ export default {
   },
 };
 </script>
+<style lang="sass" scoped>
+.monaco
+  width: 100%
+  height: 100%
+  verflow-y: hidden
+</style>

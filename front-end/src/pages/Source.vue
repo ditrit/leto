@@ -1,5 +1,5 @@
 <template>
-  <q-layout container class="global">
+  <q-layout container class="global bg-dark">
     <q-toolbar>
       <div class="row">
         <q-btn
@@ -53,8 +53,8 @@
     </q-drawer>
 
     <q-page-container>
-      <q-page class="">
-        <monaco />
+      <q-page class="editorWrapper">
+        <Monaco />
       </q-page>
     </q-page-container>
   </q-layout>
@@ -129,6 +129,11 @@ export default {
   height: 100%
   overflow: hidden
   min-height: 1200px
+.editorWrapper
+  max-width: 1400px
+  width: 1400px
+  height: 1190px
+  margin-top: 0px
 .menuStyle
   background: #eeeeee
   border-radius: 0
