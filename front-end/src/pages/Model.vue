@@ -22,8 +22,8 @@
       bordered
       class="bg-grey-3"
     >
-      <Search />
-      <q-list v-for="item in sidebarItems" :key="item.id">
+      <Search :searchList="toolsSidebar" />
+      <q-list v-for="item in toolsSidebar" :key="item.id">
         <q-expansion-item
           group="somegroup"
           :icon="item.icon"
@@ -65,7 +65,7 @@ import { ref } from "vue";
 import Search from "../components/Forms/Search.vue";
 import ModelEdit from "../components/3dModals/ModelEdit.vue";
 
-const sidebarItems = [
+const toolsSidebar = [
   {
     id: 1,
     caption: "Servers",
@@ -127,7 +127,7 @@ export default {
   setup() {
     return {
       drawer: ref(false),
-      sidebarItems,
+      toolsSidebar,
     };
   },
 };

@@ -6,7 +6,7 @@
       </div> -->
 
       <q-input
-        v-model="search"
+        v-model="getSearch"
         debounce="500"
         placeholder="Search"
         class="search_input q-mb-lg"
@@ -22,11 +22,29 @@
 import { ref } from "vue";
 
 export default {
-  setup() {
-    return {
-      search: ref(""),
-    };
+  props: {
+    searchList: {
+      type: Array,
+    },
   },
+  // setup() {
+  //   return {
+  //     search: ref(""),
+  //   };
+  // },
+  data() {
+    search: "";
+  },
+  mounted() {
+    console.log(this.searchList);
+  },
+  // computed: {
+  //   getSearch() {
+  //     return searchList.filter((item) => {
+  //       return item.caption.toLowerCase().includes(this.search.toLowerCase());
+  //     });
+  //   },
+  // },
 };
 </script>
 

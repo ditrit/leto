@@ -22,13 +22,13 @@
       bordered
       class="bg-grey-3"
     >
-      <Search />
-      <q-list v-for="item in sidebarItems" :key="item.id">
+      <Search :searchList="sourceSidebar" />
+      <q-list v-for="item in sourceSidebar" :key="item.id">
         <q-expansion-item
           group="somegroup"
           :icon="item.icon"
           :label="item.caption"
-          :data-id="item.attr"
+          :id="item.attr"
           default-opened
           header-class="text-primary"
           style="font-weight: 600"
@@ -65,7 +65,7 @@ import { ref } from "vue";
 import Monaco from "../components/Monaco/Monaco.vue";
 import Search from "../components/Forms/Search.vue";
 
-const sidebarItems = [
+const sourceSidebar = [
   {
     id: 1,
     caption: "Parent Item one",
@@ -117,7 +117,7 @@ export default {
   setup() {
     return {
       drawer: ref(false),
-      sidebarItems,
+      sourceSidebar,
     };
   },
 };
