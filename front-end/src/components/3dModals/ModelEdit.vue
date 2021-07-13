@@ -1,6 +1,10 @@
 <template>
   <div class="wrapper">
-    <div id="container"></div>
+    <div id="container">
+      <div class="q-pa-md" style="color: white">
+        <h1>Ceci est test</h1>
+      </div>
+    </div>
   </div>
 </template>
 
