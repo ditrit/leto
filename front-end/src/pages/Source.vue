@@ -75,112 +75,41 @@
 
 <script>
 import { ref, computed } from "vue";
+import axios from "axios";
 import Monaco from "../components/Monaco/Monaco.vue";
 
 export default {
   components: { Monaco },
   setup() {
     const search = ref("");
-    const sourceSidebar = ref([
-      {
-        id: 1,
-        caption: "Parent Item one",
-        icon: "code",
-        attr: "Parentone",
-        children: [
-          {
-            id: 1,
-            caption: "Child Item one",
-            icon: "code",
-            attr: "childone",
-          },
-          {
-            id: 2,
-            caption: "Child Item two",
-            icon: "code",
-            attr: "childtwo",
-          },
-          {
-            id: 3,
-            caption: "Child Item Three",
-            icon: "code",
-            attr: "childthree",
-          },
-        ],
-      },
-      {
-        id: 2,
-        itle: "",
-        caption: "Parent Item two",
-        icon: "code",
-        attr: "Parenttwo",
-        children: [
-          {
-            id: 1,
-            caption: "Child Item one",
-            icon: "code",
-            attr: "childone",
-          },
-          {
-            id: 2,
-            caption: "Child Item two",
-            icon: "code",
-            attr: "childtwo",
-          },
-          {
-            id: 3,
-            caption: "Child Item Three",
-            icon: "code",
-            attr: "childthree",
-          },
-        ],
-      },
-      {
-        id: 3,
-        caption: "Parent Item three",
-        icon: "code",
-        attr: "Parentthree",
-        children: [
-          {
-            id: 1,
-            caption: "Child Item one",
-            icon: "code",
-            attr: "childone",
-          },
-          {
-            id: 2,
-            caption: "Child Item two",
-            icon: "code",
-            attr: "childtwo",
-          },
-          {
-            id: 3,
-            caption: "Child Item Three",
-            icon: "code",
-            attr: "childthree",
-          },
-        ],
-      },
-      {
-        id: 4,
-        caption: "Parent Item four",
-        icon: "code",
-        children: [
-          { id: 1, caption: "Element one", icon: "wifi" },
-          { id: 2, caption: "Element two", icon: "wifi" },
-          { id: 3, caption: "Element three", icon: "wifi" },
-        ],
-      },
-    ]);
+    const sourceSidebar = ref([]);
+    const error = ref(null);
     const filterdSidebarItem = computed(function () {
       return sourceSidebar.value.filter((item) =>
         item.caption.includes(search.value)
       );
     });
+
+    const getSourceSidebarItem = async () => {
+      try {
+        let response = await axios.get("http://localhost:3000/sourceSideBar");
+        let data = response.data;
+        sourceSidebar.value = data;
+        console.log(sourceSidebar.value);
+        // if (!response.ok) {
+        //   throw Error("There is an issues with the data");
+        // }
+      } catch (err) {
+        error.value = err.message;
+        console.log(error.value);
+      }
+    };
+    getSourceSidebarItem();
     return {
       drawer: ref(false),
       search,
       sourceSidebar,
+
       filterdSidebarItem,
     };
   },
