@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@types/three": "^0.130.0",
-    "monaco-editor-vue": "^1.0.10",
-    "monaco-editor-webpack-plugin": "^4.0.0",
-    "three": "^0.130.1"
-  }
-}

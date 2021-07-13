@@ -8,14 +8,17 @@
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
     "test": "echo \"No test specified\" && exit 0",
+    "api": "json-server data/db.json",
     "dev": "quasar dev",
     "build": "quasar build",
+    "start": "quasar serve",
     "build:pwa": "quasar build -m pwa"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "json-server": "^0.16.3",
     "monaco-editor": "^0.25.2",
     "quasar": "^2.0.0",
     "vue-threejs": "^0.2.0-alpha.1",

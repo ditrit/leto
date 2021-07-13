@@ -1,0 +1,182 @@
+{
+  "sourceSideBar": [
+    {
+      "id": 1,
+      "caption": "Parent Item one",
+      "icon": "code",
+      "attr": "Parentone",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Child Item one",
+          "icon": "code",
+          "attr": "childone"
+        },
+        {
+          "id": 2,
+          "caption": "Child Item two",
+          "icon": "code",
+          "attr": "childtwo"
+        },
+        {
+          "id": 3,
+          "caption": "Child Item Three",
+          "icon": "code",
+          "attr": "childthree"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "caption": "Parent Item two",
+      "icon": "code",
+      "attr": "Parenttwo",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Child Item one",
+          "icon": "code",
+          "attr": "childone"
+        },
+        {
+          "id": 2,
+          "caption": "Child Item two",
+          "icon": "code",
+          "attr": "childtwo"
+        },
+        {
+          "id": 3,
+          "caption": "Child Item Three",
+          "icon": "code",
+          "attr": "childthree"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "caption": "Parent Item three",
+      "icon": "code",
+      "attr": "Parentthree",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Child Item one",
+          "icon": "code",
+          "attr": "childone"
+        },
+        {
+          "id": 2,
+          "caption": "Child Item two",
+          "icon": "code",
+          "attr": "childtwo"
+        },
+        {
+          "id": 3,
+          "caption": "Child Item Three",
+          "icon": "code",
+          "attr": "childthree"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "caption": "Parent Item four",
+      "icon": "code",
+      "children": [
+        { "id": 1, "caption": "Element one", "icon": "wifi" },
+        { "id": 2, "caption": "Element two", "icon": "wifi" },
+        { "id": 3, "caption": "Element three", "icon": "wifi" }
+      ]
+    }
+  ],
+  "modelSideBar": [
+    {
+      "id": 1,
+      "caption": "Servers",
+      "icon": "dns",
+      "attr": "servers",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Serveur de fichier",
+          "icon": "folder",
+          "attr": "server1"
+        },
+        {
+          "id": 2,
+          "caption": "Serveur d’impression",
+          "icon": "print",
+          "attr": "server2"
+        },
+        {
+          "id": 3,
+          "caption": "Serveur d’application",
+          "icon": "apps",
+          "attr": "server3"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "caption": "Routers",
+      "icon": "router",
+      "attr": "routers",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Element one",
+          "icon": "router",
+          "attr": "router1"
+        },
+        {
+          "id": 2,
+          "caption": "Element two",
+          "icon": "router",
+          "attr": "router2"
+        },
+        {
+          "id": 3,
+          "caption": "Element three",
+          "icon": "router",
+          "attr": "router3"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "caption": "Database",
+      "icon": "storage",
+      "attr": "storages",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Element one",
+          "icon": "storage",
+          "attr": "storage1"
+        },
+        {
+          "id": 2,
+          "caption": "Element two",
+          "icon": "storage",
+          "attr": "storage2"
+        },
+        {
+          "id": 3,
+          "caption": "Element three",
+          "icon": "storage",
+          "attr": "storage3"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "caption": "Network",
+      "icon": "wifi",
+      "children": [
+        { "id": 1, "caption": "Element one", "icon": "wifi" },
+        { "id": 2, "caption": "Element two", "icon": "wifi" },
+        { "id": 3, "caption": "Element three", "icon": "wifi" }
+      ]
+    }
+  ]
+}
