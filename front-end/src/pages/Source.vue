@@ -75,37 +75,28 @@
 
 <script>
 import { ref, computed } from "vue";
-import axios from "axios";
+import getSidebarItem from "../composables/getSidebarItems";
+
 import Monaco from "../components/Monaco/Monaco.vue";
 
 export default {
   components: { Monaco },
   setup() {
+    const { path, sidebarItems, error, ftechData } = getSidebarItem();
+    ftechData("http://localhost:3000/sourceSideBar");
     const search = ref("");
-    const sourceSidebar = ref([]);
-    const error = ref(null);
+
     const filterdSidebarItem = computed(() => {
-      return sourceSidebar.value.filter((item) =>
+      return sidebarItems.value.filter((item) =>
         item.caption.toLowerCase().match(search.value.toLowerCase())
       );
     });
 
-    const getSourceSidebarItem = async () => {
-      try {
-        let response = await axios.get("http://localhost:3000/sourceSideBar");
-        let data = response.data;
-        sourceSidebar.value = data;
-      } catch (err) {
-        error.value = err.message;
-        console.log(error.value);
-      }
-    };
-    getSourceSidebarItem();
     return {
       drawer: ref(false),
       search,
-      sourceSidebar,
-
+      error,
+      path,
       filterdSidebarItem,
     };
   },

@@ -75,38 +75,27 @@
 
 <script>
 import { ref, computed } from "vue";
-import axios from "axios";
+import getSidebarItem from "../composables/getSidebarItems";
 import ModelEdit from "../components/3dModals/ModelEdit.vue";
 
 export default {
   components: { ModelEdit },
   setup() {
-    const toolsSidebar = ref([]);
+    const { path, sidebarItems, error, ftechData } = getSidebarItem();
+    ftechData("http://localhost:3000/modelSideBar");
+
     const search = ref("");
-    const error = ref(null);
     const filterdSidebarItem = computed(() => {
-      return toolsSidebar.value.filter((item) =>
+      return sidebarItems.value.filter((item) =>
         item.caption.toLowerCase().match(search.value.toLowerCase())
       );
     });
 
-    const getModelSidebarItem = async () => {
-      try {
-        let response = await axios.get("http://localhost:3000/modelSideBar");
-        let data = response.data;
-        toolsSidebar.value = data;
-      } catch (err) {
-        error.value = err.message;
-        console.log(error.value);
-      }
-    };
-    getModelSidebarItem();
-
     return {
       drawer: ref(false),
-      toolsSidebar,
       search,
       error,
+      path,
       filterdSidebarItem,
     };
   },
