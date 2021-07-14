@@ -75,88 +75,38 @@
 
 <script>
 import { ref, computed } from "vue";
+import axios from "axios";
 import ModelEdit from "../components/3dModals/ModelEdit.vue";
 
 export default {
   components: { ModelEdit },
-
   setup() {
-    const toolsSidebar = ref([
-      {
-        id: 1,
-        caption: "Servers",
-        icon: "dns",
-        attr: "servers",
-        children: [
-          {
-            id: 1,
-            caption: "Serveur de fichier",
-            icon: "folder",
-            attr: "server1",
-          },
-          {
-            id: 2,
-            caption: "Serveur d’impression",
-            icon: "print",
-            attr: "server2",
-          },
-          {
-            id: 3,
-            caption: "Serveur d’application",
-            icon: "apps",
-            attr: "server3",
-          },
-        ],
-      },
-      {
-        id: 2,
-        itle: "",
-        caption: "Routers",
-        icon: "router",
-        attr: "routers",
-        children: [
-          { id: 1, caption: "Element one", icon: "router", attr: "router1" },
-          { id: 2, caption: "Element two", icon: "router", attr: "router2" },
-          { id: 3, caption: "Element three", icon: "router", attr: "router3" },
-        ],
-      },
-      {
-        id: 3,
-        caption: "Database",
-        icon: "storage",
-        attr: "storages",
-        children: [
-          { id: 1, caption: "Element one", icon: "storage", attr: "storage1" },
-          { id: 2, caption: "Element two", icon: "storage", attr: "storage2" },
-          {
-            id: 3,
-            caption: "Element three",
-            icon: "storage",
-            attr: "storage3",
-          },
-        ],
-      },
-      {
-        id: 4,
-        caption: "Network",
-        icon: "wifi",
-        children: [
-          { id: 1, caption: "Element one", icon: "wifi" },
-          { id: 2, caption: "Element two", icon: "wifi" },
-          { id: 3, caption: "Element three", icon: "wifi" },
-        ],
-      },
-    ]);
+    const toolsSidebar = ref([]);
     const search = ref("");
-    const filterdSidebarItem = computed(function () {
+    const error = ref(null);
+    const filterdSidebarItem = computed(() => {
       return toolsSidebar.value.filter((item) =>
-        item.caption.includes(search.value)
+        item.caption.toLowerCase().match(search.value.toLowerCase())
       );
     });
+
+    const getModelSidebarItem = async () => {
+      try {
+        let response = await axios.get("http://localhost:3000/modelSideBar");
+        let data = response.data;
+        toolsSidebar.value = data;
+      } catch (err) {
+        error.value = err.message;
+        console.log(error.value);
+      }
+    };
+    getModelSidebarItem();
+
     return {
       drawer: ref(false),
       toolsSidebar,
       search,
+      error,
       filterdSidebarItem,
     };
   },

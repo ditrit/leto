@@ -84,9 +84,9 @@ export default {
     const search = ref("");
     const sourceSidebar = ref([]);
     const error = ref(null);
-    const filterdSidebarItem = computed(function () {
+    const filterdSidebarItem = computed(() => {
       return sourceSidebar.value.filter((item) =>
-        item.caption.includes(search.value)
+        item.caption.toLowerCase().match(search.value.toLowerCase())
       );
     });
 
@@ -95,10 +95,6 @@ export default {
         let response = await axios.get("http://localhost:3000/sourceSideBar");
         let data = response.data;
         sourceSidebar.value = data;
-        console.log(sourceSidebar.value);
-        // if (!response.ok) {
-        //   throw Error("There is an issues with the data");
-        // }
       } catch (err) {
         error.value = err.message;
         console.log(error.value);
