@@ -9,7 +9,7 @@
 </template>
 
 <script>
-const Three = require("THREE");
+const Three = require("three");
 
 export default {
   name: "ThreeTest",
@@ -57,7 +57,7 @@ export default {
 <style lang="sass" scoped>
 .wrapper
   max-width: 1400px
-  height: 1190px
+  height: 997px
   margin-top: 0px
 
 #container

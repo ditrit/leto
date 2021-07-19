@@ -9,6 +9,17 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceFolder}/index.js"
+        },
+        {
+            "name": "Docker Node.js Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node",
+            "node": {
+                "package": "${workspaceFolder}/backend/package.json",
+                "localRoot": "${workspaceFolder}/backend"
+            }
         }
     ]
 }

@@ -1,5 +1,5 @@
 <template>
-  <q-layout container class="global bg-dark">
+  <q-layout container class="global bg-black">
     <q-toolbar>
       <div class="row">
         <q-btn
@@ -41,7 +41,7 @@
           group="somegroup"
           :icon="item.icon"
           :label="item.caption"
-          :id="item.attr"
+          :data-id="item.attr"
           default-opened
           header-class="text-primary"
           style="font-weight: 600"
@@ -66,8 +66,8 @@
     </q-drawer>
 
     <q-page-container>
-      <q-page class="editorWrapper">
-        <Monaco />
+      <q-page class="">
+        <ModelEdit />
       </q-page>
     </q-page-container>
   </q-layout>
@@ -76,16 +76,14 @@
 <script>
 import { ref, computed } from "vue";
 import getSidebarItem from "../composables/getSidebarItems";
-
-import Monaco from "../components/Monaco/Monaco.vue";
+import ModelEdit from "../components/3dModals/ModelEdit.vue";
 
 export default {
-  components: { Monaco },
+  components: { ModelEdit },
   setup() {
     const { path, sidebarItems, error, ftechData } = getSidebarItem();
-    ftechData("http://localhost:3000/sourceSideBar");
+    ftechData("http://localhost:3000/modelSideBar");
     const search = ref("");
-
     const filterdSidebarItem = computed(() => {
       return sidebarItems.value.filter((item) =>
         item.caption.toLowerCase().match(search.value.toLowerCase())
@@ -109,11 +107,6 @@ export default {
   height: 100%
   overflow: hidden
   min-height: 1200px
-.editorWrapper
-  max-width: 1400px
-  width: 1400px
-  height: 1190px
-  margin-top: 0px
 .menuStyle
   background: #eeeeee
   border-radius: 0

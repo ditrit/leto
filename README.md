@@ -12,10 +12,22 @@ Before you install and run the project, you need the have the following availabl
 npm install -g @quasar/cli
 ```
 
-## Select the main directory
+## Open terminal and Select the backend directory
 
 ```bash
-cd front-end
+cd backend
+```
+
+## Install the dependencies
+
+```bash
+npm install
+```
+
+## Open a new terminal tab and Select the frontend directory
+
+```bash
+cd frontend
 ```
 
 ## Install the dependencies
