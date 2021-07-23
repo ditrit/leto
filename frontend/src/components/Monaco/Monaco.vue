@@ -1,6 +1,6 @@
 <template>
   <div class="monaco" ref="monacoContainer"></div>
- 
+  
 </template>
 
 <script>
