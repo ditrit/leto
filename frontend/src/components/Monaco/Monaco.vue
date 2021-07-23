@@ -1,8 +1,10 @@
 <template>
   <div class="monaco" ref="monacoContainer"></div>
+ 
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import * as monaco from "monaco-editor";
 export default {
   data() {

@@ -2,7 +2,9 @@
   <div class="wrapper">
     <div id="container">
       <div class="q-pa-md" style="color: white">
-        <h1>Ceci est juste un test</h1>
+        <h1>Ceci est un TEST...</h1>
+        
+        
       </div>
     </div>
   </div>
@@ -20,6 +22,7 @@ export default {
     this.init();
     this.animate();
   },
+
   methods: {
     init: function () {
       let container = document.getElementById("container");
