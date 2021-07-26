@@ -14,6 +14,7 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"dbaeumer.vscode-eslint",
+		"ms-vscode-remote.remote-containers",
 		"esbenp.prettier-vscode",
 		"sdras.vue-vscode-snippets",
 		"syler.sass-indented",
@@ -27,7 +28,7 @@
 		"waderyan.gitblame",
 		"steoates.autoimport",
 		"formulahendry.auto-close-tag",
-		"formulahendry.auto-rename-tag"
+		"formulahendry.auto-rename-tag",
 	],
 
 		// Use 'forwardPorts' to make a list of ports inside the container available locally.

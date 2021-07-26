@@ -1,4 +1,61 @@
-## Prerequisite:
+## First Method: 
+### Prerequisite:
+
+Before you install and run the project, you need the have the following available in your system:
+
+1 - Docker Desktop, you cand download it [here](https://docs.docker.com/get-docker/)
+
+2 - VSCode IDE, you can download it [here](https://code.visualstudio.com/) 
+
+3 - Install the Remote - Containers extension: [link](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+4 - Open your terminal and clone the project: 
+
+5 - Clone the project
+```bash
+    git clone https://github.com/ditrit/leto.git
+```
+
+6 - Checkout the right branch
+```bash
+    git checkout leto-quasar-v1.2.0
+```
+
+7 - Cd to frontend directory
+```bash
+    cd frontend
+```
+
+8 - Open the frontend directory in VSCode
+```bash
+    code .    // or open frontend foelder in VSCode
+```
+
+9 - Open command palette
+```bash
+    shift + (cmd/clt) + p  // or view -> Command palette
+```
+
+10 - Choose the command and click enter
+ > Remote-Containers: build and reopen Container
+
+After installation, Your Dev envirement should run at at http://localhsot:8080.
+
+11 - Open a Second command line tab and cd to backend folder 
+```bash
+    cd backend 
+```
+
+12 - Install dependacy and run api at http://localhsot:3000.
+```bash
+    npm install and npm run api
+```
+
+---
+
+## Second Method: 
+
+### Prerequisite:
 
 Before you install and run the project, you need the have the following available in your system:
 
@@ -59,51 +116,3 @@ quasar build
 See [Configuring quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
 
 ---
-
-##### francais:
-
-## Prérequist:
-
-Avant d'installer et d'exécuter le projet, vous devez disposer des éléments suivants sur votre système :
-
-1 - Node.js : version 14.17.0 ou supérieure [NodeJs](https://nodejs.org/)
-
-2 - Npm : version 7.19.0 ou supérieure
-
-## Installation du framework Quasar
-
-npm install -g @quasar/cli
-
-## Sélectionnez le répertoire principal
-
-```bash
-cd front-end
-```
-
-## Installer les dépendances
-
-```bash
-npm install
-```
-
-### Démarrez l'application en mode développement (rechargement de code à chaud, rapport d'erreur, etc.)
-
-```bash
-quasar dev
-```
-
-### Lint les fichiers
-
-```bash
-npm run lint
-```
-
-### Construire l'application pour la production
-
-```bash
-quasar build
-```
-
-### Personnaliser la configuration
-
-Voir [Configuration de quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
