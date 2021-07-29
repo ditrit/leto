@@ -1,7 +1,9 @@
 <template>
-  <q-page padding class="flex flex-center">
-    <h2>The Tool Two Viewer</h2>
-  </q-page>
+  <q-layout class="bg-grey">
+    <q-page padding class="flex flex-center">
+      <h2>The Tool Two Viewer</h2>
+    </q-page>
+  </q-layout>
 </template>
 
 <script>

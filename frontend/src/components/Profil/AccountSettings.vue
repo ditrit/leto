@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="">
     <q-item clickable>
       <q-item-section>
         <q-avatar round size="40px">

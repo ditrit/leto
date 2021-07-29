@@ -2,6 +2,7 @@ const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
+
     children: [
       {
         path: "/tool-one/",
@@ -27,7 +28,19 @@ const routes = [
         path: "/tool-four",
         component: () => import("pages/PageToolFourViewer.vue"),
       },
+
     ],
+
+  },
+    {
+    path: "/login",
+    component: () => import("layouts/LoginLayout.vue"),
+    children: [
+     {
+       path:"/login",
+       component: () => import("pages/Login.vue"),
+      }
+    ]
   },
 
   // Always leave this as last one,
@@ -36,6 +49,7 @@ const routes = [
     path: "/:catchAll(.*)*",
     component: () => import("pages/Error404.vue"),
   },
+
 ];
 
 export default routes;

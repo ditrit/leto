@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page padding class="bg-gray">
     <tPanel />
   </q-page>
 </template>

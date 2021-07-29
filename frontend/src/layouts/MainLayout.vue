@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="lhh lpR fFf">
-    <q-header reveal bordered class="bg-white text-primary">
+  <q-layout view="lhh lpR fFf" class="bg-gray">
+    <q-header reveal class="bg-white text-primary">
       <q-toolbar class="justify-between">
         <div class="row">
           <q-tabs
@@ -43,7 +43,7 @@
       />
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="bg-gray">
       <router-view />
     </q-page-container>
   </q-layout>

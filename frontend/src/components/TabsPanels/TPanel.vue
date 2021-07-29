@@ -3,7 +3,7 @@
     <q-tabs
       v-model="tab"
       dense
-      class="text-grey"
+      class="text-gray"
       active-color="primary"
       indicator-color="primary"
       align="justify-start"
