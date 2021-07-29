@@ -10,18 +10,18 @@
       align="justify"
       narrow-indicator
     >
-      <q-tab name="mails" label="Mails" />
+      <q-tab name="sign_in" label="Sign in" />
 
-      <q-tab name="movies" label="Movies" />
+      <q-tab name="sign_up" label="Sign Up" />
     </q-tabs>
     <q-tab-panels v-model="tab" animated>
-      <q-tab-panel name="mails">
-        <div class="text-h6">Mails</div>
+      <q-tab-panel name="sign_in">
+        <div class="text-h6">Sign in</div>
         Lorem ipsum dolor sit amet consectetur adipisicing elit.
       </q-tab-panel>
 
-      <q-tab-panel name="movies">
-        <div class="text-h6">Movies</div>
+      <q-tab-panel name="sign_up">
+        <div class="text-h6">Sign Up</div>
         Lorem ipsum dolor sit amet consectetur adipisicing elit.
       </q-tab-panel>
     </q-tab-panels>
@@ -29,10 +29,11 @@
 </template>
 
 <script>
+import {ref} from 'vue'
 export default {
   setup() {
     return {
-      tab: ref("mails"),
+      tab: ref("sign_in"),
     };
   },
 };
