@@ -21,6 +21,7 @@
             />
           </q-tabs>
         </div>
+        <global-search />
         <AccountSettings />
       </q-toolbar>
     </q-header>
@@ -54,6 +55,7 @@ import { defineComponent, ref } from "vue";
 
 import EssentialTools from "components/EssentialTools.vue";
 import AccountSettings from "../components/Profil/AccountSettings.vue";
+import GlobalSearch from "../components/Form/GlobalSearch.vue";
 
 // import MainMenu from "components/MainMenu";
 // import Accordion from "components/TabsPanels/Accordion";
@@ -147,6 +149,7 @@ export default defineComponent({
   components: {
     EssentialTools,
     AccountSettings,
+    GlobalSearch,
     // Accordion,
   },
 
