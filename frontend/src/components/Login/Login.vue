@@ -1,43 +1,46 @@
 <template>
-  <q-page class="text-primary">
-    <h1>Login form</h1>
+  <q-container class="text-primary full-width">
     <q-tabs
       v-model="tab"
-      dense
       class="text-grey"
       active-color="primary"
       indicator-color="primary"
-      align="justify"
+      align="center"
       narrow-indicator
     >
       <q-tab name="sign_in" label="Sign in" />
 
       <q-tab name="sign_up" label="Sign Up" />
     </q-tabs>
-    <q-tab-panels v-model="tab" animated>
+    <q-tab-panels v-model="tab" animated align="center">
       <q-tab-panel name="sign_in">
-        <div class="text-h6">Sign in</div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        <Form />
+
+        <SocialConnect />
       </q-tab-panel>
 
       <q-tab-panel name="sign_up">
-        <div class="text-h6">Sign Up</div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        <Form />
+        <SocialConnect />
       </q-tab-panel>
     </q-tab-panels>
-  </q-page>
+  </q-container>
 </template>
 
 <script>
-import {ref} from 'vue'
+import { ref } from "vue";
+import Form from "../Form/Form.vue";
+import SocialConnect from "./SocialConnect.vue";
 export default {
+  components: { Form, SocialConnect },
   setup() {
     return {
       tab: ref("sign_in"),
+      socialLogin: () => alert("Ready to connect"),
     };
   },
 };
 </script>
 
-<style>
+<style lang="sass">
 </style>

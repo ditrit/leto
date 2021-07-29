@@ -1,17 +1,15 @@
 <template>
-  <q-container class="text-white">
+  <div class="text-white">
     <div class="row">
       <div class="leftside text-secondary">
-        <h1>Leto</h1>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Explicabo
-        </p>
+        <p class="text-h1">Leto</p>
+        <span> Orchestrateur TOSTA étendu </span>
       </div>
       <div class="rigthside">
         <Login />
       </div>
     </div>
-  </q-container>
+  </div>
 </template>
 <script>
 import Login from "../components/Login/Login.vue";

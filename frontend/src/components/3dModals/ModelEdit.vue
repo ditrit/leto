@@ -1,12 +1,6 @@
 <template>
   <div class="wrapper">
-    <div id="container">
-      <div class="q-pa-md" style="color: white">
-        <h1>Ceci est un TEST...</h1>
-        
-        
-      </div>
-    </div>
+    <div id="container"></div>
   </div>
 </template>
 
@@ -64,6 +58,6 @@ export default {
   margin-top: 0px
 
 #container
-    width: 100%
-    height: 100%
+  width: 100%
+  height: 100%
 </style>

@@ -69,19 +69,19 @@ const linksToolsList = [
     title: "",
     caption: "Ide ",
     icon: "edit",
-    link: "#/tool-one",
+    link: "#/model",
   },
   {
     title: "",
     caption: "Products",
     icon: "apps",
-    link: "#/tool-two",
+    link: "#/products",
   },
   {
     title: "",
     caption: "Libraraies",
     icon: "library_books",
-    link: "#/tool-three",
+    link: "#/libraraies",
   },
   {
     title: "",
@@ -93,7 +93,7 @@ const linksToolsList = [
     title: "",
     caption: "Settings",
     icon: "settings",
-    link: "#/tool-four",
+    link: "#/settings",
   },
 ];
 const essentialTablinks = [
@@ -101,13 +101,13 @@ const essentialTablinks = [
     id: 1,
     name: "modal",
     label: "Model",
-    link: "/tool-one/model",
+    link: "/model",
   },
   {
     id: 2,
     name: "source",
     label: "Source",
-    link: "/tool-one/source",
+    link: "/source",
   },
 ];
 const mainMenuList = [

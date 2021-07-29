@@ -34,7 +34,7 @@ import { defineComponent } from "vue";
 import { mapGetters, mapActions } from "vuex";
 
 export default defineComponent({
-  name: "PageToolThreeViewer",
+  name: "PageLibraries",
   computed: {
     ...mapGetters("test", ["getPeople"]),
   },

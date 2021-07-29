@@ -5,28 +5,33 @@ const routes = [
 
     children: [
       {
-        path: "/tool-one/",
+        path: "teams",
+        component: () => import("pages/PageTeams.vue"),
+      },
+      {
+        path: "model",
         component: () => import("pages/Model.vue"),
       },
       {
-        path: "/tool-one/model",
-        component: () => import("pages/Model.vue"),
-      },
-      {
-        path: "/tool-one/source",
+        path: "source",
         component: () => import("pages/Source.vue"),
       },
+
       {
-        path: "/tool-two",
-        component: () => import("pages/PageToolTwoViewer.vue"),
+        path: "products",
+        component: () => import("pages/PageProducts.vue"),
       },
       {
-        path: "/tool-three",
-        component: () => import("pages/PageToolThreeViewer.vue"),
+        path: "libraries",
+        component: () => import("pages/PageLibraries.vue"),
       },
       {
-        path: "/tool-four",
-        component: () => import("pages/PageToolFourViewer.vue"),
+        path: "dashboard",
+        component: () => import("pages/PageDashboard.vue"),
+      },
+      {
+        path: "settings",
+        component: () => import("pages/PageSettings.vue"),
       },
 
     ],
