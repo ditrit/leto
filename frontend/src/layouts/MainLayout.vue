@@ -1,14 +1,13 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-header reveal elevated class="bg-primary text-white">
+  <q-layout view="lhh lpR fFf">
+    <q-header reveal bordered class="bg-white text-primary">
       <q-toolbar class="justify-between">
         <div class="row">
-          <q-toolbar-title class="q-pa-md">Leto App</q-toolbar-title>
           <q-tabs
-            no-caps
-            active-color="white"
+            caps
+            active-color="secondary"
             indicator-color="transparent"
-            class="text-white"
+            class="text-primary"
             v-model="tab"
           >
             <q-route-tab
@@ -26,8 +25,16 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above side="left" bordered :width="70" class="centered">
-      <!-- drawer content -->
+    <q-drawer
+      show-if-above
+      side="left"
+      bordered
+      :width="90"
+      class="bg-primary centered"
+    >
+      <q-box class="absolute-top text-secondary">
+        <q-toolbar-title class="centered q-pa-md">Leto</q-toolbar-title>
+      </q-box>
 
       <EssentialTools
         v-for="link in linksToolsList"
@@ -54,25 +61,37 @@ import AccountSettings from "../components/Profil/AccountSettings.vue";
 const linksToolsList = [
   {
     title: "",
-    caption: "tool1 ",
+    caption: "Teams ",
+    icon: "group",
+    link: "#/teams",
+  },
+  {
+    title: "",
+    caption: "Ide ",
     icon: "edit",
     link: "#/tool-one",
   },
   {
     title: "",
-    caption: "tool2",
-    icon: "download",
+    caption: "Products",
+    icon: "apps",
     link: "#/tool-two",
   },
   {
     title: "",
-    caption: "tool3",
-    icon: "landscape",
+    caption: "Libraraies",
+    icon: "library_books",
     link: "#/tool-three",
   },
   {
     title: "",
-    caption: "tool4",
+    caption: "Dashboard",
+    icon: "dashboard",
+    link: "#/dashboard",
+  },
+  {
+    title: "",
+    caption: "Settings",
     icon: "settings",
     link: "#/tool-four",
   },
@@ -158,5 +177,4 @@ export default defineComponent({
   justify-content: center
   box-sizing: border-box
   overflow-x: hidden
-  background: #b0bec5
 </style>

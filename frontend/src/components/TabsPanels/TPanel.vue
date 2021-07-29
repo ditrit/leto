@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <q-layout view="lhh">
     <q-tabs
       v-model="tab"
       dense
@@ -17,27 +17,23 @@
     <q-separator />
 
     <q-tab-panels v-model="tab" style="height: 1000px">
-      <q-tab-panel name="model">
-        <div><Drawer style="margin-left: 0px" /></div>
-      </q-tab-panel>
+      <q-tab-panel name="model"> </q-tab-panel>
 
       <q-tab-panel name="source">
         <div class="row" style="margin-left: -15px; height: 100%">
-          <div class="sidebar q-pl-md">Source Sidebar <Drawer /></div>
           <div class="col-9 col-md-9 viewer">
             <h1 class="color_gray">Source Viewer</h1>
           </div>
         </div>
       </q-tab-panel>
     </q-tab-panels>
-  </div>
+  </q-layout>
 </template>
 <script>
 import { ref } from "vue";
-import Drawer from "../Drawers/drawer.vue";
 
 export default {
-  components: { Drawer },
+  components: {},
   setup() {
     const leftDrawerOpen = ref(false);
     return {
