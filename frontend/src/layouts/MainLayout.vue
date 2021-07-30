@@ -81,9 +81,9 @@ const linksToolsList = [
   },
   {
     title: "",
-    caption: "Libraraies",
+    caption: "Libraries",
     icon: "library_books",
-    link: "#/libraraies",
+    link: "#/libraries",
   },
   {
     title: "",
