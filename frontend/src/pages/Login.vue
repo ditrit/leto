@@ -2,7 +2,11 @@
   <div class="text-white">
     <div class="row">
       <div class="leftside text-secondary">
-        <p class="text-h1">Leto</p>
+         <q-img
+          src="../assets/logoBest.svg"
+          
+          width="30%"
+        />
         <span> Orchestrateur TOSTA étendu </span>
       </div>
       <div class="rigthside">

@@ -9,7 +9,6 @@
       narrow-indicator
     >
       <q-tab name="sign_in" label="Sign in" />
-
       <q-tab name="sign_up" label="Sign Up" />
     </q-tabs>
     <q-tab-panels v-model="tab" animated align="center">
@@ -20,7 +19,7 @@
       </q-tab-panel>
 
       <q-tab-panel name="sign_up">
-        <Form />
+        <!-- <Form /> -->
         <SocialConnect />
       </q-tab-panel>
     </q-tab-panels>
@@ -43,4 +42,6 @@ export default {
 </script>
 
 <style lang="sass">
+.q-tab 
+  color: grey
 </style>

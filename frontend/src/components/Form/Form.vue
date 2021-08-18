@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md" style="max-width: 400px">
-    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+    <q-form @submit="onSubmit" class="q-gutter-md">
       <q-input
         filled
         v-model="name"
@@ -13,7 +13,7 @@
         v-model="email"
         label="Enter your Email *"
         lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        :rules="[val => !!val || 'Email is missing']"
       />
       <q-input
         label="Enter your Password *"
@@ -49,34 +49,33 @@ import { ref } from "vue";
 export default {
   setup() {
     const $q = useQuasar();
-
     const name = ref(null);
-    const age = ref(null);
-    const accept = ref(false);
+    const email = ref(null);
+    const password = ref(null);
     const isPwd = ref(false);
-
     return {
       name,
-      age,
-      accept,
+      email,
+      password,
       isPwd,
-
       onSubmit() {
-        if (accept.value !== true) {
-          $q.notify({
-            color: "red-5",
-            textColor: "white",
-            icon: "warning",
-            message: "You need to accept the license and terms first",
-          });
-        } else {
           $q.notify({
             color: "green-4",
             textColor: "white",
             icon: "cloud_done",
-            message: "Submitted",
+            message: "Submitted successfully"
           });
-        }
+          
+          // alert(JSON.stringify({"your name: ": name.value, "your email: " : email.value}))
+          alert(
+              `
+                Thank four Sign in 😄
+
+                Your Name:  ${name.value}
+                Your Email : ${email.value}
+                Your Password : ${password.value}
+              `
+                )
       },
     };
   },
