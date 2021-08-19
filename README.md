@@ -116,3 +116,71 @@ quasar build
 See [Configuring quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
 
 ---
+
+## Add gandalf directory: 
+
+Clone :
+
+```bash
+git clone --branch swaggerAPI https://github.com/ditrit/gandalf.git
+```
+
+Cd :
+
+```bash
+cd gandalf/core/
+```
+
+Build :
+
+```bash
+go build -o gandalf
+```
+
+Mkinstall :
+
+```bash
+./mkinstall.sh
+```
+
+Init gandalf cluster :
+
+```bash
+./gandalf.sh cluster
+```
+
+Init gandalf aggregator :
+
+```bash
+./gandalf.sh aggregator
+```
+
+Passer utilisateur gandalf :
+
+```bash
+sudo su gandalf
+```
+
+Start cluster :
+
+```bash
+./gandalf start cluster --offset 1
+```
+
+Dans la sortie, repérer le secret généré pour l'aggrégateur (la ligne commence par 'New Aggregator : gandalf ' et se termine par le secret. Exemple :
+
+New Aggregator : gandalf e4da0a87-8376-4996-8169-baea15b11258
+
+Start aggregator :
+
+```bash
+./gandalf start aggregator --offset 4 -l gandalf -t gandalf --cluster 127.0.0.1:9100 --secret <secret>
+```
+------
+
+Le port de l'API est 9203, pour tester si cela fonctionne, l'appel à http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/
+dans un navigateur doit afficher Hello World !
+
+Les routes sont indiquées dans gandalf/core/aggregator/api/routers.go
+
+------

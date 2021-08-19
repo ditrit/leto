@@ -4,7 +4,6 @@
       <div class="leftside text-secondary">
          <q-img
           src="../assets/logoBest2.svg"
-          
           width="30%"
         />
         <span> Orchestrateur TOSTA étendu </span>
