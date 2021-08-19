@@ -7,6 +7,7 @@
           width="30%"
         />
         <span> Orchestrateur TOSTA étendu </span>
+        {{users}}
       </div>
       <div class="rigthside">
         <Login />
@@ -15,8 +16,29 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 import Login from "../components/Login/Login.vue";
-export default { components: { Login } };
+import { ref } from "vue";
+export default { components: { Login } , 
+setup() {
+  
+    const users = ref([]);
+    const getUsers = async() => {
+      let response = await axios.get('http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/user')
+      let data = response.data;
+      users.value = data;
+      console.log(users.value)
+    }
+    getUsers()
+    return {
+      users
+     
+      
+    };
+  
+
+}
+};
 </script>
 
 <style lang="sass">
@@ -25,7 +47,6 @@ export default { components: { Login } };
   flex-direction: column
   justify-content: center
   align-items: center
-
   height: 100vh
   width: 50%
 .rigthside

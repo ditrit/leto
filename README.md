@@ -125,6 +125,10 @@ Clone :
 git clone --branch swaggerAPI https://github.com/ditrit/gandalf.git
 ```
 
+```bash
+git checkout swaggerAPI 
+```
+
 Cd :
 
 ```bash
@@ -174,7 +178,7 @@ New Aggregator : gandalf e4da0a87-8376-4996-8169-baea15b11258
 Start aggregator :
 
 ```bash
-./gandalf start aggregator --offset 4 -l gandalf -t gandalf --cluster 127.0.0.1:9100 --secret <secret>
+./gandalf start aggregator --offset 4 -l gandalf -t gandalf --cluster 127.0.0.1:9100 --secret "secret"
 ```
 ------
 
