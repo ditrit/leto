@@ -3,7 +3,7 @@
     <div class="row">
       <div class="leftside text-secondary">
          <q-img
-          src="../assets/logoBest.svg"
+          src="../assets/logoBest2.svg"
           
           width="30%"
         />
