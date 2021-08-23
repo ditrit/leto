@@ -1,18 +1,15 @@
 <template>
-  <div class="text-white">
-    <div class="row">
-      <div class="leftside text-secondary">
-         <q-img
-          src="../assets/logoBest2.svg"
-          width="30%"
-        />
-        <span> Orchestrateur TOSTA étendu </span>
-      </div>
-      <div class="rigthside">
-        <Login />
-      </div>
-    </div>
-  </div>
+	<div class="text-white">
+		<div class="row">
+			<div class="leftside text-secondary">
+				<q-img src="../assets/logoBest2.svg" width="30%" />
+				<span> Orchestrateur TOSTA étendu </span>
+			</div>
+			<div class="rigthside">
+				<Login />
+			</div>
+		</div>
+	</div>
 </template>
 <script>
 import Login from "../components/Login/Login.vue";
@@ -25,7 +22,6 @@ export default { components: { Login } };
   flex-direction: column
   justify-content: center
   align-items: center
-
   height: 100vh
   width: 50%
 .rigthside
