@@ -75,17 +75,17 @@
 
 <script>
 import { ref, computed } from "vue";
-import getSidebarItem from "../composables/getSidebarItems";
+import getDataItems from "../composables/getDataItems";
 import Monaco from "../components/Monaco/Monaco.vue";
 
 export default {
   components: { Monaco },
   setup() {
-    const { path, sidebarItems, error, ftechData } = getSidebarItem();
+    const { path, dataItems, error, ftechData } = getDataItems();
     ftechData("http://localhost:3000/sourceSideBar");
     const search = ref("");
     const filterdSidebarItem = computed(() => {
-      return sidebarItems.value.filter((item) =>
+      return dataItems.value.filter((item) =>
         item.caption.toLowerCase().match(search.value.toLowerCase())
       );
     });

@@ -128,6 +128,16 @@ git clone --branch swaggerAPI https://github.com/ditrit/gandalf.git
 Cd :
 
 ```bash
+cd gandalf
+```
+
+```bash
+git checkout swaggerAPI 
+```
+
+Cd :
+
+```bash
 cd gandalf/core/
 ```
 
@@ -136,8 +146,6 @@ Build :
 ```bash
 go build -o gandalf
 ```
-
-Mkinstall :
 
 ```bash
 ./mkinstall.sh
@@ -167,14 +175,13 @@ Start cluster :
 ./gandalf start cluster --offset 1
 ```
 
-Dans la sortie, repérer le secret généré pour l'aggrégateur (la ligne commence par 'New Aggregator : gandalf ' et se termine par le secret. Exemple :
-
-New Aggregator : gandalf e4da0a87-8376-4996-8169-baea15b11258
+Dans la sortie, repérers
+New Aggregator : gandalf c3fb16da-450b-4ffd-b8ab-6ec8f521b157
 
 Start aggregator :
 
 ```bash
-./gandalf start aggregator --offset 4 -l gandalf -t gandalf --cluster 127.0.0.1:9100 --secret <secret>
+./gandalf start aggregator --offset 4 -l gandalf -t gandalf --cluster 127.0.0.1:9100 --secret "secret"
 ```
 ------
 

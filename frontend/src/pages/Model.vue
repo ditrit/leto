@@ -75,17 +75,17 @@
 
 <script>
 import { ref, computed } from "vue";
-import getSidebarItem from "../composables/getSidebarItems";
+import getDataItems from "../composables/getDataItems";
 import ModelEdit from "../components/3dModals/ModelEdit.vue";
 
 export default {
 	components: { ModelEdit },
 	setup() {
-		const { path, sidebarItems, error, ftechData } = getSidebarItem();
+		const { path, dataItems, error, ftechData } = getDataItems();
 		ftechData("http://localhost:3000/modelSideBar");
 		const search = ref("");
 		const filterdSidebarItem = computed(() => {
-			return sidebarItems.value.filter((item) =>
+			return dataItems.value.filter((item) =>
 				item.caption.toLowerCase().match(search.value.toLowerCase())
 			);
 		});
