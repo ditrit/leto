@@ -23,16 +23,70 @@
 					:color="btn.color"
 					:icon="btn.icon"
 					:href="btn.link"
+					@click="medium = true"
 				/>
+				<!-- <CreateItems /> -->
+				<q-dialog v-model="medium">
+					<q-card style="width: 700px; max-width: 80vw">
+						<q-card-section>
+							<div class="text-h6">Create New Team</div>
+						</q-card-section>
+
+						<q-card-section class="q-pt-none">
+							<q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+								<q-input
+									filled
+									v-model="name"
+									label="Your name *"
+									hint="Name and surname"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+								/>
+
+								<q-input
+									filled
+									type="number"
+									v-model="age"
+									label="Your age *"
+									lazy-rules
+									:rules="[
+										(val) =>
+											(val !== null && val !== '') || 'Please type your age',
+										(val) => (val > 0 && val < 100) || 'Please type a real age',
+									]"
+								/>
+
+								<div>
+									<q-btn label="Submit" type="submit" color="primary" />
+									<q-btn
+										label="Reset"
+										type="reset"
+										color="primary"
+										flat
+										class="q-ml-sm"
+									/>
+								</div>
+							</q-form>
+						</q-card-section>
+
+						<q-card-actions align="right" class="bg-white text-teal">
+							<q-btn flat label="Next" v-close-popup />
+						</q-card-actions>
+					</q-card>
+				</q-dialog>
 			</div>
 		</q-page>
 	</q-layout>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import { useQuasar } from "quasar";
 import BtnAddNew from "../components/Buttons/BtnAddNew.vue";
 import PageContent from "../components/Content/PageContent.vue";
+// import CreateItems from "../components/Dialogs/CreateItems.vue";
 const buttonsList = [
 	{
 		title: "Add new Team",
@@ -72,9 +126,36 @@ export default defineComponent({
 	components: { BtnAddNew, PageContent },
 
 	setup() {
+		const medium = ref(false);
+		const $q = useQuasar();
+
+		const name = ref(null);
+		const age = ref(null);
+		const accept = ref(false);
 		return {
 			buttonsList,
 			content,
+			medium,
+			name,
+			age,
+			accept,
+			onSubmit() {
+				if (accept.value !== true) {
+					$q.notify({
+						color: "red-5",
+						textColor: "white",
+						icon: "warning",
+						message: "You need to accept the license and terms first",
+					});
+				} else {
+					$q.notify({
+						color: "green-4",
+						textColor: "white",
+						icon: "cloud_done",
+						message: "Submitted",
+					});
+				}
+			},
 		};
 	},
 });
