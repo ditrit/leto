@@ -1,45 +1,29 @@
 <template>
 	<q-layout class="bg-grey">
 		<q-page padding class="flex bg-gray">
-			<div class="teams_content flex">
-				<div class="row">
-					<div class="col col-md-8">
-						<div class="flex">
-							<q-icon name="group" size="30px" class="q-ml-md q-mr-sm" />
-							<p class="text-bold text-h6">Teams</p>
-						</div>
-						<p class="q-ml-md">
-							Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt
-							natus alias expedita vitae deleniti distinctio tempora ipsam
-							facilis modi laborum porro non amet totam reiciendis, rerum harum
-							asperiores obcaecati ipsum?
-						</p>
-					</div>
+			<PageContent
+				v-for="(item, index) in content"
+				:key="index"
+				:name="item.icon"
+				:headline="item.headline"
+				:textContent="item.textContent"
+				:tags="item.tags"
+			/>
 
-					<div class="col-2 col-md-2">
-						<p>
-							Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus
-							magni corrupti quo blanditiis porro! Vel voluptatem quod quasi
-							dolor aperiam ipsum culpa, voluptate est neque illo tempora veniam
-							eos officia.
-						</p>
-					</div>
-				</div>
-
-				<div class="teams_buttons__container">
-					<div class="teams_button">
-						New Team
-						<q-btn class="q-mt-sm" outline round color="primary" icon="add" />
-					</div>
-					<div class="teams_button">
-						Add to Favorite
-						<q-btn class="q-mt-sm" outline round color="primary" icon="add" />
-					</div>
-					<div class="teams_button">
-						Root Team
-						<q-btn class="q-mt-sm" outline round color="primary" icon="add" />
-					</div>
-				</div>
+			<div
+				class="teams_buttons__container"
+				v-for="btn in buttonsList"
+				:key="btn.title"
+			>
+				<BtnAddNew
+					:title="btn.title"
+					:class="btn.styles"
+					outline
+					round
+					:color="btn.color"
+					:icon="btn.icon"
+					:href="btn.link"
+				/>
 			</div>
 		</q-page>
 	</q-layout>
@@ -47,28 +31,61 @@
 
 <script>
 import { defineComponent } from "vue";
+import BtnAddNew from "../components/Buttons/BtnAddNew.vue";
+import PageContent from "../components/Content/PageContent.vue";
+const buttonsList = [
+	{
+		title: "Add new Team",
+		styles: "q-mt-sm",
+		color: "primary",
+		icon: "add",
+		link: "/",
+	},
+	{
+		title: "Add to Favorite",
+		styles: "q-mt-sm",
+		color: "primary",
+		icon: "favorite",
+		link: "#/favorite",
+	},
+	{
+		title: "Root Team",
+		styles: "q-mt-sm",
+		color: "primary",
+		icon: "add",
+		link: "#/teams",
+	},
+];
+
+const content = [
+	{
+		icon: "group",
+		headline: "Teams",
+		textContent:
+			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos sapiente officiis modi at sunt excepturi expedita sint? Sed quibusda recusandae alias error harum maxime adipisci amet laborum. Perspiciatis minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur  ugiat, temporibus enim commodi iusto libero magni deleniti quod quam  consequuntur! Commodi minima excepturi repudiandae velit hic maxime doloremque. Quaerat provident commodi consectetur veniam similique ad  earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo  fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore  suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam  totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam  quasi aliquam eligendi, placeat qui corporis!",
+		tags: "",
+	},
+];
 
 export default defineComponent({
 	name: "PageTeams",
-	components: {},
+	components: { BtnAddNew, PageContent },
+
+	setup() {
+		return {
+			buttonsList,
+			content,
+		};
+	},
 });
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
+
+
 .teams_buttons__container
   display: flex
   flex-direction: row
   justify-content: space-evenly
   align-items: flex-start
-
-.teams_button
-  display: flex
-  flex-direction: column
-  justify-content: center
-  align-items: center
-  padding: 40px
-  height: 160px
-  border-radius: 8px
-  box-shadow: 0px 0px 12px 0px rgba(0,0,0, .2)
-  font-weight: 500
-  font-size: 20px
+  flex: 1
 </style>
