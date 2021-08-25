@@ -23,52 +23,17 @@
 					:color="btn.color"
 					:icon="btn.icon"
 					:href="btn.link"
-					@click="medium = true"
+					@click="oepnDialog = true"
 				/>
 				<!-- <CreateItems /> -->
-				<q-dialog v-model="medium">
+				<q-dialog v-model="oepnDialog">
 					<q-card style="width: 700px; max-width: 80vw">
 						<q-card-section>
 							<div class="text-h6">Create New Team</div>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
-							<q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-								<q-input
-									filled
-									v-model="name"
-									label="Your name *"
-									hint="Name and surname"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-
-								<q-input
-									filled
-									type="number"
-									v-model="age"
-									label="Your age *"
-									lazy-rules
-									:rules="[
-										(val) =>
-											(val !== null && val !== '') || 'Please type your age',
-										(val) => (val > 0 && val < 100) || 'Please type a real age',
-									]"
-								/>
-
-								<div>
-									<q-btn label="Submit" type="submit" color="primary" />
-									<q-btn
-										label="Reset"
-										type="reset"
-										color="primary"
-										flat
-										class="q-ml-sm"
-									/>
-								</div>
-							</q-form>
+							<CreationFormStepper />
 						</q-card-section>
 
 						<q-card-actions align="right" class="bg-white text-teal">
@@ -83,9 +48,10 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import { useQuasar } from "quasar";
+
 import BtnAddNew from "../components/Buttons/BtnAddNew.vue";
 import PageContent from "../components/Content/PageContent.vue";
+import CreationFormStepper from "../components/Stepper/CreationFormStepper.vue";
 // import CreateItems from "../components/Dialogs/CreateItems.vue";
 const buttonsList = [
 	{
@@ -123,45 +89,20 @@ const content = [
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { BtnAddNew, PageContent },
+	components: { BtnAddNew, PageContent, CreationFormStepper },
 
 	setup() {
-		const medium = ref(false);
-		const $q = useQuasar();
+		const oepnDialog = ref(false);
 
-		const name = ref(null);
-		const age = ref(null);
-		const accept = ref(false);
 		return {
 			buttonsList,
 			content,
-			medium,
-			name,
-			age,
-			accept,
-			onSubmit() {
-				if (accept.value !== true) {
-					$q.notify({
-						color: "red-5",
-						textColor: "white",
-						icon: "warning",
-						message: "You need to accept the license and terms first",
-					});
-				} else {
-					$q.notify({
-						color: "green-4",
-						textColor: "white",
-						icon: "cloud_done",
-						message: "Submitted",
-					});
-				}
-			},
+			oepnDialog,
 		};
 	},
 });
 </script>
 <style lang="sass" scoped>
-
 
 .teams_buttons__container
   display: flex

@@ -1,15 +1,15 @@
 <template>
 	<div class="q-pa-md q-gutter-sm">
-		<q-btn label="Medium" color="primary" @click="medium = true" />
+		<q-btn label="isOpened" color="primary" @click="isOpened = true" />
 
-		<q-dialog v-model="medium">
+		<q-dialog v-model="isOpened">
 			<q-card style="width: 700px; max-width: 80vw">
 				<q-card-section>
-					<div class="text-h6">Medium</div>
+					<div class="text-h6">isOpened</div>
 				</q-card-section>
 
 				<q-card-section class="q-pt-none">
-					Click/Tap on the backdrop.
+					<CreationFormStepper />
 				</q-card-section>
 
 				<q-card-actions align="right" class="bg-white text-teal">
@@ -22,14 +22,14 @@
 
 <script>
 import { ref } from "vue";
+import CreationFormStepper from "../Stepper/CreationFormStepper.vue";
 
 export default {
+	components: { CreationFormStepper },
 	setup() {
+		const isOpened = ref(false),
 		return {
-			small: ref(false),
-			medium: ref(false),
-			fullWidth: ref(false),
-			fullHeight: ref(false),
+			isOpened
 		};
 	},
 };
