@@ -1,4 +1,11 @@
 {
+  "users": [
+    { 
+      "id": 1,
+      "name" : "Brahim",
+      "email": "brahim@gmail.com"
+    }
+  ],
   "sourceSideBar": [
     {
       "id": 1,
