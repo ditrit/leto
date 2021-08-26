@@ -4,7 +4,14 @@
 			<div class="leftside text-secondary">
 				<q-img src="../assets/logoBest2.svg" width="30%" />
 				<span> Orchestrateur TOSTA étendu </span>
-				{{ users }}
+				<ul v-for="user in users" :key="user.id">
+					<li>
+						{{ user.name }}
+					</li>
+					<li>
+						{{ user.email }}
+					</li>
+				</ul>
 			</div>
 			<div class="rigthside">
 				<Login />
@@ -21,9 +28,7 @@ export default {
 	setup() {
 		const users = ref([]);
 		const getUsers = async () => {
-			let response = await axios.get(
-				"http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/user"
-			);
+			let response = await axios.get("http://localhost:3000/users");
 			let data = response.data;
 			users.value = data;
 			console.log(users.value);

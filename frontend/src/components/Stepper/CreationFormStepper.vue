@@ -61,15 +61,119 @@
 				</q-step>
 
 				<q-step :name="2" prefix="2" title="">
-					An ad group contains one or more ads which target a shared set of
-					keywords.
+					<div class="row">
+						<div class="col col-md-4 q-mr-md">
+							<q-input
+								filled
+								v-model="name"
+								label="Name *"
+								hint=""
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+						<div class="col col-md-4 q-mr-md">
+							<q-select
+								filled
+								v-model="model"
+								:options="options"
+								label="Team Parent"
+							/>
+						</div>
+						<div class="col col-md-3">
+							<q-uploader
+								style="max-width: 192px"
+								url="http://localhost:8080/upload"
+								label="Logo"
+								multiple
+								accept=".jpg, svg, image/*"
+								@rejected="onRejected"
+							/>
+						</div>
+					</div>
+					<div class="row q-mt-md">
+						<div class="col col-md-12">
+							<q-input
+								filled
+								v-model="name"
+								label="Short description"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+					</div>
+					<div class="row q-mt-md">
+						<div class="col col-md-12">
+							<q-input
+								v-model="text"
+								filled
+								type="textarea"
+								label="Description"
+							/>
+						</div>
+					</div>
 				</q-step>
 
 				<q-step :name="3" prefix="3" title="">
-					Try out different ad text to see what brings in the most customers,
-					and learn how to enhance your ads using features like ad extensions.
-					If you run into any problems with your ads, find out how to tell if
-					they're running and how to resolve approval issues.
+					<div class="row">
+						<div class="col col-md-4 q-mr-md">
+							<q-input
+								filled
+								v-model="name"
+								label="Name *"
+								hint=""
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+						<div class="col col-md-4 q-mr-md">
+							<q-select
+								filled
+								v-model="model"
+								:options="options"
+								label="Team Parent"
+							/>
+						</div>
+						<div class="col col-md-3">
+							<q-uploader
+								style="max-width: 192px"
+								url="http://localhost:8080/upload"
+								label="Logo"
+								multiple
+								accept=".jpg, svg, image/*"
+								@rejected="onRejected"
+							/>
+						</div>
+					</div>
+					<div class="row q-mt-md">
+						<div class="col col-md-12">
+							<q-input
+								filled
+								v-model="name"
+								label="Short description"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+					</div>
+					<div class="row q-mt-md">
+						<div class="col col-md-12">
+							<q-input
+								v-model="text"
+								filled
+								type="textarea"
+								label="Description"
+							/>
+						</div>
+					</div>
 				</q-step>
 
 				<template v-slot:navigation>
@@ -83,8 +187,8 @@
 							/>
 							<q-btn
 								v-if="step > 1"
-								flat
-								color="deep-orange"
+								filled
+								color="grey"
 								@click="$refs.stepper.previous()"
 								label="Back"
 								class="q-ml-sm"
