@@ -1,5 +1,5 @@
 import API from "./index";
-const END_POINT = "users";
+const END_POINT = "user";
 
 export default {
 	users() {
