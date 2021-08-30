@@ -20,21 +20,21 @@
 	</div>
 </template>
 <script>
-import axios from "axios";
-import Login from "../components/Login/Login.vue";
 import { ref } from "vue";
+import services from "../services/Users";
+import Login from "../components/Login/Login.vue";
+
 export default {
 	components: { Login },
 	setup() {
 		const users = ref([]);
 		const getUsers = async () => {
-			let response = await axios.get(
-				"http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/user"
-			);
+			let response = await services.getAlllUsers();
 			let data = response.data;
 			users.value = data;
-			console.log(users.value);
+			console.log("First Data: ", users.value);
 		};
+
 		getUsers();
 		return {
 			users,

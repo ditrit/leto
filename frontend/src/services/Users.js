@@ -1,13 +1,11 @@
 import API from "./index";
-const END_POINT = "user";
+const END_POINT = "/user";
 
 export default {
-	users() {
-		return API.get(END_POINT).then((response) => {
-			console.log(response.data);
-		});
+	getAlllUsers() {
+		return API.get(END_POINT);
 	},
-	user(id) {
+	getUser(id) {
 		return API.get(`${END_POINT}/${id}`);
 	},
 	addUser(data) {

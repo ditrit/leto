@@ -1,9 +1,21 @@
 {
   "users": [
-    { 
+    {
       "id": 1,
-      "name" : "Brahim",
+      "name": "Brahim",
       "email": "brahim@gmail.com"
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "name": "Baba",
+      "email": "baba@gmail.com",
+      "password": "123@Baba",
+      "id": 4
     }
   ],
   "sourceSideBar": [
@@ -90,9 +102,21 @@
       "caption": "Parent Item four",
       "icon": "code",
       "children": [
-        { "id": 1, "caption": "Element one", "icon": "wifi" },
-        { "id": 2, "caption": "Element two", "icon": "wifi" },
-        { "id": 3, "caption": "Element three", "icon": "wifi" }
+        {
+          "id": 1,
+          "caption": "Element one",
+          "icon": "wifi"
+        },
+        {
+          "id": 2,
+          "caption": "Element two",
+          "icon": "wifi"
+        },
+        {
+          "id": 3,
+          "caption": "Element three",
+          "icon": "wifi"
+        }
       ]
     }
   ],
@@ -180,12 +204,36 @@
       "caption": "Network",
       "icon": "wifi",
       "children": [
-        { "id": 1, "caption": "Element one", "icon": "wifi" },
-        { "id": 2, "caption": "Element two", "icon": "wifi" },
-        { "id": 3, "caption": "Element three", "icon": "wifi" },
-        { "id": 4, "caption": "Element four", "icon": "wifi" },
-        { "id": 5, "caption": "Element five", "icon": "wifi" },
-        { "id": 5, "caption": "Element six", "icon": "wifi" }
+        {
+          "id": 1,
+          "caption": "Element one",
+          "icon": "wifi"
+        },
+        {
+          "id": 2,
+          "caption": "Element two",
+          "icon": "wifi"
+        },
+        {
+          "id": 3,
+          "caption": "Element three",
+          "icon": "wifi"
+        },
+        {
+          "id": 4,
+          "caption": "Element four",
+          "icon": "wifi"
+        },
+        {
+          "id": 5,
+          "caption": "Element five",
+          "icon": "wifi"
+        },
+        {
+          "id": 5,
+          "caption": "Element six",
+          "icon": "wifi"
+        }
       ]
     }
   ]
