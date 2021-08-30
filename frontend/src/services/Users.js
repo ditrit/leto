@@ -11,6 +11,9 @@ export default {
 	addUser(data) {
 		return API.post(END_POINT, data);
 	},
+	updateUser( id, data ){
+    return API.put( `${END_POINT}/${id}, ${data}` );
+	},
 	deleteUser(id) {
 		return API.delete(`${END_POINT}/${id}`);
 	},
