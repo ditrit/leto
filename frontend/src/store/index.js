@@ -1,8 +1,7 @@
-import { store } from 'quasar/wrappers'
-import { createStore } from 'vuex'
+import { store } from "quasar/wrappers";
+import { createStore } from "vuex";
 
-import test from './store-test'
-import users from './Users'
+import loginUsers from "./Users/index";
 
 /*
  * If not building with SSR mode, you can
@@ -14,16 +13,15 @@ import users from './Users'
  */
 
 export default store(function (/* { ssrContext } */) {
-  const Store = createStore({
-    modules: {
-      test,
-			users
-    },
+	const Store = createStore({
+		modules: {
+			loginUsers,
+		},
 
-    // enable strict mode (adds overhead!)
-    // for dev mode and --debug builds only
-    strict: process.env.DEBUGGING
-  })
+		// enable strict mode (adds overhead!)
+		// for dev mode and --debug builds only
+		strict: process.env.DEBUGGING,
+	});
 
-  return Store
-})
+	return Store;
+});

@@ -45,7 +45,7 @@
 <script>
 import { useQuasar } from "quasar";
 import { ref } from "vue";
-import axios from "axios";
+import { useStore } from "vuex";
 
 export default {
 	setup() {
@@ -53,6 +53,7 @@ export default {
 		const name = ref(null);
 		const email = ref(null);
 		const password = ref(null);
+		const store = useStore();
 
 		return {
 			name,
@@ -66,22 +67,15 @@ export default {
 					icon: "cloud_done",
 					message: "Submitted successfully",
 				});
-
-				// alert(JSON.stringify({"your name: ": name.value, "your email: " : email.value}))
-				alert(
-					`
-                Thank four Sign in 😄
-
-                Your Name:  ${name.value}
-                Your Email : ${email.value}
-                Your Password : ${password.value}
-              `
-				);
-				axios.post("http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/user", {
+				const newUser = {
 					name: name.value,
 					email: email.value,
 					password: password.value,
-				});
+				};
+				store.dispatch("loginUsers/addUser", newUser);
+				name.value = "";
+				email.value = "";
+				password.value = "";
 			},
 		};
 	},

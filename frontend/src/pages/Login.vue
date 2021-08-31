@@ -1,55 +1,52 @@
 <template>
-  <div class="text-white">
-    <div class="row">
-      <div class="leftside text-secondary">
-        <q-img src="../assets/logoBest2.svg" width="30%" />
-        <span> Orchestrateur TOSTA étendu </span>
-        <ul v-for="user in showAllUsers()" :key="user.ID">
-          <li>
-            {{ user.Name }}
-          </li>
-          <li>
-            {{ user.Email }}
-          </li>
-        </ul>
-      </div>
-      <div class="rigthside">
-        <Login />
-      </div>
-    </div>
-  </div>
+	<div class="text-white">
+		<div class="row">
+			<div class="leftside text-secondary">
+				<q-img src="../assets/logoBest2.svg" width="30%" />
+				<span> Orchestrateur TOSTA étendu </span>
+				<ul v-for="user in all" :key="user.ID">
+					<li>
+						{{ user.Name }}
+					</li>
+					<li>
+						{{ user.Email }}
+					</li>
+				</ul>
+				<div v-for="name in all" :key="name.ID">{{ name.Name }}</div>
+			</div>
+			<div class="rigthside">
+				<Login />
+			</div>
+		</div>
+	</div>
 </template>
 <script>
-import { ref } from "vue";
-import services from "../services/Users";
+import { ref, computed } from "vue";
+import { mapActions } from "vuex";
+import { useStore } from "vuex";
 import Login from "../components/Login/Login.vue";
-import { mapState, mapActions } from "vuex";
 
 export default {
-  components: { Login },
-  computed: {
-    ...mapState(["allUsers"]),
-  },
-  created() {
-    this.showAllUsers;
-  },
-  methods: {
-    ...mapActions(["showAllUsers"]),
-  },
-  setup() {
-    const users = ref([]);
-    const getUsers = async () => {
-      let response = await services.getAlllUsers();
-      let data = response.data;
-      users.value = data;
-      console.log("First Data: ", users.value);
-    };
+	components: { Login },
+	methods: {
+		...mapActions("loginUsers", [
+			"fetchUsers",
+			"addUser",
+			"updateUser",
+			"removeUser",
+		]),
+	},
+	created() {
+		this.fetchUsers();
+	},
 
-    getUsers();
-    return {
-      users,
-    };
-  },
+	setup() {
+		const store = useStore();
+		const all = computed(() => store.state.loginUsers.theUsers);
+		return {
+			all,
+		};
+	},
 };
 </script>
 
