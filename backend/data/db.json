@@ -1,21 +1,34 @@
 {
   "users": [
     {
-      "id": 1,
-      "name": "Brahim",
-      "email": "brahim@gmail.com"
-    },
-    {
-      "id": 2
-    },
-    {
+      "name": "Sophia",
+      "email": "sophia@gmail.com",
+      "password": "123@Sophia",
       "id": 3
     },
     {
-      "name": "Baba",
-      "email": "baba@gmail.com",
-      "password": "123@Baba",
+      "name": "Gabbriel",
+      "email": "gabriel@gmail.com",
+      "password": "123@Gabriel",
       "id": 4
+    },
+    {
+      "name": "Anouk",
+      "email": "anouk@gmail.com",
+      "password": "123@Anouk",
+      "id": 5
+    },
+    {
+      "name": "Brahim",
+      "email": "brahim@gmail.com",
+      "password": "123@Brahim",
+      "id": 6
+    },
+    {
+      "name": "Sabine",
+      "email": "sabine@gmail.com",
+      "password": "123@Sabine",
+      "id": 7
     }
   ],
   "sourceSideBar": [

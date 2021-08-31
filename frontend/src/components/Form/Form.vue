@@ -50,10 +50,10 @@ import { useStore } from "vuex";
 export default {
 	setup() {
 		const $q = useQuasar();
+		const store = useStore();
 		const name = ref(null);
 		const email = ref(null);
 		const password = ref(null);
-		const store = useStore();
 
 		return {
 			name,

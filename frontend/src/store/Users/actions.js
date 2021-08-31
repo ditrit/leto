@@ -1,21 +1,21 @@
 import API from "../../services/index";
 
 export const fetchUsers = async ({ commit }) => {
-	let response = await API.get("/user");
+	let response = await API.get("/users");
 	commit("GET_USERS", response.data);
 };
 
-export const addUser = async ({ commit }, payload) => {
-	let response = await API.post("/user", payload);
+export const addUser = async ({ commit }, user) => {
+	let response = await API.post("/users", user);
 	commit("NEW_USER", response.data);
 };
 
-export const updateUser = async ({ commit }, payload) => {
-	let response = await API.put(`/user/${user.id}`, payload);
+export const updateUser = async ({ commit }, user) => {
+	let response = await API.put(`/users/${user.id}`, user);
 	commit("UPDATE_USER", response.data);
 };
 
-export const removeUser = async ({ commit }, user) => {
-	let response = await API.delete(`/user/${user.id}`);
-	commit("DELETE_USER", response.data);
+export const removeUser = async ({ commit }, id) => {
+	await API.delete(`/users/${id}`);
+	commit("DELETE_USER", id);
 };
