@@ -4,18 +4,18 @@
 			<div class="leftside text-secondary">
 				<q-img src="../assets/logoBest2.svg" width="30%" />
 				<span> Orchestrateur TOSTA étendu </span>
-				<ul v-for="user in all" :key="user.id">
+				<ul v-for="user in all" :key="user.ID">
 					<li>
-						{{ user.id }}
+						{{ user.ID }}
 					</li>
 					<li>
-						{{ user.name }}
+						{{ user.Name }}
 					</li>
 					<li>
-						{{ user.email }}
+						{{ user.Email }}
 					</li>
 
-					<button @click="deleteTheUser(user.id)">Delete User</button>
+					<button @click="deleteTheUser(user.ID)">Delete User</button>
 				</ul>
 			</div>
 			<div class="rigthside">

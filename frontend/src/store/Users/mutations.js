@@ -6,3 +6,5 @@ export const UPDATE_USER = (state, updatedUser) => {
 };
 export const DELETE_USER = (state, userId) =>
 	(state.theUsers = state.theUsers.filter((user) => user.id !== userId));
+
+export const LOGIN_USER = (state, user) => state.loginUsers.unshift(user);

@@ -73,9 +73,10 @@ export default {
 					password: password.value,
 				};
 				store.dispatch("loginUsers/addUser", newUser);
-				name.value = "";
-				email.value = "";
-				password.value = "";
+				store.dispatch("loginUsers/logInUser", newUser);
+				name.value = null;
+				email.value = null;
+				password.value = null;
 			},
 		};
 	},
