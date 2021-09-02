@@ -46,9 +46,11 @@
 import { useQuasar } from "quasar";
 import { ref } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 export default {
 	setup() {
+		const router = useRouter();
 		const $q = useQuasar();
 		const store = useStore();
 		const name = ref(null);
@@ -74,6 +76,7 @@ export default {
 				};
 				store.dispatch("loginUsers/addUser", newUser);
 				store.dispatch("loginUsers/logInUser", newUser);
+				$router.push("#/teams");
 				name.value = null;
 				email.value = null;
 				password.value = null;
