@@ -1,7 +1,7 @@
 <template>
 	<div class="text-white">
 		<div class="row">
-			<div class="leftside text-secondary">
+			<div class="leftside text-secondary md">
 				<q-img src="../assets/logoBest2.svg" width="30%" />
 				<span> Orchestrateur TOSTA étendu </span>
 				<ul v-for="user in all" :key="user.ID">
@@ -75,5 +75,5 @@ export default {
 	align-items: center
 	background: white
 	height: 100vh
-	width: 50%
+	flex: 1
 </style>

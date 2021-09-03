@@ -1,15 +1,107 @@
 <template>
-  <q-layout class="bg-grey">
-    <q-page padding class="flex flex-center bg-gray">
-      <h2>Products Page</h2>
-    </q-page>
-  </q-layout>
+	<q-layout class="bg-grey">
+		<q-page padding class="flex bg-gray">
+			<PageContent
+				v-for="item in dataItems"
+				:key="item.id"
+				:icon="item.icon"
+				:headline="item.headline"
+				:textContent="item.textContent"
+			/>
+
+			<div
+				class="teams_buttons__container"
+				v-for="btn in buttonsList"
+				:key="btn.title"
+			>
+				<BtnAddNew
+					:title="btn.title"
+					:class="btn.styles"
+					outline
+					round
+					:color="btn.color"
+					:icon="btn.icon"
+					:href="btn.link"
+					@click="oepnDialog = true"
+				/>
+				<!-- <CreateItems /> -->
+				<q-dialog v-model="oepnDialog">
+					<q-card style="width: 700px; max-width: 80vw">
+						<q-card-section>
+							<div class="text-h6">Create New Product</div>
+						</q-card-section>
+
+						<q-card-section class="q-pt-none">
+							<ProductCreationStepper />
+						</q-card-section>
+
+						<q-card-actions align="right" class="bg-white text-teal">
+							<q-btn flat label="Next" v-close-popup />
+						</q-card-actions>
+					</q-card>
+				</q-dialog>
+			</div>
+		</q-page>
+	</q-layout>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import getDataItems from "../composables/getDataItems";
+import BtnAddNew from "../components/Buttons/BtnAddNew.vue";
+import PageContent from "../components/Content/PageContent.vue";
+import ProductCreationStepper from "../components/Stepper/ProductCreationStepper.vue";
+// import CreateItems from "../components/Dialogs/CreateItems.vue";
+const buttonsList = [
+	{
+		title: "Add new product",
+		styles: "q-mt-sm",
+		color: "primary",
+		icon: "add",
+		link: "/",
+	},
+	{
+		title: "Add to Favorite",
+		styles: "q-mt-sm",
+		color: "primary",
+		icon: "favorite",
+		link: "#/favorite",
+	},
+	{
+		title: "Navigate",
+		styles: "q-mt-sm",
+		color: "primary",
+		icon: "add",
+		link: "#/products",
+	},
+];
 
 export default defineComponent({
-  name: "PageProducts",
+	name: "PageTeams",
+	components: { BtnAddNew, PageContent, ProductCreationStepper },
+
+	setup() {
+		const oepnDialog = ref(false);
+		const { path, dataItems, error, fetchData } = getDataItems();
+		const data = fetchData("http://localhost:3000/products");
+		dataItems.value = data;
+		console.log(dataItems.value);
+		return {
+			path,
+			dataItems,
+			error,
+			buttonsList,
+			oepnDialog,
+		};
+	},
 });
 </script>
+<style lang="sass" scoped>
+
+.teams_buttons__container
+  display: flex
+  flex-direction: row
+  justify-content: space-evenly
+  align-items: flex-start
+  flex: 1
+</style>

@@ -1,47 +1,48 @@
 <template>
-  <q-container class="text-primary full-width">
-    <q-tabs
-      v-model="tab"
-      class="text-grey"
-      active-color="primary"
-      indicator-color="primary"
-      align="center"
-      narrow-indicator
-    >
-      <q-tab name="sign_in" label="Sign in" />
-      <q-tab name="sign_up" label="Sign Up" />
-    </q-tabs>
-    <q-tab-panels v-model="tab" animated align="center">
-      <q-tab-panel name="sign_in">
-        <Form />
+	<q-container class="text-primary full-width min_heigth__600">
+		<q-tabs
+			v-model="tab"
+			class="text-grey"
+			active-color="primary"
+			indicator-color="primary"
+			align="center"
+			narrow-indicator
+		>
+			<q-tab name="login" label="Log in" />
+			<q-tab name="register" label="Register" />
+		</q-tabs>
+		<q-tab-panels v-model="tab" animated align="center">
+			<q-tab-panel name="login">
+				<LoginForm />
+			</q-tab-panel>
 
-        <SocialConnect />
-      </q-tab-panel>
-
-      <q-tab-panel name="sign_up">
-        <!-- <Form /> -->
-        <SocialConnect />
-      </q-tab-panel>
-    </q-tab-panels>
-  </q-container>
+			<q-tab-panel name="register">
+				<RegistrationForm />
+				<SocialConnect />
+			</q-tab-panel>
+		</q-tab-panels>
+	</q-container>
 </template>
 
 <script>
 import { ref } from "vue";
-import Form from "../Form/Form.vue";
+import LoginForm from "../Form/LoginForm.vue";
+import RegistrationForm from "../Form/RegistrationForm.vue";
 import SocialConnect from "./SocialConnect.vue";
 export default {
-  components: { Form, SocialConnect },
-  setup() {
-    return {
-      tab: ref("sign_in"),
-      socialLogin: () => alert("Ready to connect"),
-    };
-  },
+	components: { LoginForm, RegistrationForm, SocialConnect },
+	setup() {
+		return {
+			tab: ref("login"),
+			socialLogin: () => alert("Ready to connect"),
+		};
+	},
 };
 </script>
 
 <style lang="sass">
-.q-tab 
+.q-tab
   color: grey
+.min_heigth__600
+  min-height: 700px
 </style>

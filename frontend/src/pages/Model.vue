@@ -81,8 +81,8 @@ import ModelEdit from "../components/3dModals/ModelEdit.vue";
 export default {
 	components: { ModelEdit },
 	setup() {
-		const { path, dataItems, error, ftechData } = getDataItems();
-		ftechData("http://localhost:3000/modelSideBar");
+		const { path, dataItems, error, fetchData } = getDataItems();
+		fetchData("http://localhost:3000/modelSideBar");
 		const search = ref("");
 		const filterdSidebarItem = computed(() => {
 			return dataItems.value.filter((item) =>
