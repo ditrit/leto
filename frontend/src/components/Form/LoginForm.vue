@@ -43,7 +43,7 @@ import { useRouter } from "vue-router";
 
 export default {
 	setup() {
-		const router = useRouter();
+		const $router = useRouter();
 		const $q = useQuasar();
 		const store = useStore();
 		const name = ref(null);
@@ -67,6 +67,7 @@ export default {
 				};
 
 				store.dispatch("loginUsers/logInUser", newUser);
+				$router.push("/teams");
 
 				email.value = null;
 				password.value = null;

@@ -1,5 +1,6 @@
 <template>
 	<q-layout class="bg-grey">
+		<AjaxBar />
 		<q-page padding class="flex bg-gray">
 			<PageContent
 				v-for="item in dataItems"
@@ -54,6 +55,7 @@ import getDataItems from "../composables/getDataItems";
 import BtnAddNew from "../components/Buttons/BtnAddNew.vue";
 import PageContent from "../components/Content/PageContent.vue";
 import ProductCreationStepper from "../components/Stepper/ProductCreationStepper.vue";
+import AjaxBar from "../components/Progress/AjaxBar.vue";
 // import CreateItems from "../components/Dialogs/CreateItems.vue";
 const buttonsList = [
 	{
@@ -81,7 +83,7 @@ const buttonsList = [
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { BtnAddNew, PageContent, ProductCreationStepper },
+	components: { BtnAddNew, PageContent, ProductCreationStepper, AjaxBar },
 
 	setup() {
 		const oepnDialog = ref(false);

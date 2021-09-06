@@ -1,7 +1,6 @@
 <template>
 	<q-layout class="bg-grey">
 		<AjaxBar />
-
 		<q-page padding class="flex bg-gray">
 			<PageContent
 				v-for="item in dataItems"
@@ -33,11 +32,9 @@
 						<q-card-section>
 							<div class="text-h6">Create New Team</div>
 						</q-card-section>
-
 						<q-card-section class="q-pt-none">
 							<CreationFormStepper />
 						</q-card-section>
-
 						<q-card-actions align="right" class="bg-white text-teal">
 							<q-btn flat label="Next" v-close-popup />
 						</q-card-actions>
