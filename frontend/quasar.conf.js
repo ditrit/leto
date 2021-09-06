@@ -96,9 +96,9 @@ module.exports = configure(function (ctx) {
 			plugins: ["Notify"],
 		},
 
-		// animations: 'all', // --- includes all animations
+		animations: "all", // --- includes all animations
 		// https://v2.quasar.dev/options/animations
-		animations: [],
+		// animations: [],
 
 		// https://v2.quasar.dev/quasar-cli/developing-ssr/configuring-ssr
 		ssr: {

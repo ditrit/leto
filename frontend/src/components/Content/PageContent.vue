@@ -1,6 +1,6 @@
 <template>
 	<div class="teams_header">
-		<div class="row">
+		<div class="row min_heigth__200">
 			<div class="col col-md-8">
 				<div class="flex">
 					<q-icon :name="icon" size="30px" class="q-ml-md q-mr-sm" />
@@ -39,4 +39,7 @@ export default defineComponent({
 .teams_header
   padding-top: 60px
   padding-left: 30px
+
+.min_heigth__200
+  height: 200px !important
 </style>

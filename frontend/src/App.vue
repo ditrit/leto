@@ -1,10 +1,22 @@
 <template>
-  <router-view />
+	<router-view v-slot="{ Component }">
+		<transition name="fade" mode="out-in">
+			<component :is="Component" />
+		</transition>
+	</router-view>
 </template>
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'App'
-})
+	name: "App",
+});
 </script>
+
+<style lang="sass">
+.fade-enter-from, .fade-leave-to
+  opacity: 0
+
+.fade-enter-active, .fade-leave-active
+  transition: opacity 0.3s ease-out
+</style>

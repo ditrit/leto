@@ -14,16 +14,19 @@
 				v-for="btn in buttonsList"
 				:key="btn.title"
 			>
-				<BtnAddNew
-					:title="btn.title"
-					:class="btn.styles"
-					outline
-					round
-					:color="btn.color"
-					:icon="btn.icon"
-					:href="btn.link"
-					@click="oepnDialog = true"
-				/>
+				<transiton name="fade" v-if="dataItems">
+					<BtnAddNew
+						v-show="dataItems.length === 1"
+						:title="btn.title"
+						:class="btn.styles"
+						outline
+						round
+						:color="btn.color"
+						:icon="btn.icon"
+						:href="btn.link"
+						@click="oepnDialog = true"
+					/>
+				</transiton>
 				<!-- <CreateItems /> -->
 				<q-dialog v-model="oepnDialog">
 					<q-card style="width: 700px; max-width: 80vw">
@@ -85,7 +88,6 @@ export default defineComponent({
 		const { path, dataItems, error, fetchData } = getDataItems();
 		const data = fetchData("http://localhost:3000/products");
 		dataItems.value = data;
-		console.log(dataItems.value);
 		return {
 			path,
 			dataItems,
@@ -98,10 +100,18 @@ export default defineComponent({
 </script>
 <style lang="sass" scoped>
 
+
 .teams_buttons__container
   display: flex
   flex-direction: row
   justify-content: space-evenly
   align-items: flex-start
+  height: fit-content
   flex: 1
+
+.fade-enter-from, .fade-leave-to
+  opacity: 0
+
+.fade-enter-active, .fade-leave-active
+  transition: opacity 3s ease-out
 </style>

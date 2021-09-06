@@ -1,5 +1,7 @@
 <template>
 	<q-layout class="bg-grey">
+		<AjaxBar />
+
 		<q-page padding class="flex bg-gray">
 			<PageContent
 				v-for="item in dataItems"
@@ -15,6 +17,7 @@
 				:key="btn.title"
 			>
 				<BtnAddNew
+					v-show="dataItems.length === 1"
 					:title="btn.title"
 					:class="btn.styles"
 					outline
@@ -52,6 +55,8 @@ import getDataItems from "../composables/getDataItems";
 import BtnAddNew from "../components/Buttons/BtnAddNew.vue";
 import PageContent from "../components/Content/PageContent.vue";
 import CreationFormStepper from "../components/Stepper/CreationFormStepper.vue";
+import AjaxBar from "../components/Progress/AjaxBar.vue";
+
 // import CreateItems from "../components/Dialogs/CreateItems.vue";
 const buttonsList = [
 	{
@@ -79,7 +84,7 @@ const buttonsList = [
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { BtnAddNew, PageContent, CreationFormStepper },
+	components: { BtnAddNew, PageContent, CreationFormStepper, AjaxBar },
 
 	setup() {
 		const oepnDialog = ref(false);
@@ -88,6 +93,7 @@ export default defineComponent({
 		dataItems.value = data;
 
 		return {
+			progress: dataItems.length,
 			path,
 			dataItems,
 			error,

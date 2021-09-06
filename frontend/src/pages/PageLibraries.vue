@@ -15,6 +15,7 @@
 				:key="btn.title"
 			>
 				<BtnAddNew
+					v-show="dataItems.length === 1"
 					:title="btn.title"
 					:class="btn.styles"
 					outline
