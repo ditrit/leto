@@ -1,5 +1,5 @@
 <template>
-	<div class="q-pa-md" style="max-width: 400px">
+	<div class="q-pa-md" style="width: 400px">
 		<q-form @submit="onSubmit" class="q-gutter-md">
 			<q-input
 				filled
@@ -74,8 +74,7 @@ export default {
 					email: email.value,
 					password: password.value,
 				};
-				store.dispatch("loginUsers/addUser", newUser);
-				store.dispatch("loginUsers/logInUser", newUser);
+				store.dispatch("appUsers/addUser", newUser);
 				$router.push("#/teams");
 				name.value = null;
 				email.value = null;

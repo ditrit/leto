@@ -9,10 +9,10 @@
 						{{ user.id }}
 					</li>
 					<li>
-						{{ user.email }}
+						{{ user.name }}
 					</li>
 					<li>
-						{{ user.password }}
+						{{ user.email }}
 					</li>
 
 					<button @click="deleteTheUser(user.id)">Delete User</button>
@@ -20,7 +20,10 @@
 			</div>
 			<div class="rigthside">
 				<LoginNav />
-				<LoginForm />
+				<RegistrationForm />
+				<div class="social_acces">
+					<SocialConnect />
+				</div>
 			</div>
 		</div>
 	</div>
@@ -29,21 +32,27 @@
 import { computed } from "vue";
 import { mapActions } from "vuex";
 import { useStore } from "vuex";
-import LoginForm from "../components/Form/LoginForm.vue";
+import RegistrationForm from "../components/Form/RegistrationForm.vue";
+import SocialConnect from "../components/Login/SocialConnect.vue";
 import LoginNav from "../components/Navigation/LoginNav.vue";
 
 export default {
-	components: { LoginForm, LoginNav },
+	components: { RegistrationForm, SocialConnect, LoginNav },
 	methods: {
-		...mapActions("appUsers", ["fetchappUsers"]),
+		...mapActions("appUsers", [
+			"fetchUsers",
+			"addUser",
+			"updateUser",
+			"removeUser",
+		]),
 	},
 	created() {
-		this.fetchappUsers();
+		this.fetchUsers();
 	},
 
 	setup() {
 		const store = useStore();
-		const all = computed(() => store.state.appUsers.logedUsers);
+		const all = computed(() => store.state.appUsers.theUsers);
 
 		const deleteTheUser = (id) => {
 			return store.dispatch("appUsers/removeUser", id);
@@ -73,5 +82,4 @@ export default {
 	background: white
 	height: 100vh
 	flex: 1
-	color: black
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<div class="q-pa-md" style="max-width: 400px">
+	<div class="q-pa-md" style="width: 400px">
 		<q-form @submit="onSubmit" class="q-gutter-md">
 			<q-input
 				filled
@@ -46,7 +46,6 @@ export default {
 		const $router = useRouter();
 		const $q = useQuasar();
 		const store = useStore();
-		const name = ref(null);
 		const email = ref(null);
 		const password = ref(null);
 
@@ -66,7 +65,7 @@ export default {
 					password: password.value,
 				};
 
-				store.dispatch("loginUsers/logInUser", newUser);
+				store.dispatch("appUsers/logInUser", newUser);
 				$router.push("/teams");
 
 				email.value = null;
