@@ -17,8 +17,8 @@ export const removeUser = async ({ commit }, id) => {
 	commit("DELETE_USER", id);
 };
 export const logInUser = async ({ commit }, user) => {
-	await API.post("/login", user);
-	commit("LOGIN_USER", user);
+	const response = await API.post("/login", user);
+	commit("LOGIN_USER", response.data);
 };
 
 export const fetchappUsers = async ({ commit }) => {

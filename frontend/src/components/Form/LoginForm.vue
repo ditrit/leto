@@ -66,7 +66,7 @@ export default {
 				};
 
 				store.dispatch("appUsers/logInUser", newUser);
-				$router.push("/teams");
+				$router.push("/dashboard");
 
 				email.value = null;
 				password.value = null;
