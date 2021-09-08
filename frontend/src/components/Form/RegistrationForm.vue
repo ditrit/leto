@@ -75,7 +75,7 @@ export default {
 					password: password.value,
 				};
 				store.dispatch("appUsers/addUser", newUser);
-				$router.push("#/teams");
+				router.push("/login");
 				name.value = null;
 				email.value = null;
 				password.value = null;
