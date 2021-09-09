@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "api": "json-server --watch data/db.json"
+    "api": "json-server data/db.json -m ./node_modules/json-server-auth"
   },
   "dependencies": {
     "json-server": "^0.16.3"
