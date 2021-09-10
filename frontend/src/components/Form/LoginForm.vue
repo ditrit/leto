@@ -1,5 +1,6 @@
 <template>
 	<div class="q-pa-md" style="width: 400px">
+			<Headline6>Login</Headline6>
 		<q-form @submit="onSubmit" class="q-gutter-md">
 			<q-input
 				filled
@@ -40,8 +41,10 @@ import { useQuasar } from "quasar";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import Headline6 from '../Ui/Headlines/Headline6';
 
 export default {
+	components: { Headline6 },
 	setup() {
 		const $router = useRouter();
 		const $q = useQuasar();
@@ -65,7 +68,8 @@ export default {
 					password: password.value,
 				};
 
-				store.dispatch("appUsers/logInUser", newUser);
+				// store.dispatch("appUsers/logInUser", newUser);
+				store.dispatch("auth/signIn", newUser);
 				$router.push("/dashboard");
 
 				email.value = null;

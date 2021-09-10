@@ -4,7 +4,8 @@ const routes = [
 		component: () => import("layouts/MainLayout.vue"),
 
 		children: [
-			{ path: "", redirect: "/login" },
+			{ path: "", redirect: "/signin" },
+			// { path: "", redirect: "/login" },
 			{
 				path: "teams",
 				component: () => import("pages/PageTeams.vue"),
@@ -47,6 +48,24 @@ const routes = [
 			{
 				path: "/register",
 				component: () => import("pages/Register.vue"),
+			},
+		],
+	},
+	{
+		path: "/home",
+		component: () => import("layouts/NoLayout.vue"),
+		children: [
+			{
+				path: "/home",
+				component: () => import("pages/Home.vue"),
+			},
+			{
+				path: "/signin",
+				component: () => import("pages/SignIn.vue"),
+			},
+			{
+				path: "/dash",
+				component: () => import("pages/Dashboard.vue"),
 			},
 		],
 	},
