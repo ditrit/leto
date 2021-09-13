@@ -1,7 +1,7 @@
 import API from "../../services/index";
 
-export const signIn = async ({ commit, dispatch }, credentials) => {
-	let response = await API.post("/login", credentials);
+export const signIn = async ({ dispatch }, credentials) => {
+	let response = await API.post("/user/login", credentials);
 	dispatch("attempt", response.data.accessToken);
 };
 
@@ -17,7 +17,7 @@ export const attempt = async ({ commit, state }, token) => {
 		headerOptions = null;
 	}
 	try {
-		let response = await API.get("/users", { headers: headerOptions });
+		let response = await API.get("/user", { headers: headerOptions });
 		commit("SET_USER", response.data);
 		localStorage.setItem("token", token);
 	} catch (error) {
@@ -28,7 +28,7 @@ export const attempt = async ({ commit, state }, token) => {
 };
 
 export const logOut = ({ commit }) => {
-	return API.post("/logout").then(() => {
+	return API.post("/user/logout").then(() => {
 		commit("SET_TOKEN", null);
 		commit("SET_USER", null);
 		localStorage.removeItem("token");

@@ -7,21 +7,21 @@
 						<div class="col col-md-4 q-mr-md">
 							<q-input
 								filled
-								v-model="name"
 								label="Name *"
 								hint=""
 								lazy-rules
 								:rules="[
 									(val) => (val && val.length > 0) || 'Please type something',
 								]"
+								v-model="newDomaine.name"
 							/>
 						</div>
 						<div class="col col-md-4 q-mr-md">
 							<q-select
 								filled
-								v-model="model"
 								:options="options"
 								label="Team Parent"
+								v-model="newDomaine.teamParent"
 							/>
 						</div>
 						<div class="col col-md-3">
@@ -39,142 +39,30 @@
 						<div class="col col-md-12">
 							<q-input
 								filled
-								v-model="name"
 								label="Short description"
 								lazy-rules
 								:rules="[
 									(val) => (val && val.length > 0) || 'Please type something',
 								]"
+								v-model="newDomaine.shortDescription"
 							/>
 						</div>
 					</div>
 					<div class="row q-mt-md">
 						<div class="col col-md-12">
 							<q-input
-								v-model="text"
 								filled
 								type="textarea"
 								label="Description"
+								v-model="newDomaine.description"
 							/>
 						</div>
 					</div>
 				</q-step>
 
-				<q-step :name="2" prefix="2" title="">
-					<div class="row">
-						<div class="col col-md-4 q-mr-md">
-							<q-input
-								filled
-								v-model="name"
-								label="Name *"
-								hint=""
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-						</div>
-						<div class="col col-md-4 q-mr-md">
-							<q-select
-								filled
-								v-model="model"
-								:options="options"
-								label="Team Parent"
-							/>
-						</div>
-						<div class="col col-md-3">
-							<q-uploader
-								style="max-width: 192px"
-								url="http://localhost:8080/upload"
-								label="Logo"
-								multiple
-								accept=".jpg, svg, image/*"
-								@rejected="onRejected"
-							/>
-						</div>
-					</div>
-					<div class="row q-mt-md">
-						<div class="col col-md-12">
-							<q-input
-								filled
-								v-model="name"
-								label="Short description"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-						</div>
-					</div>
-					<div class="row q-mt-md">
-						<div class="col col-md-12">
-							<q-input
-								v-model="text"
-								filled
-								type="textarea"
-								label="Description"
-							/>
-						</div>
-					</div>
-				</q-step>
+				<q-step :name="2" prefix="2" title=""> </q-step>
 
-				<q-step :name="3" prefix="3" title="">
-					<div class="row">
-						<div class="col col-md-4 q-mr-md">
-							<q-input
-								filled
-								v-model="name"
-								label="Name *"
-								hint=""
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-						</div>
-						<div class="col col-md-4 q-mr-md">
-							<q-select
-								filled
-								v-model="model"
-								:options="options"
-								label="Team Parent"
-							/>
-						</div>
-						<div class="col col-md-3">
-							<q-uploader
-								style="max-width: 192px"
-								url="http://localhost:8080/upload"
-								label="Logo"
-								multiple
-								accept=".jpg, svg, image/*"
-								@rejected="onRejected"
-							/>
-						</div>
-					</div>
-					<div class="row q-mt-md">
-						<div class="col col-md-12">
-							<q-input
-								filled
-								v-model="name"
-								label="Short description"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-						</div>
-					</div>
-					<div class="row q-mt-md">
-						<div class="col col-md-12">
-							<q-input
-								v-model="text"
-								filled
-								type="textarea"
-								label="Description"
-							/>
-						</div>
-					</div>
-				</q-step>
+				<q-step :name="3" prefix="3" title=""> </q-step>
 
 				<template v-slot:navigation>
 					<q-stepper-navigation>
@@ -201,11 +89,17 @@
 	</div>
 </template>
 <script>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { useQuasar } from "quasar";
 
 export default {
 	setup() {
+		const newDomaine = reactive({
+			name: "",
+			teamParent: "",
+			shortDescription: "",
+			description: "",
+		});
 		const $q = useQuasar();
 		const text = ref("");
 		function onRejected(rejectedEntries) {
@@ -214,12 +108,18 @@ export default {
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
 		}
+
+		function onSubmit() {
+			console.log("object");
+		}
+		onSubmit();
 		return {
 			step: ref(1),
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 			onRejected,
 			text,
+			newDomaine,
 		};
 	},
 };

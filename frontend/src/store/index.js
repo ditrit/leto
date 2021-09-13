@@ -3,6 +3,7 @@ import { createStore } from "vuex";
 
 import auth from "./Auth/index";
 import appUsers from "./Users/index";
+import appDomain from "./Domain/index";
 
 /*
  * If not building with SSR mode, you can
@@ -18,6 +19,7 @@ export default store(function (/* { ssrContext } */) {
 		modules: {
 			auth,
 			appUsers,
+			appDomain,
 		},
 
 		// enable strict mode (adds overhead!)

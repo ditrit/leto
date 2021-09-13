@@ -6,11 +6,11 @@ const optionsLogin = {
 };
 
 export const fetchUsers = async ({ commit }) => {
-	let response = await API.get("/users");
+	let response = await API.get("/user");
 	commit("GET_USERS", response.data);
 };
 export const addUser = async ({ commit }, user) => {
-	let response = await API.post("/users", user);
+	let response = await API.post("/user/register", user);
 	commit("NEW_USER", response.data);
 };
 export const updateUser = async ({ commit }, user) => {
@@ -22,7 +22,7 @@ export const removeUser = async ({ commit }, id) => {
 	commit("DELETE_USER", id);
 };
 export const logInUser = async ({ commit }, user) => {
-	const response = await API.post("/login", user);
+	const response = await API.post("user/login", user);
 	commit("LOGIN_USER", response.data);
 };
 

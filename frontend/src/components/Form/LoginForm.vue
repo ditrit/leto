@@ -1,6 +1,6 @@
 <template>
 	<div class="q-pa-md" style="width: 400px">
-			<Headline6>Login</Headline6>
+		<Headline6>Login</Headline6>
 		<q-form @submit="onSubmit" class="q-gutter-md">
 			<q-input
 				filled
@@ -41,7 +41,7 @@ import { useQuasar } from "quasar";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import Headline6 from '../Ui/Headlines/Headline6';
+import Headline6 from "../Ui/Headlines/Headline6";
 
 export default {
 	components: { Headline6 },
@@ -57,12 +57,6 @@ export default {
 			password,
 
 			onSubmit() {
-				$q.notify({
-					color: "green-4",
-					textColor: "white",
-					icon: "cloud_done",
-					message: "Submitted successfully",
-				});
 				const newUser = {
 					email: email.value,
 					password: password.value,
@@ -70,6 +64,13 @@ export default {
 
 				// store.dispatch("appUsers/logInUser", newUser);
 				store.dispatch("auth/signIn", newUser);
+
+				$q.notify({
+					color: "green-4",
+					textColor: "white",
+					icon: "cloud_done",
+					message: "Submitted successfully",
+				});
 				$router.push("/dashboard");
 
 				email.value = null;
