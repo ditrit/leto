@@ -32,9 +32,12 @@
 									</router-link>
 								</q-item>
 								<q-item>
-									<router-link class="text-primary text-weight-medium" to="#">
+									<a
+										@click.prevent="signOut"
+										class="text-primary text-weight-medium"
+									>
 										Sign out
-									</router-link>
+									</a>
 								</q-item>
 							</div>
 						</q-list>
@@ -55,6 +58,7 @@
 import { defineComponent, computed } from "vue";
 
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import AccountSettings from "../components/Profil/AccountSettings.vue";
 
 export default defineComponent({
@@ -65,11 +69,19 @@ export default defineComponent({
 
 	setup() {
 		const store = useStore();
+		const router = useRouter();
 		const authenticated = computed(() => {
 			return store.getters["auth/authenticated"];
 		});
+
+		const signOut = () => {
+			store.dispatch("auth/logOut");
+			router.push("/signin");
+		};
+
 		return {
 			authenticated,
+			signOut,
 		};
 	},
 });

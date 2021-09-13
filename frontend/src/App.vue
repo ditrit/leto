@@ -7,9 +7,16 @@
 </template>
 <script>
 import { defineComponent } from "vue";
-
+import "./store/subscriber";
+import { useStore } from "vuex";
 export default defineComponent({
 	name: "App",
+	setup() {
+		const store = useStore();
+		store.dispatch("auth/attempt", localStorage.getItem("token"));
+
+		return {};
+	},
 });
 </script>
 

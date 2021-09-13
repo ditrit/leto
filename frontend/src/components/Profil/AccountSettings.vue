@@ -39,7 +39,14 @@
 
 					<div class="q-mt-md q-mb-xs">Hi {{ item.name }}</div>
 
-					<q-btn color="primary" label="Logout" push size="sm" v-close-popup />
+					<q-btn
+						color="primary"
+						label="Logout"
+						push
+						size="sm"
+						v-close-popup
+						@click.prevent="logOut"
+					/>
 				</div>
 			</div>
 		</q-menu>
@@ -48,12 +55,19 @@
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default {
 	setup() {
 		const store = useStore();
+		const router = useRouter();
 		const authenticated = computed(() => {
 			return store.getters["auth/authenticated"];
 		});
+
+		const logOut = () => {
+			store.dispatch("auth/logOut");
+			router.push("/login");
+		};
 
 		const getName = () => {
 			let name = Object.values(authenticated.value);
@@ -64,6 +78,7 @@ export default {
 		console.log("getName: ", getName.value);
 		return {
 			authenticated,
+			logOut,
 			getName,
 		};
 	},
