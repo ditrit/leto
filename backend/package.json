@@ -3,6 +3,7 @@
     "api": "json-server data/db.json -m ./node_modules/json-server-auth"
   },
   "dependencies": {
-    "json-server": "^0.16.3"
+    "json-server": "^0.16.3",
+    "json-server-auth": "^2.1.0"
   }
 }

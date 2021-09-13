@@ -11,3 +11,8 @@ export const LOGIN_USER = (state, user) => state.appUsers.unshift(user);
 
 export const GET_LOGIN_USERS = (state, logedUsers) =>
 	(state.logedUsers = logedUsers);
+
+export const FIND_USER_BY_ID = (state, id) => {
+	const index = state.theUsers.findIndex((user) => user.id === id);
+	state.theUsers.splice(index, 1, id);
+};

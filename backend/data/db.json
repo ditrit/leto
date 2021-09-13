@@ -25,25 +25,33 @@
   ],
   "users": [
     {
-      "email": "sabine@gmail.com",
-      "password": "$2a$10$SHSqdlnKL6QNwzaGzRi6kuWFb5wNG08ol5xLBa/0SUGJy.eqW7UFq",
-      "name": "Sabine",
+      "email": "Brahim@gmail.com",
+      "password": "$2a$10$7f2nJh3qu.jSd./fiWg9G.QW.h.mSs17z1X9fk3ncrksJwOY76Kv6",
+      "name": "Brahim",
       "id": 1
-    },
-    {
-      "email": "romain@gmail.com",
-      "password": "$2a$10$qjv gz4SDvw6BcaTFaAbpTO5JUglIViKQX8S6f75pzcd5.GAvq7/mC",
-      "name": "Romain",
-      "id": 2
-    },
-    {
-      "email": "sophia@gmail.com",
-      "password": "$2a$10$cRbqSjkufjytiw7DP6.mAeC5tquciOWt.OpHsGEL/mRzHFMUzXxgq",
-      "name": "Sophia",
-      "id": 3
     }
   ],
   "login": [],
+  "logout": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 4
+    },
+    {
+      "id": 5
+    },
+    {
+      "id": 6
+    }
+  ],
   "sourceSideBar": [
     {
       "id": 1,
