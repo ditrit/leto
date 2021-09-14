@@ -33,6 +33,7 @@
 							<div class="text-h6">Create New Team</div>
 						</q-card-section>
 						<q-card-section class="q-pt-none">
+							<!-- <AddNewTeam /> -->
 							<CreationFormStepper />
 						</q-card-section>
 						<q-card-actions align="right" class="bg-white text-teal">

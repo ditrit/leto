@@ -13,7 +13,7 @@
 								:rules="[
 									(val) => (val && val.length > 0) || 'Please type something',
 								]"
-								v-model="newDomaine.name"
+								v-model="name"
 							/>
 						</div>
 						<div class="col col-md-4 q-mr-md">
@@ -21,7 +21,7 @@
 								filled
 								:options="options"
 								label="Team Parent"
-								v-model="newDomaine.teamParent"
+								v-model="teamParent"
 							/>
 						</div>
 						<div class="col col-md-3">
@@ -44,7 +44,7 @@
 								:rules="[
 									(val) => (val && val.length > 0) || 'Please type something',
 								]"
-								v-model="newDomaine.shortDescription"
+								v-model="shortDescription"
 							/>
 						</div>
 					</div>
@@ -54,7 +54,7 @@
 								filled
 								type="textarea"
 								label="Description"
-								v-model="newDomaine.description"
+								v-model="description"
 							/>
 						</div>
 					</div>
@@ -68,6 +68,7 @@
 					<q-stepper-navigation>
 						<div class="flex justify-center">
 							<q-btn
+								type=""
 								@click="$refs.stepper.next()"
 								color="positive"
 								:label="step === 3 ? 'Send' : 'Next'"
@@ -89,17 +90,18 @@
 	</div>
 </template>
 <script>
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { useQuasar } from "quasar";
+import { useStore } from "vuex";
 
 export default {
 	setup() {
-		const newDomaine = reactive({
-			name: "",
-			teamParent: "",
-			shortDescription: "",
-			description: "",
-		});
+		const store = useStore();
+		const name = ref("");
+		const teamParent = ref("");
+		const shortDescription = ref("");
+		const description = ref("");
+
 		const $q = useQuasar();
 		const text = ref("");
 		function onRejected(rejectedEntries) {
@@ -109,17 +111,28 @@ export default {
 			});
 		}
 
-		function onSubmit() {
-			console.log("object");
-		}
-		onSubmit();
 		return {
 			step: ref(1),
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 			onRejected,
 			text,
-			newDomaine,
+			store,
+			name,
+			teamParent,
+			shortDescription,
+			description,
+
+			onSubmit() {
+				const newDomain = {
+					name: name.value,
+					teamParent: teamParent.value,
+					shortDescription: shortDescription.value,
+					description: description.value,
+				};
+				store.dispatch("appDomain/addDomain", newDomain);
+				console.log(newDomain);
+			},
 		};
 	},
 };

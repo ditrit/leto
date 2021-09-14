@@ -6,6 +6,7 @@ export const GET_DOMAIN_BY_ID = (state, id) => {
 };
 
 export const NEW_DOMAIN = (state, domain) => state.domains.unshift(domain);
+
 export const UPDATE_DOMAIN = (state, updatedDomain) => {
 	const index = state.domains.findIndex(
 		(domain) => domain.id === updatedDomain
