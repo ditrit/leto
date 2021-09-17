@@ -1,6 +1,7 @@
 import { store } from "quasar/wrappers";
 import { createStore } from "vuex";
 
+// import createPersistedState from "vuex-persistedstate";
 import auth from "./Auth/index";
 import appUsers from "./Users/index";
 import appDomain from "./Domain/index";
@@ -17,10 +18,11 @@ import appDomain from "./Domain/index";
 export default store(function (/* { ssrContext } */) {
 	const Store = createStore({
 		modules: {
-			auth,
-			appUsers,
-			appDomain,
+			a: auth,
+			u: appUsers,
+			d: appDomain,
 		},
+		// plugins: [createPersistedState()],
 
 		// enable strict mode (adds overhead!)
 		// for dev mode and --debug builds only

@@ -22,7 +22,8 @@
 		"quasar": "^2.0.0",
 		"three": "^0.130.1",
 		"vue-threejs": "^0.2.0-alpha.1",
-		"vuex": "^4.0.1"
+		"vuex": "^4.0.1",
+		"vuex-persistedstate": "^4.0.0"
 	},
 	"devDependencies": {
 		"@babel/eslint-parser": "^7.13.14",

@@ -7,7 +7,9 @@
 </template>
 <script>
 import { defineComponent } from "vue";
-import "./store/subscriber";
+// import axiosSetup from "./services/requestInterseptor";
+// axiosSetup();
+
 import { useStore } from "vuex";
 export default defineComponent({
 	name: "App",

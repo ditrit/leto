@@ -46,6 +46,7 @@ import Headline6 from "../Ui/Headlines/Headline6";
 export default {
 	components: { Headline6 },
 	setup() {
+		const isPwd = ref(false);
 		const $router = useRouter();
 		const $q = useQuasar();
 		const store = useStore();
@@ -55,6 +56,7 @@ export default {
 		return {
 			email,
 			password,
+			isPwd,
 
 			onSubmit() {
 				const newUser = {
@@ -63,7 +65,7 @@ export default {
 				};
 
 				// store.dispatch("appUsers/logInUser", newUser);
-				store.dispatch("auth/signIn", newUser);
+				store.dispatch("auth/logIn", newUser);
 
 				$q.notify({
 					color: "green-4",

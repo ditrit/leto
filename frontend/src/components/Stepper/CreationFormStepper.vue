@@ -219,7 +219,7 @@ export default {
 .q-card
 	width: 800px !important
 
-	min-height: fill-available !important
+	min-height: stretch !important
 .q-stepper
 	width: 720px !important
 	box-shadow: none !important
