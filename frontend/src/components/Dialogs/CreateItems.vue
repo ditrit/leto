@@ -3,7 +3,7 @@
 		<q-btn label="isOpened" color="primary" @click="isOpened = true" />
 
 		<q-dialog v-model="isOpened">
-			<q-card style="width: 700px; max-width: 80vw">
+			<q-card>
 				<q-card-section>
 					<div class="text-h6">isOpened</div>
 				</q-card-section>

@@ -1,7 +1,7 @@
 <template>
 	<div class="q-pa-md" style="width: 400px">
 		<Headline6>Login</Headline6>
-		<q-form @submit="onSubmit" class="q-gutter-md">
+		<q-form @submit.prevent="login" class="q-gutter-md">
 			<q-input
 				filled
 				v-model="email"
@@ -33,6 +33,10 @@
 					padding="lg"
 				/>
 			</div>
+			<router-link to="/register">
+				Don't have an account? Register.
+			</router-link>
+			<p>{{ error }}</p>
 		</q-form>
 	</div>
 </template>
@@ -47,7 +51,7 @@ export default {
 	components: { Headline6 },
 	setup() {
 		const isPwd = ref(false);
-		const $router = useRouter();
+		const router = useRouter();
 		const $q = useQuasar();
 		const store = useStore();
 		const email = ref(null);
@@ -56,16 +60,23 @@ export default {
 		return {
 			email,
 			password,
+			error: null,
 			isPwd,
 
-			onSubmit() {
+			login() {
 				const newUser = {
 					email: email.value,
 					password: password.value,
 				};
 
-				// store.dispatch("appUsers/logInUser", newUser);
-				store.dispatch("auth/logIn", newUser);
+				store
+					.dispatch("auth/login", newUser)
+					.then(() => {
+						router.push("/dashboard");
+					})
+					.catch((err) => {
+						error.value = err.response.data.error;
+					});
 
 				$q.notify({
 					color: "green-4",
@@ -73,10 +84,9 @@ export default {
 					icon: "cloud_done",
 					message: "Submitted successfully",
 				});
-				$router.push("/dashboard");
 
-				email.value = null;
-				password.value = null;
+				// email.value = "";
+				// password.value = "";
 			},
 		};
 	},

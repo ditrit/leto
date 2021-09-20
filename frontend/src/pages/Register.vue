@@ -4,7 +4,7 @@
 			<div class="leftside text-secondary md">
 				<q-img src="../assets/logoBest2.svg" width="30%" />
 				<span> Orchestrateur TOSTA étendu </span>
-				<ul v-for="user in all" :key="user.id">
+				<!-- <ul v-for="user in all" :key="user.id">
 					<li>
 						{{ user.id }}
 					</li>
@@ -16,7 +16,7 @@
 					</li>
 
 					<button @click="deleteTheUser(user.id)">Delete User</button>
-				</ul>
+				</ul> -->
 			</div>
 			<div class="rigthside">
 				<LoginNav />
@@ -47,12 +47,12 @@ export default {
 		]),
 	},
 	created() {
-		this.fetchUsers();
+		// this.fetchUsers();
 	},
 
 	setup() {
 		const store = useStore();
-		const all = computed(() => store.state.appUsers.theUsers);
+		const all = computed(() => store.state.auth.user);
 
 		const deleteTheUser = (id) => {
 			return store.dispatch("appUsers/removeUser", id);

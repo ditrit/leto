@@ -1,5 +1,3 @@
 export default {
-	token: null,
-	registerdUser: null,
-	logedInUser: null,
+	user: null,
 };

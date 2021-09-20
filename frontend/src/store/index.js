@@ -18,9 +18,9 @@ import appDomain from "./Domain/index";
 export default store(function (/* { ssrContext } */) {
 	const Store = createStore({
 		modules: {
-			a: auth,
-			u: appUsers,
-			d: appDomain,
+			auth,
+			appUsers,
+			appDomain,
 		},
 		// plugins: [createPersistedState()],
 

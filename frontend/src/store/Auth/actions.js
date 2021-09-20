@@ -1,55 +1,18 @@
 import API from "../../services/index";
-import axiosSetUp from "../../services/requestInterseptor";
+import axios from "axios";
 
-export const logIn = async ({ dispatch }, credentials) => {
-	let response = await API.post("/user/login", credentials);
-	dispatch("attempt", response.data.access_token);
-};
-
-export const attempt = async ({ commit }, token) => {
-	commit("SET_TOKEN", token);
-
-	try {
-		console.log("token: ", token);
-		localStorage.setItem("My token", token);
-		commit("SET_LOGGED_IN_USER");
-	} catch (error) {
-		console.log(error.message);
-		commit("SET_TOKEN", null);
-		commit("SET_USER", null);
-	}
-};
-
-export const logOut = ({ commit }) => {
-	return API.post("/user/logout").then(() => {
-		commit("SET_TOKEN", null);
-		commit("SET_USER", null);
-		localStorage.removeItem("token");
+export const register = ({ commit }, credentials) => {
+	return API.post("/user/register", credentials).then(({ data }) => {
+		commit("SET_USER_DATA", data);
 	});
 };
 
-// export const logIn = async ({ dispatch }, credentials) => {
-// 	let response = await API.post("/login", credentials);
-// 	dispatch("attempt", response.data.accessToken);
-// };
+export const login = ({ commit }, credentials) => {
+	return API.post("/user/login", credentials).then(({ data }) => {
+		commit("SET_USER_DATA", data);
+	});
+};
 
-// export const attempt = async ({ commit, state }, token) => {
-// 	commit("SET_TOKEN", token);
-// 	try {
-// 		let response = await API.get("/users");
-// 		commit("SET_USER", response.data);
-// 		localStorage.setItem("token", token);
-// 	} catch (error) {
-// 		console.log(error.message);
-// 		commit("SET_TOKEN", null);
-// 		commit("SET_USER", null);
-// 	}
-// };
-
-// export const logOut = ({ commit }) => {
-// 	return API.post("/logout").then(() => {
-// 		commit("SET_TOKEN", null);
-// 		commit("SET_USER", null);
-// 		localStorage.removeItem("token");
-// 	});
-// };
+export const logout = ({ commit }) => {
+	commit("CLEAR_USER_DATA");
+};

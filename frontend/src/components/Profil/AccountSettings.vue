@@ -37,7 +37,7 @@
 						<img src="../../assets/profil.png" />
 					</q-avatar>
 
-					<div class="q-mt-md q-mb-xs">Hi {{ item.name }}</div>
+					<div class="q-mt-md q-mb-xs">Hi Brahim</div>
 
 					<q-btn
 						color="primary"
@@ -45,7 +45,7 @@
 						push
 						size="sm"
 						v-close-popup
-						@click.prevent="logOut"
+						@click.prevent="logout"
 					/>
 				</div>
 			</div>
@@ -61,11 +61,11 @@ export default {
 		const store = useStore();
 		const router = useRouter();
 		const authenticated = computed(() => {
-			return store.getters["auth/authenticated"];
+			return store.getters["auth/loggedIn"];
 		});
 
-		const logOut = () => {
-			store.dispatch("auth/logOut");
+		const logout = () => {
+			store.dispatch("auth/logout");
 			router.push("/login");
 		};
 
@@ -78,7 +78,7 @@ export default {
 		console.log("getName: ", getName.value);
 		return {
 			authenticated,
-			logOut,
+			logout,
 			getName,
 		};
 	},
