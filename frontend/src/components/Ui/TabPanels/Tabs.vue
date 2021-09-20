@@ -4,7 +4,6 @@
 			<q-card>
 				<q-tabs
 					v-model="tab"
-					dense
 					class="text-grey"
 					active-color="primary"
 					indicator-color="primary"
@@ -21,10 +20,24 @@
 
 				<q-tab-panels v-model="tab" animated>
 					<q-tab-panel name="tags">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum
-						dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit
-						isicing elit. Lorem ipsum dolor sit amet consectetur Lorem ipsum
-						dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit
+						<ul class="tags_default">
+							<li>Tag1</li>
+							<li>Tag2</li>
+							<li>Tag3</li>
+							<li>Tag4</li>
+							<li>Tag5</li>
+							<li>Tag6</li>
+							<li>Tag7</li>
+							<li>Tag8</li>
+							<li>Tag9</li>
+							<li>Tag10</li>
+							<li>Tag11</li>
+							<li>Tag12</li>
+							<li>Tag13</li>
+							<li>Tag14</li>
+							<li>Tag15</li>
+							<li>Tag16</li>
+						</ul>
 					</q-tab-panel>
 
 					<q-tab-panel name="team_members">
@@ -32,7 +45,6 @@
 					</q-tab-panel>
 
 					<q-tab-panel name="libraries">
-						<div class="text-h6">Movies</div>
 						Lorem ipsum dolor sit amet consectetur adipisicing elit.
 					</q-tab-panel>
 
@@ -57,3 +69,16 @@ export default {
 	},
 };
 </script>
+<style lang="sass" scoped>
+.tags_default
+  display: flex
+  justify-content: flex-start
+  flex-wrap: wrap
+  list-style: none
+  li
+    background: beige
+    padding: 8px 20px
+    border-radius: 12px
+    margin-top: 8px
+    margin-right: 8px
+</style>
