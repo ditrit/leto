@@ -8,7 +8,7 @@ export default function axiosSetUp() {
 	// point to your API endpoint
 	axios.defaults.baseURL = "http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/";
 	// Add a request interceptor
-	axios.interceptors.request.use(
+	API.interceptors.request.use(
 		function (config) {
 			// Do something before request is sent
 			const token = store.getters.accessToken;
@@ -24,7 +24,7 @@ export default function axiosSetUp() {
 	);
 
 	// Add a response interceptor
-	axios.interceptors.response.use(
+	API.interceptors.response.use(
 		function (response) {
 			// Any status code that lie within the range of 2xx cause this function to trigger
 			// Do something with response data

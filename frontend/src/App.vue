@@ -6,51 +6,28 @@
 	</router-view>
 </template>
 <script>
-import { defineComponent } from "vue";
-import store from "./store/index";
-import axios from "axios";
+import API from "./services/index";
 import { useStore } from "vuex";
 
-export default defineComponent({
+export default {
 	name: "App",
-	// created() {
-	// 	const userString = localStorage.getItem("user");
-	// 	if (userString) {
-	// 		const userData = userString;
-	// 		console.log("userData: ", userData);
-
-	// 		store().commit("auth/SET_USER_DATA", userData);
-	// 	}
-	// 	axios.interceptors.response.use(
-	// 		(response) => response,
-	// 		(error) => {
-	// 			if (error.response.status === 401) {
-	// 				store().dispatch("auth/logout");
-	// 			}
-	// 			return Promise.reject(error);
-	// 		}
-	// 	);
-	// },
 	setup() {
 		const store = useStore();
-		const userString = localStorage.getItem("user");
-		if (userString) {
-			const userData = userString;
-			console.log("userData: ", userData);
-			store.commit("auth/SET_USER_DATA", userData);
-		}
-		axios.interceptors.response.use(
-			(response) => response,
-			(error) => {
-				if (error.response.status === 401) {
-					store.dispatch("auth/logout");
-				}
-				return Promise.reject(error);
+		const refreshBrowser = () => {
+			const userString = localStorage.getItem("usser");
+			if (userString) {
+				const userData = userString;
+				console.log("userData: ", userData);
+				store.commit("auth/SET_USER_DATA", userData);
+				axios.defaults.headers.common["Authorization"] = `Bearer ${userData}`;
 			}
-		);
-		return { store };
+			API.interceptors.response.use((response) => response);
+		};
+		return {
+			refreshBrowser,
+		};
 	},
-});
+};
 </script>
 
 <style lang="sass">

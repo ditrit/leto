@@ -117,10 +117,12 @@ import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import Tabs from "../Ui/TabPanels/Tabs.vue";
+import getDataItems from "../../composables/getDataItems";
 
 export default {
 	components: { Tabs },
 	setup() {
+		// const { path, dataItems, error, fetchData } = getDataItems();
 		const store = useStore();
 		const name = ref("");
 		const teamParent = ref("");
@@ -136,6 +138,9 @@ export default {
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
 		}
+
+		// const getTeamParentList  = fetchData("http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/domain");
+		// options.value = getTeamParentList;
 
 		return {
 			step: ref(1),

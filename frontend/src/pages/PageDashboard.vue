@@ -9,7 +9,7 @@
 				:headline="item.headline"
 				:textContent="item.textContent"
 			/>
-			<!-- <button type="button" @click.prevent="logout">Logout</button> -->
+			<button type="button" @click.prevent="logout">Logout</button>
 			<ul>
 				<li v-for="(user, index) in users" :key="index">
 					<pre>{{ user }}</pre>

@@ -56,11 +56,12 @@ export default {
 		const store = useStore();
 		const email = ref(null);
 		const password = ref(null);
+		const error = ref(null);
 
 		return {
 			email,
 			password,
-			error: null,
+			error,
 			isPwd,
 
 			login() {
