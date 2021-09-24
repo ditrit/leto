@@ -14,7 +14,7 @@ API.interceptors.request.use((config) => {
 	axios.defaults.headers.common["Authorization"] = `Bearer ${userData}`;
 
 	// this.$store.commit("auth/SET_USER_DATA", userData);
-	params.append("Authorization", userData);
+	params.append("Authorization", `Bearer ${userData}`);
 	config.params = params;
 	return config;
 });
@@ -26,7 +26,7 @@ API.interceptors.response.use((config) => {
 	console.log("userData response : ", userData);
 	axios.defaults.headers.common["Authorization"] = `Bearer ${userData}`;
 	// this.$store.commit("auth/SET_USER_DATA", userData);
-	params.append("Authorization", userData);
+	params.append("Authorization", `Bearer ${userData}`);
 	config.params = params;
 	return config;
 });

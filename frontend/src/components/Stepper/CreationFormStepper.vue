@@ -117,18 +117,19 @@ import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import Tabs from "../Ui/TabPanels/Tabs.vue";
-import getDataItems from "../../composables/getDataItems";
+import axios from "axios";
 
 export default {
 	components: { Tabs },
 	setup() {
-		// const { path, dataItems, error, fetchData } = getDataItems();
 		const store = useStore();
 		const name = ref("");
 		const teamParent = ref("");
 		const shortDescription = ref("");
 		const description = ref("");
 		const test1 = ref("");
+		const options = ref([]);
+		const optionIds = ref([]);
 
 		const $q = useQuasar();
 		const text = ref("");
@@ -138,14 +139,26 @@ export default {
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
 		}
-
-		// const getTeamParentList  = fetchData("http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/domain");
-		// options.value = getTeamParentList;
-
+		const getOptions = async () => {
+			let response = await axios.get(
+				"http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/domain/"
+			);
+			let data = await response.data;
+			options.value = data.map((item) => {
+				return item.Name;
+			});
+			optionIds.value = data.map((item) => {
+				return item.ID;
+			});
+			console.log("options.value: ", options.value);
+		};
+		getOptions();
+		console.log("	getOptions();: ", getOptions.value);
 		return {
 			step: ref(1),
 			model: ref(null),
-			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
+			options,
+			optionIds,
 			onRejected,
 			text,
 			store,
