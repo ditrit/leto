@@ -28,7 +28,7 @@
 						<div class="col">
 							<q-select
 								filled
-								:options="options"
+								:options="optionsSelections.map((item) => item.name)"
 								label="Team Parent"
 								v-model="teamParent"
 							/>
@@ -113,11 +113,10 @@
 	</div>
 </template>
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import Tabs from "../Ui/TabPanels/Tabs.vue";
-import axios from "axios";
 
 export default {
 	components: { Tabs },
@@ -125,12 +124,10 @@ export default {
 		const store = useStore();
 		const name = ref("");
 		const teamParent = ref("");
+		const domainID = ref("");
 		const shortDescription = ref("");
 		const description = ref("");
-		const test1 = ref("");
-		const options = ref([]);
-		const optionIds = ref([]);
-
+		const optionsSelections = ref([]);
 		const $q = useQuasar();
 		const text = ref("");
 		function onRejected(rejectedEntries) {
@@ -139,26 +136,23 @@ export default {
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
 		}
-		const getOptions = async () => {
-			let response = await axios.get(
-				"http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/domain/"
-			);
-			let data = await response.data;
-			options.value = data.map((item) => {
-				return item.Name;
-			});
-			optionIds.value = data.map((item) => {
-				return item.ID;
-			});
-			console.log("options.value: ", options.value);
-		};
-		getOptions();
-		console.log("	getOptions();: ", getOptions.value);
+		const fetchData = () => store.dispatch("appDomain/fetchAllDomaines");
+		fetchData();
+		const allDomain = computed(() => store.getters["appDomain/allDomaines"]);
+		console.log("allDomain: ", allDomain.value);
+		optionsSelections.value = allDomain.value.map((payload) => {
+			return {
+				name: payload.Name,
+				id: payload.ID,
+			};
+		});
+
 		return {
 			step: ref(1),
 			model: ref(null),
-			options,
-			optionIds,
+			fetchData,
+			optionsSelections,
+			domainID,
 			onRejected,
 			text,
 			store,
@@ -166,15 +160,14 @@ export default {
 			teamParent,
 			shortDescription,
 			description,
-			test1,
 
 			onSubmit() {
 				const newDomain = {
+					id: 696888448809795585,
 					name: name.value,
 					teamParent: teamParent.value,
 					shortDescription: shortDescription.value,
 					description: description.value,
-					test1: test1.value,
 				};
 				store.dispatch("appDomain/addDomain", newDomain);
 				console.log(newDomain);

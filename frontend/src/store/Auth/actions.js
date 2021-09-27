@@ -14,5 +14,6 @@ export const login = ({ commit }, credentials) => {
 };
 
 export const logout = ({ commit }) => {
+	API.post("/user/logout");
 	commit("CLEAR_USER_DATA");
 };
