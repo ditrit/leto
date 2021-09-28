@@ -16,7 +16,6 @@
 			v-model="drawer"
 			@hide="makeMenuVisible"
 			show-if-above
-			@click.capture="drawerClick"
 			:width="250"
 			:breakpoint="500"
 			bordered
@@ -27,7 +26,7 @@
 					<q-input
 						v-model="search"
 						debounce="500"
-						placeholder="Search"
+						label="Search"
 						class="search_input q-mb-lg q-pa-md"
 					>
 						<template v-slot:append>
@@ -36,8 +35,13 @@
 					</q-input>
 				</div>
 			</div>
-			<q-list v-for="item in filterdSidebarItem" :key="item.id">
-				<q-expansion-item
+			<q-list>
+				<template v-for="item in filterdSidebarItem" :key="item.id">
+					<q-item clickable @click="addItem(item)">
+						<q-item-label>{{item.name}}</q-item-label>
+					</q-item>
+				</template>
+				<!--<q-expansion-item
 					group="somegroup"
 					:icon="item.icon"
 					:label="item.caption"
@@ -60,14 +64,14 @@
 							child.caption
 						}}</q-item-section>
 					</q-item>
-				</q-expansion-item>
-				<q-sepaartor />
+				</q-expansion-item>-->
+				<q-separator />
 			</q-list>
 		</q-drawer>
 
 		<q-page-container>
 			<q-page class="">
-				<ModelEdit />
+				<ModelEdit :items="items" />
 			</q-page>
 		</q-page-container>
 	</q-layout>
@@ -81,23 +85,59 @@ import ModelEdit from "../components/3dModals/ModelEdit.vue";
 export default {
 	components: { ModelEdit },
 	setup() {
-		const { path, dataItems, error, fetchData } = getDataItems();
-		fetchData("http://localhost:3000/modelSideBar");
+		/*const { path, dataItems, error, fetchData } = getDataItems();
+		fetchData("http://localhost:3000/modelSideBar");*/
+		//TODO: clarify data model and storage
+		const dataItems = {
+			'root' : { 'name': 'root', 'derivedFrom' : '', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
+			'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': ['router']} },
+			'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'print.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'menu.webp', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'dns.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'mail.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'web.jpg', 'capacities': {'nestedOn': [], 'linkedTo': ['database']}, 'requirements': {'nestedOn': [''], 'linkedTo': ['apache', 'php']} },
+			'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#8288a1', 'logo' : 'servBDD.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+			'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
+			'router': { 'name': 'router', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#19bfba', 'logo' : 'wifi.png', 'capacities': {'nestedOn': [], 'linkedTo': ['serveur']}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'apache': { 'name': 'apache', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#a82b18', 'logo' : 'apache.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+			'php': { 'name': 'php', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#3065ba', 'logo' : 'php.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+			'database': { 'name': 'database', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#db852a', 'logo' : 'db.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+			'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} }
+		};
 		const search = ref("");
+		const items = ref([])
 		const filterdSidebarItem = computed(() => {
-			return dataItems.value.filter((item) =>
+			return Object.keys(dataItems).map(i => ({...dataItems[i],type: i}))
+				.filter((item) =>
+					item.name.toLowerCase().match(search.value.toLowerCase()))
+			/*return dataItems.keys().filter((item) =>
 				item.caption.toLowerCase().match(search.value.toLowerCase())
-			);
+			);*/
 		});
 
 		return {
 			drawer: ref(false),
 			search,
-			error,
-			path,
+			items,
+			//error,
+			//path,
 			filterdSidebarItem,
 		};
 	},
+	methods: {
+		createKey() {
+			return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		},
+		addItem(item) {
+			const newItem = JSON.parse(JSON.stringify(item))
+			newItem.id = this.createKey()
+			console.log('adding item', newItem)
+
+			this.items.push(newItem)
+		}
+	}
 };
 </script>
 

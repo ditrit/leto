@@ -6,9 +6,14 @@
 
 <script>
 const Three = require("three");
+import {Renderer} from 'src/3DRenderer/Renderer'
+import {Item} from 'src/3DRenderer/components/Item'
 
 export default {
   name: "ThreeTest",
+	props: {
+  	items: Array
+	},
   data() {
     return {};
   },
@@ -17,11 +22,16 @@ export default {
     this.animate();
   },
 
+
+
   methods: {
     init: function () {
-      let container = document.getElementById("container");
+      const container = document.getElementById("container");
+      this.renderer = new Renderer(container)
 
-      this.camera = new Three.PerspectiveCamera(
+			this.renderer.render()
+
+      /*this.camera = new Three.PerspectiveCamera(
         70,
         container.clientWidth / container.clientHeight,
         0.01,
@@ -39,15 +49,37 @@ export default {
 
       this.renderer = new Three.WebGLRenderer({ antialias: true });
       this.renderer.setSize(container.clientWidth, container.clientHeight);
-      container.appendChild(this.renderer.domElement);
+      container.appendChild(this.renderer.domElement);*/
     },
     animate: function () {
-      requestAnimationFrame(this.animate);
-      this.mesh.rotation.x += 0.01;
-      this.mesh.rotation.y += 0.02;
-      this.renderer.render(this.scene, this.camera);
-    },
+			requestAnimationFrame(this.animate);
+
+			this.renderer.render()
+
+
+		},
   },
+	watch: {
+		items: {
+			deep: true,
+			handler() {
+				console.log('items updated')
+				if (!this.localItems)
+					this.localItems = []
+				for (let item of this.items) {
+					const localIndex = this.localItems.findIndex(i => i.id === item.id)
+					if (localIndex === -1) {
+						console.log('new item')
+						const newItem = new Item(item)
+						this.localItems.push(newItem)
+						this.renderer.addItem(newItem)
+					} else {
+						//TODO: handle item update
+					}
+				}
+			}
+		},
+	},
 };
 </script>
 
