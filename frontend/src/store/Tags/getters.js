@@ -1,1 +1,1 @@
-export const allDomaines = (state) => state.domains;
+export const allTags = (state) => state.tags;

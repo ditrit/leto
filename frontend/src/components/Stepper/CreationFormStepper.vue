@@ -28,7 +28,7 @@
 						<div class="col">
 							<q-select
 								filled
-								:options="optionsSelections.map((item) => item.name)"
+								:options="options"
 								label="Team Parent"
 								v-model="teamParent"
 							/>
@@ -70,7 +70,12 @@
 				</q-step>
 
 				<q-step :name="2" prefix="2" title="">
-					<Tabs />
+					<Tabs
+						:allTags="tags"
+						:teamMembers="teamMembers"
+						:teamLibraries="teamLibraries"
+						:teamEnvironnements="teamEnvironnements"
+					/>
 				</q-step>
 
 				<q-step :name="3" prefix="3" title="">
@@ -120,6 +125,7 @@ import Tabs from "../Ui/TabPanels/Tabs.vue";
 
 export default {
 	components: { Tabs },
+
 	setup() {
 		const store = useStore();
 		const name = ref("");
@@ -128,41 +134,182 @@ export default {
 		const shortDescription = ref("");
 		const description = ref("");
 		const optionsSelections = ref([]);
+		const options = ref([]);
+		const tags = ref([]);
 		const $q = useQuasar();
 		const text = ref("");
+		const teamMembers = ref([
+			{
+				id: 0,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Brahim",
+				role: "Admin",
+				description: "Ceci est une description",
+			},
+			{
+				id: 1,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Sabine",
+				role: "Dev",
+				description: "Ceci est une description",
+			},
+			{
+				id: 2,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Sophia",
+				role: "DevOps",
+				description: "Ceci est une description",
+			},
+			{
+				id: 3,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Gabriel",
+				role: "DevOps",
+				description: "Ceci est une description",
+			},
+			{
+				id: 4,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Anouk",
+				role: "DevOps",
+				description: "Ceci est une description",
+			},
+		]);
+
+		const teamLibraries = ref([
+			{
+				id: 0,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Library 1",
+				description: "Ceci est une description",
+			},
+			{
+				id: 1,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Library 2",
+				description: "Ceci est une description",
+			},
+			{
+				id: 2,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Library 3",
+				description: "Ceci est une description",
+			},
+			{
+				id: 3,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Library 4",
+				description: "Ceci est une description",
+			},
+			{
+				id: 4,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Library 5",
+				description: "Ceci est une description",
+			},
+			{
+				id: 5,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Library 6",
+				description: "Ceci est une long description",
+			},
+		]);
+		const teamEnvironnements = ref([
+			{
+				id: 0,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Env 1",
+				description: "Ceci est une description",
+			},
+			{
+				id: 1,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Env 2",
+				description: "Ceci est une description",
+			},
+			{
+				id: 2,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Env 3",
+				description: "Ceci est une description",
+			},
+			{
+				id: 3,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Env 4",
+				description: "Ceci est une description",
+			},
+			{
+				id: 4,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Env 5",
+				description: "Ceci est une description",
+			},
+			{
+				id: 5,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Env 6",
+				description: "Ceci est une long description",
+			},
+			{
+				id: 6,
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				name: "Env 7",
+				description: "Ceci est une long description",
+			},
+		]);
+
 		function onRejected(rejectedEntries) {
 			$q.notify({
 				type: "negative",
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
 		}
-		const fetchData = () => store.dispatch("appDomain/fetchAllDomaines");
-		fetchData();
+		/**
+		 * TODO
+		 * 	1 - regroupe functions by thematique
+		 */
+		const fetchTeams = store.dispatch("appTeams/fetchAllTeams");
+		const fetchTags = store.dispatch("appTags/fetchAllTags");
 
-		const allDomain = computed(() => store.getters["appDomain/allDomaines"]);
-		console.log("allDomain: ", allDomain.value);
+		const allTeams = computed(() => store.getters["appTeams/allTeams"]);
+		console.log("allTeams: ", allTeams.value);
 
-		optionsSelections.value = allDomain.value.map((payload) => {
+		const getTagsNames = async () => {
+			const allTags = await store.getters["appTags/allTags"];
+			const data = await allTags.map((tag) => tag.Name);
+			return (tags.value = data);
+		};
+		getTagsNames();
+
+		optionsSelections.value = allTeams.value.map((payload) => {
 			return {
 				name: payload.Name,
 				id: payload.ID,
 				parentId: payload.ParentID,
 			};
 		});
+		options.value = optionsSelections.value.map((item) => item.name);
+
 		const getTeamParentId = () => {
 			const obj = Object.values(optionsSelections.value);
-			console.log("obj: ", obj);
-			let parentId = obj.find((item) => item.name === teamParent.value);
-			console.log("parentId: ", parentId);
-			return (domainID.value = parentId.parentId);
+			let findId = obj.find((item) => item.name === teamParent.value);
+			console.log("parentId: ", findId);
+			return (domainID.value = findId.parentId);
 		};
 
 		return {
 			step: ref(1),
 			model: ref(null),
-
+			fetchTeams,
+			fetchTags,
 			optionsSelections,
+			options,
 			domainID,
+			tags,
+			teamMembers,
+			teamLibraries,
+			teamEnvironnements,
 			onRejected,
 			text,
 			store,
@@ -173,13 +320,14 @@ export default {
 
 			onSubmit() {
 				const newDomain = {
-					id: getTeamParentId(),
+					pid: getTeamParentId(),
 					name: name.value,
 					teamParent: teamParent.value,
 					shortDescription: shortDescription.value,
 					description: description.value,
+					tags: tags.value,
 				};
-				store.dispatch("appDomain/addDomain", newDomain);
+				store.dispatch("appTeams/addTeam", newDomain);
 				console.log(newDomain);
 				$q.notify({
 					type: "positive",

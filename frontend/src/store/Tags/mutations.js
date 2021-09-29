@@ -1,17 +1,15 @@
-export const GET_DOMAINS = (state, domains) => (state.domains = domains);
+export const GET_TAGS = (state, tags) => (state.tags = tags);
 
-export const GET_DOMAIN_BY_ID = (state, id) => {
-	const index = state.domains.findIndex((domain) => domain.id === id);
-	state.domains.splice(index, 1, id);
+export const GET_TAG_BY_ID = (state, id) => {
+	const index = state.tags.findIndex((tag) => tag.id === id);
+	state.tags.splice(index, 1, id);
 };
 
-export const NEW_DOMAIN = (state, domain) => state.domains.unshift(domain);
+export const NEW_TAG = (state, tag) => state.tags.unshift(tag);
 
-export const UPDATE_DOMAIN = (state, updatedDomain) => {
-	const index = state.domains.findIndex(
-		(domain) => domain.id === updatedDomain
-	);
-	state.domains.splice(index, 1, updatedDomain);
+export const UPDATE_TAG = (state, updatedTag) => {
+	const index = state.tags.findIndex((tag) => tag.id === updatedTag);
+	state.tags.splice(index, 1, updatedTag);
 };
-export const DELETE_DOMAIN = (state, domainIid) =>
-	(state.domains = state.domains.filter((domain) => domain.id !== domainIid));
+export const DELETE_TAG = (state, tagIid) =>
+	(state.tags = state.tags.filter((tag) => tag.id !== tagIid));

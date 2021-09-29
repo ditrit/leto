@@ -4,7 +4,9 @@ import { createStore } from "vuex";
 // import createPersistedState from "vuex-persistedstate";
 import auth from "./Auth/index";
 import appUsers from "./Users/index";
-import appDomain from "./Domain/index";
+import appDomain from "./Domains/index";
+import appTags from "./Tags/index";
+import appTeams from "./Teams/index";
 
 /*
  * If not building with SSR mode, you can
@@ -21,11 +23,9 @@ export default store(function (/* { ssrContext } */) {
 			auth,
 			appUsers,
 			appDomain,
+			appTeams,
+			appTags,
 		},
-		// plugins: [createPersistedState()],
-
-		// enable strict mode (adds overhead!)
-		// for dev mode and --debug builds only
 		strict: process.env.DEBUGGING,
 	});
 
