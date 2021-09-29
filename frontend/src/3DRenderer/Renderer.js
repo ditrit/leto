@@ -5,6 +5,9 @@ import { createScene } from './components/scene.js';
 import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import {createAmbientLight} from "src/3DRenderer/components/ambientLight";
+import {createGridHelper} from "src/3DRenderer/components/gridHelper";
+import {Grid} from "src/3DRenderer/systems/Grid";
+
 import {Item} from "src/3DRenderer/components/Item";
 import {CameraController} from "src/3DRenderer/systems/CameraController";
 
@@ -21,6 +24,8 @@ class Renderer {
 		container.append(this.renderer.domElement)
 		const ambientLight = createAmbientLight()
 		this.scene.add(ambientLight)
+		const gridHelper = createGridHelper
+		this.scene.add(gridHelper())
 	//	this.addItem(new Item({}))
 
 		//const cube = createCube();
@@ -36,6 +41,7 @@ class Renderer {
 		const newSceneItem = item.create3DItem()
 		this.scene.add(newSceneItem)
 		this.items.push(newSceneItem)
+		this.grid = new Grid(this.items)
 
 	}
 }

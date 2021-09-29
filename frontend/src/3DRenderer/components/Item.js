@@ -24,7 +24,7 @@ class Item {
 		ctx.font = '70pt Calibri';
 		ctx.textAlign = 'left';
 		ctx.fillStyle = '#FFFFFF';
-		ctx.fillText(this.name, (height/3)+10, height/6, width-(height/3)-120);
+		ctx.fillText(this.type, (height/3)+10, height/6, width-(height/3)-120);
 		// Label Name
 		ctx.font = '90pt Calibri';
 		ctx.textAlign = 'center';
