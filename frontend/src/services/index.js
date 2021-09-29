@@ -10,8 +10,8 @@ API.interceptors.request.use((config) => {
 	const userString = localStorage.getItem("user");
 
 	const userData = userString;
-	console.log("userData requiste : ", userData);
-	// axios.defaults.headers.common["Authorization"] = `Bearer ${userData}`;
+	// console.log("userData requiste : ", userData);
+	axios.defaults.headers.common["Authorization"] = `Bearer ${userData}`;
 	config.headers.Authorization = `Bearer ${userData}`;
 	// store.commit("auth/SET_USER_DATA", userData);
 	params.append("Authorization", `Bearer ${userData}`);
@@ -23,7 +23,7 @@ API.interceptors.response.use((config) => {
 	const userString = localStorage.getItem("user");
 
 	const userData = userString;
-	console.log("userData response : ", userData);
+	// console.log("userData response : ", userData);
 	axios.defaults.headers.common["Authorization"] = `Bearer ${userData}`;
 	// this.$store.commit("auth/SET_USER_DATA", userData);
 	config.headers.Authorization = `Bearer ${userData}`;

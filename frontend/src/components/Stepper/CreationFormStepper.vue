@@ -138,19 +138,29 @@ export default {
 		}
 		const fetchData = () => store.dispatch("appDomain/fetchAllDomaines");
 		fetchData();
+
 		const allDomain = computed(() => store.getters["appDomain/allDomaines"]);
 		console.log("allDomain: ", allDomain.value);
+
 		optionsSelections.value = allDomain.value.map((payload) => {
 			return {
 				name: payload.Name,
 				id: payload.ID,
+				parentId: payload.ParentID,
 			};
 		});
+		const getTeamParentId = () => {
+			const obj = Object.values(optionsSelections.value);
+			console.log("obj: ", obj);
+			let parentId = obj.find((item) => item.name === teamParent.value);
+			console.log("parentId: ", parentId);
+			return (domainID.value = parentId.parentId);
+		};
 
 		return {
 			step: ref(1),
 			model: ref(null),
-			fetchData,
+
 			optionsSelections,
 			domainID,
 			onRejected,
@@ -163,7 +173,7 @@ export default {
 
 			onSubmit() {
 				const newDomain = {
-					id: 696888448809795585,
+					id: getTeamParentId(),
 					name: name.value,
 					teamParent: teamParent.value,
 					shortDescription: shortDescription.value,
