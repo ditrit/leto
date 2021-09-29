@@ -6,6 +6,7 @@ import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import {createAmbientLight} from "src/3DRenderer/components/ambientLight";
 import {Item} from "src/3DRenderer/components/Item";
+import {CameraController} from "src/3DRenderer/systems/CameraController";
 
 
 class Renderer {
@@ -13,7 +14,7 @@ class Renderer {
 		this.camera = createCamera( 70,
 			container.clientWidth / container.clientHeight,
 			0.01,
-			10);
+			100);
 		this.scene = createScene();
 		this.renderer = createRenderer();
 		this.items = []
@@ -25,6 +26,7 @@ class Renderer {
 		//const cube = createCube();
 	//	this.scene.add(cube)
 		const resizer = new Resizer(container, this.camera, this.renderer)
+		const cameraController = new CameraController(this.camera, this.renderer.domElement)
 	}
 	render() {
 		this.renderer.render(this.scene, this.camera);
