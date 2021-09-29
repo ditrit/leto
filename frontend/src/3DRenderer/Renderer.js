@@ -16,6 +16,7 @@ class Renderer {
 			10);
 		this.scene = createScene();
 		this.renderer = createRenderer();
+		this.items = []
 		container.append(this.renderer.domElement)
 		const ambientLight = createAmbientLight()
 		this.scene.add(ambientLight)
@@ -32,7 +33,7 @@ class Renderer {
 		console.log('renderer add item', item)
 		const newSceneItem = item.create3DItem()
 		this.scene.add(newSceneItem)
-//		this.render()
+		this.items.push(newSceneItem)
 
 	}
 }
