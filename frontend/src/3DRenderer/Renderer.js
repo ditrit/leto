@@ -4,6 +4,7 @@ import { createScene } from './components/scene.js';
 
 import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
+import {createAmbientLight} from "src/3DRenderer/components/ambientLight";
 import {Item} from "src/3DRenderer/components/Item";
 
 
@@ -16,6 +17,8 @@ class Renderer {
 		this.scene = createScene();
 		this.renderer = createRenderer();
 		container.append(this.renderer.domElement)
+		const ambientLight = createAmbientLight()
+		this.scene.add(ambientLight)
 	//	this.addItem(new Item({}))
 
 		//const cube = createCube();
