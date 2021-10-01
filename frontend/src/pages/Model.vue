@@ -70,9 +70,21 @@
 		</q-drawer>
 
 		<q-page-container>
-			<q-page class="">
-				<ModelEdit :items="items" />
-			</q-page>
+			<div class="row">
+				<div class="col-6">
+					<ModelEdit :items="items" />
+				</div>
+				<div class="col-2"></div>
+				<div class="col4">
+					<template :key="item.id" v-for="item in items">
+						<q-card >
+							<q-card-section>
+								<q-input :color="item.color" v-model="item.name"></q-input>
+							</q-card-section>
+						</q-card>
+					</template>
+				</div>
+			</div>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -143,16 +155,16 @@ export default {
 
 <style lang="sass" scoped>
 .global
-  width: 100%
-  height: 100%
-  overflow: hidden
-  min-height: 1200px
+	width: 100%
+	height: 100%
+	overflow: hidden
+	min-height: 1200px
 .menuStyle
-  background: #eeeeee
-  border-radius: 0
-  margin-top: -16px
+	background: #eeeeee
+	border-radius: 0
+	margin-top: -16px
 .hiddenMenu
-  transform: translateX(238px)
+	transform: translateX(238px)
 .visibleMenu
-  transform: translateX(-14px)
+	transform: translateX(-14px)
 </style>

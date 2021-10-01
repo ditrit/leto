@@ -74,7 +74,9 @@ export default {
 						this.localItems.push(newItem)
 						this.renderer.addItem(newItem)
 					} else {
-						//TODO: handle item update
+						console.log('update item')
+						Object.assign(this.localItems[localIndex], item)
+						this.renderer.updateItem(item)
 					}
 				}
 			}
@@ -85,8 +87,7 @@ export default {
 
 <style lang="sass" scoped>
 .wrapper
-  max-width: 1400px
-  height: 997px
+  height: 70vh
   margin-top: 0px
 
 #container

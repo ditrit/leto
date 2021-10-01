@@ -34,15 +34,22 @@ class Renderer {
 		const cameraController = new CameraController(this.camera, this.renderer.domElement)
 	}
 	render() {
+		//console.log('rendering', this.scene, this.camera)
 		this.renderer.render(this.scene, this.camera);
 	}
 	addItem(item) {
 		console.log('renderer add item', item)
-		const newSceneItem = item.create3DItem()
-		this.scene.add(newSceneItem)
-		this.items.push(newSceneItem)
+		item.create3DItem()
+		this.scene.add(item.threeObj)
+		this.items.push(item)
 		this.grid = new Grid(this.items)
-
+	}
+	updateItem(item) {
+		const rendererItem = this.items.find(i => i.id === item.id)
+		if (!rendererItem)
+			return this.addItem(item)
+		rendererItem.update(item)
+		console.log('render scene', this.scene)
 	}
 }
 

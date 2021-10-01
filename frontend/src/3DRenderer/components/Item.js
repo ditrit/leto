@@ -3,17 +3,22 @@ import {BoxBufferGeometry, Mesh,BoxGeometry, MeshBasicMaterial, CanvasTexture, M
 class Item {
 	constructor(params) {
 		Object.assign(this, params)
+		const width = this.width * 500;
+		const height = this.height *500;
 		this.links = []
+		this.canvas = document.createElement('canvas');
+		this.canvas.width  = width;
+		this.canvas.height = height;
+		this.updateCanvas()
 	}
-	generateTexture() {
+	updateCanvas() {
 		const width = this.width * 500;
 		const height = this.height *500;
 		console.log('item color', this.color)
+		console.log('item name', this.name)
 
-		const canvas = document.createElement('canvas');
-		canvas.width  = width;
-		canvas.height = height;
-		const ctx = canvas.getContext("2d");
+
+		const ctx = this.canvas.getContext("2d");
 		// Background
 		ctx.beginPath();
 		ctx.rect(0, 0, width, height);
@@ -35,17 +40,12 @@ class Item {
 		ctx.fillStyle = this.color;
 		ctx.fill();
 		ctx.closePath();
-		const texture = new CanvasTexture(canvas);
+	}
+	generateTexture() {
 
-		const material = [
-			new MeshStandardMaterial({ map: texture }),	// Right side
-			new MeshStandardMaterial({ map: texture }),	// Left side
-			new MeshStandardMaterial({ color: this.color }),	// Top side
-			new MeshStandardMaterial({ color: this.color }),	// Bottom side
-			new MeshStandardMaterial({ map: texture }),	// Front side
-			new MeshStandardMaterial({ map: texture })	// Back side
-		];
-		return material
+		const texture = new CanvasTexture(this.canvas);
+
+		return texture
 		// Logo - disabled for now
 		/*const img = new Image();   // Crée un nouvel élément Image
 		img.addEventListener('load', function() {
@@ -60,6 +60,17 @@ class Item {
 		}, false);
 		img.src = './public/textures/logos/'+logo;*/
 	}
+	generateMaterial() {
+		const material = [
+			new MeshStandardMaterial({ map: this.texture }),	// Right side
+			new MeshStandardMaterial({ map: this.texture }),	// Left side
+			new MeshStandardMaterial({ color: this.color }),	// Top side
+			new MeshStandardMaterial({ color: this.color }),	// Bottom side
+			new MeshStandardMaterial({ map: this.texture }),	// Front side
+			new MeshStandardMaterial({ map: this.texture })	// Back side
+		];
+		return material
+	}
 	generateComponent(material) {
 
 		const finalObject = new Group()
@@ -70,9 +81,18 @@ class Item {
 		return finalObject
 
 	}
+	update(newData) {
+		Object.assign(this, newData)
+		this.updateCanvas()
+		this.texture.needsUpdate = true
+		//this.threeObj.material
+	}
 	create3DItem() {
-		const material = this.generateTexture();
-		return this.generateComponent(material)
+		this.texture = this.generateTexture()
+		const material = this.generateMaterial();
+
+		this.threeObj =  this.generateComponent(material)
+		return this.threeObj
 
 	}
 }

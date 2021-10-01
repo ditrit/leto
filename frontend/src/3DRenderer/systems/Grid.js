@@ -24,8 +24,8 @@ class Grid {
 		console.log('freeColumnIndex', freeColumnIndex)
 		const freeSlotIndex = this.grid[freeColumnIndex].findIndex(s => !s)
 		this.grid[freeColumnIndex][freeSlotIndex] = item
-		item.position.x = freeColumnIndex * (this.cellWidth + GRID_SPACING)
-		item.position.z = freeSlotIndex * (this.cellDepth + GRID_SPACING)
+		item.threeObj.position.x = freeColumnIndex * (this.cellWidth + GRID_SPACING)
+		item.threeObj.position.z = freeSlotIndex * (this.cellDepth + GRID_SPACING)
 	}
 	update() {
 
