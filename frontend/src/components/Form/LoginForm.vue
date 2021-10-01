@@ -36,7 +36,7 @@
 			<router-link to="/register">
 				Don't have an account? Register.
 			</router-link>
-			<p>{{ error }}</p>
+			<p class="text-red">{{ error }}</p>
 		</q-form>
 	</div>
 </template>
@@ -70,6 +70,7 @@ export default {
 					password: password.value,
 				};
 
+				console.log("newUser: ", newUser);
 				store
 					.dispatch("auth/login", newUser)
 					.then(() => {
@@ -78,6 +79,7 @@ export default {
 					.catch((err) => {
 						error.value = err.response.data.error;
 					});
+				store.dispatch("auth/currentUser", newUser);
 
 				$q.notify({
 					color: "green-4",

@@ -9,6 +9,12 @@
 				:headline="item.headline"
 				:textContent="item.textContent"
 			/>
+			<ul v-if="user">
+				<li v-for="element in currentuser" :key="element.ID">
+					{{ element.Name }} {{ element.Email }}
+				</li>
+			</ul>
+			<h2 v-if="!user">You are not logged in</h2>
 			<button type="button" @click.prevent="logout">Logout</button>
 			<ul>
 				<li v-for="(user, index) in users" :key="index">
@@ -22,7 +28,7 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex";
-import axios from "axios";
+import API from "../services/index";
 import AjaxBar from "../components/Progress/AjaxBar.vue";
 import getDataItems from "../composables/getDataItems";
 import PageContent from "../components/Content/PageContent.vue";
@@ -32,27 +38,37 @@ export default {
 	setup() {
 		const store = useStore();
 		const users = ref([]);
+		const user = ref(null);
+		const currentuser = ref([]);
+		user.value = store.getters["auth/user"];
+		console.log("user: ", user.value);
 
 		const { path, dataItems, error, fetchData } = getDataItems();
 		const data = fetchData("http://localhost:3000/dashboard");
 		dataItems.value = data;
 
 		const getUsers = async () => {
-			const response = await axios.get(
-				"http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/user/"
-			);
+			const response = await API.get("/user");
 			users.value = response.data;
+			currentuser.value = users.value.filter(
+				(item) => item.Email === user.value.email
+			);
+			console.log("currentuser ", currentuser.value);
 		};
 		const logout = () => {
 			store.dispatch("auth/logout");
 		};
+
 		getUsers();
+
 		return {
 			progress: dataItems.length,
 			path,
 			dataItems,
 			error,
+			user,
 			users,
+			currentuser,
 			store,
 			logout,
 		};
