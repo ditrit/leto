@@ -1,7 +1,7 @@
 <template>
-	<div class="q-pa-md" style="width: 400px">
+	<div class="q-pa-md text-center" style="width: 400px">
 		<Headline6>Login</Headline6>
-		<q-form @submit.prevent="login" class="q-gutter-md">
+		<q-form @submit.prevent="login" class="q-gutter-sm">
 			<q-input
 				filled
 				v-model="email"
@@ -33,7 +33,7 @@
 					padding="lg"
 				/>
 			</div>
-			<router-link to="/register">
+			<router-link to="/register" class="block text-grey-6">
 				Don't have an account? Register.
 			</router-link>
 			<p class="text-red">{{ error }}</p>

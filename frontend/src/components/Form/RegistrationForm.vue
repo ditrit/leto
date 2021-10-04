@@ -1,26 +1,40 @@
 <template>
-	<div class="q-pa-md" style="width: 400px">
+	<div class="q-pa-md text-center" style="width: 400px">
 		<Headline6>Register</Headline6>
-		<q-form @submit.prevent="register" class="q-gutter-md">
+		<q-form @submit.prevent="register" class="q-gutter-sm">
 			<q-input
 				filled
-				v-model="name"
-				label="Enter your Name *"
+				v-model="firstName"
+				label="First Name *"
 				lazy-rules
-				:rules="[(val) => (val && val.length > 0) || 'Please type something']"
+				:rules="[
+					(val) =>
+						(val && val.length > 2) || 'Please type minimum 3 characters',
+				]"
+			/>
+			<q-input
+				filled
+				v-model="secondName"
+				label="Second Name *"
+				lazy-rules
+				:rules="[
+					(val) =>
+						(val && val.length > 2) || 'Please type minimum 3 characters',
+				]"
 			/>
 			<q-input
 				filled
 				v-model="email"
-				label="Enter your Email *"
+				label="Email *"
 				lazy-rules
-				:rules="[(val) => !!val || 'Email is missing']"
+				:rules="[(val) => !!val || 'Email is missing', emailValidation]"
 			/>
 			<q-input
-				label="Enter your Password *"
+				label="Password *"
 				v-model="password"
 				filled
 				:type="isPwd ? 'password' : 'text'"
+				:rules="[(val) => val.length >= 8 || 'Please use minimum 8 characters']"
 			>
 				<template v-slot:append>
 					<q-icon
@@ -40,7 +54,9 @@
 					padding="lg"
 				/>
 			</div>
-			<router-link to="/login"> Already have an account? Login. </router-link>
+			<router-link to="/login" class="block text-grey-6">
+				Already have an account? Login.
+			</router-link>
 			<ul>
 				<li v-for="(error, index) in errors" :key="index">
 					{{ error }}
@@ -55,6 +71,7 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Headline6 from "../Ui/Headlines/Headline6.vue";
+import { emailValidation } from "../../common";
 
 export default {
 	components: { Headline6 },
@@ -62,28 +79,26 @@ export default {
 		const router = useRouter();
 		const $q = useQuasar();
 		const store = useStore();
-		const name = ref(null);
+		const firstName = ref(null);
+		const secondName = ref(null);
 		const email = ref(null);
 		const password = ref(null);
 		const errors = ref(null);
 		const isPwd = ref(false);
 
 		return {
-			name,
+			firstName,
+			secondName,
 			email,
 			password,
 			errors,
 			isPwd,
+			emailValidation,
 
 			register() {
-				$q.notify({
-					color: "green-4",
-					textColor: "white",
-					icon: "cloud_done",
-					message: "Submitted successfully",
-				});
 				const newUser = {
-					name: name.value,
+					firstName: firstName.value,
+					secondName: secondName.value,
 					email: email.value,
 					password: password.value,
 				};
@@ -92,13 +107,23 @@ export default {
 					.then(() => {
 						router.push("/login");
 					})
+					.then(() => {
+						$q.notify({
+							color: "green-4",
+							textColor: "white",
+							icon: "cloud_done",
+							message: "Submitted successfully",
+						});
+					})
 					.catch((err) => {
 						errors.value = err.response.data.errors;
+						$q.notify({
+							color: "red-4",
+							textColor: "white",
+							icon: "error",
+							message: errors.value,
+						});
 					});
-
-				name.value = null;
-				email.value = null;
-				password.value = null;
 			},
 		};
 	},

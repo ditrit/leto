@@ -11,7 +11,8 @@
 			/>
 			<ul v-if="user">
 				<li v-for="element in currentuser" :key="element.ID">
-					{{ element.Name }} {{ element.Email }}
+					{{ element.FirstName }} {{ element.SecondName }}
+					<div>{{ element.Email }}</div>
 				</li>
 			</ul>
 			<h2 v-if="!user">You are not logged in</h2>

@@ -1,5 +1,4 @@
 import API from "../../services/index";
-import axios from "axios";
 
 export const register = ({ commit }, credentials) => {
 	API.post("/user/register", credentials)
