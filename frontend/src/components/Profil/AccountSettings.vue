@@ -4,12 +4,12 @@
 			<q-item-section>
 				<q-avatar round size="40px">
 					<img src="../../assets/profil.png" />
-					<q-badge floating rounded color="orange">4</q-badge>
+					<!-- <q-badge floating rounded color="orange">4</q-badge> -->
 				</q-avatar>
 			</q-item-section>
 		</q-item>
 		<q-menu>
-			<div class="row no-wrap q-pa-sm">
+			<div class="row no-wrap q-pa-md">
 				<q-list separator>
 					<q-item clickable v-ripple>
 						<q-item-section>Link One</q-item-section>
@@ -24,7 +24,6 @@
 
 					<q-item clickable v-ripple>
 						<q-item-section>
-							<q-item-label overline>OVERLINE</q-item-label>
 							<q-item-label>Link Three</q-item-label>
 						</q-item-section>
 					</q-item>
@@ -32,18 +31,20 @@
 
 				<q-separator vertical inset class="q-mx-lg" />
 
-				<div class="column" v-for="item in authenticated" :key="item.id">
+				<div class="column" v-if="user">
 					<q-avatar size="72px">
 						<img src="../../assets/profil.png" />
 					</q-avatar>
 
-					<div class="q-mt-md q-mb-xs">Hi Brahim</div>
+					<div class="q-mt-md q-mb-xs">
+						Hi, {{ user.FirstName }} {{ user.LastName }}
+					</div>
 
 					<q-btn
 						color="primary"
 						label="Logout"
 						push
-						size="sm"
+						size="md"
 						v-close-popup
 						@click.prevent="logout"
 					/>
@@ -53,33 +54,25 @@
 	</div>
 </template>
 <script>
-import { computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 export default {
 	setup() {
 		const store = useStore();
 		const router = useRouter();
-		const authenticated = computed(() => {
-			return store.getters["auth/loggedIn"];
-		});
+
+		const user = ref(null);
+		user.value = store.getters["auth/user"];
 
 		const logout = () => {
 			store.dispatch("auth/logout");
 			router.push("/login");
 		};
 
-		const getName = () => {
-			let name = Object.values(authenticated.value);
-			return name;
-		};
-
-		console.log(authenticated.value);
-		console.log("getName: ", getName.value);
 		return {
-			authenticated,
+			user,
 			logout,
-			getName,
 		};
 	},
 };

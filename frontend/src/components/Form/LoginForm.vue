@@ -78,8 +78,9 @@ export default {
 					})
 					.catch((err) => {
 						error.value = err.response.data.error;
+						console.log("	error.value : ", error.value);
 					});
-				store.dispatch("auth/currentUser", newUser);
+				store.dispatch("auth/currentUser");
 
 				$q.notify({
 					color: "green-4",
@@ -87,9 +88,6 @@ export default {
 					icon: "cloud_done",
 					message: "Submitted successfully",
 				});
-
-				// email.value = "";
-				// password.value = "";
 			},
 		};
 	},

@@ -14,7 +14,7 @@
 			/>
 			<q-input
 				filled
-				v-model="secondName"
+				v-model="lastName"
 				label="Second Name *"
 				lazy-rules
 				:rules="[
@@ -54,7 +54,7 @@
 					padding="lg"
 				/>
 			</div>
-			<router-link to="/login" class="block text-grey-6">
+			<router-link to="/login" class="block text-grey-7">
 				Already have an account? Login.
 			</router-link>
 			<ul>
@@ -80,7 +80,7 @@ export default {
 		const $q = useQuasar();
 		const store = useStore();
 		const firstName = ref(null);
-		const secondName = ref(null);
+		const lastName = ref(null);
 		const email = ref(null);
 		const password = ref(null);
 		const errors = ref(null);
@@ -88,7 +88,7 @@ export default {
 
 		return {
 			firstName,
-			secondName,
+			lastName,
 			email,
 			password,
 			errors,
@@ -98,7 +98,7 @@ export default {
 			register() {
 				const newUser = {
 					firstName: firstName.value,
-					secondName: secondName.value,
+					lastName: lastName.value,
 					email: email.value,
 					password: password.value,
 				};
