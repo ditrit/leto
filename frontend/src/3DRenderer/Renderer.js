@@ -37,9 +37,9 @@ class Renderer {
 		//console.log('rendering', this.scene, this.camera)
 		this.renderer.render(this.scene, this.camera);
 	}
-	addItem(item) {
+	async addItem(item) {
 		console.log('renderer add item', item)
-		item.create3DItem()
+		await item.create3DItem()
 		this.scene.add(item.threeObj)
 		this.items.push(item)
 		this.grid = new Grid(this.items)

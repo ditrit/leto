@@ -9,7 +9,7 @@ class Item {
 		this.canvas = document.createElement('canvas');
 		this.canvas.width  = width;
 		this.canvas.height = height;
-		this.updateCanvas()
+
 	}
 	updateCanvas() {
 		const width = this.width * 500;
@@ -40,25 +40,24 @@ class Item {
 		ctx.fillStyle = this.color;
 		ctx.fill();
 		ctx.closePath();
+		return new Promise((resolve) => {
+			if (!this.logo) return resolve()
+			const img = new Image();
+			img.src = `textures/logos/${this.logo}`
+			img.addEventListener('load', function() {
+				ctx.drawImage(img, 0, 0, height/3, height/3);
+				console.log('img loaded')
+				resolve()
+			}, false);
+		})
+
 	}
 	generateTexture() {
 
 		const texture = new CanvasTexture(this.canvas);
 
 		return texture
-		// Logo - disabled for now
-		/*const img = new Image();   // Crée un nouvel élément Image
-		img.addEventListener('load', function() {
-			ctx.drawImage(img, 0, 0, height/3, height/3);
 
-
-			if(action === 'createComponent')
-				generateComponent(componentType, material);
-			else if(action === 'updateTexture')
-				regenerateTexture(component, material);
-
-		}, false);
-		img.src = './public/textures/logos/'+logo;*/
 	}
 	generateMaterial() {
 		const material = [
@@ -83,11 +82,14 @@ class Item {
 	}
 	update(newData) {
 		Object.assign(this, newData)
-		this.updateCanvas()
-		this.texture.needsUpdate = true
+		this.updateCanvas().then(() => {
+			console.log('canvas updated')
+			this.texture.needsUpdate = true
+		})
 		//this.threeObj.material
 	}
-	create3DItem() {
+	async create3DItem() {
+		await this.updateCanvas()
 		this.texture = this.generateTexture()
 		const material = this.generateMaterial();
 
