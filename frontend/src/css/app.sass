@@ -1,7 +1,27 @@
 // app global css in Sass form
 :root 
-    --bg-page: #ce1515       
+  --box-shadow: 0 0 3px rgba(0,0,0,.5) 
 html, body
     width: 100%
     height: 100%
     overflow: hidden
+
+.cards_wrapper
+  display: flex
+  justify-content: flex-start
+  flex-wrap: wrap
+  list-style: none
+  li
+    background: beige
+    padding: 8px 12px
+    border-radius: 12px
+    margin-top: 8px
+    margin-right: 8px
+
+.item_card
+  width: 100%
+  margin-bottom: 7px
+  border: none !important
+  box-shadow: var(--box-shadow) !important
+.q-card__section--vert
+  padding: 6px

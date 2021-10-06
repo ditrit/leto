@@ -5,12 +5,12 @@
 			<q-input
 				filled
 				v-model="email"
-				label="Enter your Email *"
+				label="Email *"
 				lazy-rules
 				:rules="[(val) => !!val || 'Email is missing']"
 			/>
 			<q-input
-				label="Enter your Password *"
+				label="Password *"
 				v-model="password"
 				filled
 				:type="isPwd ? 'password' : 'text'"

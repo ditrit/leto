@@ -1,5 +1,5 @@
 <template>
-	<q-layout view="lhh lpR fFf" class="bg-gray">
+	<q-layout view="lhh lpR fFf" class="bg-grey-4">
 		<q-header reveal class="bg-white text-primary">
 			<q-toolbar class="justify-between">
 				<div class="row">

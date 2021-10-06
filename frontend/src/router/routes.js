@@ -10,6 +10,13 @@ const routes = [
 				component: () => import("pages/PageTeams.vue"),
 				meta: { requiresAuth: true },
 			},
+
+			{
+				path: "child",
+				component: () => import("pages/PageTeamChild.vue"),
+				meta: { requiresAuth: true },
+			},
+
 			{
 				path: "model",
 				component: () => import("pages/Model.vue"),

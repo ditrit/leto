@@ -1,6 +1,6 @@
 <template>
 	<div class="q-pa-md">
-		<div class="col col-md-12 q-gutter-y-md" style="max-width: 600px">
+		<div class="col col-md-12" style="max-width: 600px">
 			<q-card>
 				<q-tabs
 					v-model="tab"
@@ -19,13 +19,13 @@
 
 				<q-tab-panels v-model="tab" animated>
 					<q-tab-panel name="tags">
-						<ul class="tags_default">
+						<ul class="cards_wrapper">
 							<li v-for="(tag, index) in allTags" :key="index">{{ tag }}</li>
 						</ul>
 					</q-tab-panel>
 
 					<q-tab-panel name="team_members">
-						<div class="row items-center wrap">
+						<div class="cards_wrapper q-gutter-x-sm">
 							<ActionCard
 								v-for="member in teamMembers"
 								:key="member.id"
@@ -37,7 +37,7 @@
 					</q-tab-panel>
 
 					<q-tab-panel name="libraries">
-						<div class="row items-center wrap">
+						<div class="cards_wrapper q-gutter-x-sm">
 							<ActionCard
 								v-for="librarie in teamLibraries"
 								:key="librarie.id"
@@ -48,7 +48,7 @@
 					</q-tab-panel>
 
 					<q-tab-panel name="environnements">
-						<div class="row items-center wrap">
+						<div class="cards_wrapper q-gutter-x-sm">
 							<ActionCard
 								v-for="env in teamEnvironnements"
 								:key="env.id"
@@ -153,16 +153,4 @@ export default {
 	},
 };
 </script>
-<style lang="sass" scoped>
-.tags_default
-  display: flex
-  justify-content: flex-start
-  flex-wrap: no-wrap
-  list-style: none
-  li
-    background: beige
-    padding: 8px 12px
-    border-radius: 12px
-    margin-top: 8px
-    margin-right: 8px
-</style>
+<style lang="sass" scoped></style>

@@ -5,7 +5,7 @@
 			<q-input
 				filled
 				v-model="firstName"
-				label="First Name *"
+				label="First name *"
 				lazy-rules
 				:rules="[
 					(val) =>
@@ -15,7 +15,7 @@
 			<q-input
 				filled
 				v-model="lastName"
-				label="Second Name *"
+				label="Last name *"
 				lazy-rules
 				:rules="[
 					(val) =>

@@ -1,5 +1,5 @@
 <template>
-	<q-layout class="bg-grey-4">
+	<q-layout>
 		<AjaxBar />
 		<q-page padding class="flex">
 			<PageContent

@@ -211,7 +211,7 @@ export default {
 				id: 5,
 				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 				name: "Library 6",
-				description: "Ceci est une long description",
+				description: "Ceci est une  description",
 			},
 		]);
 		const teamEnvironnements = ref([
@@ -249,13 +249,13 @@ export default {
 				id: 5,
 				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 				name: "Env 6",
-				description: "Ceci est une long description",
+				description: "Ceci est une  description",
 			},
 			{
 				id: 6,
 				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 				name: "Env 7",
-				description: "Ceci est une long description",
+				description: "Ceci est une  description",
 			},
 		]);
 
@@ -286,10 +286,12 @@ export default {
 			return {
 				name: payload.Name,
 				id: payload.ID,
+				parentName: payload?.Parent?.Name,
 				parentId: payload.ParentID,
 			};
 		});
-		options.value = optionsSelections.value.map((item) => item.name);
+		let unique = optionsSelections.value.map((item) => item.parentName);
+		options.value = [...new Set(unique)].filter((item) => item != null);
 
 		const getTeamParentId = () => {
 			const obj = Object.values(optionsSelections.value);
