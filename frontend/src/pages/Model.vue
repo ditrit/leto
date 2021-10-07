@@ -79,19 +79,26 @@
 
 					<q-card v-if="selectedItem" style="max-width: 450px">
 						<q-card-section>
-							<q-input :color="selectedItem.color" v-model="selectedItem.name" label="Nom"></q-input>
+							<div class="row">
+								<div class="col  col-8">
+									<q-input :color="selectedItem.color" v-model="selectedItem.name" label="Nom"></q-input>
+								</div>
+								<div class="col col-4">
+									<q-btn flat icon="close" @click="removeSelection"></q-btn>
+								</div>
+							</div>
 						</q-card-section>
 						<q-card-section>
 							{{selectedItem}}
 						</q-card-section>
 					</q-card>
-					<!--<template :key="item.id" v-for="item in items">
-						<q-card>
+					<template v-else :key="item.id" v-for="item in items">
+						<q-card @click="selectItem(item)">
 							<q-card-section>
-								<q-input :color="item.color" v-model="item.name"></q-input>
+								{{item.name}}
 							</q-card-section>
 						</q-card>
-					</template>-->
+					</template>
 				</div>
 			</div>
 		</q-page-container>
@@ -160,6 +167,11 @@ export default {
 			this.items[itemIndex].isSelected = true
 			this.selectedItem = this.items[itemIndex]
 
+		},
+		removeSelection() {
+			if (this.selectedItem)
+				this.selectedItem.isSelected = false
+			this.selectedItem = null
 		},
 		addItem(item) {
 			const newItem = JSON.parse(JSON.stringify(item))
