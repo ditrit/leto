@@ -12,16 +12,54 @@ html, body
   flex-wrap: wrap
   list-style: none
   li
-    background: beige
+    background: white
     padding: 8px 12px
     border-radius: 12px
     margin-top: 8px
     margin-right: 8px
+    box-shadow: var(--box-shadow)
+
+.cards_tags_wrapper  
+  display: flex
+  justify-content: flex-start
+  flex-wrap: nowrap
+  list-style: none
+  li
+    display: flex
+    justify-content: center
+    align-items: center
+    min-width: 80px
+    background: white
+    padding: 6px 8px
+    border-radius: 12px
+    margin-top: 8px
+    margin-right: 8px
+    box-shadow: var(--box-shadow)
+
+.card_default
+  background: transparent !important 
+  border: none
+  border-right: 1px solid grey
+  border-radius:  0
+  padding-right: 8px
+
+.card_tags_default
+  background: transparent !important 
+  margin-left: 8px
+  margin-right: 8px
+  border: none
 
 .item_card
   width: 100%
   margin-bottom: 7px
   border: none !important
   box-shadow: var(--box-shadow) !important
+  
 .q-card__section--vert
   padding: 6px
+
+.content_wrapper
+  display: flex
+  & img 
+    width: 14%
+    border: 2px solid white

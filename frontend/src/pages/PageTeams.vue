@@ -33,7 +33,6 @@
 								<div class="text-h6 q-pa-md">Create New Team</div>
 							</q-card-section>
 							<q-card-section class="q-pt-none">
-								<!-- <AddNewTeam /> -->
 								<CreationFormStepper />
 							</q-card-section>
 							<q-card-actions align="right" class="bg-white text-teal">
@@ -50,7 +49,6 @@
 <script>
 import { defineComponent, ref } from "vue";
 import getDataItems from "../composables/getDataItems";
-
 import BtnAddNew from "../components/Buttons/BtnAddNew.vue";
 import PageContent from "../components/Content/PageContent.vue";
 import CreationFormStepper from "../components/Stepper/CreationFormStepper.vue";
