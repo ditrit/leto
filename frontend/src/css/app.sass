@@ -1,6 +1,7 @@
 // app global css in Sass form
 :root 
   --box-shadow: 0 0 3px rgba(0,0,0,.5) 
+  --light-gray : lightgray
 html, body
     width: 100%
     height: 100%
@@ -39,7 +40,7 @@ html, body
 .card_default
   background: transparent !important 
   border: none
-  border-right: 1px solid grey
+  border-right: 1px solid var(--light-gray)
   border-radius:  0
   padding-right: 8px
 
@@ -61,5 +62,27 @@ html, body
 .content_wrapper
   display: flex
   & img 
-    width: 14%
+    width: 26%
     border: 2px solid white
+    height: 100%
+
+.card_actions 
+  min-width: 42px
+  min-height: 39px
+  margin-top: 20px !important
+  margin-left: -14px !important
+ 
+
+
+.panel_wrapper 
+  & .q-tab-panel
+    height: 100%
+    width: 100%
+    min-height: 240px !important
+  & .q-tabs__content--align-justify .q-tab 
+    flex: 1 1 auto
+    border: 1px solid var(--light-gray)
+
+.q-tab__indicator 
+  height: 4px !important
+  margin-bottom: -1px
