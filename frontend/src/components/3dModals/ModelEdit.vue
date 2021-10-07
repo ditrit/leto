@@ -30,6 +30,10 @@ export default {
       this.renderer = new Renderer(container)
 
 			this.renderer.render()
+			this.renderer.on('selected:item', (event) => {
+				console.log('intersects event', event)
+				this.$emit('select:item', event)
+			})
 
       /*this.camera = new Three.PerspectiveCamera(
         70,

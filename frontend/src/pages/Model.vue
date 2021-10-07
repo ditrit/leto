@@ -72,17 +72,26 @@
 		<q-page-container>
 			<div class="row">
 				<div class="col-6">
-					<ModelEdit :items="items" />
+					<ModelEdit :items="items" @select:item="selectItem" />
 				</div>
 				<div class="col-2"></div>
 				<div class="col4">
-					<template :key="item.id" v-for="item in items">
-						<q-card >
+
+					<q-card v-if="selectedItem" style="max-width: 450px">
+						<q-card-section>
+							<q-input :color="selectedItem.color" v-model="selectedItem.name" label="Nom"></q-input>
+						</q-card-section>
+						<q-card-section>
+							{{selectedItem}}
+						</q-card-section>
+					</q-card>
+					<!--<template :key="item.id" v-for="item in items">
+						<q-card>
 							<q-card-section>
 								<q-input :color="item.color" v-model="item.name"></q-input>
 							</q-card-section>
 						</q-card>
-					</template>
+					</template>-->
 				</div>
 			</div>
 		</q-page-container>
@@ -119,6 +128,7 @@ export default {
 			'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'root', 'width' : 1.2, 'height' : 0.9, 'depth' : 1.2, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} }
 		};
 		const search = ref("");
+		const selectedItem = ref(null)
 		const items = ref([])
 		const filterdSidebarItem = computed(() => {
 			return Object.keys(dataItems).map(i => ({...dataItems[i],type: i}))
@@ -133,6 +143,7 @@ export default {
 			drawer: ref(false),
 			search,
 			items,
+			selectedItem,
 			//error,
 			//path,
 			filterdSidebarItem,
@@ -141,6 +152,14 @@ export default {
 	methods: {
 		createKey() {
 			return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		},
+		selectItem(item) {
+			if (this.selectedItem)
+				this.selectedItem.isSelected = false
+			const itemIndex = this.items.findIndex(i => i.id === item.id)
+			this.items[itemIndex].isSelected = true
+			this.selectedItem = this.items[itemIndex]
+
 		},
 		addItem(item) {
 			const newItem = JSON.parse(JSON.stringify(item))

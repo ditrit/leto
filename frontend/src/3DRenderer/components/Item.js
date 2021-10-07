@@ -84,6 +84,11 @@ class Item {
 		Object.assign(this, newData)
 		this.updateCanvas().then(() => {
 			console.log('canvas updated')
+			if (this.isSelected) {
+			this.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0xff0000 )))
+			} else {
+				this.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0x000000 )))
+			}
 			this.texture.needsUpdate = true
 		})
 		//this.threeObj.material
