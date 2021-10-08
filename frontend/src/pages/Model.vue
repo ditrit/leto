@@ -1,18 +1,6 @@
 <template>
 	<q-layout container class="global">
-		<q-toolbar>
-			<div class="row">
-				<q-btn
-					flat
-					@click="drawer = !drawer"
-					round
-					dense
-					icon="menu"
-					:class="drawer ? 'menuStyle hiddenMenu' : ' menuStyle visibleMenu'"
-				/>
-			</div>
-		</q-toolbar>
-		<q-drawer
+		<!-- <q-drawer
 			v-model="drawer"
 			@hide="makeMenuVisible"
 			show-if-above
@@ -63,10 +51,10 @@
 				</q-expansion-item>
 				<q-sepaartor />
 			</q-list>
-		</q-drawer>
+		</q-drawer> -->
 
 		<q-page-container>
-			<q-page class="">
+			<q-page>
 				<ModelEdit />
 			</q-page>
 		</q-page-container>

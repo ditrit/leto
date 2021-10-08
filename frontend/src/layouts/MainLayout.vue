@@ -1,6 +1,10 @@
 <template>
 	<q-layout view="lhh lpR fFf" class="bg-grey-4">
-		<q-header reveal class="bg-white text-primary" style="left: 90px">
+		<q-header
+			reveal
+			class="bg-white text-primary"
+			:style="drawer ? 'left: 350px' : 'left: 90px'"
+		>
 			<q-toolbar class="justify-between">
 				<!-- <div class="row">
 					<q-tabs
@@ -21,7 +25,9 @@
 						/>
 					</q-tabs>
 				</div> -->
-				<global-search style="margin-left: 25%" />
+				<global-search
+					:style="drawer ? 'margin-left: 25%' : 'margin-left: 35%'"
+				/>
 				<AccountSettings />
 			</q-toolbar>
 		</q-header>
@@ -113,9 +119,12 @@
 			/>
 		</q-drawer>
 
-		<q-page-container class="bg-gray">
+		<q-page
+			class="q-pa-lg bg-gray"
+			:style="drawer ? 'margin-left: 360px' : 'margin-left: 90px'"
+		>
 			<router-view />
-		</q-page-container>
+		</q-page>
 	</q-layout>
 </template>
 

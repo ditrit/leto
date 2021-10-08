@@ -1,6 +1,6 @@
 <template>
 	<q-layout container class="global bg-dark">
-		<q-toolbar>
+		<!-- <q-toolbar>
 			<div class="row">
 				<q-btn
 					flat
@@ -11,8 +11,8 @@
 					:class="drawer ? 'menuStyle hiddenMenu' : ' menuStyle visibleMenu'"
 				/>
 			</div>
-		</q-toolbar>
-		<q-drawer
+		</q-toolbar> -->
+		<!-- <q-drawer
 			v-model="drawer"
 			@hide="makeMenuVisible"
 			show-if-above
@@ -63,7 +63,7 @@
 				</q-expansion-item>
 				<q-sepaartor />
 			</q-list>
-		</q-drawer>
+		</q-drawer> -->
 
 		<q-page-container>
 			<q-page class="editorWrapper">
