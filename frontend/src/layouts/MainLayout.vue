@@ -1,8 +1,8 @@
 <template>
 	<q-layout view="lhh lpR fFf" class="bg-grey-4">
-		<q-header reveal class="bg-white text-primary">
+		<q-header reveal class="bg-white text-primary" style="left: 90px">
 			<q-toolbar class="justify-between">
-				<div class="row">
+				<!-- <div class="row">
 					<q-tabs
 						caps
 						active-color="secondary"
@@ -20,11 +20,75 @@
 							exact
 						/>
 					</q-tabs>
-				</div>
-				<global-search />
+				</div> -->
+				<global-search style="margin-left: 25%" />
 				<AccountSettings />
 			</q-toolbar>
 		</q-header>
+		<q-toolbar>
+			<div class="row">
+				<q-btn
+					flat
+					@click="drawer = !drawer"
+					round
+					dense
+					icon="menu"
+					:class="drawer ? 'menuStyle hiddenMenu' : ' menuStyle visibleMenu'"
+				/>
+			</div>
+		</q-toolbar>
+		<q-drawer
+			v-model="drawer"
+			@hide="makeMenuVisible"
+			show-if-above
+			@click.capture="drawerClick"
+			:width="350"
+			:breakpoint="500"
+			bordered
+			class="bg-grey-3"
+		>
+			<div class="q-mt-md" style="max-width: 350px">
+				<div class="q-gutter-md">
+					<q-input
+						v-model="search"
+						debounce="500"
+						placeholder="Search"
+						class="search_input q-mb-lg q-pa-md"
+					>
+						<template v-slot:append>
+							<q-icon name="search" />
+						</template>
+					</q-input>
+				</div>
+			</div>
+			<q-list v-for="item in filterdSidebarItem" :key="item.id">
+				<q-expansion-item
+					group="somegroup"
+					:icon="item.icon"
+					:label="item.caption"
+					:data-id="item.attr"
+					default-opened
+					header-class="text-primary"
+					style="font-weight: 600"
+				>
+					<q-item
+						v-for="child in item.children"
+						:key="child.id"
+						:data-id="child.attr"
+						clickable
+						v-ripple
+					>
+						<q-item-section avatar class="q-pl-md">
+							<q-icon color="grey" :name="child.icon" size="16px" />
+						</q-item-section>
+						<q-item-section style="color: grey">{{
+							child.caption
+						}}</q-item-section>
+					</q-item>
+				</q-expansion-item>
+				<q-sepaartor />
+			</q-list>
+		</q-drawer>
 
 		<q-drawer
 			show-if-above
@@ -139,15 +203,6 @@ const mainMenuList = [
 		link: "",
 	},
 ];
-const profil = [
-	{
-		id: 1,
-		firstName: "Bs",
-		lastName: "Sr",
-		notification: 2,
-		image: "https://avatars.githubusercontent.com/u/7687826?s=60&v=4",
-	},
-];
 
 export default defineComponent({
 	name: "MainLayout",
@@ -155,7 +210,6 @@ export default defineComponent({
 		EssentialTools,
 		AccountSettings,
 		GlobalSearch,
-		// Accordion,
 	},
 
 	setup() {
@@ -163,6 +217,7 @@ export default defineComponent({
 		return {
 			leftDrawerOpen,
 			essentialTablinks,
+			drawer: ref(false),
 			toggleLeftDrawer() {
 				leftDrawerOpen.value = !leftDrawerOpen.value;
 			},
@@ -185,4 +240,24 @@ export default defineComponent({
 	justify-content: center
 	box-sizing: border-box
 	overflow-x: hidden
+
+.q-drawer--left
+	// margin-top: 60px
+
+
+.teams_buttons__container
+	display: flex
+	flex-direction: column
+
+.menuStyle
+	background: #eeeeee
+	border-radius: 0
+	margin-top: -14px
+	z-index: 5000
+
+.hiddenMenu
+	transform: translateX(338px)
+
+.visibleMenu
+	transform: translateX(80px)
 </style>

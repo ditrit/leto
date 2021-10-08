@@ -1,71 +1,7 @@
 <template>
-	<q-layout>
+	<q-layout class="">
 		<AjaxBar />
 		<q-page padding class="bg-gray">
-			<q-toolbar>
-				<div class="row">
-					<q-btn
-						flat
-						@click="drawer = !drawer"
-						round
-						dense
-						icon="menu"
-						:class="drawer ? 'menuStyle hiddenMenu' : ' menuStyle visibleMenu'"
-					/>
-				</div>
-			</q-toolbar>
-			<q-drawer
-				v-model="drawer"
-				@hide="makeMenuVisible"
-				show-if-above
-				@click.capture="drawerClick"
-				:width="250"
-				:breakpoint="500"
-				bordered
-				class="main_drawer bg-grey-3"
-			>
-				<div class="q-mt-md" style="max-width: 350px">
-					<div class="q-gutter-md">
-						<q-input
-							v-model="search"
-							debounce="500"
-							placeholder="Search"
-							class="search_input q-mb-lg q-pa-md"
-						>
-							<template v-slot:append>
-								<q-icon name="search" />
-							</template>
-						</q-input>
-					</div>
-				</div>
-				<q-list v-for="item in filterdSidebarItem" :key="item.id">
-					<q-expansion-item
-						group="somegroup"
-						:icon="item.icon"
-						:label="item.caption"
-						:data-id="item.attr"
-						default-opened
-						header-class="text-primary"
-						style="font-weight: 600"
-					>
-						<q-item
-							v-for="child in item.children"
-							:key="child.id"
-							:data-id="child.attr"
-							clickable
-							v-ripple
-						>
-							<q-item-section avatar class="q-pl-md">
-								<q-icon color="grey" :name="child.icon" size="16px" />
-							</q-item-section>
-							<q-item-section style="color: grey">{{
-								child.caption
-							}}</q-item-section>
-						</q-item>
-					</q-expansion-item>
-					<q-sepaartor />
-				</q-list>
-			</q-drawer>
 			<div class="content_wrapper">
 				<q-card
 					class="card_default"
@@ -206,28 +142,16 @@ export default defineComponent({
 			oepnDialog,
 			tags,
 			child,
-			drawer: ref(false),
 		};
 	},
 });
 </script>
 <style lang="sass" scoped>
+.q-drawer
+  z-index: -1 !important
 .buttons_wrapper
   display: flex
   flex-direction: row
   justify-content: space-evenly
   align-items: center
-.q-drawer--left
-  z-index: 1 !important
-.teams_buttons__container
-  display: flex
-  flex-direction: column
-.menuStyle
-  background: #eeeeee
-  border-radius: 0
-  margin-top: -41px
-.hiddenMenu
-  transform: translateX(220px)
-.visibleMenu
-  transform: translateX(-28px)
 </style>

@@ -6,11 +6,13 @@
 					<q-icon :name="icon" size="30px" class="q-ml-md q-mr-sm" />
 					<div class="title_container">
 						<p class="text-bold text-h6">{{ headline }}</p>
-						<p class="text-subtitle3 text-grey-8">{{ subTitle }}</p>
+						<p v-if="subTitle" class="text-subtitle3 text-grey-8">
+							{{ subTitle }}
+						</p>
 					</div>
 				</div>
 				<div class="content_wrapper">
-					<img src="https://cdn.quasar.dev/img/parallax2.jpg" alt="logo" />
+					<img v-if="logo" src="logo" alt="logo" />
 					<p class="q-ml-md">
 						{{ textContent }}
 					</p>
@@ -27,18 +29,18 @@ export default defineComponent({
 	props: {
 		icon: {
 			type: String,
-			default: "groups",
+			required: true,
 		},
 		headline: {
 			type: String,
-			default: "Teams",
+			required: true,
 		},
 		textContent: {
 			type: String,
-			default: "Lorem ipsum dolor sit amet consectetur adipisicing elit...",
+			required: true,
 		},
-		subTitle: { type: String, default: "subTitle" },
-		logo: { type: String, default: "https://cdn.quasar.dev/img/parallax2.jpg" },
+		subTitle: { type: String, required: false },
+		logo: { type: String, required: false },
 	},
 });
 </script>
