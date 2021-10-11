@@ -1,5 +1,5 @@
 <template>
-	<div class="">
+	<div class="profil_settings" style="z-index: 2">
 		<q-item clickable>
 			<q-item-section>
 				<q-avatar round size="40px">
@@ -77,4 +77,8 @@ export default {
 	},
 };
 </script>
-<style lang="sass"></style>
+<style lang="sass">
+.profil_settings
+	position: absolute
+	right: 20px
+</style>

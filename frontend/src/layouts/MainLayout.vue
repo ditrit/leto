@@ -1,102 +1,11 @@
 <template>
 	<q-layout view="lhh lpR fFf" class="bg-grey-4">
-		<q-header
-			reveal
-			class="bg-white text-primary"
-			:style="drawer ? 'left: 350px' : 'left: 90px'"
-		>
-			<q-toolbar class="justify-between">
-				<!-- <div class="row">
-					<q-tabs
-						caps
-						active-color="secondary"
-						indicator-color="transparent"
-						class="text-primary"
-						v-model="tab"
-					>
-						<q-route-tab
-							v-for="item in essentialTablinks"
-							:key="item.id"
-							:name="item.name"
-							:label="item.label"
-							:to="item.link"
-							:data-id="item.name"
-							exact
-						/>
-					</q-tabs>
-				</div> -->
-				<global-search
-					:style="drawer ? 'margin-left: 25%' : 'margin-left: 35%'"
-				/>
-				<AccountSettings />
-			</q-toolbar>
-		</q-header>
-		<q-toolbar>
-			<div class="row">
-				<q-btn
-					flat
-					@click="drawer = !drawer"
-					round
-					dense
-					icon="menu"
-					:class="drawer ? 'menuStyle hiddenMenu' : ' menuStyle visibleMenu'"
-				/>
-			</div>
-		</q-toolbar>
+		<MainHeader style="z-index: 1">
+			<AccountSettings />
+		</MainHeader>
+		<Drawer :data="data"> </Drawer>
 		<q-drawer
-			v-model="drawer"
-			@hide="makeMenuVisible"
-			show-if-above
-			@click.capture="drawerClick"
-			:width="350"
-			:breakpoint="500"
-			bordered
-			class="bg-grey-3"
-		>
-			<div class="q-mt-md" style="max-width: 350px">
-				<div class="q-gutter-md">
-					<q-input
-						v-model="search"
-						debounce="500"
-						placeholder="Search"
-						class="search_input q-mb-lg q-pa-md"
-					>
-						<template v-slot:append>
-							<q-icon name="search" />
-						</template>
-					</q-input>
-				</div>
-			</div>
-			<q-list v-for="item in filterdSidebarItem" :key="item.id">
-				<q-expansion-item
-					group="somegroup"
-					:icon="item.icon"
-					:label="item.caption"
-					:data-id="item.attr"
-					default-opened
-					header-class="text-primary"
-					style="font-weight: 600"
-				>
-					<q-item
-						v-for="child in item.children"
-						:key="child.id"
-						:data-id="child.attr"
-						clickable
-						v-ripple
-					>
-						<q-item-section avatar class="q-pl-md">
-							<q-icon color="grey" :name="child.icon" size="16px" />
-						</q-item-section>
-						<q-item-section style="color: grey">{{
-							child.caption
-						}}</q-item-section>
-					</q-item>
-				</q-expansion-item>
-				<q-sepaartor />
-			</q-list>
-		</q-drawer>
-
-		<q-drawer
+			elevated
 			show-if-above
 			side="left"
 			bordered
@@ -104,7 +13,6 @@
 			class="bg-primary centered"
 		>
 			<q-box class="absolute-top text-secondary centered">
-				<!-- <q-toolbar-title class="centered q-pa-md">Leto</q-toolbar-title> -->
 				<q-img
 					class="q-mt-sm"
 					src="../assets/logoBest2.svg"
@@ -119,21 +27,20 @@
 			/>
 		</q-drawer>
 
-		<q-page
-			class="q-pa-lg bg-gray"
-			:style="drawer ? 'margin-left: 360px' : 'margin-left: 90px'"
-		>
+		<q-page class="page_padding">
 			<router-view />
 		</q-page>
 	</q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { ref } from "vue";
 
 import EssentialTools from "components/EssentialTools.vue";
 import AccountSettings from "../components/Profil/AccountSettings.vue";
-import GlobalSearch from "../components/Form/GlobalSearch.vue";
+
+import Drawer from "../components/Drawers/Drawer.vue";
+import MainHeader from "../components/Ui/Headers/mainHeader.vue";
 
 // import MainMenu from "components/MainMenu";
 // import Accordion from "components/TabsPanels/Accordion";
@@ -213,29 +120,89 @@ const mainMenuList = [
 	},
 ];
 
-export default defineComponent({
+export default {
 	name: "MainLayout",
 	components: {
 		EssentialTools,
 		AccountSettings,
-		GlobalSearch,
+		Drawer,
+		MainHeader,
 	},
 
 	setup() {
-		const leftDrawerOpen = ref(false);
-		return {
-			leftDrawerOpen,
-			essentialTablinks,
-			drawer: ref(false),
-			toggleLeftDrawer() {
-				leftDrawerOpen.value = !leftDrawerOpen.value;
+		const data = ref([
+			{
+				label: "GIMS",
+				children: [
+					{
+						label: "Team One",
+						children: [
+							{ label: "Sub Team 1 - 1" },
+							{ label: "Sub Team 1 - 2" },
+						],
+					},
+					{
+						label: "Team Two",
+						disabled: false,
+						children: [
+							{ label: "Sub Team 2 - 1" },
+							{ label: "Sub Team 2 - 2" },
+						],
+					},
+					{
+						label: "Team Three",
+						children: [
+							{ label: "Sub Team 3 - 1" },
+							{ label: "Sub Team 3 - 2" },
+							{ label: "Sub Team 3 - 3" },
+						],
+					},
+				],
 			},
+			{
+				label: "BDDF",
+				children: [
+					{
+						label: "Team One",
+						children: [
+							{ label: "Sub Team 1 - 1" },
+							{ label: "Sub Team 1 - 2" },
+						],
+					},
+					{
+						label: "Team Two",
+						disabled: false,
+						children: [
+							{ label: "Sub Team 2 - 1" },
+							{ label: "Sub Team 2 - 2" },
+						],
+					},
+					{
+						label: "Team Three",
+						children: [
+							{ label: "Sub Team 3 - 1" },
+							{ label: "Sub Team 3 - 2" },
+							{ label: "Sub Team 3 - 3" },
+						],
+					},
+				],
+			},
+		]);
+		return {
+			data,
+			essentialTablinks,
 			linksToolsList,
 		};
 	},
-});
+};
 </script>
 <style lang="sass">
+.page_padding
+	padding-top: 30px
+	padding-right: 0px
+	padding-bottom: 0px
+	padding-left: 60px
+
 .full_height
 	height: inherit
 
@@ -257,16 +224,4 @@ export default defineComponent({
 .teams_buttons__container
 	display: flex
 	flex-direction: column
-
-.menuStyle
-	background: #eeeeee
-	border-radius: 0
-	margin-top: -14px
-	z-index: 5000
-
-.hiddenMenu
-	transform: translateX(338px)
-
-.visibleMenu
-	transform: translateX(80px)
 </style>
