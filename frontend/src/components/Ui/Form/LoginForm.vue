@@ -45,7 +45,7 @@ import { useQuasar } from "quasar";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import Headline6 from "../Ui/Headlines/Headline6";
+import Headline6 from "../Headlines/Headline6";
 
 export default {
 	components: { Headline6 },

@@ -21,7 +21,7 @@
 			@hide="makeMenuVisible"
 			show-if-above
 			@click.capture="drawerClick"
-			:width="350"
+			:width="300"
 			:breakpoint="500"
 			bordered
 			class="bg-grey-3"
@@ -31,7 +31,7 @@
 			"
 		>
 			<slot>
-				<div class="q-pa-md q-gutter-sm">
+				<div class="search_container">
 					<q-input ref="filterRef" filled v-model="filter" label="Search">
 						<template v-slot:append>
 							<q-icon
@@ -53,6 +53,7 @@
 						:nodes="data"
 						node-key="label"
 						:filter="filter"
+						class="node_tree q-pl-lg q-pt-md"
 						default-expand-all
 					/>
 				</div>
@@ -62,6 +63,7 @@
 </template>
 <script>
 import { ref } from "vue";
+
 export default {
 	props: {
 		data: {
@@ -75,7 +77,6 @@ export default {
 			drawer: ref(false),
 			filter,
 			filterRef,
-
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();
@@ -92,8 +93,15 @@ export default {
 	z-index: 5000
 
 .hiddenMenu
-	transform: translateX(428px)
+	transform: translateX(376px)
 
 .visibleMenu
 	transform: translateX(78px)
+
+.q-tree__node-header-content
+	font-weight: bold
+
+.q-tree__node .q-tree__children .q-tree__node-header-content
+	font-weight: 400
+	color: var(--gray)
 </style>

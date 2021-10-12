@@ -3,7 +3,7 @@
 		<q-item clickable>
 			<q-item-section>
 				<q-avatar round size="40px">
-					<img src="../../assets/profil.png" />
+					<img src="../../../assets/profil.png" />
 					<!-- <q-badge floating rounded color="orange">4</q-badge> -->
 				</q-avatar>
 			</q-item-section>
@@ -33,7 +33,7 @@
 
 				<div class="column" v-if="user">
 					<q-avatar size="72px">
-						<img src="../../assets/profil.png" />
+						<img src="../../../assets/profil.png" />
 					</q-avatar>
 
 					<div class="q-mt-md q-mb-xs">

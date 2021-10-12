@@ -70,8 +70,8 @@ import { useQuasar } from "quasar";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import Headline6 from "../Ui/Headlines/Headline6.vue";
-import { emailValidation } from "../../common";
+import Headline6 from "../Headlines/Headline6";
+import { emailValidation } from "../../../common";
 
 export default {
 	components: { Headline6 },

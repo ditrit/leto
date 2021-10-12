@@ -59,6 +59,6 @@ export default defineComponent({
 
 .content_wrapper
   & img
-    wdth: 60px
+    width: 60px
     height: 60px
 </style>

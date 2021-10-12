@@ -1,19 +1,20 @@
 <template>
 	<q-header class="main_header bg-white text-primary">
-		<q-toolbar class="justify-between">
+		<q-toolbar>
 			<slot></slot>
 		</q-toolbar>
 	</q-header>
 </template>
 
 <script>
-export default {
-	props: [""],
-};
+export default {};
 </script>
 
 <style lang="sass" scoped>
-.main_header
-  display: flex
-  justify-content: space-between
+
+.q-toolbar
+	display: flex !important
+	flex-direction: row !important
+	justify-content: center !important
+	height: 56px
 </style>

@@ -49,10 +49,10 @@
 <script>
 import { defineComponent, ref } from "vue";
 import getDataItems from "../composables/getDataItems";
-import BtnAddNew from "../components/Buttons/BtnAddNew.vue";
-import PageContent from "../components/Content/PageContent.vue";
-import CreationFormStepper from "../components/Stepper/CreationFormStepper.vue";
-import AjaxBar from "../components/Progress/AjaxBar.vue";
+import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
+import PageContent from "../components/Content/PageContent";
+import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
+import AjaxBar from "../components/UI/Progress/AjaxBar";
 
 const buttonsList = [
 	{

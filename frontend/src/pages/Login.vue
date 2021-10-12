@@ -29,8 +29,8 @@
 import { computed } from "vue";
 import { mapActions } from "vuex";
 import { useStore } from "vuex";
-import LoginForm from "../components/Form/LoginForm.vue";
-import LoginNav from "../components/Navigation/LoginNav.vue";
+import LoginForm from "../components/UI/Form/LoginForm";
+import LoginNav from "../components/UI/Navigation/LoginNav";
 
 export default {
 	components: { LoginForm, LoginNav },

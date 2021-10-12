@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="">
 		<q-card
 			class="card_default"
 			flat
@@ -24,24 +24,7 @@
 							</p>
 						</div>
 					</div>
-
-					<div class="col-auto">
-						<q-btn color="grey-7" round flat icon="more_vert">
-							<q-menu cover auto-close class="card_actions">
-								<q-list>
-									<q-item clickable>
-										<q-item-section>Link One</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Link Two </q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Link Three</q-item-section>
-									</q-item>
-								</q-list>
-							</q-menu>
-						</q-btn>
-					</div>
+					<CardButtons :links="links" />
 				</div>
 			</q-card-section>
 		</q-card>
@@ -49,12 +32,21 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import CardButtons from "../../UI/Cards/CardButtons.vue";
 export default {
 	name: "ContentCard",
+	components: { CardButtons },
 	props: {
 		data: {
 			type: Array,
 		},
+	},
+	setup() {
+		const links = ref(["Link One", "Link Two", "Link Three"]);
+		return {
+			links,
+		};
 	},
 };
 </script>

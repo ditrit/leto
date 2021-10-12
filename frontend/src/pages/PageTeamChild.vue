@@ -14,24 +14,7 @@
 										<div class="text-h6">Tags</div>
 									</div>
 								</div>
-
-								<div class="col-auto">
-									<q-btn color="grey-7" round flat icon="more_vert">
-										<q-menu cover auto-close class="card_actions">
-											<q-list>
-												<q-item clickable>
-													<q-item-section>Link One</q-item-section>
-												</q-item>
-												<q-item clickable>
-													<q-item-section>Link Two </q-item-section>
-												</q-item>
-												<q-item clickable>
-													<q-item-section>Link Three</q-item-section>
-												</q-item>
-											</q-list>
-										</q-menu>
-									</q-btn>
-								</div>
+								<CardButtons :links="links" />
 							</div>
 						</q-card-section>
 						<q-card-section>
@@ -43,6 +26,7 @@
 				</div>
 			</div>
 			<div class="panel_wrapper q-mt-lg">
+				<GlobalSearch class="global_Search__right" />
 				<Tabs
 					:allTags="tags"
 					:teamProducts="teamProducts"
@@ -58,13 +42,15 @@
 <script>
 import { defineComponent, ref } from "vue";
 
-import AjaxBar from "../components/Progress/AjaxBar.vue";
-import ContentCard from "../components/Ui/Cards/ContentCard.vue";
-import Tabs from "../components/Ui/TabPanels/Tabs.vue";
+import AjaxBar from "../components/UI/Progress/AjaxBar";
+import CardButtons from "../components/UI/Cards/CardButtons";
+import ContentCard from "../components/Ui/Cards/ContentCard";
+import Tabs from "../components/Ui/TabPanels/Tabs";
+import GlobalSearch from "../components/UI/Form/GlobalSearch.vue";
 
 export default defineComponent({
 	name: "PageTeamChild",
-	components: { AjaxBar, Tabs, ContentCard },
+	components: { AjaxBar, Tabs, ContentCard, CardButtons, GlobalSearch },
 
 	setup() {
 		const tags = ref([
@@ -74,6 +60,8 @@ export default defineComponent({
 			"Tag Four",
 			"Tag Five",
 		]);
+
+		const links = ref(["Link One", "Link Two", "Link Three"]);
 
 		const child = ref([
 			{
@@ -96,16 +84,13 @@ export default defineComponent({
 			oepnDialog,
 			tags,
 			child,
+			links,
 		};
 	},
 });
 </script>
 <style lang="sass" scoped>
+
 .q-drawer
   z-index: -1 !important
-.buttons_wrapper
-  display: flex
-  flex-direction: row
-  justify-content: space-evenly
-  align-items: center
 </style>

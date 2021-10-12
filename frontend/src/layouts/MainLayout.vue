@@ -2,6 +2,7 @@
 	<q-layout view="lhh lpR fFf" class="bg-grey-4">
 		<MainHeader style="z-index: 1">
 			<AccountSettings />
+			<GlobalSearch />
 		</MainHeader>
 		<Drawer :data="data"> </Drawer>
 		<q-drawer
@@ -19,7 +20,6 @@
 					style="height: 5%; width: 55%"
 				></q-img>
 			</q-box>
-
 			<EssentialTools
 				v-for="link in linksToolsList"
 				:key="link.title"
@@ -36,14 +36,12 @@
 <script>
 import { ref } from "vue";
 
-import EssentialTools from "components/EssentialTools.vue";
-import AccountSettings from "../components/Profil/AccountSettings.vue";
+import EssentialTools from "components/EssentialTools";
+import AccountSettings from "../components/UI/Profil/AccountSettings";
 
-import Drawer from "../components/Drawers/Drawer.vue";
-import MainHeader from "../components/Ui/Headers/mainHeader.vue";
-
-// import MainMenu from "components/MainMenu";
-// import Accordion from "components/TabsPanels/Accordion";
+import Drawer from "../components/UI/Drawers/Drawer";
+import MainHeader from "../components/UI/Headers/mainHeader";
+import GlobalSearch from "../components/UI/Form/GlobalSearch";
 
 const linksToolsList = [
 	{
@@ -127,6 +125,7 @@ export default {
 		AccountSettings,
 		Drawer,
 		MainHeader,
+		GlobalSearch,
 	},
 
 	setup() {
@@ -198,10 +197,11 @@ export default {
 </script>
 <style lang="sass">
 .page_padding
-	padding-top: 30px
-	padding-right: 0px
-	padding-bottom: 0px
-	padding-left: 60px
+	padding: 60px 60px 60px 140px
+	// padding-top: 30px
+	// padding-right: 0px
+	// padding-bottom: 0px
+	// padding-left: 60px
 
 .full_height
 	height: inherit

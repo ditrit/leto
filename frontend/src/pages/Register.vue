@@ -4,19 +4,6 @@
 			<div class="leftside text-secondary md">
 				<q-img src="../assets/logoBest2.svg" width="30%" />
 				<span> Orchestrateur TOSTA étendu </span>
-				<!-- <ul v-for="user in all" :key="user.id">
-					<li>
-						{{ user.id }}
-					</li>
-					<li>
-						{{ user.name }}
-					</li>
-					<li>
-						{{ user.email }}
-					</li>
-
-					<button @click="deleteTheUser(user.id)">Delete User</button>
-				</ul> -->
 			</div>
 			<div class="rigthside">
 				<LoginNav />
@@ -32,9 +19,9 @@
 import { computed } from "vue";
 import { mapActions } from "vuex";
 import { useStore } from "vuex";
-import RegistrationForm from "../components/Form/RegistrationForm.vue";
-import SocialConnect from "../components/Login/SocialConnect.vue";
-import LoginNav from "../components/Navigation/LoginNav.vue";
+import RegistrationForm from "../components/UI/Form/RegistrationForm";
+import SocialConnect from "../components/Login/SocialConnect";
+import LoginNav from "../components/UI/Navigation/LoginNav";
 
 export default {
 	components: { RegistrationForm, SocialConnect, LoginNav },

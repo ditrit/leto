@@ -16,9 +16,9 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex";
-import AjaxBar from "../components/Progress/AjaxBar.vue";
+import AjaxBar from "../components/UI/Progress/AjaxBar";
 import getDataItems from "../composables/getDataItems";
-import PageContent from "../components/Content/PageContent.vue";
+import PageContent from "../components/Content/PageContent";
 
 export default {
 	components: { AjaxBar, PageContent },

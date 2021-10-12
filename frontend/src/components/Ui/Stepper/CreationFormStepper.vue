@@ -121,7 +121,7 @@
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
-import Tabs from "../Ui/TabPanels/Tabs.vue";
+import Tabs from "../TabPanels/Tabs";
 
 export default {
 	components: { Tabs },
