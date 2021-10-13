@@ -1,4 +1,5 @@
 import {BoxBufferGeometry, Mesh,BoxGeometry, MeshBasicMaterial, CanvasTexture, MeshStandardMaterial, Group} from "three";
+import {Grid} from "src/3DRenderer/systems/Grid";
 
 class Item {
 	constructor(params) {
@@ -6,6 +7,10 @@ class Item {
 		const width = this.width * 500;
 		const height = this.height *500;
 		this.links = []
+		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
+		this.grid.cellDepth = 1.1
+		this.grid.cellWidth = 1.1
+		this.grid.gridSpacing = 0.1
 		this.canvas = document.createElement('canvas');
 		this.canvas.width  = width;
 		this.canvas.height = height;
@@ -78,6 +83,21 @@ class Item {
 		finalObject.add(newComponent)
 
 		return finalObject
+
+	}
+	async resize() {
+		this.width = this.grid.columnCount * 1.2
+		this.depth = this.grid.lineCount * 1.2
+		this.threeObj.children[0].geometry.dispose()
+		this.threeObj.children[0].geometry = new BoxGeometry(this.width, this.height, this.depth)
+		await this.updateCanvas()
+		this.grid.updatePlacement()
+		/*const newObj = await this.create3DItem()
+		Object.assign(newObj.position, previousPosition)
+		this.threeObj.clear()
+		this.threeObj.removeFromParent()
+		this.threeObj = newObj
+		scene.add(this.threeObj)*/
 
 	}
 	update(newData) {

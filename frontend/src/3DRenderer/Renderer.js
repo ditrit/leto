@@ -33,10 +33,13 @@ class Renderer  extends EventEmitter{
 
 		//const cube = createCube();
 		//	this.scene.add(cube)
+
+		this.grid = new Grid()
 		const resizer = new Resizer(container, this.camera, this.renderer)
 		const cameraController = new CameraController(this.camera, this.renderer.domElement)
 		const mouseController = new MouseController(this.scene, this.renderer, this.camera, this.items)
 		mouseController.on('intersect', (event) => this.onClickSelect(event))
+
 	}
 	render() {
 		//console.log('rendering', this.scene, this.camera)
@@ -52,18 +55,29 @@ class Renderer  extends EventEmitter{
 	}
 	async addItem(item) {
 		console.log('renderer add item', item)
+
+		let gridToUpdate, parentItem
+
+		if (!item.parentId) {
+			gridToUpdate = this.grid
+		} else {
+			parentItem = this.items.find(i => i.id === item.parentId)
+			if (!parentItem || !parentItem.threeObj) return
+			gridToUpdate = parentItem.grid
+			console.log('parentItem', parentItem)
+
+			/*item.threeObj.position.x = parentItem.threeObj.position.x
+			item.threeObj.position.z = parentItem.threeObj.position.z
+			item.threeObj.position.y = parentItem.threeObj.position.y + parentItem.height*/
+		}
+		gridToUpdate.resizeIfNecessary()
+		if (parentItem)
+			await parentItem.resize(this.scene)
 		await item.create3DItem()
 		this.scene.add(item.threeObj)
 		this.items.push(item)
-		if (!item.parentId) {
-			this.grid = new Grid(this.items)
-		} else {
-			const parentItem = this.items.find(i => i.id === item.parentId)
-			console.log('parentItem', parentItem)
-			item.threeObj.position.x = parentItem.threeObj.position.x
-			item.threeObj.position.z = parentItem.threeObj.position.z
-			item.threeObj.position.y = parentItem.threeObj.position.y + parentItem.height
-		}
+		gridToUpdate.placeItemOnGrid(item)
+
 	}
 	updateItem(item) {
 		const rendererItem = this.items.find(i => i.id === item.id)
