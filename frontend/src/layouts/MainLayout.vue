@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import { ref } from "vue";
-
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 import EssentialTools from "components/EssentialTools";
 import AccountSettings from "../components/UI/Profil/AccountSettings";
 
@@ -187,10 +187,18 @@ export default {
 				],
 			},
 		]);
+		const store = useStore();
+		const getDomainTree = store.dispatch("appDomain/fetchDomainesTree");
+		const allDomainTree = computed(
+			() => store.getters["appDomain/allDomainesTree"]
+		);
+		console.log("allDomainTree: ", allDomainTree);
 		return {
 			data,
 			essentialTablinks,
 			linksToolsList,
+			getDomainTree,
+			allDomainTree,
 		};
 	},
 };

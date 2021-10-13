@@ -1,6 +1,6 @@
 <template>
 	<q-layout>
-		<AjaxBar />
+		<!-- <AjaxBar /> -->
 		<q-page padding class="bg-gray">
 			<PageContent
 				v-for="item in dataItems"
@@ -52,7 +52,7 @@ import getDataItems from "../composables/getDataItems";
 import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
 import PageContent from "../components/Content/PageContent";
 import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
-import AjaxBar from "../components/UI/Progress/AjaxBar";
+// import AjaxBar from "../components/UI/Progress/AjaxBar";
 
 const buttonsList = [
 	{
@@ -80,7 +80,7 @@ const buttonsList = [
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { BtnAddNew, PageContent, CreationFormStepper, AjaxBar },
+	components: { BtnAddNew, PageContent, CreationFormStepper },
 
 	setup() {
 		const oepnDialog = ref(false);
@@ -89,7 +89,7 @@ export default defineComponent({
 		dataItems.value = data;
 
 		return {
-			progress: dataItems.length,
+			// progress: dataItems.length,
 			path,
 			dataItems,
 			error,

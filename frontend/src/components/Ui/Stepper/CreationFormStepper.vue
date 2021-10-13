@@ -290,14 +290,14 @@ export default {
 				parentId: payload.ParentID,
 			};
 		});
-		let unique = optionsSelections.value.map((item) => item.parentName);
+		let unique = optionsSelections.value.map((item) => item.name);
 		options.value = [...new Set(unique)].filter((item) => item != null);
 
 		const getTeamParentId = () => {
 			const obj = Object.values(optionsSelections.value);
 			let findId = obj.find((item) => item.name === teamParent.value);
-			console.log("parentId: ", findId);
-			return (domainID.value = findId.parentId);
+			console.log("parent Team Id: ", findId);
+			return (domainID.value = findId.id);
 		};
 
 		return {
@@ -322,14 +322,14 @@ export default {
 
 			onSubmit() {
 				const newDomain = {
-					pid: getTeamParentId(),
+					id: getTeamParentId(),
 					name: name.value,
 					teamParent: teamParent.value,
 					shortDescription: shortDescription.value,
 					description: description.value,
-					tags: tags.value,
+					// tags: tags.value,
 				};
-				store.dispatch("appTeams/addTeam", newDomain);
+				store.dispatch("appDomain/addDomain", newDomain);
 				console.log(newDomain);
 				$q.notify({
 					type: "positive",

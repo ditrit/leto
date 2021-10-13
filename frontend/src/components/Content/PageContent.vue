@@ -46,10 +46,12 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+
 .teams_header
   padding-top: 60px
   padding-left: 30px
   margin-bottom: 60px
+
 .title_container
   display: flex
   flex-direction: column

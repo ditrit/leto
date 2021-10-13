@@ -1,5 +1,9 @@
 import API from "../../services/index";
 
+export const fetchDomainesTree = async ({ commit }) => {
+	let response = await API.get("/domain/tree");
+	commit("GET_DOMAINS_TREE", response.data);
+};
 export const fetchAllDomaines = async ({ commit }) => {
 	let response = await API.get("/domain");
 	commit("GET_DOMAINS", response.data);

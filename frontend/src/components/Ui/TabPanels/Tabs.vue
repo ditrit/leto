@@ -9,6 +9,7 @@
 				align="justify"
 				narrow-indicator
 			>
+				<q-tab v-if="tags" dense name="tags" label="Tags" icon="sell" />
 				<q-tab dense name="products" label="Products" icon="apps" />
 				<q-tab dense name="team_members" label="Team members" icon="group" />
 				<q-tab dense name="libraries" label="Libraries" icon="library_books" />
@@ -24,7 +25,7 @@
 				</q-tab-panel>
 
 				<q-tab-panel name="products">
-					<div class="cards_wrapper q-gutter-x-sm">
+					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
 						<ActionCard
 							v-for="product in teamProducts"
 							:key="product.id"
@@ -35,7 +36,7 @@
 					</div>
 				</q-tab-panel>
 				<q-tab-panel name="team_members">
-					<div class="cards_wrapper q-gutter-x-sm">
+					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
 						<ActionCard
 							v-for="member in teamMembers"
 							:key="member.id"
@@ -47,7 +48,7 @@
 				</q-tab-panel>
 
 				<q-tab-panel name="libraries">
-					<div class="cards_wrapper q-gutter-x-sm">
+					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
 						<ActionCard
 							v-for="librarie in teamLibraries"
 							:key="librarie.id"
@@ -58,7 +59,7 @@
 				</q-tab-panel>
 
 				<q-tab-panel name="environnements">
-					<div class="cards_wrapper q-gutter-x-sm">
+					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
 						<ActionCard
 							v-for="env in teamEnvironnements"
 							:key="env.id"
@@ -90,21 +91,40 @@ export default {
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Brahim",
 					role: "Admin",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 				{
 					id: 1,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Sabine",
 					role: "Dev",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 				{
 					id: 2,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Sophia",
 					role: "DevOps",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 3,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Gabriel",
+					role: "DevOps",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 4,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Anouk",
+					role: "DevOps",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 			],
 		},
@@ -115,19 +135,22 @@ export default {
 					id: 0,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Product 1",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 				{
 					id: 1,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Product 2",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 				{
 					id: 2,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Product 3",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 			],
 		},
@@ -138,19 +161,22 @@ export default {
 					id: 0,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Library 1",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 				{
 					id: 1,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Library 2",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 				{
 					id: 2,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Library 3",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 			],
 		},
@@ -161,19 +187,22 @@ export default {
 					id: 0,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Env 1",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 				{
 					id: 1,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Env 2",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 				{
 					id: 2,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Env 3",
-					description: "Ceci est une description",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
 			],
 		},
@@ -185,4 +214,7 @@ export default {
 	},
 };
 </script>
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.q-tab-panel
+	padding: 25px
+</style>

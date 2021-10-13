@@ -1,4 +1,6 @@
 export const GET_DOMAINS = (state, domains) => (state.domains = domains);
+export const GET_DOMAINS_TREE = (state, domains) =>
+	(state.domainsTree = domains);
 
 export const GET_DOMAIN_BY_ID = (state, id) => {
 	const index = state.domains.findIndex((domain) => domain.id === id);
