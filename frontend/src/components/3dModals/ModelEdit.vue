@@ -1,7 +1,5 @@
 <template>
-  <div class="wrapper">
     <div id="container"></div>
-  </div>
 </template>
 
 <script>
@@ -96,5 +94,5 @@ export default {
 
 #container
   width: 100%
-  height: 100%
+  height: 80vh
 </style>

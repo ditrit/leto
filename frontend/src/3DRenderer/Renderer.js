@@ -29,10 +29,10 @@ class Renderer  extends EventEmitter{
 		this.scene.add(ambientLight)
 		const gridHelper = createGridHelper
 		this.scene.add(gridHelper())
-	//	this.addItem(new Item({}))
+		//	this.addItem(new Item({}))
 
 		//const cube = createCube();
-	//	this.scene.add(cube)
+		//	this.scene.add(cube)
 		const resizer = new Resizer(container, this.camera, this.renderer)
 		const cameraController = new CameraController(this.camera, this.renderer.domElement)
 		const mouseController = new MouseController(this.scene, this.renderer, this.camera, this.items)
@@ -55,7 +55,15 @@ class Renderer  extends EventEmitter{
 		await item.create3DItem()
 		this.scene.add(item.threeObj)
 		this.items.push(item)
-		this.grid = new Grid(this.items)
+		if (!item.parentId) {
+			this.grid = new Grid(this.items)
+		} else {
+			const parentItem = this.items.find(i => i.id === item.parentId)
+			console.log('parentItem', parentItem)
+			item.threeObj.position.x = parentItem.threeObj.position.x
+			item.threeObj.position.z = parentItem.threeObj.position.z
+			item.threeObj.position.y = parentItem.threeObj.position.y + parentItem.height
+		}
 	}
 	updateItem(item) {
 		const rendererItem = this.items.find(i => i.id === item.id)

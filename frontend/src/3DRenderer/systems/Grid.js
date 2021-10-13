@@ -19,6 +19,7 @@ class Grid {
 
 	}
 	placeItemOnGrid(item) {
+		if (item.parentId) return
 		console.log('positioning item', item, this.grid)
 		const freeColumnIndex = this.grid.findIndex(c => c.some(l => !l))
 		console.log('freeColumnIndex', freeColumnIndex)

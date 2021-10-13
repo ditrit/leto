@@ -71,11 +71,11 @@
 
 		<q-page-container>
 			<div class="row">
-				<div class="col-6">
-					<ModelEdit :items="items" @select:item="selectItem" />
+				<div class="col col-6">
+							<ModelEdit :items="items" @select:item="selectItem" />
 				</div>
-				<div class="col-2"></div>
-				<div class="col4">
+				<div class="col col-1"></div>
+				<div class="col col-4">
 
 					<q-card v-if="selectedItem" style="max-width: 450px">
 						<q-card-section>
@@ -90,9 +90,10 @@
 						</q-card-section>
 						<q-card-section>
 							{{selectedItem}}
+							{{selectedItemChildren}}
 						</q-card-section>
 					</q-card>
-					<template v-else :key="item.id" v-for="item in items">
+					<template v-else :key="item.id" v-for="item in baseItems">
 						<q-card @click="selectItem(item)">
 							<q-card-section>
 								{{item.name}}
@@ -146,11 +147,21 @@ export default {
 			);*/
 		});
 
+		const selectedItemChildren = computed(() => {
+			if (!selectedItem.value) return null;
+			return items.value.filter(i => i.parentId === selectedItem.value.id)
+		})
+		const baseItems = computed(() => {
+			return items.value.filter(i => !i.parentId)
+		})
+
 		return {
 			drawer: ref(false),
 			search,
 			items,
 			selectedItem,
+			selectedItemChildren,
+			baseItems,
 			//error,
 			//path,
 			filterdSidebarItem,
@@ -176,6 +187,9 @@ export default {
 		addItem(item) {
 			const newItem = JSON.parse(JSON.stringify(item))
 			newItem.id = this.createKey()
+			if (this.selectedItem) {
+				newItem.parentId = this.selectedItem.id
+			}
 			console.log('adding item', newItem)
 
 			this.items.push(newItem)
