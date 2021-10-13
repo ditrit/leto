@@ -8,50 +8,50 @@ const routes = [
 			{
 				path: "teams",
 				component: () => import("pages/PageTeams.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 
 			{
 				path: "child",
 				component: () => import("pages/PageTeamChild.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 
 			{
 				path: "model",
 				component: () => import("pages/Model.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 			{
 				path: "source",
 				component: () => import("pages/Source.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 
 			{
 				path: "products",
 				component: () => import("pages/PageProducts.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 			{
 				path: "libraries",
 				component: () => import("pages/PageLibraries.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 			{
 				path: "dashboard",
 				component: () => import("pages/PageDashboard.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings",
 				component: () => import("pages/PageSettings.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 			{
 				path: "domain",
 				component: () => import("pages/PageDomain.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 		],
 	},

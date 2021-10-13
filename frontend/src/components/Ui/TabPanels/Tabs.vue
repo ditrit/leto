@@ -9,7 +9,6 @@
 				align="justify"
 				narrow-indicator
 			>
-				<q-tab dense name="tags" label="Tags" icon="sell" />
 				<q-tab dense name="products" label="Products" icon="apps" />
 				<q-tab dense name="team_members" label="Team members" icon="group" />
 				<q-tab dense name="libraries" label="Libraries" icon="library_books" />

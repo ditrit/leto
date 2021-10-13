@@ -28,7 +28,6 @@
 			<div class="panel_wrapper q-mt-lg">
 				<GlobalSearch class="global_Search__right" />
 				<Tabs
-					:allTags="tags"
 					:teamProducts="teamProducts"
 					:teamMembers="teamMembers"
 					:teamLibraries="teamLibraries"
@@ -80,7 +79,6 @@ export default defineComponent({
 			// progress: tags.length,
 			lorem:
 				"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-
 			oepnDialog,
 			tags,
 			child,
