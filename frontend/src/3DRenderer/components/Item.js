@@ -6,7 +6,7 @@ class Item {
 		Object.assign(this, params)
 		this.links = []
 		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
-		this.grid.gridSpacing = 0.1
+		this.grid.gridSpacing = 0.5
 		this.canvas = document.createElement('canvas');
 
 
@@ -98,12 +98,6 @@ class Item {
 		this.threeObj.children[0].geometry.dispose()
 		this.threeObj.children[0].geometry = new BoxGeometry(this.width, this.height, this.depth)
 		await this.updateCanvas()
-		if (this.parentItem) {
-		//	await this.parentItem.grid.updateBlockSize()
-
-			//await this.parentItem.resize(this.parentItem.grid.width, this.parentItem.grid.depth)
-		}
-
 
 		this.grid.updatePlacement()
 		/*const newObj = await this.create3DItem()

@@ -99,7 +99,10 @@ class Grid {
 		}
 		this.cellWidth = Math.max(this.cellWidth, ...this.items.map(i => (i && i.width) ? i.width : 1))
 		this.cellDepth = Math.max(this.cellDepth, ...this.items.map(i => (i && i.depth) ? i.depth: 1))
-		for (let item of this.items.filter(i => i && i.grid)) {
+		for (let item of this.items.filter(i => i && typeof i !== 'string')) {
+			console.log('resizing item', item)
+			item.baseDepth = this.cellDepth
+			item.baseWidth = this.cellWidth
 			await item.resize()
 		}
 		this.updatePlacement()
