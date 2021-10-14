@@ -6,7 +6,6 @@ import auth from "./Auth/index";
 import appUsers from "./Users/index";
 import appDomain from "./Domains/index";
 import appTags from "./Tags/index";
-import appTeams from "./Teams/index";
 
 /*
  * If not building with SSR mode, you can
@@ -23,7 +22,6 @@ export default store(function (/* { ssrContext } */) {
 			auth,
 			appUsers,
 			appDomain,
-			appTeams,
 			appTags,
 		},
 		strict: process.env.DEBUGGING,

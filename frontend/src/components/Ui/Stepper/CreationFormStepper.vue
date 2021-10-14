@@ -269,10 +269,10 @@ export default {
 		 * TODO
 		 * 	1 - regroupe functions by thematique
 		 */
-		const fetchTeams = store.dispatch("appTeams/fetchAllTeams");
+		const fetchTeams = store.dispatch("appDomain/fetchAllDomaines");
 		const fetchTags = store.dispatch("appTags/fetchAllTags");
 
-		const allTeams = computed(() => store.getters["appTeams/allTeams"]);
+		const allTeams = computed(() => store.getters["appDomain/allDomaines"]);
 		console.log("allTeams: ", allTeams.value);
 
 		const getTagsNames = async () => {
