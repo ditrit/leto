@@ -41,8 +41,15 @@ class Renderer  extends EventEmitter{
 		mouseController.on('intersect', (event) => this.onClickSelect(event))
 
 	}
-	render() {
+	async render() {
 		//console.log('rendering', this.scene, this.camera)
+		if (this.grid.needsUpdate) {
+			await this.grid.updateBlockSize()
+			this.grid.updatePlacement()
+			this.grid.needsUpdate = false
+			console.log('grid new block sizes', this.grid)
+
+		}
 		this.renderer.render(this.scene, this.camera);
 	}
 	onClickSelect(object) {
@@ -60,8 +67,10 @@ class Renderer  extends EventEmitter{
 
 		if (!item.parentId) {
 			gridToUpdate = this.grid
+
 		} else {
 			parentItem = this.items.find(i => i.id === item.parentId)
+			item.parentItem = parentItem
 			if (!parentItem || !parentItem.threeObj) return
 			gridToUpdate = parentItem.grid
 			console.log('parentItem', parentItem)
@@ -71,12 +80,22 @@ class Renderer  extends EventEmitter{
 			item.threeObj.position.y = parentItem.threeObj.position.y + parentItem.height*/
 		}
 		gridToUpdate.resizeIfNecessary()
+		//	item.width = gridToUpdate.cellWidth
+		//item.depth = gridToUpdate.cellDepth
+
 		if (parentItem)
-			await parentItem.resize(this.scene)
+			await parentItem.resize(gridToUpdate.width, gridToUpdate.depth)
+
+
+		item.baseWidth = gridToUpdate.cellWidth
+		item.baseDepth = gridToUpdate.cellDepth
+
 		await item.create3DItem()
 		this.scene.add(item.threeObj)
 		this.items.push(item)
 		gridToUpdate.placeItemOnGrid(item)
+		this.grid.needsUpdate = true
+
 
 	}
 	updateItem(item) {

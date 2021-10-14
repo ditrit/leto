@@ -4,21 +4,18 @@ import {Grid} from "src/3DRenderer/systems/Grid";
 class Item {
 	constructor(params) {
 		Object.assign(this, params)
-		const width = this.width * 500;
-		const height = this.height *500;
 		this.links = []
 		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
-		this.grid.cellDepth = 1.1
-		this.grid.cellWidth = 1.1
 		this.grid.gridSpacing = 0.1
 		this.canvas = document.createElement('canvas');
-		this.canvas.width  = width;
-		this.canvas.height = height;
+
 
 	}
 	updateCanvas() {
 		const width = this.width * 500;
 		const height = this.height *500;
+		this.canvas.width  = width;
+		this.canvas.height = height;
 		console.log('item color', this.color)
 		console.log('item name', this.name)
 
@@ -85,12 +82,29 @@ class Item {
 		return finalObject
 
 	}
-	async resize() {
-		this.width = this.grid.columnCount * 1.2
-		this.depth = this.grid.lineCount * 1.2
+	get width() {
+		return Math.max(this.grid.width, this.baseWidth)
+	}
+	get depth() {
+		return Math.max(this.grid.depth, this.baseDepth)
+	}
+	async resize(newWidth = 1, newDepth = 1) {
+		/*if (followGrid) {
+			this.width = this.grid.width
+			this.depth = this.grid.depth
+		}*/
+		/*this.width = newWidth
+		this.depth = newDepth*/
 		this.threeObj.children[0].geometry.dispose()
 		this.threeObj.children[0].geometry = new BoxGeometry(this.width, this.height, this.depth)
 		await this.updateCanvas()
+		if (this.parentItem) {
+		//	await this.parentItem.grid.updateBlockSize()
+
+			//await this.parentItem.resize(this.parentItem.grid.width, this.parentItem.grid.depth)
+		}
+
+
 		this.grid.updatePlacement()
 		/*const newObj = await this.create3DItem()
 		Object.assign(newObj.position, previousPosition)
@@ -105,7 +119,7 @@ class Item {
 		this.updateCanvas().then(() => {
 			console.log('canvas updated')
 			if (this.isSelected) {
-			this.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0xff0000 )))
+				this.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0xff0000 )))
 			} else {
 				this.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0x000000 )))
 			}

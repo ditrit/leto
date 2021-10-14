@@ -15,8 +15,8 @@ class MouseController extends EventEmitter{
 		event.preventDefault()
 		console.log("renderer clicked", event, this)
 		const mousePos = {
-			x:  (event.layerX / event.target.width) * 2 - 1,
-			y: -(event.layerY / event.target.height) * 2 + 1
+			x:  (event.layerX / event.target.scrollWidth) * 2 - 1,
+			y: -(event.layerY / event.target.scrollHeight) * 2 + 1
 		}
 		this.raycaster.setFromCamera(mousePos, this.camera)
 		const intersects = this.raycaster.intersectObjects(this.items.map(i => i.threeObj), true)
