@@ -72,7 +72,7 @@
 		<q-page-container>
 			<div class="row">
 				<div class="col col-6">
-							<ModelEdit :items="items" @select:item="selectItem" />
+					<ModelEdit :items="items" @select:item="selectItem" />
 				</div>
 				<div class="col col-1"></div>
 				<div class="col col-4">
@@ -89,8 +89,13 @@
 							</div>
 						</q-card-section>
 						<q-card-section>
-							{{selectedItem}}
-							{{selectedItemChildren}}
+							<template	:key="item.id" v-for="item in selectedItemChildren">
+								<q-card @click="selectItem(item)">
+									<q-card-section>
+										{{item.name}}
+									</q-card-section>
+								</q-card>
+							</template>
 						</q-card-section>
 					</q-card>
 					<template v-else :key="item.id" v-for="item in baseItems">
