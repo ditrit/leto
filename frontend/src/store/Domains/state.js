@@ -1,4 +1,4 @@
 export default {
-	domainsTree: [],
 	domains: [],
+	domainsTree: [],
 };

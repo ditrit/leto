@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
+import { useStore } from "vuex";
 import getDataItems from "../composables/getDataItems";
 import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
 import PageContent from "../components/Content/PageContent";
@@ -62,20 +63,20 @@ const buttonsList = [
 		icon: "add",
 		link: "/",
 	},
-	{
-		title: "Add to Favorite",
-		styles: "bg-white q-mt-sm",
-		color: "primary",
-		icon: "favorite",
-		link: "#/favorite",
-	},
-	{
-		title: "Root Team",
-		styles: "bg-white q-mt-sm",
-		color: "primary",
-		icon: "add",
-		link: "#/teams",
-	},
+	// {
+	// 	title: "Add to Favorite",
+	// 	styles: "bg-white q-mt-sm",
+	// 	color: "primary",
+	// 	icon: "favorite",
+	// 	link: "#/favorite",
+	// },
+	// {
+	// 	title: "Root Team",
+	// 	styles: "bg-white q-mt-sm",
+	// 	color: "primary",
+	// 	icon: "add",
+	// 	link: "#/teams",
+	// },
 ];
 
 export default defineComponent({
@@ -83,10 +84,23 @@ export default defineComponent({
 	components: { BtnAddNew, PageContent, CreationFormStepper },
 
 	setup() {
+		const allDomains = ref([]);
+		const allTags = ref([]);
+		const store = useStore();
 		const oepnDialog = ref(false);
 		const { path, dataItems, error, fetchData } = getDataItems();
 		const data = fetchData("http://localhost:3000/teams");
 		dataItems.value = data;
+
+		// fetch All Domaines
+		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
+		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
+		allDomains.value = getDomaies.value;
+		console.log("getDomaies team Page: ", allDomains.value);
+		// fetch All Tags
+		const fetchTags = store.dispatch("appTags/fetchAllTags");
+		allTags.value = store.getters["appTags/allTags"];
+		console.log("tagsvalue : ", allTags.value);
 
 		return {
 			// progress: dataItems.length,
@@ -95,6 +109,11 @@ export default defineComponent({
 			error,
 			buttonsList,
 			oepnDialog,
+			fetchDomaines,
+			allDomains,
+			getDomaies,
+			allTags,
+			fetchTags,
 		};
 	},
 });

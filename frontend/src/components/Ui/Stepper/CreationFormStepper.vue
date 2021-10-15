@@ -27,6 +27,7 @@
 						</div>
 						<div class="col">
 							<q-select
+								v-if="options"
 								filled
 								:options="options"
 								label="Team Parent"
@@ -72,6 +73,7 @@
 				<q-step :name="2" prefix="2" title="">
 					<Tabs
 						:allTags="tags"
+						:teamProducts="domainProducts"
 						:teamMembers="teamMembers"
 						:teamLibraries="teamLibraries"
 						:teamEnvironnements="teamEnvironnements"
@@ -131,6 +133,7 @@ export default {
 		const name = ref("");
 		const teamParent = ref("");
 		const domainID = ref("");
+		const selectedDomain = ref(null);
 		const shortDescription = ref("");
 		const description = ref("");
 		const optionsSelections = ref([]);
@@ -138,6 +141,9 @@ export default {
 		const tags = ref([]);
 		const $q = useQuasar();
 		const text = ref("");
+		const domainProducts = ref([]);
+		const domainAuthorizations = ref([]);
+		const domainLibraries = ref([]);
 		const teamMembers = ref([
 			{
 				id: 0,
@@ -175,7 +181,6 @@ export default {
 				description: "Ceci est une description",
 			},
 		]);
-
 		const teamLibraries = ref([
 			{
 				id: 0,
@@ -269,49 +274,79 @@ export default {
 		 * TODO
 		 * 	1 - regroupe functions by thematique
 		 */
-		const fetchTeams = store.dispatch("appDomain/fetchAllDomaines");
+		// fetch All Domaines
+		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
+		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
+		console.log("getDomaies: ", getDomaies.value);
+
+		// fetch All Tags
 		const fetchTags = store.dispatch("appTags/fetchAllTags");
-
-		const allTeams = computed(() => store.getters["appDomain/allDomaines"]);
-		console.log("allTeams: ", allTeams.value);
-
-		const getTagsNames = async () => {
+		// Get Domes names
+		const getParentTags = async () => {
 			const allTags = await store.getters["appTags/allTags"];
 			const data = await allTags.map((tag) => tag.Name);
 			return (tags.value = data);
 		};
-		getTagsNames();
 
-		optionsSelections.value = allTeams.value.map((payload) => {
+		// Get input Select options value
+		optionsSelections.value = getDomaies.value.map((payload) => {
 			return {
-				name: payload.Name,
 				id: payload.ID,
-				parentName: payload?.Parent?.Name,
-				parentId: payload.ParentID,
+				name: payload.Name,
+				parentName: payload?.Name,
+				parentId: payload?.ParentID,
+				authorizations: payload?.Authorizations,
+				libraries: payload?.Libraries,
+				products: payload?.Products,
 			};
 		});
+		console.log("optionsSelections: ", optionsSelections);
 		let unique = optionsSelections.value.map((item) => item.name);
-		options.value = [...new Set(unique)].filter((item) => item != null);
+		// options.value = [...new Set(unique)].filter((item) => item != null);
+		options.value = unique;
 
-		const getTeamParentId = () => {
+		const getDomainParentId = () => {
 			const obj = Object.values(optionsSelections.value);
 			let findId = obj.find((item) => item.name === teamParent.value);
-			console.log("parent Team Id: ", findId);
+			console.log("parent Team Id: ", findId.parentId);
+			console.log("Team Id: ", findId.id);
 			return (domainID.value = findId.id);
 		};
+		// Fetch Domain by ID
+		const techDomainByID = () => {
+			const domain = optionsSelections.value.filter(
+				(item) => item.id === domainID.value
+			);
+			console.log("selectedDomain.value : ", selectedDomain.value);
+			return (selectedDomain.value = domain);
+		};
+		const getDomainParentProducts = () => {
+			const obj = Object.values(optionsSelections.value);
+			let findParent = obj.find((item) => item.name === teamParent.value);
+			return (domainProducts.value = findParent.products);
+		};
+
+		console.log("domainProducts.value : ", domainProducts.value);
 
 		return {
 			step: ref(1),
 			model: ref(null),
-			fetchTeams,
+			fetchDomaines,
 			fetchTags,
 			optionsSelections,
 			options,
 			domainID,
+			selectedDomain,
 			tags,
 			teamMembers,
 			teamLibraries,
 			teamEnvironnements,
+			getParentTags,
+			getDomainParentProducts,
+			techDomainByID,
+			domainProducts,
+			domainAuthorizations,
+			domainLibraries,
 			onRejected,
 			text,
 			store,
@@ -322,13 +357,20 @@ export default {
 
 			onSubmit() {
 				const newDomain = {
-					id: getTeamParentId(),
+					pid: getDomainParentId(),
 					name: name.value,
 					teamParent: teamParent.value,
 					shortDescription: shortDescription.value,
 					description: description.value,
 					// tags: tags.value,
 				};
+				// const newDomain = {
+				// 	pid: 701720315569373200,
+				// 	name: "Brahim",
+				// 	teamParent: "root",
+				// 	shortDescription: "Short",
+				// 	description: "long",
+				// };
 				store.dispatch("appDomain/addDomain", newDomain);
 				console.log(newDomain);
 				$q.notify({
