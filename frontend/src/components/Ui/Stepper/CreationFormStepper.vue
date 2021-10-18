@@ -70,11 +70,9 @@
 				</q-step>
 
 				<q-step :name="2" prefix="2" title="">
-					<q-badge color="secondary" multi-line>
-						Model: "{{ selectedParentData }}"
-					</q-badge>
 					<Tabs
-						:allTags="tags"
+						v-if="selectedParentData"
+						:allTags="null"
 						:teamProducts="selectedParentData.products"
 						:teamMembers="selectedParentData.authorizations"
 						:teamLibraries="selectedParentData.libraries"
@@ -137,90 +135,11 @@ export default {
 		const domainID = ref("");
 		const shortDescription = ref("");
 		const description = ref("");
+		const selectedParentData = ref(null);
 		const optionsSelections = ref(null);
 		const options = ref([]);
 		const SelectedDomain = ref([]);
-		const tags = ref([]);
 		const $q = useQuasar();
-		const text = ref("");
-		const domainProducts = ref([]);
-		const domainAuthorizations = ref([]);
-		const domainLibraries = ref([]);
-		const teamMembers = ref([
-			{
-				id: 0,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Brahim",
-				role: "Admin",
-				description: "Ceci est une description",
-			},
-			{
-				id: 1,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Sabine",
-				role: "Dev",
-				description: "Ceci est une description",
-			},
-			{
-				id: 2,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Sophia",
-				role: "DevOps",
-				description: "Ceci est une description",
-			},
-			{
-				id: 3,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Gabriel",
-				role: "DevOps",
-				description: "Ceci est une description",
-			},
-			{
-				id: 4,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Anouk",
-				role: "DevOps",
-				description: "Ceci est une description",
-			},
-		]);
-		const teamLibraries = ref([
-			{
-				id: 0,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 1",
-				description: "Ceci est une description",
-			},
-			{
-				id: 1,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 2",
-				description: "Ceci est une description",
-			},
-			{
-				id: 2,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 3",
-				description: "Ceci est une description",
-			},
-			{
-				id: 3,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 4",
-				description: "Ceci est une description",
-			},
-			{
-				id: 4,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 5",
-				description: "Ceci est une description",
-			},
-			{
-				id: 5,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 6",
-				description: "Ceci est une  description",
-			},
-		]);
 		const teamEnvironnements = ref([
 			{
 				id: 0,
@@ -265,7 +184,6 @@ export default {
 				description: "Ceci est une  description",
 			},
 		]);
-
 		function onRejected(rejectedEntries) {
 			$q.notify({
 				type: "negative",
@@ -282,17 +200,8 @@ export default {
 		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
 		console.log("getDomaies: ", getDomaies.value);
 
-		// fetch All Tags
-		const fetchTags = store.dispatch("appTags/fetchAllTags");
-		// Get Domes names
-		const getParentTags = async () => {
-			const allTags = await store.getters["appTags/allTags"];
-			const data = await allTags.map((tag) => tag.Name);
-			return (tags.value = data);
-		};
-
 		// Get input Select options value
-		optionsSelections.value = getDomaies.value.map((payload) => {
+		let dataReturned = getDomaies.value.map((payload) => {
 			return {
 				id: payload.ID,
 				name: payload.Name,
@@ -305,105 +214,38 @@ export default {
 				products: payload?.Products,
 			};
 		});
-		// let unique = optionsSelections.value.map((item) => item.name);
-		// //options.value = [...new Set(unique)].filter((item) => item != null);
-		// options.value = unique;
-		// console.log("options.value: ", options.value);
-
-		// const getTeamParentData = async () => {
-		// 	let availableDomaines = await optionsSelections.value;
-		// 	let chosenTeamParent = await teamParent.value;
-		// 	return (SelectedDomain.value = availableDomaines.value.filter(
-		// 		(item) => item.name === chosenTeamParent.name
-		// 	));
-		// };
-		// get alldomaines available
-		// get the teamParent avalue
-		// filter alldomaines by teamParent value
-		// show the filter data in the second step on the form
-
-		console.log(SelectedDomain.value);
-		console.log("optionsSelections: ", optionsSelections.value);
-
-		const getDomainParentId = () => {
-			const obj = optionsSelections.value;
-			let findId = obj.find((item) => item.name === teamParent.value);
-
-			console.log("Team Id: ", findId.id);
-			return (domainID.value = findId.id);
-		};
-
-		// const getTeamParentObj = async () => {
-		// 	const data = await optionsSelections.value.filter(
-		// 		(item) => item.id === domainID.value
-		// 	);
-		// 	console.log("data: ", data);
-		// 	return data;
-		// };
-
-		console.log("domainID.value: ", domainID.value);
-		// Fetch domain By ID
-		const domainById = store.dispatch(
-			"appDomain/fetchDomainById",
-			domainID.value
+		console.log("dataReturned: ", dataReturned);
+		optionsSelections.value = [...new Set(dataReturned)].filter(
+			(item) => item != null
 		);
-		console.log("domainById: ", domainById.value);
-		console.log("teamParent: ", teamParent.value);
-
-		const getDomainParentProducts = () => {
-			let findParent = optionsSelections.value.find(
-				(item) => item.name === teamParent.value
-			);
-			return (domainProducts.value = findParent.products);
-		};
-		console.log("domainProducts.value : ", domainProducts.value);
 
 		return {
 			step: ref(1),
-			selectedParentData: ref(null),
+			selectedParentData,
 			fetchDomaines,
-			fetchTags,
 			SelectedDomain,
 			optionsSelections,
-			getDomainParentId,
 			options,
 			domainID,
-			tags,
-			teamMembers,
-			teamLibraries,
 			teamEnvironnements,
-			getParentTags,
-			getDomainParentProducts,
-			domainProducts,
-			domainAuthorizations,
-			domainLibraries,
 			onRejected,
-			text,
 			store,
 			name,
 			teamParent,
 			shortDescription,
 			description,
-			domainById,
-			// getTeamParentData,
-			// getTeamParentObj,
 
 			onSubmit() {
 				const newDomain = {
-					pid: getDomainParentId(),
+					pid: 702883548917661697,
 					name: name.value,
-					teamParent: teamParent.value,
+					teamParent: selectedParentData.value.parentName,
 					shortDescription: shortDescription.value,
 					description: description.value,
-					// tags: tags.value,
+					authorizations: selectedParentData.value.authorizations,
+					libraries: selectedParentData.value.libraries,
+					products: selectedParentData.value.products,
 				};
-				// const newDomain = {
-				// 	pid: 701720315569373200,
-				// 	name: "Brahim",
-				// 	teamParent: "root",
-				// 	shortDescription: "Short",
-				// 	description: "long",
-				// };
 				store.dispatch("appDomain/addDomain", newDomain);
 				console.log(newDomain);
 				$q.notify({
