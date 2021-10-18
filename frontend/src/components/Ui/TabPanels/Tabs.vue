@@ -28,10 +28,9 @@
 					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
 						<ActionCard
 							v-for="product in teamProducts"
-							:key="product.id"
-							:name="product.name"
-							:role="product.role"
-							:description="product.description"
+							:key="product.ID"
+							:name="product.Name"
+							:description="product.ShortDescription"
 						/>
 					</div>
 				</q-tab-panel>
@@ -39,10 +38,10 @@
 					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
 						<ActionCard
 							v-for="member in teamMembers"
-							:key="member.id"
-							:name="member.name"
-							:role="member.role"
-							:description="member.description"
+							:key="member.ID"
+							:name="member.User.LastName"
+							:role="member.Role.Name"
+							:description="member.ShortDescription"
 						/>
 					</div>
 				</q-tab-panel>
@@ -51,9 +50,9 @@
 					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
 						<ActionCard
 							v-for="librarie in teamLibraries"
-							:key="librarie.id"
-							:name="librarie.name"
-							:description="librarie.description"
+							:key="librarie.ID"
+							:name="librarie.Name"
+							:description="librarie.ShortDescription"
 						/>
 					</div>
 				</q-tab-panel>

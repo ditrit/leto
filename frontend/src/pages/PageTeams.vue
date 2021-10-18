@@ -33,7 +33,10 @@
 								<div class="text-h6 q-pa-md">Create New Team</div>
 							</q-card-section>
 							<q-card-section class="q-pt-none">
-								<CreationFormStepper />
+								<CreationFormStepper
+									:allDomains="allDomains"
+									:allTags="allTags"
+								/>
 							</q-card-section>
 							<q-card-actions align="right" class="bg-white text-teal">
 								<q-btn flat label="Next" v-close-popup />
@@ -84,8 +87,8 @@ export default defineComponent({
 	components: { BtnAddNew, PageContent, CreationFormStepper },
 
 	setup() {
-		const allDomains = ref([]);
 		const allTags = ref([]);
+		const allDomains = ref([]);
 		const store = useStore();
 		const oepnDialog = ref(false);
 		const { path, dataItems, error, fetchData } = getDataItems();
@@ -96,7 +99,8 @@ export default defineComponent({
 		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
 		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
 		allDomains.value = getDomaies.value;
-		console.log("getDomaies team Page: ", allDomains.value);
+		console.log("getDomaies team page : ", allDomains.value);
+
 		// fetch All Tags
 		const fetchTags = store.dispatch("appTags/fetchAllTags");
 		allTags.value = store.getters["appTags/allTags"];
@@ -110,7 +114,6 @@ export default defineComponent({
 			buttonsList,
 			oepnDialog,
 			fetchDomaines,
-			allDomains,
 			getDomaies,
 			allTags,
 			fetchTags,

@@ -27,11 +27,10 @@
 						</div>
 						<div class="col">
 							<q-select
-								v-if="options"
 								filled
-								:options="options"
+								:options="optionsSelections"
 								label="Team Parent"
-								v-model="teamParent"
+								v-model="selectedParentData"
 							/>
 						</div>
 					</div>
@@ -71,11 +70,14 @@
 				</q-step>
 
 				<q-step :name="2" prefix="2" title="">
+					<q-badge color="secondary" multi-line>
+						Model: "{{ selectedParentData }}"
+					</q-badge>
 					<Tabs
 						:allTags="tags"
-						:teamProducts="domainProducts"
-						:teamMembers="teamMembers"
-						:teamLibraries="teamLibraries"
+						:teamProducts="selectedParentData.products"
+						:teamMembers="selectedParentData.authorizations"
+						:teamLibraries="selectedParentData.libraries"
 						:teamEnvironnements="teamEnvironnements"
 					/>
 				</q-step>
@@ -133,11 +135,11 @@ export default {
 		const name = ref("");
 		const teamParent = ref("");
 		const domainID = ref("");
-		const selectedDomain = ref(null);
 		const shortDescription = ref("");
 		const description = ref("");
-		const optionsSelections = ref([]);
+		const optionsSelections = ref(null);
 		const options = ref([]);
+		const SelectedDomain = ref([]);
 		const tags = ref([]);
 		const $q = useQuasar();
 		const text = ref("");
@@ -274,6 +276,7 @@ export default {
 		 * TODO
 		 * 	1 - regroupe functions by thematique
 		 */
+
 		// fetch All Domaines
 		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
 		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
@@ -293,6 +296,8 @@ export default {
 			return {
 				id: payload.ID,
 				name: payload.Name,
+				label: payload.Name,
+				value: payload.Name,
 				parentName: payload?.Name,
 				parentId: payload?.ParentID,
 				authorizations: payload?.Authorizations,
@@ -300,50 +305,75 @@ export default {
 				products: payload?.Products,
 			};
 		});
-		console.log("optionsSelections: ", optionsSelections);
-		let unique = optionsSelections.value.map((item) => item.name);
-		// options.value = [...new Set(unique)].filter((item) => item != null);
-		options.value = unique;
+		// let unique = optionsSelections.value.map((item) => item.name);
+		// //options.value = [...new Set(unique)].filter((item) => item != null);
+		// options.value = unique;
+		// console.log("options.value: ", options.value);
+
+		// const getTeamParentData = async () => {
+		// 	let availableDomaines = await optionsSelections.value;
+		// 	let chosenTeamParent = await teamParent.value;
+		// 	return (SelectedDomain.value = availableDomaines.value.filter(
+		// 		(item) => item.name === chosenTeamParent.name
+		// 	));
+		// };
+		// get alldomaines available
+		// get the teamParent avalue
+		// filter alldomaines by teamParent value
+		// show the filter data in the second step on the form
+
+		console.log(SelectedDomain.value);
+		console.log("optionsSelections: ", optionsSelections.value);
 
 		const getDomainParentId = () => {
-			const obj = Object.values(optionsSelections.value);
+			const obj = optionsSelections.value;
 			let findId = obj.find((item) => item.name === teamParent.value);
-			console.log("parent Team Id: ", findId.parentId);
+
 			console.log("Team Id: ", findId.id);
 			return (domainID.value = findId.id);
 		};
-		// Fetch Domain by ID
-		const techDomainByID = () => {
-			const domain = optionsSelections.value.filter(
-				(item) => item.id === domainID.value
-			);
-			console.log("selectedDomain.value : ", selectedDomain.value);
-			return (selectedDomain.value = domain);
-		};
+
+		// const getTeamParentObj = async () => {
+		// 	const data = await optionsSelections.value.filter(
+		// 		(item) => item.id === domainID.value
+		// 	);
+		// 	console.log("data: ", data);
+		// 	return data;
+		// };
+
+		console.log("domainID.value: ", domainID.value);
+		// Fetch domain By ID
+		const domainById = store.dispatch(
+			"appDomain/fetchDomainById",
+			domainID.value
+		);
+		console.log("domainById: ", domainById.value);
+		console.log("teamParent: ", teamParent.value);
+
 		const getDomainParentProducts = () => {
-			const obj = Object.values(optionsSelections.value);
-			let findParent = obj.find((item) => item.name === teamParent.value);
+			let findParent = optionsSelections.value.find(
+				(item) => item.name === teamParent.value
+			);
 			return (domainProducts.value = findParent.products);
 		};
-
 		console.log("domainProducts.value : ", domainProducts.value);
 
 		return {
 			step: ref(1),
-			model: ref(null),
+			selectedParentData: ref(null),
 			fetchDomaines,
 			fetchTags,
+			SelectedDomain,
 			optionsSelections,
+			getDomainParentId,
 			options,
 			domainID,
-			selectedDomain,
 			tags,
 			teamMembers,
 			teamLibraries,
 			teamEnvironnements,
 			getParentTags,
 			getDomainParentProducts,
-			techDomainByID,
 			domainProducts,
 			domainAuthorizations,
 			domainLibraries,
@@ -354,6 +384,9 @@ export default {
 			teamParent,
 			shortDescription,
 			description,
+			domainById,
+			// getTeamParentData,
+			// getTeamParentObj,
 
 			onSubmit() {
 				const newDomain = {

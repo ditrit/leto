@@ -9,8 +9,8 @@ export const fetchAllDomaines = async ({ commit }) => {
 	commit("GET_DOMAINS", response.data);
 };
 
-export const fetchDomainById = async ({ commit }, domain) => {
-	let response = await API.get(`/domain/${domain.id}`);
+export const fetchDomainById = async ({ commit }, id) => {
+	let response = await API.get(`/domain/${id}`);
 	commit("GET_DOMAIN_BY_ID", response.data);
 };
 
