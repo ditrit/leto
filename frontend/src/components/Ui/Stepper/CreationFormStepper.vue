@@ -199,6 +199,7 @@ export default {
 		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
 		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
 		console.log("getDomaies: ", getDomaies.value);
+		console.log("selectedParentData: ", selectedParentData.value);
 
 		// Get input Select options value
 		let dataReturned = getDomaies.value.map((payload) => {
@@ -237,12 +238,12 @@ export default {
 
 			onSubmit() {
 				const newDomain = {
-					pid: 702883548917661697,
+					pid: selectedParentData.value.id,
 					name: name.value,
 					teamParent: selectedParentData.value.parentName,
 					shortDescription: shortDescription.value,
 					description: description.value,
-					authorizations: selectedParentData.value.authorizations,
+					// authorizations: selectedParentData.value.authorizations,
 					libraries: selectedParentData.value.libraries,
 					products: selectedParentData.value.products,
 				};

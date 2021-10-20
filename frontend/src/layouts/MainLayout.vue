@@ -5,6 +5,7 @@
 			<GlobalSearch />
 		</MainHeader>
 		<Drawer :data="data"> </Drawer>
+
 		<q-drawer
 			elevated
 			show-if-above
@@ -38,7 +39,6 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import EssentialTools from "components/EssentialTools";
 import AccountSettings from "../components/UI/Profil/AccountSettings";
-
 import Drawer from "../components/UI/Drawers/Drawer";
 import MainHeader from "../components/UI/Headers/mainHeader";
 import GlobalSearch from "../components/UI/Form/GlobalSearch";
@@ -129,76 +129,101 @@ export default {
 	},
 
 	setup() {
-		const data = ref([
-			{
-				label: "GIMS",
-				children: [
-					{
-						label: "Team One",
-						children: [
-							{ label: "Sub Team 1 - 1" },
-							{ label: "Sub Team 1 - 2" },
-						],
-					},
-					{
-						label: "Team Two",
-						disabled: false,
-						children: [
-							{ label: "Sub Team 2 - 1" },
-							{ label: "Sub Team 2 - 2" },
-						],
-					},
-					{
-						label: "Team Three",
-						children: [
-							{ label: "Sub Team 3 - 1" },
-							{ label: "Sub Team 3 - 2" },
-							{ label: "Sub Team 3 - 3" },
-						],
-					},
-				],
-			},
-			{
-				label: "BDDF",
-				children: [
-					{
-						label: "Team One",
-						children: [
-							{ label: "Sub Team 1 - 1" },
-							{ label: "Sub Team 1 - 2" },
-						],
-					},
-					{
-						label: "Team Two",
-						disabled: false,
-						children: [
-							{ label: "Sub Team 2 - 1" },
-							{ label: "Sub Team 2 - 2" },
-						],
-					},
-					{
-						label: "Team Three",
-						children: [
-							{ label: "Sub Team 3 - 1" },
-							{ label: "Sub Team 3 - 2" },
-							{ label: "Sub Team 3 - 3" },
-						],
-					},
-				],
-			},
-		]);
+		// const data = ref([
+		// 	{
+		// 		label: "GIMS",
+		// 		children: [
+		// 			{
+		// 				label: "Team One",
+		// 				children: [
+		// 					{ label: "Sub Team 1 - 1" },
+		// 					{ label: "Sub Team 1 - 2" },
+		// 				],
+		// 			},
+		// 			{
+		// 				label: "Team Two",
+		// 				disabled: false,
+		// 				children: [
+		// 					{ label: "Sub Team 2 - 1" },
+		// 					{ label: "Sub Team 2 - 2" },
+		// 				],
+		// 			},
+		// 			{
+		// 				label: "Team Three",
+		// 				children: [
+		// 					{ label: "Sub Team 3 - 1" },
+		// 					{ label: "Sub Team 3 - 2" },
+		// 					{ label: "Sub Team 3 - 3" },
+		// 				],
+		// 			},
+		// 		],
+		// 	},
+		// 	{
+		// 		label: "BDDF",
+		// 		children: [
+		// 			{
+		// 				label: "Team One",
+		// 				children: [
+		// 					{ label: "Sub Team 1 - 1" },
+		// 					{ label: "Sub Team 1 - 2" },
+		// 				],
+		// 			},
+		// 			{
+		// 				label: "Team Two",
+		// 				disabled: false,
+		// 				children: [
+		// 					{ label: "Sub Team 2 - 1" },
+		// 					{ label: "Sub Team 2 - 2" },
+		// 				],
+		// 			},
+		// 			{
+		// 				label: "Team Three",
+		// 				children: [
+		// 					{ label: "Sub Team 3 - 1" },
+		// 					{ label: "Sub Team 3 - 2" },
+		// 					{ label: "Sub Team 3 - 3" },
+		// 				],
+		// 			},
+		// 		],
+		// 	},
+		// ]);
+
+		const data = ref(null);
 		const store = useStore();
 		const getDomainTree = store.dispatch("appDomain/fetchDomainesTree");
 		const allDomainTree = computed(
 			() => store.getters["appDomain/allDomainesTree"]
 		);
-		console.log("allDomainTree: ", allDomainTree);
+		console.log("allDomainTree: ", allDomainTree.value);
+		let dataReturned = Object.values(allDomainTree.value);
+		// console.log("dataReturned All: ", dataReturned);
+		// console.log("dataReturned Domain label: ", dataReturned[0].Name);
+		// console.log(
+		// 	"dataReturned Childs label: ",
+		// 	dataReturned[1].map((item) => item.Domain.Name)
+		// );
+
+		data.value = [
+			{
+				label: dataReturned[0].Name,
+				children: [
+					{
+						label: dataReturned[1].map((item) => item?.Domain?.Name),
+						children: [
+							{ label: dataReturned[1].map((item) => item?.Childs?.Name) },
+						],
+					},
+				],
+			},
+		];
+
 		return {
 			data,
 			essentialTablinks,
 			linksToolsList,
 			getDomainTree,
 			allDomainTree,
+			dataReturned,
 		};
 	},
 };
@@ -227,7 +252,6 @@ export default {
 
 .q-drawer--left
 	// margin-top: 60px
-
 
 .teams_buttons__container
 	display: flex

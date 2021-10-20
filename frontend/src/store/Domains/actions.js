@@ -15,7 +15,7 @@ export const fetchDomainById = async ({ commit }, id) => {
 };
 
 export const addDomain = async ({ commit }, domain) => {
-	let response = await API.post(`/domain/${domain.pid}`, domain);
+	let response = await API.post(`/domain/703345557993750529`, domain);
 	commit("NEW_DOMAIN", response.data);
 };
 export const updateDomain = async ({ commit }, domain) => {
