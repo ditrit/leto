@@ -24,6 +24,7 @@ class Renderer  extends EventEmitter{
 		this.scene = createScene();
 		this.renderer = createRenderer();
 		this.items = []
+		this.links =[]
 		this.sizeChart = {
 			0: {width:1,depth:1}
 		}
@@ -77,6 +78,11 @@ class Renderer  extends EventEmitter{
 		this.emit('selected:item', item)
 		//item.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0xff0000 )))
 
+	}
+	addLink(link) {
+		link.create3DObject()
+		this.scene.add(link.threeObj)
+		this.links.push(link)
 	}
 	async addItem(item) {
 		console.log('renderer add item', item)

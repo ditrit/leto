@@ -72,7 +72,7 @@
 		<q-page-container>
 			<div class="row">
 				<div class="col col-6">
-					<ModelEdit :items="items" @select:item="selectItem" />
+					<ModelEdit :items="items" :links="links" @select:item="selectItem" />
 				</div>
 				<div class="col col-1"></div>
 				<div class="col col-4">
@@ -81,10 +81,18 @@
 						<q-card-section>
 							<div class="row">
 								<div class="col  col-8">
-									<q-input :color="selectedItem.color" v-model="selectedItem.name" label="Nom"></q-input>
+									<q-input :color="selectedItem.color" v-model="selectedItem.name" label="Name"></q-input>
 								</div>
 								<div class="col col-4">
 									<q-btn flat icon="close" @click="removeSelection"></q-btn>
+								</div>
+							</div>
+						</q-card-section>
+						<q-card-section>
+							<div class="row">
+								<div class="col">
+									<q-select v-model="newLinkTarget" :options="items" option-label="name"></q-select>
+									<q-btn @click="addLink">Relier</q-btn>
 								</div>
 							</div>
 						</q-card-section>
@@ -142,7 +150,9 @@ export default {
 		};
 		const search = ref("");
 		const selectedItem = ref(null)
+		const newLinkTarget = ref(null)
 		const items = ref([])
+		const links = ref([])
 		const filterdSidebarItem = computed(() => {
 			return Object.keys(dataItems).map(i => ({...dataItems[i],type: i}))
 				.filter((item) =>
@@ -164,6 +174,8 @@ export default {
 			drawer: ref(false),
 			search,
 			items,
+			links,
+			newLinkTarget,
 			selectedItem,
 			selectedItemChildren,
 			baseItems,
@@ -188,6 +200,15 @@ export default {
 			if (this.selectedItem)
 				this.selectedItem.isSelected = false
 			this.selectedItem = null
+		},
+		addLink() {
+			console.log('newLinkTarget', this.newLinkTarget)
+			this.links.push({
+				id: this.createKey(),
+				from: this.selectedItem.id,
+				to: this.newLinkTarget.id
+			})
+
 		},
 		addItem(item) {
 			const newItem = JSON.parse(JSON.stringify(item))

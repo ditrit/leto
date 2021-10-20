@@ -6,11 +6,13 @@
 const Three = require("three");
 import {Renderer} from 'src/3DRenderer/Renderer'
 import {Item} from 'src/3DRenderer/components/Item'
+import {Link} from 'src/3DRenderer/components/Link'
 
 export default {
   name: "ThreeTest",
 	props: {
-  	items: Array
+  	items: Array,
+		links: Array
 	},
   data() {
     return {};
@@ -54,6 +56,7 @@ export default {
       container.appendChild(this.renderer.domElement);*/
     },
     animate: function () {
+
 			requestAnimationFrame(this.animate);
 
 			this.renderer.render()
@@ -65,24 +68,38 @@ export default {
 		items: {
 			deep: true,
 			handler() {
-				console.log('items updated')
 				if (!this.localItems)
 					this.localItems = []
 				for (let item of this.items) {
 					const localIndex = this.localItems.findIndex(i => i.id === item.id)
 					if (localIndex === -1) {
-						console.log('new item')
 						const newItem = new Item(item)
 						this.localItems.push(newItem)
 						this.renderer.addItem(newItem)
 					} else {
-						console.log('update item')
 						Object.assign(this.localItems[localIndex], item)
 						this.renderer.updateItem(item)
 					}
 				}
 			}
 		},
+		links: {
+			deep: true,
+			handler() {
+				if (!this.localLinks)
+					this.localLinks = []
+				for (let link of this.links) {
+					const localIndex = this.localLinks.findIndex(i => i.id === link.id)
+					if (localIndex === -1) {
+						const item1 = this.localItems.find(i => i.id === link.from)
+						const item2 = this.localItems.find(i => i.id === link.to)
+						const newLink = new Link(item1, item2)
+						this.localLinks.push(newLink)
+						this.renderer.addLink(newLink)
+					}
+				}
+			}
+		}
 	},
 };
 </script>
