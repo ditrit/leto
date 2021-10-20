@@ -123,22 +123,22 @@ export default {
 		fetchData("http://localhost:3000/modelSideBar");*/
 		//TODO: clarify data model and storage
 		const dataItems = {
-			'root' : { 'name': 'root', 'derivedFrom' : '',  'height' : 0.9, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
-			'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root',  'height' : 0.9, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': ['router']} },
-			'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur',  'height' : 0.9, 'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-			'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur',  'height' : 0.9, 'color' : '#8288a1', 'logo' : 'print.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-			'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur',  'height' : 0.9, 'color' : '#8288a1', 'logo' : 'menu.webp', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-			'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur',  'height' : 0.9, 'color' : '#8288a1', 'logo' : 'dns.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-			'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur',  'height' : 0.9, 'color' : '#8288a1', 'logo' : 'mail.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-			'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur',  'height' : 0.9, 'color' : '#8288a1', 'logo' : 'web.jpg', 'capacities': {'nestedOn': [], 'linkedTo': ['database']}, 'requirements': {'nestedOn': [''], 'linkedTo': ['apache', 'php']} },
-			'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur',  'height' : 0.9, 'color' : '#8288a1', 'logo' : 'servBDD.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-			'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur',  'height' : 0.9, 'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-			'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel',  'height' : 0.9, 'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
-			'router': { 'name': 'router', 'derivedFrom' : 'root',  'height' : 0.9, 'color' : '#19bfba', 'logo' : 'wifi.png', 'capacities': {'nestedOn': [], 'linkedTo': ['serveur']}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
-			'apache': { 'name': 'apache', 'derivedFrom' : 'root',  'height' : 0.9, 'color' : '#a82b18', 'logo' : 'apache.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-			'php': { 'name': 'php', 'derivedFrom' : 'root',  'height' : 0.9, 'color' : '#3065ba', 'logo' : 'php.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-			'database': { 'name': 'database', 'derivedFrom' : 'root',  'height' : 0.9, 'color' : '#db852a', 'logo' : 'db.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
-			'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'root',  'height' : 0.9, 'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} }
+			'root' : { 'name': 'root', 'derivedFrom' : '',   'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
+			'serveur' : { 'name': 'serveur', 'derivedFrom' : 'root',   'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': ['router']} },
+			'serveurDeFichier' : { 'name': 'serveur de fichier', 'derivedFrom' : 'serveur',   'color' : '#8288a1', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurImpression' : { 'name': 'serveur d\'impression', 'derivedFrom' : 'serveur',   'color' : '#8288a1', 'logo' : 'print.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurApplication' : { 'name': 'serveur d\'application', 'derivedFrom' : 'serveur',   'color' : '#8288a1', 'logo' : 'menu.webp', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurDNS' : { 'name': 'serveur DNS', 'derivedFrom' : 'serveur',   'color' : '#8288a1', 'logo' : 'dns.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurMessagerie' : { 'name': 'serveur de messagerie', 'derivedFrom' : 'serveur',   'color' : '#8288a1', 'logo' : 'mail.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurWeb' : { 'name': 'serveur web', 'derivedFrom' : 'serveur',   'color' : '#8288a1', 'logo' : 'web.jpg', 'capacities': {'nestedOn': [], 'linkedTo': ['database']}, 'requirements': {'nestedOn': [''], 'linkedTo': ['apache', 'php']} },
+			'serveurBDD' : { 'name': 'serveur de bases de données', 'derivedFrom' : 'serveur',   'color' : '#8288a1', 'logo' : 'servBDD.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'serveurVirtuel' : { 'name': 'serveur virtuel', 'derivedFrom' : 'serveur',   'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+			'jetty' : { 'name': 'jetty', 'derivedFrom' : 'serveurVirtuel',   'color' : '#404040', 'logo' : 'file.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': [], 'linkedTo': []} },
+			'router': { 'name': 'router', 'derivedFrom' : 'root',   'color' : '#19bfba', 'logo' : 'wifi.png', 'capacities': {'nestedOn': [], 'linkedTo': ['serveur']}, 'requirements': {'nestedOn': [''], 'linkedTo': []} },
+			'apache': { 'name': 'apache', 'derivedFrom' : 'root',   'color' : '#a82b18', 'logo' : 'apache.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+			'php': { 'name': 'php', 'derivedFrom' : 'root',   'color' : '#3065ba', 'logo' : 'php.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+			'database': { 'name': 'database', 'derivedFrom' : 'root',   'color' : '#db852a', 'logo' : 'db.png', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} },
+			'nodejs': { 'name': 'nodejs', 'derivedFrom' : 'root',   'color' : '#2cab4c', 'logo' : 'nodejs.jpg', 'capacities': {'nestedOn': [], 'linkedTo': []}, 'requirements': {'nestedOn': ['serveur'], 'linkedTo': []} }
 		};
 		const search = ref("");
 		const selectedItem = ref(null)

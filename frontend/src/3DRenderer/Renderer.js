@@ -24,6 +24,9 @@ class Renderer  extends EventEmitter{
 		this.scene = createScene();
 		this.renderer = createRenderer();
 		this.items = []
+		this.sizeChart = {
+			0: {width:1,depth:1}
+		}
 		container.append(this.renderer.domElement)
 		const ambientLight = createAmbientLight()
 		this.scene.add(ambientLight)
@@ -41,10 +44,25 @@ class Renderer  extends EventEmitter{
 		mouseController.on('intersect', (event) => this.onClickSelect(event))
 
 	}
+	updateSizeChart() {
+		const zLevels = new Set(this.items.map(i => i.threeObj.position.y))
+		for (let zlevel of zLevels) {
+			if (!this.sizeChart.hasOwnProperty(zlevel)) {
+				this.sizeChart[zlevel] = {width:1,depth:1}
+			}
+			const items = this.items.filter(i => i.threeObj.position.y === zlevel)
+			const maxWidth = Math.max(...items.map(i => i.width))
+			const maxDepth = Math.max(...items.map(i => i.depth))
+			this.sizeChart[zlevel].width = Math.max(this.sizeChart[zlevel].width, maxWidth)
+			this.sizeChart[zlevel].depth = Math.max(this.sizeChart[zlevel].depth, maxDepth)
+
+		}
+	}
 	async render() {
 		//console.log('rendering', this.scene, this.camera)
 		if (this.grid.needsUpdate) {
-			await this.grid.updateBlockSize()
+			this.updateSizeChart()
+			await this.grid.updateBlockSize(this.sizeChart)
 			this.grid.updatePlacement()
 			this.grid.needsUpdate = false
 			console.log('grid new block sizes', this.grid)
@@ -79,12 +97,17 @@ class Renderer  extends EventEmitter{
 			item.threeObj.position.z = parentItem.threeObj.position.z
 			item.threeObj.position.y = parentItem.threeObj.position.y + parentItem.height*/
 		}
-		gridToUpdate.resizeIfNecessary()
+		const gridWasResized = gridToUpdate.resizeIfNecessary()
+		if (gridWasResized) {
+			/*this.sizeChart[gridToUpdate.parentItem.threeObj.position.z] = {
+				l:gridToUpdate.lineCount,
+				c:gridToUpdate.columnCount}*/
+		}
 		//	item.width = gridToUpdate.cellWidth
 		//item.depth = gridToUpdate.cellDepth
 
 		if (parentItem)
-			await parentItem.resize(gridToUpdate.width, gridToUpdate.depth)
+			await parentItem.resize()
 
 
 		item.baseWidth = gridToUpdate.cellWidth

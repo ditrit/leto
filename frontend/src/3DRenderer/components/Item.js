@@ -3,6 +3,7 @@ import {Grid} from "src/3DRenderer/systems/Grid";
 
 class Item {
 	constructor(params) {
+		this.height = 1
 		Object.assign(this, params)
 		this.links = []
 		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
@@ -99,7 +100,7 @@ class Item {
 		this.threeObj.children[0].geometry = new BoxGeometry(this.width, this.height, this.depth)
 		await this.updateCanvas()
 
-		this.grid.updatePlacement()
+		//this.grid.updatePlacement()
 		/*const newObj = await this.create3DItem()
 		Object.assign(newObj.position, previousPosition)
 		this.threeObj.clear()

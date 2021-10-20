@@ -39,7 +39,9 @@ class Grid {
 					}
 				}
 			}
+			return true
 		}
+		return false
 	}
 	get width() {
 		return this.colWidth * this.columnCount
@@ -87,18 +89,18 @@ class Grid {
 		item.threeObj.position.z =
 			(this.parentItem ? (this.parentItem.threeObj.position.z - this.depth / 2) : 0) +
 			this.getUsedDepthAtIndex(freeSlotIndex, freeColumnIndex) + this.lineDepth/2
-		item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 0.9 : 0
+		item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
 		item.baseWidth = this.cellWidth
 		item.baseDepth = this.cellDepth
 		this.items.push(item)
 	}
-	async updateBlockSize() {
-		for (let item of this.items.filter(i => i && i.grid)) {
-			await item.grid.updateBlockSize()
+	async updateBlockSize(sizeChart) {
 
-		}
-		this.cellWidth = Math.max(this.cellWidth, ...this.items.map(i => (i && i.width) ? i.width : 1))
-		this.cellDepth = Math.max(this.cellDepth, ...this.items.map(i => (i && i.depth) ? i.depth: 1))
+		const index = this.parentItem ? this.parentItem.threeObj.position.y +1 : 0
+		this.cellWidth = sizeChart[index] ? sizeChart[index].width : 1
+		this.cellDepth = sizeChart[index] ? sizeChart[index].depth : 1
+		//this.cellWidth = Math.max(this.cellWidth, ...this.items.map(i => (i && i.width) ? i.width : 1))
+		//this.cellDepth = Math.max(this.cellDepth, ...this.items.map(i => (i && i.depth) ? i.depth: 1))
 		for (let item of this.items.filter(i => i && typeof i !== 'string')) {
 			console.log('resizing item', item)
 			item.baseDepth = this.cellDepth
@@ -106,6 +108,10 @@ class Grid {
 			await item.resize()
 		}
 		this.updatePlacement()
+		for (let item of this.items.filter(i => i && i.grid)) {
+			await item.grid.updateBlockSize( sizeChart)
+
+		}
 
 	}
 	updatePlacement() {
@@ -121,7 +127,7 @@ class Grid {
 					item.threeObj.position.z =
 						(this.parentItem ? (this.parentItem.threeObj.position.z - this.depth / 2) : 0) +
 						this.getUsedDepthAtIndex(line, col) + this.lineDepth/2
-					item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 0.9 : 0
+					item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
 					item.grid.updatePlacement()
 				}
 			}
