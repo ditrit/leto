@@ -7,7 +7,7 @@ class Item {
 		Object.assign(this, params)
 		this.links = []
 		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
-		this.grid.gridSpacing = 0.5
+		this.grid.gridSpacing = 1
 		this.canvas = document.createElement('canvas');
 
 

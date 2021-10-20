@@ -6,7 +6,7 @@ class Grid {
 		this.lineCount = 1//Math.ceil(items.length / this.columnCount)
 		this.cellWidth = 1
 		this.cellDepth = 1
-		this.gridSpacing = 2
+		this.gridSpacing = 5
 		this.parentItem = parentItem
 		this.reserveSlot = reserveSlot
 		this.items = items
@@ -52,7 +52,7 @@ class Grid {
 		return this.colWidth * this.columnCount
 	}
 	get colWidth() {
-		return this.cellWidth + this.gridSpacing
+		return this.cellWidth +  this.gridSpacing
 		/*return Math.max(
 			...this.grid.map(col => col.reduce((a, l) => (l && l.width ? Math.max(l.width, a) : a) ,this.cellWidth + this.gridSpacing))
 		)*/
@@ -85,26 +85,22 @@ class Grid {
 		const freeColumnIndex = this.grid.findIndex(c => c.some(l => !l))
 		//const colWidth = this.parentItem? (this.parentItem.width / this.columnCount) : (this.cellWidth + this.gridSpacing)
 		//const lineDepth = this.parentItem? (this.parentItem.depth / this.lineCount) : (this.cellDepth + this.gridSpacing)
-		console.log('freeColumnIndex', freeColumnIndex)
 		const freeSlotIndex = this.grid[freeColumnIndex].findIndex(s => !s)
 		this.grid[freeColumnIndex][freeSlotIndex] = item
-		item.threeObj.position.x =
-			(this.parentItem ? (this.parentItem.threeObj.position.x - this.width / 2) : 0) +
+		/*item.threeObj.position.x =
+			((this.parentItem ? this.parentItem.threeObj.position.x : 0) - this.width / 2) +
 			this.getUsedWidthAtIndex(freeColumnIndex) + this.colWidth/2
 		item.threeObj.position.z =
-			(this.parentItem ? (this.parentItem.threeObj.position.z - this.depth / 2) : 0) +
-			this.getUsedDepthAtIndex(freeSlotIndex, freeColumnIndex) + this.lineDepth/2
-		item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
+			((this.parentItem ? this.parentItem.threeObj.position.z : 0) - this.depth / 2) +
+			this.getUsedDepthAtIndex(freeSlotIndex) + this.lineDepth/2
+		item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0*/
 		item.baseWidth = this.cellWidth
 		item.baseDepth = this.cellDepth
 		this.items.push(item)
 	}
 	async updateBlockSize(sizeChart) {
-		for (let item of this.items.filter(i => i && i.grid)) {
-			await item.grid.updateBlockSize( sizeChart)
 
-		}
-		const index = this.parentItem ? this.parentItem.threeObj.position.y +1 : 0
+		const index = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
 		this.cellWidth = sizeChart[index] ? sizeChart[index].width : 1
 		this.cellDepth = sizeChart[index] ? sizeChart[index].depth : 1
 		//this.cellWidth = Math.max(this.cellWidth, ...this.items.map(i => (i && i.width) ? i.width : 1))
@@ -115,7 +111,11 @@ class Grid {
 			item.baseWidth = this.cellWidth
 			await item.resize()
 		}
-		this.updatePlacement()
+		for (let item of this.items.filter(i => i && i.grid)) {
+			await item.grid.updateBlockSize( sizeChart)
+
+		}
+		//this.updatePlacement()
 
 
 	}
@@ -127,11 +127,11 @@ class Grid {
 
 				if (item && item.threeObj) {
 					item.threeObj.position.x =
-						(this.parentItem ? (this.parentItem.threeObj.position.x - this.width / 2) : 0) +
+						((this.parentItem ? this.parentItem.threeObj.position.x : 0) - this.width / 2) +
 						this.getUsedWidthAtIndex(col) + this.colWidth/2
 					item.threeObj.position.z =
-						(this.parentItem ? (this.parentItem.threeObj.position.z - this.depth / 2) : 0) +
-						this.getUsedDepthAtIndex(line, col) + this.lineDepth/2
+						((this.parentItem ? this.parentItem.threeObj.position.z : 0) - this.depth / 2) +
+						this.getUsedDepthAtIndex(line) + this.lineDepth/2
 					item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
 					item.grid.updatePlacement()
 				}
