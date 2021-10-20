@@ -2,8 +2,8 @@
 
 class Grid {
 	constructor(items = [],parentItem = null, reserveSlot = false) {
-		this.columnCount = Math.max(Math.ceil(Math.sqrt(items.length)) + reserveSlot, 1);
-		this.lineCount = Math.ceil(items.length / this.columnCount)
+		this.columnCount = 1//Math.max(Math.ceil(Math.sqrt(items.length)) + reserveSlot, 1);
+		this.lineCount = 1//Math.ceil(items.length / this.columnCount)
 		this.cellWidth = 1
 		this.cellDepth = 1
 		this.gridSpacing = 2
@@ -27,9 +27,14 @@ class Grid {
 		const hasEmptySpace = this.grid.some(c => c.some(l => !l))
 		console.log('grid', this.grid)
 		if (!hasEmptySpace) {
-			this.grid.push([])
-			this.columnCount += 1
-			this.lineCount += 1
+			console.log("no empty space")
+//			this.grid.push([])
+			if (this.columnCount > this.lineCount) {
+				this.lineCount += 1
+			} else {
+				this.grid.push([])
+				this.columnCount += 1
+			}
 			for (let column in this.grid) {
 				if (!this.grid[column])
 					this.grid[column] = (new Array(this.lineCount)).fill(null)
@@ -95,7 +100,10 @@ class Grid {
 		this.items.push(item)
 	}
 	async updateBlockSize(sizeChart) {
+		for (let item of this.items.filter(i => i && i.grid)) {
+			await item.grid.updateBlockSize( sizeChart)
 
+		}
 		const index = this.parentItem ? this.parentItem.threeObj.position.y +1 : 0
 		this.cellWidth = sizeChart[index] ? sizeChart[index].width : 1
 		this.cellDepth = sizeChart[index] ? sizeChart[index].depth : 1
@@ -108,10 +116,7 @@ class Grid {
 			await item.resize()
 		}
 		this.updatePlacement()
-		for (let item of this.items.filter(i => i && i.grid)) {
-			await item.grid.updateBlockSize( sizeChart)
 
-		}
 
 	}
 	updatePlacement() {
