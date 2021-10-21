@@ -96,6 +96,9 @@ export default {
 						const newLink = new Link(item1, item2)
 						this.localLinks.push(newLink)
 						this.renderer.addLink(newLink)
+					} else {
+						Object.assign(this.localLinks[localIndex], link)
+						this.renderer.updateLink(link)
 					}
 				}
 			}

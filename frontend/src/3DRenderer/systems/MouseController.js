@@ -12,7 +12,7 @@ class MouseController extends EventEmitter{
 		renderer.domElement.addEventListener('click', (event) => this.onclick(event,this), false)
 	}
 	onclick(event, self) {
-		event.preventDefault()
+	//	event.preventDefault()
 		console.log("renderer clicked", event, this)
 		const mousePos = {
 			x:  (event.layerX / event.target.scrollWidth) * 2 - 1,

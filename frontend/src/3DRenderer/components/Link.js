@@ -7,11 +7,10 @@ class Link {
 
 	}
 	update() {
-		console.log('updating link', this)
 		this.path.needsUpdate = true
 	//	this.path.v1 = this.startItem.threeObj.position
 		//this.path.v2 = this.endItem.threeObj.position
-		this.threeObj.needsUpdate = true
+		//this.threeObj.needsUpdate = true
 		this.threeObj.geometry.dispose()
 		this.threeObj.geometry = new TubeGeometry(this.path, 20, 0.05, 8, true );
 		//const material = new MeshBasicMaterial( { color: 0x0000ff } );

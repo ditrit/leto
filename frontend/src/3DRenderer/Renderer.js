@@ -12,6 +12,7 @@ import {EventEmitter} from 'events'
 import {Item} from "src/3DRenderer/components/Item";
 import {CameraController} from "src/3DRenderer/systems/CameraController";
 import {MouseController} from "src/3DRenderer/systems/MouseController";
+import {DragController} from "src/3DRenderer/systems/DragController"
 
 
 class Renderer  extends EventEmitter{
@@ -40,7 +41,9 @@ class Renderer  extends EventEmitter{
 
 		this.grid = new Grid()
 		const resizer = new Resizer(container, this.camera, this.renderer)
-		const cameraController = new CameraController(this.camera, this.renderer.domElement)
+		this.cameraController = new CameraController(this.camera, this.renderer.domElement)
+		this.dragController = new DragController(this.items, this.camera, this.renderer, this.cameraController)
+
 		const mouseController = new MouseController(this.scene, this.renderer, this.camera, this.items)
 		mouseController.on('intersect', (event) => this.onClickSelect(event))
 
@@ -66,15 +69,16 @@ class Renderer  extends EventEmitter{
 			await this.grid.updateBlockSize(this.sizeChart)
 			this.grid.updatePlacement()
 			this.grid.needsUpdate = false
-			this.links.forEach(l => l.update())
 			console.log('grid new block sizes', this.grid)
 
 		}
+		this.links.forEach(l => l.update())
+
 		this.renderer.render(this.scene, this.camera);
 	}
 	onClickSelect(object) {
 		console.log('onclickSelect', object)
-		const item = this.items.find(i => i.threeObj.children.find(c => c.uuid === object.uuid))
+		const item = this.items.find(c => c.threeObj.uuid === object.uuid)
 		console.log('selectedItem', item)
 		this.emit('selected:item', item)
 		//item.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0xff0000 )))
@@ -130,6 +134,9 @@ class Renderer  extends EventEmitter{
 		await item.create3DItem()
 		this.scene.add(item.threeObj)
 		this.items.push(item)
+		//this.dragController.items.push(item)
+		this.dragController.updateControls()
+		console.log('updated drag controls? ', this.dragController, this.dragController.dragControls.getObjects())
 		gridToUpdate.placeItemOnGrid(item)
 		this.grid.needsUpdate = true
 

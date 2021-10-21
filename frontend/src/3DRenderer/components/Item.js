@@ -75,12 +75,13 @@ class Item {
 	}
 	generateComponent(material) {
 
-		const finalObject = new Group()
+		//const finalObject = new Group()
 		const newComponent = new Mesh(new BoxGeometry(this.width, this.height, this.depth), material)
 
-		finalObject.add(newComponent)
+		//finalObject.add(newComponent)
 
-		return finalObject
+		//return finalObject
+		return newComponent
 
 	}
 	get width() {
@@ -96,8 +97,8 @@ class Item {
 		}*/
 		/*this.width = newWidth
 		this.depth = newDepth*/
-		this.threeObj.children[0].geometry.dispose()
-		this.threeObj.children[0].geometry = new BoxGeometry(this.width, this.height, this.depth)
+		this.threeObj.geometry.dispose()
+		this.threeObj.geometry = new BoxGeometry(this.width, this.height, this.depth)
 		await this.updateCanvas()
 
 		//this.grid.updatePlacement()
@@ -114,9 +115,9 @@ class Item {
 		this.updateCanvas().then(() => {
 			console.log('canvas updated')
 			if (this.isSelected) {
-				this.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0xff0000 )))
+				this.threeObj.material.forEach(m =>m.emissive.setHex( 0xff0000 ))
 			} else {
-				this.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0x000000 )))
+				this.threeObj.material.forEach(m =>m.emissive.setHex( 0x000000 ))
 			}
 			this.texture.needsUpdate = true
 		})

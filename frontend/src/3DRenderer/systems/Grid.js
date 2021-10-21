@@ -133,6 +133,7 @@ class Grid {
 						((this.parentItem ? this.parentItem.threeObj.position.z : 0) - this.depth / 2) +
 						this.getUsedDepthAtIndex(line) + this.lineDepth/2
 					item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
+					item.basePosition = JSON.parse(JSON.stringify(item.threeObj.position))
 					item.grid.updatePlacement()
 				}
 			}
