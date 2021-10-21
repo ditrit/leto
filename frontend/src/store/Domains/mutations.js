@@ -15,5 +15,11 @@ export const UPDATE_DOMAIN = (state, updatedDomain) => {
 	);
 	state.domains.splice(index, 1, updatedDomain);
 };
-export const DELETE_DOMAIN = (state, domainIid) =>
-	(state.domains = state.domains.filter((domain) => domain.id !== domainIid));
+export const DELETE_DOMAIN = (state, domainId) =>
+	(state.domains = state.domains.filter((domain) => domain.id !== domainId));
+
+export const GET_DOMAIN_TAGS = (state, domainTag) =>
+	(state.domainTags = domainTag);
+
+export const ADD_DOMAIN_TAGS = (state, domainTag) =>
+	state.domainTags.unshift(domainTag);

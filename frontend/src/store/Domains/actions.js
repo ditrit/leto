@@ -27,3 +27,11 @@ export const removeDomain = async ({ commit }, id) => {
 	await API.delete(`/domain/${id}`);
 	commit("DELETE_DOMAIN", id);
 };
+export const fetchDomainTags = async ({ commit }, id) => {
+	await API.get(`/domain/${id}/tag`);
+	commit("GET_DOMAIN_TAGS", id);
+};
+export const addDomainTag = async ({ commit }, domainId, tagId) => {
+	await API.get(`/domain/${domainId}/tag/${tagId}`);
+	commit("ADD_DOMAIN_TAGS", domainId, tagId);
+};

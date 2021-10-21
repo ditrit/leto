@@ -48,13 +48,13 @@
 							/>
 						</template>
 					</q-input>
-
-					<q-tree
-						:nodes="data"
-						node-key="label"
-						:filter="filter"
-						class="node_tree q-pl-lg q-pt-md"
-						default-expand-all
+					<MenuAccordion
+						v-for="(item, index) in menu"
+						:key="index"
+						:logo="item.logo"
+						:parentLabel="item.parentLabel"
+						:icon="item.icon"
+						:links="item.link"
 					/>
 				</div>
 			</slot>
@@ -62,18 +62,87 @@
 	</div>
 </template>
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
+import MenuAccordion from "../Accordion/MenuAccordion";
 
 export default {
+	components: { MenuAccordion },
 	props: {
 		data: {
 			type: Array,
 		},
 	},
 	setup() {
+		const store = useStore();
+		const menu = ref([
+			{
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				parentLabel: "Parent 1",
+				icon: "user",
+				link: [
+					"link 1",
+					"link 2",
+					"link 3",
+					"link 4",
+					"link 5",
+					"link 6",
+					"link 7",
+				],
+			},
+			{
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				parentLabel: "Parent 2",
+				icon: "user",
+				link: ["link 1", "link 2", "link 3", "link 4", "link 5"],
+			},
+			{
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				parentLabel: "Parent 3",
+				icon: "group",
+				link: ["link 1", "link 2", "link 3"],
+			},
+			{
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				parentLabel: "Parent 4",
+				icon: "mail",
+				link: ["link 1", "link 2"],
+			},
+			{
+				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+				parentLabel: "Parent 5",
+				icon: "cart",
+				link: ["link 1", "link 2", "link 3", "link 4"],
+			},
+		]);
+		const getMenuData = async () => {
+			await store.dispatch("appDomain/fetchDomainesTree");
+			const allDomainTree = await computed(
+				() => store.getters["appDomain/allDomainesTree"]
+			);
+			let returnArray = Object.values(allDomainTree.value);
+			console.log(
+				"returnArray: ",
+				returnArray[1].map((item) => item.Domain.Name)
+			);
+		};
+		getMenuData();
+
+		const getDomainTags = store.dispatch(
+			"appDomain/fetchDomainTags",
+			"703688716410650625"
+		);
+
+		const allDomainTags = computed(
+			() => store.getters["appDomain/allDomainTag"]
+		);
+
+		console.log(allDomainTags.value);
 		const filter = ref("");
 		const filterRef = ref(null);
 		return {
+			menu,
+			getDomainTags,
 			drawer: ref(false),
 			filter,
 			filterRef,
