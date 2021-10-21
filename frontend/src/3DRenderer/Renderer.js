@@ -66,6 +66,7 @@ class Renderer  extends EventEmitter{
 			await this.grid.updateBlockSize(this.sizeChart)
 			this.grid.updatePlacement()
 			this.grid.needsUpdate = false
+			this.links.forEach(l => l.update())
 			console.log('grid new block sizes', this.grid)
 
 		}
@@ -83,6 +84,13 @@ class Renderer  extends EventEmitter{
 		link.create3DObject()
 		this.scene.add(link.threeObj)
 		this.links.push(link)
+	}
+
+	updateLink(link) {
+		const rendererLink = this.links.find(i => i.id === link.id)
+		if (!rendererLink)
+			return this.addLink(link)
+		rendererLink.update(link)
 	}
 	async addItem(item) {
 		console.log('renderer add item', item)

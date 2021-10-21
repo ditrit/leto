@@ -48,7 +48,7 @@ class Item {
 			const img = new Image();
 			img.src = `textures/logos/${this.logo}`
 			img.addEventListener('load', function() {
-				ctx.drawImage(img, 0, 0, height/3, height/3);
+				ctx.drawImage(img, 0, 0, height, height);
 				console.log('img loaded')
 				resolve()
 			}, false);
