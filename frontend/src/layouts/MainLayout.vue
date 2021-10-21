@@ -4,7 +4,7 @@
 			<AccountSettings />
 			<GlobalSearch />
 		</MainHeader>
-		<Drawer :data="data"> </Drawer>
+		<Drawer :data="data" />
 
 		<q-drawer
 			elevated
@@ -129,73 +129,90 @@ export default {
 	},
 
 	setup() {
-		// const data = ref([
-		// 	{
-		// 		label: "GIMS",
-		// 		children: [
-		// 			{
-		// 				label: "Team One",
-		// 				children: [
-		// 					{ label: "Sub Team 1 - 1" },
-		// 					{ label: "Sub Team 1 - 2" },
-		// 				],
-		// 			},
-		// 			{
-		// 				label: "Team Two",
-		// 				disabled: false,
-		// 				children: [
-		// 					{ label: "Sub Team 2 - 1" },
-		// 					{ label: "Sub Team 2 - 2" },
-		// 				],
-		// 			},
-		// 			{
-		// 				label: "Team Three",
-		// 				children: [
-		// 					{ label: "Sub Team 3 - 1" },
-		// 					{ label: "Sub Team 3 - 2" },
-		// 					{ label: "Sub Team 3 - 3" },
-		// 				],
-		// 			},
-		// 		],
-		// 	},
-		// 	{
-		// 		label: "BDDF",
-		// 		children: [
-		// 			{
-		// 				label: "Team One",
-		// 				children: [
-		// 					{ label: "Sub Team 1 - 1" },
-		// 					{ label: "Sub Team 1 - 2" },
-		// 				],
-		// 			},
-		// 			{
-		// 				label: "Team Two",
-		// 				disabled: false,
-		// 				children: [
-		// 					{ label: "Sub Team 2 - 1" },
-		// 					{ label: "Sub Team 2 - 2" },
-		// 				],
-		// 			},
-		// 			{
-		// 				label: "Team Three",
-		// 				children: [
-		// 					{ label: "Sub Team 3 - 1" },
-		// 					{ label: "Sub Team 3 - 2" },
-		// 					{ label: "Sub Team 3 - 3" },
-		// 				],
-		// 			},
-		// 		],
-		// 	},
-		// ]);
+		const data = ref([
+			{
+				label: "GIMS",
+				children: [
+					{
+						label: "Team One",
+						children: [
+							{ label: "Sub Team 1 - 1" },
+							{ label: "Sub Team 1 - 2" },
+						],
+					},
+					{
+						label: "Team Two",
+						disabled: false,
+						children: [
+							{ label: "Sub Team 2 - 1" },
+							{ label: "Sub Team 2 - 2" },
+						],
+					},
+					{
+						label: "Team Three",
+						children: [
+							{ label: "Sub Team 3 - 1" },
+							{ label: "Sub Team 3 - 2" },
+							{ label: "Sub Team 3 - 3" },
+						],
+					},
+				],
+			},
+			{
+				label: "BDDF",
+				children: [
+					{
+						label: "Team One",
+						children: [
+							{ label: "Sub Team 1 - 1" },
+							{ label: "Sub Team 1 - 2" },
+						],
+					},
+					{
+						label: "Team Two",
+						disabled: false,
+						children: [
+							{ label: "Sub Team 2 - 1" },
+							{ label: "Sub Team 2 - 2" },
+						],
+					},
+					{
+						label: "Team Three",
+						children: [
+							{ label: "Sub Team 3 - 1" },
+							{ label: "Sub Team 3 - 2" },
+							{ label: "Sub Team 3 - 3" },
+						],
+					},
+				],
+			},
+		]);
 
-		const data = ref(null);
+		// const data = ref(null);
 		const store = useStore();
 		const getDomainTree = store.dispatch("appDomain/fetchDomainesTree");
 		const allDomainTree = computed(
 			() => store.getters["appDomain/allDomainesTree"]
 		);
 		console.log("allDomainTree: ", allDomainTree.value);
-		let dataReturned = Object.values(allDomainTree.value);
+
+		const getData = async () => {
+			let dataReturned = await allDomainTree.value;
+			let returnArray = Object.values(dataReturned);
+			console.log("returnArray: parent ", returnArray[0].Name);
+			console.log(
+				"returnArray: childs ",
+				returnArray[1].map((item) => {
+					return {
+						label: item.Domain.Name,
+						children: [item.Childs],
+					};
+				})
+			);
+		};
+
+		getData();
+		// let dataReturned = Object.values(allDomainTree.value);
 		// console.log("dataReturned All: ", dataReturned);
 		// console.log("dataReturned Domain label: ", dataReturned[0].Name);
 		// console.log(
@@ -203,19 +220,22 @@ export default {
 		// 	dataReturned[1].map((item) => item.Domain.Name)
 		// );
 
-		data.value = [
-			{
-				label: dataReturned[0].Name,
-				children: [
-					{
-						label: dataReturned[1].map((item) => item?.Domain?.Name),
-						children: [
-							{ label: dataReturned[1].map((item) => item?.Childs?.Name) },
-						],
-					},
-				],
-			},
-		];
+		// data.value = [
+		// 	{
+		// 		label: dataReturned[0].Name,
+		// 		children: [
+		// 			{
+		// 				label: dataReturned[1].map((item) => item?.Domain?.Name),
+		// 				children: [
+		// 					{
+		// 						label: item.map((el) => el.Name),
+		// 						children: [{ label: Childs }],
+		// 					},
+		// 				],
+		// 			},
+		// 		],
+		// 	},
+		// ];
 
 		return {
 			data,
@@ -223,7 +243,6 @@ export default {
 			linksToolsList,
 			getDomainTree,
 			allDomainTree,
-			dataReturned,
 		};
 	},
 };
