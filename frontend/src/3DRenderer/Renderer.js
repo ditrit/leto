@@ -25,6 +25,7 @@ class Renderer  extends EventEmitter{
 		this.scene = createScene();
 		this.renderer = createRenderer();
 		this.items = []
+		this.needsLinkUpdate = true
 		this.links =[]
 		this.sizeChart = {
 			0: {width:1,depth:1}
@@ -42,7 +43,7 @@ class Renderer  extends EventEmitter{
 		this.grid = new Grid()
 		const resizer = new Resizer(container, this.camera, this.renderer)
 		this.cameraController = new CameraController(this.camera, this.renderer.domElement)
-		this.dragController = new DragController(this.items, this.camera, this.renderer, this.cameraController)
+		this.dragController = new DragController(this)
 
 		const mouseController = new MouseController(this.scene, this.renderer, this.camera, this.items)
 		mouseController.on('intersect', (event) => this.onClickSelect(event))
@@ -72,7 +73,10 @@ class Renderer  extends EventEmitter{
 			console.log('grid new block sizes', this.grid)
 
 		}
-		this.links.forEach(l => l.update())
+		if (this.needsLinkUpdate) {
+			this.needsLinkUpdate = false
+			this.links.forEach(l => l.update())
+		}
 
 		this.renderer.render(this.scene, this.camera);
 	}
@@ -88,6 +92,7 @@ class Renderer  extends EventEmitter{
 		link.create3DObject()
 		this.scene.add(link.threeObj)
 		this.links.push(link)
+		this.needsLinkUpdate = false
 	}
 
 	updateLink(link) {
@@ -139,6 +144,7 @@ class Renderer  extends EventEmitter{
 		console.log('updated drag controls? ', this.dragController, this.dragController.dragControls.getObjects())
 		gridToUpdate.placeItemOnGrid(item)
 		this.grid.needsUpdate = true
+		this.needsLinkUpdate = true
 
 
 	}

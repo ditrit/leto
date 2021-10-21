@@ -3,12 +3,13 @@ import {EventEmitter} from "events";
 
 
 class DragController extends EventEmitter {
-	constructor(items, camera, renderer, cameraController) {
+	constructor(parentRendrer) {
 		super()
-		this.items = items
-		this.camera = camera
-		this.renderer = renderer
-		this.cameraController = cameraController
+		this.items = parentRendrer.items
+		this.camera = parentRendrer.camera
+		this.renderer = parentRendrer.renderer
+		this.cameraController = parentRendrer.cameraController
+		this.parentRenderer = parentRendrer
 		this.updateControls()
 	}
 	get threeItems() {
@@ -40,6 +41,7 @@ this.startPosition = JSON.parse(JSON.stringify(event.object.position))
 		//event.object.parent.position.z = origItem.threeObj.position.z
 		origItem.threeObj.position.y = origItem.basePosition.y
 		event.object.position.y = origItem.basePosition.y
+		this.parentRenderer.needsLinkUpdate = true
 		origItem.grid.updatePlacement()
 	}
 	onDragEnd(event) {
@@ -53,6 +55,7 @@ this.startPosition = JSON.parse(JSON.stringify(event.object.position))
 	//	event.object.parent.position.z = origItem.threeObj.position.z
 		origItem.threeObj.position.y = origItem.basePosition.y
 		event.object.position.y = origItem.basePosition.y
+		this.parentRenderer.needsLinkUpdate = true
 		origItem.grid.updatePlacement()
 		this.emit('item:dragged', origItem)
 		console.log('draggedItem', origItem)
