@@ -9,10 +9,10 @@ class MouseController extends EventEmitter{
 		this.items = items
 		this.renderer = renderer
 		this.raycaster = new Raycaster()
-		renderer.domElement.addEventListener('click', (event) => this.onclick(event,this), false)
+		renderer.domElement.addEventListener('pointerdown', (event) => this.onclick(event,this), false)
 	}
 	onclick(event, self) {
-	//	event.preventDefault()
+		//	event.preventDefault()
 		console.log("renderer clicked", event, this)
 		const mousePos = {
 			x:  (event.layerX / event.target.scrollWidth) * 2 - 1,
@@ -20,9 +20,17 @@ class MouseController extends EventEmitter{
 		}
 		this.raycaster.setFromCamera(mousePos, this.camera)
 		const intersects = this.raycaster.intersectObjects(this.items.map(i => i.threeObj), true)
-		console.log('intersects', intersects, mousePos)
+		//console.log('intersects', intersects, mousePos)
 		if (intersects.length > 0) {
-			this.emit('intersect', intersects[0].object)
+			switch (event.button) {
+				case 0:
+					this.emit('intersect', intersects[0].object)
+					break;
+				case 2:
+					this.emit('link', intersects[0].object)
+					break;
+
+			}
 		}
 
 	}

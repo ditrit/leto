@@ -72,7 +72,11 @@
 		<q-page-container>
 			<div class="row">
 				<div class="col col-6">
-					<ModelEdit :items="items" :links="links" @item:select="selectItem" @item:updateParent="updateItemParent" />
+					<ModelEdit :items="items"
+										 :links="links"
+										 @item:select="selectItem"
+										 @item:link="onItemLink"
+										 @item:updateParent="updateItemParent" />
 				</div>
 				<div class="col col-1"></div>
 				<div class="col col-4">
@@ -208,6 +212,12 @@ export default {
 			if (this.selectedItem)
 				this.selectedItem.isSelected = false
 			this.selectedItem = null
+		},
+		onItemLink(newTarget) {
+			if (this.selectedItem) {
+				this.newLinkTarget = newTarget
+				this.addLink()
+			}
 		},
 		addLink() {
 			console.log('newLinkTarget', this.newLinkTarget)

@@ -37,6 +37,10 @@ export default {
 				console.log('parent update event', event)
 				this.$emit('item:updateParent', event)
 			})
+			this.renderer.on('item:link', (event) => {
+				console.log('item link event', event)
+				this.$emit('item:link', event)
+			})
 
 			/*this.camera = new Three.PerspectiveCamera(
 				70,

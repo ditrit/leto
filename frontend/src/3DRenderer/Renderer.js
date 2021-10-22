@@ -47,6 +47,7 @@ class Renderer  extends EventEmitter{
 
 		const mouseController = new MouseController(this.scene, this.renderer, this.camera, this.items)
 		mouseController.on('intersect', (event) => this.onClickSelect(event))
+		mouseController.on('link', (event) => this.onClickLink(event))
 
 	}
 	updateSizeChart() {
@@ -90,6 +91,10 @@ class Renderer  extends EventEmitter{
 		this.emit('item:selected', item)
 		//item.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0xff0000 )))
 
+	}
+	onClickLink(object) {
+		const item = this.items.find(c => c.threeObj.uuid === object.uuid)
+		this.emit('item:link', item)
 	}
 	addLink(link) {
 		link.create3DObject()
