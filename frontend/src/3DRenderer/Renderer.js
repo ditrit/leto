@@ -51,24 +51,27 @@ class Renderer  extends EventEmitter{
 	}
 	updateSizeChart() {
 		const zLevels = new Set(this.items.map(i => i.threeObj.position.y))
+		console.log('zlevels', zLevels, this.items.map(i => i.threeObj.position.y))
 		for (let zlevel of zLevels) {
 			if (!this.sizeChart.hasOwnProperty(zlevel)) {
 				this.sizeChart[zlevel] = {width:1,depth:1}
 			}
 			const items = this.items.filter(i => i.threeObj.position.y === zlevel)
-			const maxWidth = Math.max(...items.map(i => i.width))
-			const maxDepth = Math.max(...items.map(i => i.depth))
-			this.sizeChart[zlevel].width = Math.max(this.sizeChart[zlevel].width, maxWidth)
-			this.sizeChart[zlevel].depth = Math.max(this.sizeChart[zlevel].depth, maxDepth)
+			const maxWidth = Math.max(...items.map(i => i.grid.width))
+			const maxDepth = Math.max(...items.map(i => i.grid.depth))
+			this.sizeChart[zlevel].width = maxWidth//Math.max(this.sizeChart[zlevel].width, maxWidth)
+			this.sizeChart[zlevel].depth = maxDepth//Math.max(this.sizeChart[zlevel].depth, maxDepth)
 
 		}
 	}
 	async render() {
 		//console.log('rendering', this.scene, this.camera)
 		if (this.grid.needsUpdate) {
+
+			console.log('updating grid positions')
+			this.grid.updatePlacement()
 			this.updateSizeChart()
 			await this.grid.updateBlockSize(this.sizeChart)
-			this.grid.updatePlacement()
 			this.grid.needsUpdate = false
 			console.log('grid new block sizes', this.grid)
 
@@ -84,7 +87,7 @@ class Renderer  extends EventEmitter{
 		console.log('onclickSelect', object)
 		const item = this.items.find(c => c.threeObj.uuid === object.uuid)
 		console.log('selectedItem', item)
-		this.emit('selected:item', item)
+		this.emit('item:selected', item)
 		//item.threeObj.children.forEach(c => c.material.forEach(m =>m.emissive.setHex( 0xff0000 )))
 
 	}
@@ -120,14 +123,6 @@ class Renderer  extends EventEmitter{
 			item.threeObj.position.z = parentItem.threeObj.position.z
 			item.threeObj.position.y = parentItem.threeObj.position.y + parentItem.height*/
 		}
-		const gridWasResized = gridToUpdate.resizeIfNecessary()
-		if (gridWasResized) {
-			/*this.sizeChart[gridToUpdate.parentItem.threeObj.position.z] = {
-				l:gridToUpdate.lineCount,
-				c:gridToUpdate.columnCount}*/
-		}
-		//	item.width = gridToUpdate.cellWidth
-		//item.depth = gridToUpdate.cellDepth
 
 		if (parentItem)
 			await parentItem.resize()
@@ -143,6 +138,7 @@ class Renderer  extends EventEmitter{
 		this.dragController.updateControls()
 		console.log('updated drag controls? ', this.dragController, this.dragController.dragControls.getObjects())
 		gridToUpdate.placeItemOnGrid(item)
+		console.log('post-update grid', gridToUpdate)
 		this.grid.needsUpdate = true
 		this.needsLinkUpdate = true
 
@@ -152,6 +148,17 @@ class Renderer  extends EventEmitter{
 		const rendererItem = this.items.find(i => i.id === item.id)
 		if (!rendererItem)
 			return this.addItem(item)
+		if (item.parentWasUpdated) {
+			this.grid.needsUpdate = true
+			this.needsLinkUpdate = true
+			const newParent = this.items.find(i => i.id === item.parentId)
+			if (newParent) {
+				newParent.grid.placeItemOnGrid(rendererItem)
+			} else {
+				this.grid.placeItemOnGrid(rendererItem)
+			}
+			item.parentWasUpdated = false
+		}
 		rendererItem.update(item)
 		console.log('render scene', this.scene)
 	}

@@ -4,6 +4,8 @@ import {Grid} from "src/3DRenderer/systems/Grid";
 class Item {
 	constructor(params) {
 		this.height = 1
+		this.width = 1
+		this.depth = 1
 		Object.assign(this, params)
 		this.links = []
 		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
@@ -84,12 +86,17 @@ class Item {
 		return newComponent
 
 	}
-	get width() {
-		return Math.max(this.grid.width, this.baseWidth)
+	isParentOfUUID(uuid) {
+		if(this.threeObj.uuid === uuid) return true
+		return  this.grid.items.reduce((a, i) => a || i.isParentOfUUID(uuid), false)
+	}
+
+	/*get width() {
+		return this.grid.width//Math.max(this.grid.width, this.baseWidth)
 	}
 	get depth() {
-		return Math.max(this.grid.depth, this.baseDepth)
-	}
+		return this.grid.depth//Math.max(this.grid.depth, this.baseDepth)
+	}*/
 	async resize(newWidth = 1, newDepth = 1) {
 		/*if (followGrid) {
 			this.width = this.grid.width

@@ -1,5 +1,5 @@
 <template>
-    <div id="container"></div>
+	<div id="container"></div>
 </template>
 
 <script>
@@ -9,53 +9,56 @@ import {Item} from 'src/3DRenderer/components/Item'
 import {Link} from 'src/3DRenderer/components/Link'
 
 export default {
-  name: "ThreeTest",
+	name: "ThreeTest",
 	props: {
-  	items: Array,
+		items: Array,
 		links: Array
 	},
-  data() {
-    return {};
-  },
-  mounted() {
-    this.init();
-    this.animate();
-  },
+	data() {
+		return {};
+	},
+	mounted() {
+		this.init();
+		this.animate();
+	},
 
 
 
-  methods: {
-    init: function () {
-      const container = document.getElementById("container");
-      this.renderer = new Renderer(container)
+	methods: {
+		init: function () {
+			const container = document.getElementById("container");
+			this.renderer = new Renderer(container)
 
 			this.renderer.render()
-			this.renderer.on('selected:item', (event) => {
-				console.log('intersects event', event)
-				this.$emit('select:item', event)
+			this.renderer.on('item:selected', (event) => {
+				this.$emit('item:select', event)
+			})
+			this.renderer.on('item:updateParent', (event) => {
+				console.log('parent update event', event)
+				this.$emit('item:updateParent', event)
 			})
 
-      /*this.camera = new Three.PerspectiveCamera(
-        70,
-        container.clientWidth / container.clientHeight,
-        0.01,
-        10
-      );
-      this.camera.position.z = 1;
+			/*this.camera = new Three.PerspectiveCamera(
+				70,
+				container.clientWidth / container.clientHeight,
+				0.01,
+				10
+			);
+			this.camera.position.z = 1;
 
-      this.scene = new Three.Scene();
+			this.scene = new Three.Scene();
 
-      let geometry = new Three.BoxGeometry(0.2, 0.2, 0.2);
-      let material = new Three.MeshNormalMaterial();
+			let geometry = new Three.BoxGeometry(0.2, 0.2, 0.2);
+			let material = new Three.MeshNormalMaterial();
 
-      this.mesh = new Three.Mesh(geometry, material);
-      this.scene.add(this.mesh);
+			this.mesh = new Three.Mesh(geometry, material);
+			this.scene.add(this.mesh);
 
-      this.renderer = new Three.WebGLRenderer({ antialias: true });
-      this.renderer.setSize(container.clientWidth, container.clientHeight);
-      container.appendChild(this.renderer.domElement);*/
-    },
-    animate: function () {
+			this.renderer = new Three.WebGLRenderer({ antialias: true });
+			this.renderer.setSize(container.clientWidth, container.clientHeight);
+			container.appendChild(this.renderer.domElement);*/
+		},
+		animate: function () {
 
 			requestAnimationFrame(this.animate);
 
@@ -63,7 +66,7 @@ export default {
 
 
 		},
-  },
+	},
 	watch: {
 		items: {
 			deep: true,
@@ -77,6 +80,15 @@ export default {
 						this.localItems.push(newItem)
 						this.renderer.addItem(newItem)
 					} else {
+						console.log('itemUpdated', item.parentId, this.localItems[localIndex].parentId)
+						if (item.parentWasUpdated && item.parentId !== this.localItems[localIndex].parentId) {
+							const previousParent = this.localItems.find(i => i.grid.items.find(g => g.id === item.id))
+							if (previousParent) {
+								previousParent.grid.removeItemFromGrid(item)
+							} else {
+								this.renderer.grid.removeItemFromGrid(item)
+							}
+						}
 						Object.assign(this.localItems[localIndex], item)
 						this.renderer.updateItem(item)
 					}
@@ -109,10 +121,10 @@ export default {
 
 <style lang="sass" scoped>
 .wrapper
-  height: 70vh
-  margin-top: 0px
+	height: 70vh
+	margin-top: 0px
 
 #container
-  width: 100%
-  height: 80vh
+	width: 100%
+	height: 80vh
 </style>

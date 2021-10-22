@@ -72,7 +72,7 @@
 		<q-page-container>
 			<div class="row">
 				<div class="col col-6">
-					<ModelEdit :items="items" :links="links" @select:item="selectItem" />
+					<ModelEdit :items="items" :links="links" @item:select="selectItem" @item:updateParent="updateItemParent" />
 				</div>
 				<div class="col col-1"></div>
 				<div class="col col-4">
@@ -196,6 +196,14 @@ export default {
 			this.selectedItem = this.items[itemIndex]
 
 		},
+		updateItemParent(event) {
+			console.log('this.items', this.items)
+			const itemIndex = this.items.findIndex(i => i.id === event.itemId)
+			this.items[itemIndex].parentWasUpdated = event.parentId !== this.items[itemIndex].parentId
+			this.items[itemIndex].parentId = event.parentId
+
+
+		},
 		removeSelection() {
 			if (this.selectedItem)
 				this.selectedItem.isSelected = false
@@ -215,6 +223,8 @@ export default {
 			newItem.id = this.createKey()
 			if (this.selectedItem) {
 				newItem.parentId = this.selectedItem.id
+			} else {
+				newItem.parentId = null
 			}
 			console.log('adding item', newItem)
 
