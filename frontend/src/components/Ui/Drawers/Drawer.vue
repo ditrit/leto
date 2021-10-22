@@ -51,10 +51,10 @@
 					<MenuAccordion
 						v-for="(item, index) in menu"
 						:key="index"
+						:id="item.id"
 						:logo="item.logo"
-						:parentLabel="item.parentLabel"
-						:icon="item.icon"
-						:links="item.link"
+						:parentLabel="item.parent"
+						:links="item.name"
 					/>
 				</div>
 			</slot>
@@ -75,67 +75,50 @@ export default {
 	},
 	setup() {
 		const store = useStore();
-		const menu = ref([
-			{
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				parentLabel: "Parent 1",
-				icon: "user",
-				link: [
-					"link 1",
-					"link 2",
-					"link 3",
-					"link 4",
-					"link 5",
-					"link 6",
-					"link 7",
-				],
-			},
-			{
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				parentLabel: "Parent 2",
-				icon: "user",
-				link: ["link 1", "link 2", "link 3", "link 4", "link 5"],
-			},
-			{
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				parentLabel: "Parent 3",
-				icon: "group",
-				link: ["link 1", "link 2", "link 3"],
-			},
-			{
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				parentLabel: "Parent 4",
-				icon: "mail",
-				link: ["link 1", "link 2"],
-			},
-			{
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				parentLabel: "Parent 5",
-				icon: "cart",
-				link: ["link 1", "link 2", "link 3", "link 4"],
-			},
-		]);
+		const menu = ref(null);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
 			const allDomainTree = await computed(
 				() => store.getters["appDomain/allDomainesTree"]
 			);
 			let returnArray = Object.values(allDomainTree.value);
-			console.log(
-				"returnArray: ",
-				returnArray[1].map((item) => item.Domain.Name)
-			);
+			console.log("returnArray: ", returnArray);
+			return (menu.value = [
+				{
+					parent: returnArray[0].Name,
+					childs: returnArray[1].map((item) => item.Domain),
+					name: returnArray[1].map((item) => item.Domain.Name),
+					logo: returnArray[1].map((item) => item.Domain.Logo),
+				},
+			]);
 		};
 		getMenuData();
+		console.log("	menu.value : ", menu.value);
 
+		// API Testing:
 		const getDomainTags = store.dispatch(
 			"appDomain/fetchDomainTags",
-			"703688716410650625"
+			"703911909106483201"
 		);
 
 		const allDomainTags = computed(
 			() => store.getters["appDomain/allDomainTag"]
 		);
+
+		/*
+TODO:
+Make ids value dynamic
+ */
+		const addDomainTags = store.dispatch(
+			"appDomain/addDomainTag",
+			"703911909106483201",
+			"703917905933860865"
+		);
+		// const removeDomainTag = store.dispatch(
+		// 	"appDomain/removeDomainTag",
+		// 	"703911909106483201",
+		// 	"703917905933860865"
+		// );
 
 		console.log(allDomainTags.value);
 		const filter = ref("");
@@ -143,6 +126,8 @@ export default {
 		return {
 			menu,
 			getDomainTags,
+			addDomainTags,
+			// removeDomainTag,
 			drawer: ref(false),
 			filter,
 			filterRef,

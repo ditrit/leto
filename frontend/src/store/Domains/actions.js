@@ -31,7 +31,20 @@ export const fetchDomainTags = async ({ commit }, id) => {
 	await API.get(`/domain/${id}/tag`);
 	commit("GET_DOMAIN_TAGS", id);
 };
-export const addDomainTag = async ({ commit }, domainId, tagId) => {
-	await API.get(`/domain/${domainId}/tag/${tagId}`);
+export const addDomainTag = async (
+	{ commit },
+	domainId = "703911909106483201",
+	tagId = "703911909124931585"
+) => {
+	await API.post(`/domain/${domainId}/tag/${tagId}`);
 	commit("ADD_DOMAIN_TAGS", domainId, tagId);
+};
+
+export const removeDomainTag = async (
+	{ commit },
+	domainId = "703911909106483201",
+	tagId = "703911909124931585"
+) => {
+	await API.delete(`/domain/${domainId}/tag/${tagId}`);
+	commit("DELETE_DOMAIN_TAG", domainId, tagId);
 };

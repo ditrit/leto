@@ -11,19 +11,23 @@
 				<template v-slot:header>
 					<q-item-section avatar>
 						<q-avatar>
-							<img :src="logo" />
+							<img v-for="(item, index) in logo" :key="index" :src="item" />
 						</q-avatar>
 					</q-item-section>
 
-					<q-item-section>
+					<q-item-section class="text-bold uppercase">
 						{{ parentLabel }}
 					</q-item-section>
 				</template>
 				<q-card>
 					<q-card-section class="link_wrapper" v-if="links">
-						<router-link v-for="(link, index) in links" :key="index" to="/">{{
-							link
-						}}</router-link>
+						<router-link
+							v-for="(link, index) in links"
+							:key="index"
+							to="/child"
+						>
+							{{ link }}
+						</router-link>
 					</q-card-section>
 				</q-card>
 			</q-expansion-item>
@@ -33,6 +37,10 @@
 <script>
 export default {
 	props: {
+		id: {
+			type: String,
+			required: true,
+		},
 		logo: {
 			type: String,
 			default: "https://cdn.quasar.dev/img/boy-avatar.png",
@@ -57,11 +65,15 @@ export default {
   display: flex
   flex-direction: column
   justify-content: space-around
-  align-items: center
+  align-items: flex-start
+  padding-left: 5.2em
 
 .q-card
   background: transparent !important
 
 .q-item__section--side > .q-avatar
   font-size: 30px !important
+
+.uppercase
+  text-transform: uppercase
 </style>
