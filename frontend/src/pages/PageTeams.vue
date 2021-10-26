@@ -33,10 +33,7 @@
 								<div class="text-h6 q-pa-md">Create New Team</div>
 							</q-card-section>
 							<q-card-section class="q-pt-none">
-								<CreationFormStepper
-									:allDomains="allDomains"
-									:allTags="allTags"
-								/>
+								<CreationFormStepper />
 							</q-card-section>
 							<q-card-actions align="right" class="bg-white text-teal">
 								<q-btn flat label="Next" v-close-popup />
@@ -51,7 +48,7 @@
 
 <script>
 import { defineComponent, ref, computed } from "vue";
-import { useStore } from "vuex";
+// import { useStore } from "vuex";
 import getDataItems from "../composables/getDataItems";
 import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
 import PageContent from "../components/Content/PageContent";
@@ -87,24 +84,24 @@ export default defineComponent({
 	components: { BtnAddNew, PageContent, CreationFormStepper },
 
 	setup() {
-		const allTags = ref([]);
-		const allDomains = ref([]);
-		const store = useStore();
+		// const allTags = ref([]);
+		// const allDomains = ref([]);
+		// const store = useStore();
 		const oepnDialog = ref(false);
 		const { path, dataItems, error, fetchData } = getDataItems();
 		const data = fetchData("http://localhost:3000/teams");
 		dataItems.value = data;
 
 		// fetch All Domaines
-		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
-		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
-		allDomains.value = getDomaies.value;
-		console.log("getDomaies team page : ", allDomains.value);
+		// const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
+		// const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
+		// allDomains.value = getDomaies.value;
+		// console.log("getDomaies team page : ", allDomains.value);
 
 		// fetch All Tags
-		const fetchTags = store.dispatch("appTags/fetchAllTags");
-		allTags.value = store.getters["appTags/allTags"];
-		console.log("tagsvalue : ", allTags.value);
+		// const fetchTags = store.dispatch("appTags/fetchAllTags");
+		// allTags.value = store.getters["appTags/allTags"];
+		// console.log("tagsvalue : ", allTags.value);
 
 		return {
 			// progress: dataItems.length,
@@ -113,10 +110,10 @@ export default defineComponent({
 			error,
 			buttonsList,
 			oepnDialog,
-			fetchDomaines,
-			getDomaies,
-			allTags,
-			fetchTags,
+			// fetchDomaines,
+			// getDomaies,
+			// allTags,
+			// fetchTags,
 		};
 	},
 });

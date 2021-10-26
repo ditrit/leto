@@ -11,16 +11,16 @@
 				<div class="row no-wrap">
 					<div class="col">
 						<div class="text-h6">
-							<q-icon :name="item.icon" size="30px" class="q-mr-sm" />
-							{{ item.headline }}
+							<q-icon name="group" size="30px" class="q-mr-sm" />
+							<span class="text-uppercase">{{ item.Name }}</span>
 						</div>
 						<div class="text-subtitle3 text-grey-8">
-							{{ item.subTitle }}
+							{{ item.ShortDescription }}
 						</div>
 						<div class="content_wrapper q-mt-md">
-							<img src="https://cdn.quasar.dev/img/parallax2.jpg" alt="logo" />
+							<img :src="item.Logo" alt="domain logo" />
 							<p class="q-ml-md">
-								{{ item.textContent }}
+								{{ item.Description }}
 							</p>
 						</div>
 					</div>

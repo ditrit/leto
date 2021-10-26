@@ -48,14 +48,16 @@
 							/>
 						</template>
 					</q-input>
-					<MenuAccordion
-						v-for="(item, index) in menu"
-						:key="index"
-						:id="item.id"
-						:logo="item.logo"
-						:parentLabel="item.parent"
-						:links="item.name"
-					/>
+					<div v-if="menu">
+						<MenuAccordion
+							v-for="(item, index) in menu"
+							:key="index"
+							:id="item.ID"
+							:logo="item.logo"
+							:parentLabel="item.parent"
+							:links="item.name"
+						/>
+					</div>
 				</div>
 			</slot>
 		</q-drawer>
@@ -83,12 +85,14 @@ export default {
 			);
 			let returnArray = Object.values(allDomainTree.value);
 			console.log("returnArray: ", returnArray);
+
 			return (menu.value = [
 				{
 					parent: returnArray[0].Name,
 					childs: returnArray[1].map((item) => item.Domain),
 					name: returnArray[1].map((item) => item.Domain.Name),
 					logo: returnArray[1].map((item) => item.Domain.Logo),
+					id: returnArray[1].map((item) => item.Domain.ID),
 				},
 			]);
 		};
@@ -96,37 +100,37 @@ export default {
 		console.log("	menu.value : ", menu.value);
 
 		// API Testing:
-		const getDomainTags = store.dispatch(
-			"appDomain/fetchDomainTags",
-			"703911909106483201"
-		);
+		// const getDomainTags = store.dispatch(
+		// 	"appDomain/fetchDomainTags",
+		// 	"703911909106483201"
+		// );
 
-		const allDomainTags = computed(
-			() => store.getters["appDomain/allDomainTag"]
-		);
+		// const allDomainTags = computed(
+		// 	() => store.getters["appDomain/allDomainTag"]
+		// );
 
 		/*
 TODO:
 Make ids value dynamic
  */
-		const addDomainTags = store.dispatch(
-			"appDomain/addDomainTag",
-			"703911909106483201",
-			"703917905933860865"
-		);
+		// const addDomainTags = store.dispatch(
+		// 	"appDomain/addDomainTag",
+		// 	"703911909106483201",
+		// 	"703917905933860865"
+		// );
 		// const removeDomainTag = store.dispatch(
 		// 	"appDomain/removeDomainTag",
 		// 	"703911909106483201",
 		// 	"703917905933860865"
 		// );
 
-		console.log(allDomainTags.value);
+		// console.log(allDomainTags.value);
 		const filter = ref("");
 		const filterRef = ref(null);
 		return {
 			menu,
-			getDomainTags,
-			addDomainTags,
+			// getDomainTags,
+			// addDomainTags,
 			// removeDomainTag,
 			drawer: ref(false),
 			filter,

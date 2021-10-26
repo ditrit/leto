@@ -82,7 +82,9 @@
 
 				<q-step :name="3" prefix="3" title="">
 					<div class="row q-mt-md">
-						<div class="col col-md-12">thank you</div>
+						<div class="col col-md-12 text-center">
+							<h4>Your Data is ready to be sent</h4>
+						</div>
 					</div>
 				</q-step>
 
@@ -140,6 +142,7 @@ export default {
 		const options = ref([]);
 		const SelectedDomain = ref([]);
 		const $q = useQuasar();
+
 		const teamEnvironnements = ref([
 			{
 				id: 0,
@@ -199,26 +202,27 @@ export default {
 		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
 		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
 		console.log("getDomaies: ", getDomaies.value);
-		console.log("selectedParentData: ", selectedParentData.value);
 
 		// Get input Select options value
 		let dataReturned = getDomaies.value.map((payload) => {
 			return {
-				id: payload.ID,
+				id: parseInt(payload.ID),
 				name: payload.Name,
 				label: payload.Name,
 				value: payload.Name,
 				parentName: payload?.Name,
-				parentId: payload?.ParentID,
-				authorizations: payload?.Authorizations,
-				libraries: payload?.Libraries,
-				products: payload?.Products,
+				parentId: parseInt(payload?.ParentID),
+				// authorizations: payload?.Authorizations,
+				// libraries: payload?.Libraries,
+				// products: payload?.Products,
 			};
 		});
-		console.log("dataReturned: ", dataReturned);
-		optionsSelections.value = [...new Set(dataReturned)].filter(
-			(item) => item != null
-		);
+		// console.log("dataReturned: ", dataReturned);
+		optionsSelections.value = dataReturned;
+		console.log("selectedParentData: ", optionsSelections.value);
+		// optionsSelections.value = [...new Set(dataReturned)].filter(
+		// 	(item) => item != null
+		// );
 
 		return {
 			step: ref(1),
@@ -238,12 +242,12 @@ export default {
 
 			onSubmit() {
 				const newDomain = {
-					pid: selectedParentData.value.id,
+					pid: parseInt(selectedParentData.value.id),
 					name: name.value,
 					teamParent: selectedParentData.value.parentName,
 					shortDescription: shortDescription.value,
 					description: description.value,
-					// authorizations: selectedParentData.value.authorizations,
+					authorizations: selectedParentData.value.authorizations,
 					libraries: selectedParentData.value.libraries,
 					products: selectedParentData.value.products,
 				};

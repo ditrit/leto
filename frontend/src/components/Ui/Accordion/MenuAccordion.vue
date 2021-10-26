@@ -24,7 +24,7 @@
 						<router-link
 							v-for="(link, index) in links"
 							:key="index"
-							to="/child"
+							to="/teams/705129797877268481"
 						>
 							{{ link }}
 						</router-link>
@@ -68,8 +68,7 @@ export default {
   align-items: flex-start
   padding-left: 5.2em
 
-.q-card
-  background: transparent !important
+
 
 .q-item__section--side > .q-avatar
   font-size: 30px !important
