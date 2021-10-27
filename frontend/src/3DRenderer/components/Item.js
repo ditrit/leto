@@ -1,4 +1,4 @@
-import {BoxBufferGeometry, Mesh,BoxGeometry, MeshBasicMaterial, CanvasTexture, MeshStandardMaterial, Group} from "three";
+import {BoxBufferGeometry, Mesh,BoxGeometry, MeshBasicMaterial, CanvasTexture, MeshStandardMaterial, Group, ImageLoader} from "three";
 import {Grid} from "src/3DRenderer/systems/Grid";
 
 class Item {
@@ -14,7 +14,7 @@ class Item {
 
 
 	}
-	updateCanvas() {
+	async updateCanvas() {
 		const width = this.width * 500;
 		const height = this.height *500;
 		this.canvas.width  = width;
@@ -22,8 +22,14 @@ class Item {
 		console.log('item color', this.color)
 		console.log('item name', this.name)
 
+		const loader = new ImageLoader()
 
+
+
+
+		// use the image, e.g. draw part of it on a canvas
 		const ctx = this.canvas.getContext("2d");
+
 		// Background
 		ctx.beginPath();
 		ctx.rect(0, 0, width, height);
@@ -44,8 +50,17 @@ class Item {
 		ctx.rect(width-100, 0, 100, 100);
 		ctx.fillStyle = this.color;
 		ctx.fill();
-		ctx.closePath();
-		return new Promise((resolve) => {
+		ctx.closePath()
+
+		loader.load(this.logo, (image) => {
+			ctx.drawImage(image, 0,0, height, height);
+			this.texture.needsUpdate = true
+		})
+
+
+
+
+		/*return new Promise((resolve) => {
 			if (!this.logo) return resolve()
 			const img = new Image();
 			img.src = this.logo
@@ -54,7 +69,7 @@ class Item {
 				console.log('img loaded')
 				resolve()
 			}, false);
-		})
+		})*/
 
 	}
 	generateTexture() {
@@ -106,7 +121,7 @@ class Item {
 		this.depth = newDepth*/
 		this.threeObj.geometry.dispose()
 		this.threeObj.geometry = new BoxGeometry(this.width, this.height, this.depth)
-		await this.updateCanvas()
+		this.updateCanvas()
 
 		//this.grid.updatePlacement()
 		/*const newObj = await this.create3DItem()
@@ -119,19 +134,18 @@ class Item {
 	}
 	update(newData) {
 		Object.assign(this, newData)
-		this.updateCanvas().then(() => {
-			console.log('canvas updated')
-			if (this.isSelected) {
-				this.threeObj.material.forEach(m =>m.emissive.setHex( 0xff0000 ))
-			} else {
-				this.threeObj.material.forEach(m =>m.emissive.setHex( 0x000000 ))
-			}
-			this.texture.needsUpdate = true
-		})
+		this.updateCanvas()
+		console.log('canvas updated')
+		if (this.isSelected) {
+			this.threeObj.material.forEach(m =>m.emissive.setHex( 0xff0000 ))
+		} else {
+			this.threeObj.material.forEach(m =>m.emissive.setHex( 0x000000 ))
+		}
+		this.texture.needsUpdate = true
 		//this.threeObj.material
 	}
 	async create3DItem() {
-		await this.updateCanvas()
+		this.updateCanvas()
 		this.texture = this.generateTexture()
 		const material = this.generateMaterial();
 
