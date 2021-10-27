@@ -110,6 +110,7 @@ class Grid {
 		//item.baseDepth = this.cellDepth
 		if (!this.items.find(i => i.id === item.id))
 			this.items.push(item)
+		this.updatePlacement()
 	}
 	removeItemFromGrid(item) {
 		const itemIndex = this.items.findIndex(i => i.id === item.id)
@@ -136,7 +137,7 @@ class Grid {
 			await item.grid.updateBlockSize( sizeChart)
 
 		}
-		//this.updatePlacement()
+		this.updatePlacement()
 
 
 	}

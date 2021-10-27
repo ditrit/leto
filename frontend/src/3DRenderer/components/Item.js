@@ -8,8 +8,8 @@ class Item {
 		this.depth = 1
 		Object.assign(this, params)
 		this.links = []
-		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
-		this.grid.gridSpacing = 1
+		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, false)
+		this.grid.gridSpacing = 1.5
 		this.canvas = document.createElement('canvas');
 
 
@@ -48,7 +48,7 @@ class Item {
 		return new Promise((resolve) => {
 			if (!this.logo) return resolve()
 			const img = new Image();
-			img.src = `textures/logos/${this.logo}`
+			img.src = this.logo
 			img.addEventListener('load', function() {
 				ctx.drawImage(img, 0, 0, height, height);
 				console.log('img loaded')

@@ -71,7 +71,7 @@ class Renderer  extends EventEmitter{
 		if (this.grid.needsUpdate) {
 
 			console.log('updating grid positions')
-			this.grid.updatePlacement()
+			//this.grid.updatePlacement()
 			this.updateSizeChart()
 			await this.grid.updateBlockSize(this.sizeChart)
 			this.grid.needsUpdate = false
