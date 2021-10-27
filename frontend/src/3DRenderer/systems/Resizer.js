@@ -1,15 +1,21 @@
 class Resizer {
 	constructor(container, camera, renderer) {
+		this.container = container
+		this.camera = camera
+		this.renderer = renderer
+		this.update()
+	}
+	update() {
 		// Set the camera's aspect ratio
-		camera.aspect = container.clientWidth / container.clientHeight;
+		this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
 
-		camera.updateProjectionMatrix()
+		this.camera.updateProjectionMatrix()
 
 		// update the size of the renderer AND the canvas
-		renderer.setSize(container.clientWidth, container.clientHeight);
+		this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
 
 		// set the pixel ratio (for mobile devices)
-		renderer.setPixelRatio(window.devicePixelRatio);
+		this.renderer.setPixelRatio(window.devicePixelRatio);
 	}
 }
 

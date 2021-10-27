@@ -48,6 +48,7 @@ class Renderer  extends EventEmitter{
 		const mouseController = new MouseController(this.scene, this.renderer, this.camera, this.items)
 		mouseController.on('intersect', (event) => this.onClickSelect(event))
 		mouseController.on('link', (event) => this.onClickLink(event))
+		window.addEventListener('resize', () => resizer.update())
 
 	}
 	updateSizeChart() {
