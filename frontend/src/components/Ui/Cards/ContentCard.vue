@@ -10,7 +10,7 @@
 			<q-card-section>
 				<div class="row no-wrap">
 					<div class="col">
-						<div class="text-h6">
+						<div class="flex text-h6 items-start">
 							<q-icon name="group" size="30px" class="q-mr-sm" />
 							<span class="text-uppercase">{{ item.Name }}</span>
 						</div>

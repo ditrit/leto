@@ -1,7 +1,7 @@
 <template>
-	<q-layout>
+	<q-layout class="page_padding">
 		<!-- <AjaxBar /> -->
-		<q-page padding class="bg-gray">
+		<q-page class="bg-gray">
 			<PageContent
 				v-for="item in dataItems"
 				:key="item.id"

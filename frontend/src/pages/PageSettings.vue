@@ -1,6 +1,6 @@
 <template>
-	<q-layout>
-		<q-page padding class="flex flex-center bg-gray">
+	<q-layout class="page_padding">
+		<q-page class="flex flex-center bg-gray">
 			<h2>Settings Page</h2>
 		</q-page>
 	</q-layout>

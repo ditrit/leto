@@ -1,5 +1,5 @@
 <template>
-	<div class="q-pa-md">
+	<div class="q-pa-md stepper_wrapper">
 		<q-form
 			@submit="step === 3 ? onSubmit() : $refs.stepper.next()"
 			class="q-gutter-md"
@@ -71,7 +71,6 @@
 
 				<q-step :name="2" prefix="2" title="">
 					<Tabs
-						v-if="selectedParentData"
 						:allTags="null"
 						:teamProducts="selectedParentData.products"
 						:teamMembers="selectedParentData.authorizations"
@@ -206,23 +205,23 @@ export default {
 		// Get input Select options value
 		let dataReturned = getDomaies.value.map((payload) => {
 			return {
-				id: parseInt(payload.ID),
+				id: payload.ID,
 				name: payload.Name,
 				label: payload.Name,
 				value: payload.Name,
 				parentName: payload?.Name,
-				parentId: parseInt(payload?.ParentID),
-				// authorizations: payload?.Authorizations,
-				// libraries: payload?.Libraries,
-				// products: payload?.Products,
+				parentId: payload?.ParentID,
+				authorizations: payload?.Authorizations,
+				libraries: payload?.Libraries,
+				products: payload?.Products,
 			};
 		});
 		// console.log("dataReturned: ", dataReturned);
 		optionsSelections.value = dataReturned;
-		console.log("selectedParentData: ", optionsSelections.value);
-		// optionsSelections.value = [...new Set(dataReturned)].filter(
-		// 	(item) => item != null
-		// );
+		// console.log("selectedParentData: ", optionsSelections.value);
+		optionsSelections.value = [...new Set(dataReturned)].filter(
+			(item) => item != null
+		);
 
 		return {
 			step: ref(1),
@@ -242,7 +241,7 @@ export default {
 
 			onSubmit() {
 				const newDomain = {
-					pid: parseInt(selectedParentData.value.id),
+					pid: selectedParentData.value.id,
 					name: name.value,
 					teamParent: selectedParentData.value.parentName,
 					shortDescription: shortDescription.value,
@@ -263,7 +262,7 @@ export default {
 };
 </script>
 <style lang="sass">
-.q-card
+.stepper_wrapper .q-card
 	max-width: 800px !important
 	max-height: 100%
 .q-stepper

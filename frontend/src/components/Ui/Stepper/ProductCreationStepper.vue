@@ -1,5 +1,5 @@
 <template>
-	<div class="q-pa-md">
+	<div class="q-pa-md stepper_wrapper">
 		<q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
 			<q-stepper v-model="step" ref="stepper" animated active-color="purple">
 				<q-step :name="1" prefix="1" title="">
@@ -225,8 +225,7 @@ export default {
 };
 </script>
 <style lang="sass">
-.q-card
-	width: 800px !important
+
 .q-stepper
 	width: 720px !important
 	box-shadow: none !important

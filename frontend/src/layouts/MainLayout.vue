@@ -27,8 +27,7 @@
 				v-bind="link"
 			/>
 		</q-drawer>
-
-		<q-page class="page_padding">
+		<q-page>
 			<router-view />
 		</q-page>
 	</q-layout>
@@ -113,8 +112,7 @@ export default {
 };
 </script>
 <style lang="sass">
-.page_padding
-	padding: 60px 60px 60px 140px
+
 
 .full_height
 	height: inherit
@@ -129,8 +127,6 @@ export default {
 	justify-content: center
 	box-sizing: border-box
 	overflow-x: hidden
-
-.q-drawer--left
 
 .teams_buttons__container
 	display: flex

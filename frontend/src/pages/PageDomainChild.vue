@@ -1,5 +1,5 @@
 <template>
-	<q-layout class="">
+	<q-layout class="domain_wrapper left_padding top_padding">
 		<AjaxBar />
 		<q-page class="bg-gray">
 			<div class="content_wrapper">
@@ -68,9 +68,9 @@ export default defineComponent({
 		const actionsLinks = ref(["Link One", "Link Two", "Link Three"]);
 		const child = ref([]);
 		const oepnDialog = ref(false);
-		const myData = ref(null);
+
 		const getData = async () => {
-			await store.dispatch("appDomain/fetchDomainById", "705129797877268481");
+			await store.dispatch("appDomain/fetchDomainById", "705425405321871361");
 			let data = await computed(() => store.getters["appDomain/allDomaines"]);
 			console.log("data: ", data.value);
 			progress.value = child.value.length;
@@ -81,13 +81,17 @@ export default defineComponent({
 			oepnDialog,
 			child,
 			actionsLinks,
-			myData,
 		};
 	},
 });
 </script>
 <style lang="sass" scoped>
-
+.domain_wrapper .q-card
+  width: 96%
+.top_padding
+  padding-top: 54px
+.left_padding
+  padding-left: 140px
 .q-drawer
   z-index: -1 !important
 </style>

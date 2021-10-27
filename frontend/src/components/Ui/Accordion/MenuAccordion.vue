@@ -24,7 +24,7 @@
 						<router-link
 							v-for="(link, index) in links"
 							:key="index"
-							to="/teams/705129797877268481"
+							to="/teams/705425405321871361"
 						>
 							{{ link }}
 						</router-link>

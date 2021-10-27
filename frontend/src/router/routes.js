@@ -12,7 +12,7 @@ const routes = [
 			},
 
 			{
-				path: "teams/705129797877268481",
+				path: "teams/705425405321871361",
 				component: () => import("pages/PageDomainChild.vue"),
 				props: true,
 				meta: { requiresAuth: true },
