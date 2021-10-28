@@ -12,7 +12,7 @@ const routes = [
 			},
 
 			{
-				path: "teams/705425405321871361",
+				path: "teams/622048a9-6706-43a7-89c0-f1a8733392b9",
 				component: () => import("pages/PageDomainChild.vue"),
 				props: true,
 				meta: { requiresAuth: true },
@@ -63,15 +63,6 @@ const routes = [
 			{
 				path: "/login",
 				component: () => import("pages/Login.vue"),
-				// beforeEnter: (to, from, next) => {
-				// 	const router = useRouter();
-
-				// 	console.log("middleware:", from);
-				// 	console.log(store);
-				// 	if (store.getters["auth/authenticated"]) {
-				// 		next(router.push("/register"));
-				// 	}
-				// },
 			},
 			{
 				path: "/register",

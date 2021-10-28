@@ -71,6 +71,7 @@
 
 				<q-step :name="2" prefix="2" title="">
 					<Tabs
+						v-if="selectedParentData"
 						:allTags="null"
 						:teamProducts="selectedParentData.products"
 						:teamMembers="selectedParentData.authorizations"
@@ -98,12 +99,13 @@
 								style="padding: 15px 50px"
 							/>
 							<q-btn
-								v-if="step > 2"
+								v-if="step >= 3"
 								type=""
-								@click="$refs.stepper.close()"
+								@click="$refs.creationDialog"
 								color="positive"
 								label="Ok"
 								style="padding: 15px 50px"
+								v-close-popup
 							/>
 
 							<q-btn
@@ -217,7 +219,7 @@ export default {
 			};
 		});
 		// console.log("dataReturned: ", dataReturned);
-		optionsSelections.value = dataReturned;
+		// optionsSelections.value = dataReturned;
 		// console.log("selectedParentData: ", optionsSelections.value);
 		optionsSelections.value = [...new Set(dataReturned)].filter(
 			(item) => item != null
@@ -240,22 +242,32 @@ export default {
 			description,
 
 			onSubmit() {
-				const newDomain = {
-					pid: selectedParentData.value.id,
-					name: name.value,
-					teamParent: selectedParentData.value.parentName,
-					shortDescription: shortDescription.value,
-					description: description.value,
-					authorizations: selectedParentData.value.authorizations,
-					libraries: selectedParentData.value.libraries,
-					products: selectedParentData.value.products,
-				};
-				store.dispatch("appDomain/addDomain", newDomain);
-				console.log(newDomain);
-				$q.notify({
-					type: "positive",
-					message: "Your data was sent ",
-				});
+				try {
+					const newDomain = {
+						pid: selectedParentData.value.id,
+						name: name.value,
+						teamParent: selectedParentData.value.parentName,
+						shortDescription: shortDescription.value,
+						description: description.value,
+						authorizations: selectedParentData.value.authorizations,
+						libraries: selectedParentData.value.libraries,
+						products: selectedParentData.value.products,
+					};
+					if (newDomain.name.length && newDomain.teamParent.length) {
+						store.dispatch("appDomain/addDomain", newDomain);
+						console.log(newDomain);
+
+						$q.notify({
+							type: "positive",
+							message: "Your data was sent ",
+						});
+					}
+				} catch (error) {
+					$q.notify({
+						type: "negative",
+						message: "Your data was not sent ",
+					});
+				}
 			},
 		};
 	},

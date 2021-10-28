@@ -70,7 +70,10 @@ export default defineComponent({
 		const oepnDialog = ref(false);
 
 		const getData = async () => {
-			await store.dispatch("appDomain/fetchDomainById", "705425405321871361");
+			await store.dispatch(
+				"appDomain/fetchDomainById",
+				"622048a9-6706-43a7-89c0-f1a8733392b9"
+			);
 			let data = await computed(() => store.getters["appDomain/allDomaines"]);
 			console.log("data: ", data.value);
 			progress.value = child.value.length;

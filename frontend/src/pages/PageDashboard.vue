@@ -9,6 +9,7 @@
 				:headline="item.headline"
 				:textContent="item.textContent"
 			/>
+			<Modal />
 		</q-page>
 	</q-layout>
 </template>
@@ -19,9 +20,10 @@ import { useStore } from "vuex";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import getDataItems from "../composables/getDataItems";
 import PageContent from "../components/Content/PageContent";
+import Modal from "../components/UI/Dialogs/Modal.vue";
 
 export default {
-	components: { AjaxBar, PageContent },
+	components: { AjaxBar, PageContent, Modal },
 	setup() {
 		const store = useStore();
 		const user = ref(null);

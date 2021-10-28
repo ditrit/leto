@@ -24,7 +24,7 @@
 						<router-link
 							v-for="(link, index) in links"
 							:key="index"
-							to="/teams/705425405321871361"
+							to="/teams/622048a9-6706-43a7-89c0-f1a8733392b9"
 						>
 							{{ link }}
 						</router-link>
@@ -67,8 +67,6 @@ export default {
   justify-content: space-around
   align-items: flex-start
   padding-left: 5.2em
-
-
 
 .q-item__section--side > .q-avatar
   font-size: 30px !important
