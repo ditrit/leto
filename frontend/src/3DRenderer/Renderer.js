@@ -30,6 +30,7 @@ class Renderer  extends EventEmitter{
 		this.sizeChart = {
 			0: {width:1,depth:1}
 		}
+		this.itemCountChart = {}
 		container.append(this.renderer.domElement)
 		const ambientLight = createAmbientLight()
 		this.scene.add(ambientLight)
@@ -51,10 +52,34 @@ class Renderer  extends EventEmitter{
 		window.addEventListener('resize', () => resizer.update())
 
 	}
-	updateSizeChart() {
+	updateCellSizeChart() {
 		const zLevels = new Set(this.items.map(i => i.threeObj.position.y))
 		console.log('zlevels', zLevels, this.items.map(i => i.threeObj.position.y))
-		for (let zlevel of zLevels) {
+		const maxLevel = Math.max(...zLevels) + 1
+		console.log('max', maxLevel)
+		this.sizeChart[maxLevel] = {
+			width: 1,
+			depth: 1
+		}
+		for (let l = maxLevel - 1; l >= 0; --l) {
+
+			/*this.sizeChart[l] = {
+				width: -l + (maxLevel + this.sizeChart[l + 1].width),
+				depth: -l + (maxLevel + this.sizeChart[l + 1].depth),
+			}*/
+			console.log('sizechart',l, this.sizeChart[l], this.sizeChart[l+1])
+			this.sizeChart[l] = {
+				width: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*this.sizeChart[l + 1].width,
+			}
+			//this.sizeChart[l].depth= Math.ceil(this.itemCountChart[l] / this.sizeChart[l].width) + 1
+			this.sizeChart[l].depth= (Math.ceil(this.itemCountChart[l] / this.sizeChart[l].width))* this.sizeChart[l + 1].depth+1
+
+
+
+			//	width:(-l + (maxLevel)) * (Math.ceil(Math.sqrt(this.itemCountChart[l + 1] ? this.itemCountChart[l + 1] : 1))),
+		//		depth:(-l + (maxLevel)) * ((this.itemCountChart[l + 1] ? this.itemCountChart[l + 1] : 1) / Math.ceil(Math.sqrt(this.itemCountChart[l + 1] ? this.itemCountChart[l + 1] : 1))),}
+		}
+		/*for (let zlevel of zLevels) {
 			if (!this.sizeChart.hasOwnProperty(zlevel)) {
 				this.sizeChart[zlevel] = {width:1,depth:1}
 			}
@@ -64,16 +89,26 @@ class Renderer  extends EventEmitter{
 			this.sizeChart[zlevel].width = maxWidth//Math.max(this.sizeChart[zlevel].width, maxWidth)
 			this.sizeChart[zlevel].depth = maxDepth//Math.max(this.sizeChart[zlevel].depth, maxDepth)
 
-		}
+		}*/
 	}
 	async render() {
 		//console.log('rendering', this.scene, this.camera)
 		if (this.grid.needsUpdate) {
 
 			console.log('updating grid positions')
+
 			//this.grid.updatePlacement()
-			this.updateSizeChart()
-			await this.grid.updateBlockSize(this.sizeChart)
+
+			this.itemCountChart = {}
+			this.grid.buildItemCountChart(this.itemCountChart)
+			this.updateCellSizeChart()
+			console.log('itemcountchart', this.itemCountChart, this.sizeChart)
+			this.grid.updateBlockSize(this.sizeChart, this.itemCountChart)
+			this.grid.updatePlacement()
+
+			this.items.forEach(i => i.resize())
+
+
 			this.grid.needsUpdate = false
 			console.log('grid new block sizes', this.grid)
 

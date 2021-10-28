@@ -4,8 +4,8 @@ import {Grid} from "src/3DRenderer/systems/Grid";
 class Item {
 	constructor(params) {
 		this.height = 1
-		this.width = 1
-		this.depth = 1
+		//this.width = 1
+		//this.depth = 1
 		Object.assign(this, params)
 		this.links = []
 		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, false)
@@ -13,6 +13,12 @@ class Item {
 		this.canvas = document.createElement('canvas');
 
 
+	}
+	get width() {
+		return this.grid.width
+	}
+	get depth() {
+		return this.grid.depth
 	}
 	async updateCanvas() {
 		const width = this.width * 500;
@@ -40,17 +46,17 @@ class Item {
 		ctx.font = '70pt Calibri';
 		ctx.textAlign = 'left';
 		ctx.fillStyle = '#FFFFFF';
-		ctx.fillText(this.type, (height/3)+10, height/6, width-(height/3)-120);
+		ctx.fillText(this.type, (height)+10, height/6, width-(height/3)-120);
 		// Label Name
 		ctx.font = '90pt Calibri';
 		ctx.textAlign = 'center';
 		ctx.fillText(this.name, width/2, height/2, width-20);
 		// TagColor
-		ctx.beginPath();
+		/*ctx.beginPath();
 		ctx.rect(width-100, 0, 100, 100);
 		ctx.fillStyle = this.color;
 		ctx.fill();
-		ctx.closePath()
+		ctx.closePath()*/
 
 		loader.load(this.logo, (image) => {
 			ctx.drawImage(image, 0,0, height, height);

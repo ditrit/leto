@@ -7,6 +7,7 @@ class Grid {
 		this.cellWidth = 1
 		this.cellDepth = 1
 		this.gridSpacing = 5
+		this.maxCount = 1
 		this.parentItem = parentItem
 		this.reserveSlot = reserveSlot
 		this.items = items
@@ -37,7 +38,7 @@ class Grid {
 			console.log("no empty space")
 //			this.grid.push([])
 			if (this.columnCount > this.lineCount) {
-			//	this.lineCount += 1
+				//	this.lineCount += 1
 			} else {
 				this.grid.push([])
 			}
@@ -55,31 +56,34 @@ class Grid {
 		return false
 	}
 	get columnCount() {
-		return Math.max(Math.ceil(Math.sqrt(this.items.length + this.reserveSlot) ) , 1);
+		return Math.max(Math.ceil(Math.sqrt(this.itemCount + this.reserveSlot)) , 1);
 	}
 	get lineCount() {
-		return Math.max(Math.ceil((this.items.length + this.reserveSlot) / this.columnCount), 1)
+		return Math.max(Math.ceil((this.itemCount + this.reserveSlot) / this.columnCount), 1)
 	}
 	get width() {
 		return this.colWidth * this.columnCount
 	}
 	get colWidth() {
-		return this.cellWidth +  this.gridSpacing
+		return this.cellWidth + this.gridSpacing
 		/*return Math.max(
 			...this.grid.map(col => col.reduce((a, l) => (l && l.width ? Math.max(l.width, a) : a) ,this.cellWidth + this.gridSpacing))
 		)*/
 	}
+	get itemCount() {
+		return Math.max(this.items.length, this.maxCount)
+	}
 	get lineDepth() {
-	/*	let maxLineDepth = this.cellDepth + this.gridSpacing
-		for (let line = 0; line < this.lineCount; ++line) {
-			for (let col = 0; col < this.columnCount; ++col) {
-				const item = this.grid[col][line]
-				if (item && item.depth) {
-					maxLineDepth = Math.max(maxLineDepth, item.depth)
+		/*	let maxLineDepth = this.cellDepth + this.gridSpacing
+			for (let line = 0; line < this.lineCount; ++line) {
+				for (let col = 0; col < this.columnCount; ++col) {
+					const item = this.grid[col][line]
+					if (item && item.depth) {
+						maxLineDepth = Math.max(maxLineDepth, item.depth)
+					}
 				}
 			}
-		}
-		return maxLineDepth*/
+			return maxLineDepth*/
 		return this.cellDepth + this.gridSpacing
 	}
 	get depth() {
@@ -102,7 +106,7 @@ class Grid {
 	}
 	placeItemOnGrid(item) {
 		//this.resizeIfNecessary()
-	//	console.log('positioning item', item, this.grid)
+		//	console.log('positioning item', item, this.grid)
 		/*const freeColumnIndex = this.grid.findIndex(c => c.some(l => !l))
 		const freeSlotIndex = this.grid[freeColumnIndex].findIndex(s => !s)
 		this.grid[freeColumnIndex][freeSlotIndex] = item*/
@@ -110,34 +114,35 @@ class Grid {
 		//item.baseDepth = this.cellDepth
 		if (!this.items.find(i => i.id === item.id))
 			this.items.push(item)
-		this.updatePlacement()
+		item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
+		//this.updatePlacement()
 	}
 	removeItemFromGrid(item) {
 		const itemIndex = this.items.findIndex(i => i.id === item.id)
 		this.items.splice(itemIndex, 1)
 
 	}
-	async updateBlockSize(sizeChart) {
-
-
-		const index = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) + 1 : 0
-		this.cellWidth = sizeChart[index] ? sizeChart[index].width : 1
-		this.cellDepth = sizeChart[index] ? sizeChart[index].depth : 1
-		console.log('sizeChart', sizeChart, this.parentItem ? this.parentItem.threeObj.position.y : 1,index, this.cellWidth, this.cellDepth)
-		if (this.parentItem)
-			await this.parentItem.resize()
-
-		for (let item of this.items.filter(i => i && typeof i !== 'string')) {
-		//	console.log('resizing item', item)
-			item.depth = this.cellDepth
-			item.width = this.cellWidth
-			await item.resize()
-		}
+	buildItemCountChart(itemCountChart) {
 		for (let item of this.items.filter(i => i && i.grid)) {
-			await item.grid.updateBlockSize( sizeChart)
+			item.grid.buildItemCountChart(itemCountChart)
+		}
+		const currentIndex = this.parentItem ? this.parentItem.threeObj.position.y : -1
+		const maxCount = Math.max(this.items.length, itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 1)
+		itemCountChart[currentIndex] = maxCount
+	}
+	updateBlockSize(cellSizeChart, itemCountChart) {
+		for (let item of this.items.filter(i => i && i.grid)) {
+			item.grid.updateBlockSize( cellSizeChart, itemCountChart)
 
 		}
-		this.updatePlacement()
+		const currentIndex = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) : -1
+		const cellIndex = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) + 1 : 0
+		this.cellWidth = cellSizeChart[cellIndex] ? cellSizeChart[cellIndex].width : 1
+		this.cellDepth = cellSizeChart[cellIndex] ? cellSizeChart[cellIndex].depth : 1
+		this.maxCount = itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 1
+
+
+		//this.updatePlacement()
 
 
 	}
