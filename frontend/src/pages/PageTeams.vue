@@ -1,6 +1,6 @@
 <template>
 	<q-layout class="page_padding">
-		<!-- <AjaxBar /> -->
+		<AjaxBar />
 		<q-page class="bg-gray">
 			<PageContent
 				v-for="item in dataItems"
@@ -26,6 +26,10 @@
 						:href="btn.link"
 						@click="oepnDialog = true"
 					/>
+					<!-- <Modal v-model="oepnDialog" :isModalOpened="oepnDialog">
+						<template v-slot:ModalHeadline> This is my Modal </template>
+						<template v-slot:ModalBody> <CreationFormStepper /></template>
+					</Modal> -->
 					<!-- <CreateItems /> -->
 					<q-dialog v-model="oepnDialog">
 						<q-card style="width: 700px; max-width: 80vw">
@@ -47,13 +51,13 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
-// import { useStore } from "vuex";
+import { defineComponent, ref } from "vue";
+import Modal from "../components/UI/Dialogs/Modal.vue";
 import getDataItems from "../composables/getDataItems";
 import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
 import PageContent from "../components/Content/PageContent";
 import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
-// import AjaxBar from "../components/UI/Progress/AjaxBar";
+import AjaxBar from "../components/UI/Progress/AjaxBar";
 
 const buttonsList = [
 	{
@@ -81,7 +85,7 @@ const buttonsList = [
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { BtnAddNew, PageContent, CreationFormStepper },
+	components: { BtnAddNew, PageContent, CreationFormStepper, AjaxBar },
 
 	setup() {
 		// const allTags = ref([]);
@@ -104,7 +108,7 @@ export default defineComponent({
 		// console.log("tagsvalue : ", allTags.value);
 
 		return {
-			// progress: dataItems.length,
+			progress: dataItems.length,
 			path,
 			dataItems,
 			error,

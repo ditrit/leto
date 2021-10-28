@@ -1,8 +1,12 @@
 <template>
 	<div class="q-pa-md q-gutter-sm">
-		<q-btn label="isOpened" color="primary" @click="isOpened = true" />
+		<q-btn label="isOpened" color="primary" @click="openedDailog" />
 
-		<q-dialog v-model="isOpened" ref="creationDialog">
+		<q-dialog
+			:isModalOpened="isModalOpened"
+			v-model="isOpened"
+			ref="creationDialog"
+		>
 			<q-card>
 				<q-card-section>
 					<div class="text-h6">
@@ -28,8 +32,12 @@ export default {
 	props: ["isModalOpened"],
 	setup() {
 		const isOpened = ref(false);
+		const openedDailog = () => {
+			isOpened.value = true;
+		};
 		return {
 			isOpened,
+			openedDailog,
 		};
 	},
 };
