@@ -11,8 +11,8 @@ class CameraController {
 		}
 		//orbitControls.enablePan = false;
 		orbitControls.enableDamping = false;
-		orbitControls.minDistance = 2;
-		orbitControls.maxDistance = 500;
+		orbitControls.minDistance = 1;
+		orbitControls.maxDistance = 500000;
 		orbitControls.target = new Vector3(0, 1, 0);
 		orbitControls.update();
 		this.orbitControls = orbitControls

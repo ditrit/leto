@@ -21,7 +21,7 @@ class Renderer  extends EventEmitter{
 		this.camera = createCamera( 70,
 			container.clientWidth / container.clientHeight,
 			0.01,
-			100);
+			1000);
 		this.scene = createScene();
 		this.renderer = createRenderer();
 		this.items = []
@@ -69,10 +69,11 @@ class Renderer  extends EventEmitter{
 			}*/
 			console.log('sizechart',l, this.sizeChart[l], this.sizeChart[l+1])
 			this.sizeChart[l] = {
-				width: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*this.sizeChart[l + 1].width,
+				width: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*this.sizeChart[l + 1].width + 1,
+				depth: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*this.sizeChart[l + 1].depth + 1,
 			}
 			//this.sizeChart[l].depth= Math.ceil(this.itemCountChart[l] / this.sizeChart[l].width) + 1
-			this.sizeChart[l].depth= (Math.ceil(this.itemCountChart[l] / this.sizeChart[l].width))* this.sizeChart[l + 1].depth+1
+			//this.sizeChart[l].depth = (Math.ceil(this.sizeChart[l].width / (Math.floor(Math.sqrt(this.itemCountChart[l])) + 1)))* this.sizeChart[l + 1].depth
 
 
 
