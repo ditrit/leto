@@ -58,8 +58,8 @@ class Renderer  extends EventEmitter{
 		const maxLevel = Math.max(...zLevels) + 1
 		console.log('max', maxLevel)
 		this.sizeChart[maxLevel] = {
-			width: 1,
-			depth: 1
+			width: 3,
+			depth: 3
 		}
 		for (let l = maxLevel - 1; l >= 0; --l) {
 
@@ -70,7 +70,7 @@ class Renderer  extends EventEmitter{
 			console.log('sizechart',l, this.sizeChart[l], this.sizeChart[l+1])
 			this.sizeChart[l] = {
 				width: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*this.sizeChart[l + 1].width + 1,
-				depth: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*this.sizeChart[l + 1].depth + 1,
+				depth: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*this.sizeChart[l + 1].depth + 1
 			}
 			//this.sizeChart[l].depth= Math.ceil(this.itemCountChart[l] / this.sizeChart[l].width) + 1
 			//this.sizeChart[l].depth = (Math.ceil(this.sizeChart[l].width / (Math.floor(Math.sqrt(this.itemCountChart[l])) + 1)))* this.sizeChart[l + 1].depth

@@ -6,7 +6,7 @@ class Grid {
 		//this.lineCount = 1//Math.ceil(items.length / this.columnCount)
 		this.cellWidth = 1
 		this.cellDepth = 1
-		this.gridSpacing = 5
+		this.gridSpacing = 3
 		this.maxCount = 1
 		this.parentItem = parentItem
 		this.reserveSlot = reserveSlot
@@ -127,7 +127,7 @@ class Grid {
 			item.grid.buildItemCountChart(itemCountChart)
 		}
 		const currentIndex = this.parentItem ? this.parentItem.threeObj.position.y : -1
-		const maxCount = Math.max(this.items.length, itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 1)
+		const maxCount = Math.max(this.items.length, itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 0)
 		itemCountChart[currentIndex] = maxCount
 	}
 	updateBlockSize(cellSizeChart, itemCountChart) {
@@ -139,7 +139,7 @@ class Grid {
 		const cellIndex = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) + 1 : 0
 		this.cellWidth = cellSizeChart[cellIndex] ? cellSizeChart[cellIndex].width : 1
 		this.cellDepth = cellSizeChart[cellIndex] ? cellSizeChart[cellIndex].depth : 1
-		this.maxCount = itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 1
+		this.maxCount = itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 0
 
 
 		//this.updatePlacement()
