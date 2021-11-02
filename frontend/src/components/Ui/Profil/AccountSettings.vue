@@ -22,10 +22,8 @@
 						</q-item-section>
 					</q-item>
 
-					<q-item clickable v-ripple>
-						<q-item-section>
-							<q-item-label>Link Three</q-item-label>
-						</q-item-section>
+					<q-item>
+						<LangSwitcher />
 					</q-item>
 				</q-list>
 
@@ -57,7 +55,9 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import LangSwitcher from "../../LangSwitcher.vue";
 export default {
+	components: { LangSwitcher },
 	setup() {
 		const store = useStore();
 		const router = useRouter();

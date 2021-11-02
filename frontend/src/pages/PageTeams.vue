@@ -9,10 +9,6 @@
 				:headline="$t('teams')"
 				:textContent="item.textContent"
 			/>
-			<q-btn :label="$t('success')" />
-			<q-btn :label="$t('failed')" />
-			<p>{{ $t("success") }}</p>
-			<p>{{ $t("failed") }}</p>
 			<div class="buttons_wrapper">
 				<div
 					class="teams_buttons__container"
