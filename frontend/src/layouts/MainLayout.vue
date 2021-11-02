@@ -2,6 +2,7 @@
 	<q-layout view="lhh lpR fFf" class="bg-grey-4 q-pr-md">
 		<MainHeader style="z-index: 1">
 			<AccountSettings />
+			<LangSwitcher />
 			<!-- <GlobalSearch /> -->
 		</MainHeader>
 		<Drawer :data="data" />
@@ -36,6 +37,7 @@
 <script>
 import EssentialTools from "components/EssentialTools";
 import AccountSettings from "../components/UI/Profil/AccountSettings";
+import LangSwitcher from "../components/LangSwitcher.vue";
 import Drawer from "../components/UI/Drawers/Drawer";
 import MainHeader from "../components/UI/Headers/mainHeader";
 // import GlobalSearch from "../components/UI/Form/GlobalSearch";
@@ -100,6 +102,7 @@ export default {
 		AccountSettings,
 		Drawer,
 		MainHeader,
+		LangSwitcher,
 		// GlobalSearch,
 	},
 

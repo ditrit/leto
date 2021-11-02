@@ -6,9 +6,13 @@
 				v-for="item in dataItems"
 				:key="item.id"
 				:icon="item.icon"
-				:headline="item.headline"
+				:headline="$t('teams')"
 				:textContent="item.textContent"
 			/>
+			<q-btn :label="$t('success')" />
+			<q-btn :label="$t('failed')" />
+			<p>{{ $t("success") }}</p>
+			<p>{{ $t("failed") }}</p>
 			<div class="buttons_wrapper">
 				<div
 					class="teams_buttons__container"
@@ -17,7 +21,7 @@
 				>
 					<BtnAddNew
 						v-show="dataItems.length === 1"
-						:title="btn.title"
+						:title="$t('add_team')"
 						:class="btn.styles"
 						outline
 						round

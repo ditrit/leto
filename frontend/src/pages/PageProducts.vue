@@ -6,7 +6,7 @@
 				v-for="item in dataItems"
 				:key="item.id"
 				:icon="item.icon"
-				:headline="item.headline"
+				:headline="$t('products')"
 				:textContent="item.textContent"
 			/>
 
@@ -18,7 +18,7 @@
 				<transiton name="fade" v-if="dataItems">
 					<BtnAddNew
 						v-show="dataItems.length === 1"
-						:title="btn.title"
+						:title="$t('add_product')"
 						:class="btn.styles"
 						outline
 						round
@@ -32,7 +32,7 @@
 				<q-dialog v-model="oepnDialog">
 					<q-card style="width: 700px; max-width: 80vw">
 						<q-card-section>
-							<div class="text-h6">Create New Product</div>
+							<div class="text-h6">{{ $t("create_product") }}</div>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
