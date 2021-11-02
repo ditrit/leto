@@ -13,7 +13,7 @@
 					@click="openedDailog"
 				/>
 				<q-dialog v-model="isOpened" v-show="oepnDialog">
-					<q-card style="width: 700px; max-width: 80vw">
+					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
 							<div class="text-h6 q-pa-md">
 								<slot name="ModalHeadline"> </slot>

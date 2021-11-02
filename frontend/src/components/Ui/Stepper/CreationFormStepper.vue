@@ -250,7 +250,7 @@ export default {
 						shortDescription: shortDescription.value,
 						description: description.value,
 						// authorizations: selectedParentData.value.authorizations,
-						libraries: selectedParentData.value.libraries,
+						// libraries: selectedParentData.value.libraries,
 						/* TODO  Whats is the heritage ?*/
 						// products: selectedParentData.value.products,
 					};
