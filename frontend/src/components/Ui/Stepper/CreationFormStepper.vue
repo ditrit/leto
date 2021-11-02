@@ -249,9 +249,10 @@ export default {
 						teamParent: selectedParentData.value.parentName,
 						shortDescription: shortDescription.value,
 						description: description.value,
-						authorizations: selectedParentData.value.authorizations,
+						// authorizations: selectedParentData.value.authorizations,
 						libraries: selectedParentData.value.libraries,
-						products: selectedParentData.value.products,
+						/* TODO  Whats is the heritage ?*/
+						// products: selectedParentData.value.products,
 					};
 					if (newDomain.name.length && newDomain.teamParent.length) {
 						store.dispatch("appDomain/addDomain", newDomain);

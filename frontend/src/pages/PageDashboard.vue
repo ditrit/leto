@@ -9,7 +9,11 @@
 				:headline="item.headline"
 				:textContent="item.textContent"
 			/>
-			<Modal />
+			<Modal>
+				<template v-slot:ModalBody>
+					<CreationFormStepperVue />
+				</template>
+			</Modal>
 		</q-page>
 	</q-layout>
 </template>
@@ -21,9 +25,9 @@ import AjaxBar from "../components/UI/Progress/AjaxBar";
 import getDataItems from "../composables/getDataItems";
 import PageContent from "../components/Content/PageContent";
 import Modal from "../components/UI/Dialogs/Modal.vue";
-
+import CreationFormStepperVue from "src/components/UI/Stepper/CreationFormStepper.vue";
 export default {
-	components: { AjaxBar, PageContent, Modal },
+	components: { AjaxBar, PageContent, Modal, CreationFormStepperVue },
 	setup() {
 		const store = useStore();
 		const user = ref(null);

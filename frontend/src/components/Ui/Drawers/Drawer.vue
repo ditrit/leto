@@ -88,11 +88,11 @@ export default {
 
 			return (menu.value = [
 				{
-					parent: returnArray[0].Name,
-					childs: returnArray[1].map((item) => item.Domain),
-					name: returnArray[1].map((item) => item.Domain.Name),
-					logo: returnArray[1].map((item) => item.Domain.Logo),
-					id: returnArray[1].map((item) => item.Domain.ID),
+					parent: returnArray.Name,
+					childs: returnArray.Childs.map((item) => item.Domain),
+					name: returnArray.Childs.map((item) => item.Domain.Name),
+					logo: returnArray.Childs.map((item) => item.Domain.Logo),
+					id: returnArray.Childs.map((item) => item.Domain.ID),
 				},
 			]);
 		};
