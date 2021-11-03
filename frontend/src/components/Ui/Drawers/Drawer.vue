@@ -48,16 +48,22 @@
 							/>
 						</template>
 					</q-input>
-					<div v-if="menu">
+					<!-- <div>
 						<MenuAccordion
 							v-for="(item, index) in menu"
 							:key="index"
 							:id="item.ID"
-							:logo="item.logo"
-							:parentLabel="item.parent"
-							:links="item.name"
+							:logo="item.Logo"
+							:parentLabel="item.Name"
+							:links="item.Name"
 						/>
-					</div>
+					</div> -->
+
+					<ul>
+						<pre v-for="(item, index) in menu" :key="index">
+							<li> {{item}}</li>
+						</pre>
+					</ul>
 				</div>
 			</slot>
 		</q-drawer>
@@ -66,10 +72,10 @@
 <script>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
-import MenuAccordion from "../Accordion/MenuAccordion";
+// import MenuAccordion from "../Accordion/MenuAccordion";
 
 export default {
-	components: { MenuAccordion },
+	// components: { MenuAccordion },
 	props: {
 		data: {
 			type: Array,
@@ -83,18 +89,13 @@ export default {
 			const allDomainTree = await computed(
 				() => store.getters["appDomain/allDomainesTree"]
 			);
-			let returnArray = Object.values(allDomainTree.value);
-			console.log("returnArray: ", returnArray);
-
-			return (menu.value = [
-				{
-					parent: returnArray.Name,
-					childs: returnArray.Childs.map((item) => item.Domain),
-					name: returnArray.Childs.map((item) => item.Domain.Name),
-					logo: returnArray.Childs.map((item) => item.Domain.Logo),
-					id: returnArray.Childs.map((item) => item.Domain.ID),
-				},
-			]);
+			console.log("allDomainTree: ", allDomainTree.value);
+			console.log("allDomainTree  name: ", allDomainTree.value.Name);
+			console.log(
+				"allDomainTree  childs: ",
+				allDomainTree.value.Childs.map((item) => item.Name)
+			);
+			menu.value = allDomainTree.value;
 		};
 		getMenuData();
 		console.log("	menu.value : ", menu.value);

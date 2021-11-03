@@ -1,14 +1,11 @@
 <template>
 	<div class="q-pa-md q-gutter-sm">
-		<!-- <q-btn label="isOpened" color="primary" @click="openedDailog" /> -->
 		<div class="buttons_wrapper">
 			<div class="teams_buttons__container">
 				<BtnAddNew
 					:title="$t('add_team')"
 					class="bg-white q-mt-sm"
-					outline
-					round
-					color="primary"
+					:color="primary"
 					icon="add"
 					@click="openedDailog"
 				/>

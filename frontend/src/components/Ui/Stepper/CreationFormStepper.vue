@@ -133,6 +133,11 @@ import Tabs from "../TabPanels/Tabs";
 export default {
 	components: { Tabs },
 
+	/**
+	 * TODO
+	 * 	1 - Add props and get aldomaies data from TeamPage
+	 */
+
 	setup() {
 		const store = useStore();
 		const name = ref("");
@@ -154,7 +159,7 @@ export default {
 		}
 		/**
 		 * TODO
-		 * 	1 - regroupe functions by thematique
+		 * 	2 - regroupe functions by thematique
 		 */
 
 		// fetch All Domaines
