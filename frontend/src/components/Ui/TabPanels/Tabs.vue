@@ -61,9 +61,9 @@
 					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
 						<ActionCard
 							v-for="env in teamEnvironnements"
-							:key="env.id"
-							:name="env.name"
-							:description="env.description"
+							:key="env.ID"
+							:name="env.Name"
+							:description="env.ShortDescription"
 						/>
 					</div>
 				</q-tab-panel>
@@ -129,29 +129,6 @@ export default {
 		},
 		teamProducts: {
 			type: [],
-			default: [
-				{
-					id: 0,
-					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-					name: "Product 1",
-					description:
-						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
-				},
-				{
-					id: 1,
-					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-					name: "Product 2",
-					description:
-						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
-				},
-				{
-					id: 2,
-					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-					name: "Product 3",
-					description:
-						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
-				},
-			],
 		},
 		teamLibraries: {
 			type: [],

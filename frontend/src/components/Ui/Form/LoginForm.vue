@@ -82,14 +82,14 @@ export default {
 						icon: "cloud_done",
 						message: "Submitted successfully",
 					});
-				} catch (err) {
-					error.value = err.response.data.error;
-					console.log("	error.value : ", error.value);
+				} catch (error) {
+					// error.value = err.response.data.error;
+					console.log("	error.value : ", response.error);
 					$q.notify({
 						color: "negative",
 						textColor: "white",
 						icon: "danger",
-						message: "Not Submitted",
+						message: "Sorry,you can not login",
 					});
 				}
 			},

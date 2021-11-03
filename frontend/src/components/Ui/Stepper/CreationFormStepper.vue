@@ -71,12 +71,14 @@
 
 				<q-step :name="2" prefix="2" title="">
 					<Tabs
-						v-if="selectedParentData"
+						v-if="optionsSelections.length"
 						:allTags="null"
-						:teamProducts="selectedParentData.products"
+						:teamProducts="
+							selectedParentData.products ? selectedParentData.products : null
+						"
 						:teamMembers="selectedParentData.authorizations"
 						:teamLibraries="selectedParentData.libraries"
-						:teamEnvironnements="teamEnvironnements"
+						:teamEnvironnements="selectedParentData.environments"
 					/>
 				</q-step>
 
@@ -144,50 +146,6 @@ export default {
 		const SelectedDomain = ref([]);
 		const $q = useQuasar();
 
-		const teamEnvironnements = ref([
-			{
-				id: 0,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 1",
-				description: "Ceci est une description",
-			},
-			{
-				id: 1,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 2",
-				description: "Ceci est une description",
-			},
-			{
-				id: 2,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 3",
-				description: "Ceci est une description",
-			},
-			{
-				id: 3,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 4",
-				description: "Ceci est une description",
-			},
-			{
-				id: 4,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 5",
-				description: "Ceci est une description",
-			},
-			{
-				id: 5,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 6",
-				description: "Ceci est une  description",
-			},
-			{
-				id: 6,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 7",
-				description: "Ceci est une  description",
-			},
-		]);
 		function onRejected(rejectedEntries) {
 			$q.notify({
 				type: "negative",
@@ -216,9 +174,10 @@ export default {
 				authorizations: payload?.Authorizations,
 				libraries: payload?.Libraries,
 				products: payload?.Products,
+				environments: payload?.Environments,
 			};
 		});
-		// console.log("dataReturned: ", dataReturned);
+		console.log("dataReturned from stepper: ", [...dataReturned]);
 		// optionsSelections.value = dataReturned;
 		// console.log("selectedParentData: ", optionsSelections.value);
 		optionsSelections.value = [...new Set(dataReturned)].filter(
@@ -233,7 +192,7 @@ export default {
 			optionsSelections,
 			options,
 			domainID,
-			teamEnvironnements,
+
 			onRejected,
 			store,
 			name,
