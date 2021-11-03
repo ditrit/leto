@@ -58,27 +58,42 @@ class Renderer  extends EventEmitter{
 		const maxLevel = Math.max(...zLevels) + 1
 		console.log('max', maxLevel)
 		this.sizeChart[maxLevel] = {
-			width: 3,
-			depth: 3
+			width: 2,
+			depth: 2
 		}
-		for (let l = maxLevel - 1; l >= 0; --l) {
+		for (let l = maxLevel - 1; l >= -1; --l) {
 
 			/*this.sizeChart[l] = {
 				width: -l + (maxLevel + this.sizeChart[l + 1].width),
 				depth: -l + (maxLevel + this.sizeChart[l + 1].depth),
 			}*/
-			console.log('sizechart',l, this.sizeChart[l], this.sizeChart[l+1])
-			this.sizeChart[l] = {
-				width: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*this.sizeChart[l + 1].width + 1,
-				depth: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*this.sizeChart[l + 1].depth + 1
+
+			let nbObj
+			if (l === -1) {
+				 nbObj =  Math.floor(Math.sqrt(this.itemCountChart[l]))
+			} else {
+				 nbObj =  this.itemCountChart[l]
 			}
+			const nbLane = nbObj
+			const objWidth = this.sizeChart[l + 1].width
+			const laneWidth = maxLevel - l
+			const width = nbObj * objWidth + nbLane * laneWidth
+
+			this.sizeChart[l] = {
+				width: width,
+				depth: laneWidth * 3,
+				laneWidth: laneWidth
+				//width: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*(this.sizeChart[l + 1].width + 1),
+				//depth: (Math.ceil(Math.sqrt(this.itemCountChart[l])) + 1)*(this.sizeChart[l + 1].depth + 1)
+			}
+			console.log('sizechart',l, this.sizeChart[l], this.sizeChart[l+1])
 			//this.sizeChart[l].depth= Math.ceil(this.itemCountChart[l] / this.sizeChart[l].width) + 1
 			//this.sizeChart[l].depth = (Math.ceil(this.sizeChart[l].width / (Math.floor(Math.sqrt(this.itemCountChart[l])) + 1)))* this.sizeChart[l + 1].depth
 
 
 
 			//	width:(-l + (maxLevel)) * (Math.ceil(Math.sqrt(this.itemCountChart[l + 1] ? this.itemCountChart[l + 1] : 1))),
-		//		depth:(-l + (maxLevel)) * ((this.itemCountChart[l + 1] ? this.itemCountChart[l + 1] : 1) / Math.ceil(Math.sqrt(this.itemCountChart[l + 1] ? this.itemCountChart[l + 1] : 1))),}
+			//		depth:(-l + (maxLevel)) * ((this.itemCountChart[l + 1] ? this.itemCountChart[l + 1] : 1) / Math.ceil(Math.sqrt(this.itemCountChart[l + 1] ? this.itemCountChart[l + 1] : 1))),}
 		}
 		/*for (let zlevel of zLevels) {
 			if (!this.sizeChart.hasOwnProperty(zlevel)) {

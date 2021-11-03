@@ -8,8 +8,9 @@ class Item {
 		//this.depth = 1
 		Object.assign(this, params)
 		this.links = []
-		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, false)
-		this.grid.gridSpacing = 2
+		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
+		this.grid.gridSpacing = 1
+
 		this.canvas = document.createElement('canvas');
 
 

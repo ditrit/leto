@@ -5,9 +5,11 @@ class Grid {
 		//this.columnCount = 1//Math.max(Math.ceil(Math.sqrt(items.length)) + reserveSlot, 1);
 		//this.lineCount = 1//Math.ceil(items.length / this.columnCount)
 		this.cellWidth = 1
+		this.width = 1
 		this.cellDepth = 1
-		this.gridSpacing = 3
+		this.gridSpacing = 1
 		this.maxCount = 1
+		this.baseDepth = 1
 		this.parentItem = parentItem
 		this.reserveSlot = reserveSlot
 		this.items = items
@@ -55,15 +57,15 @@ class Grid {
 		}
 		return false
 	}
-	get columnCount() {
-		return Math.max(Math.ceil(Math.sqrt(this.itemCount + this.reserveSlot)) , 1);
-	}
 	get lineCount() {
-		return Math.max(Math.ceil((this.itemCount + this.reserveSlot) / this.columnCount), 1)
+		return this.parentItem ? 1 : Math.max(Math.ceil(Math.sqrt(this.itemCount)) , 1);
 	}
-	get width() {
+	get columnCount() {
+		return this.parentItem ? this.itemCount : Math.max(Math.ceil((this.itemCount) / this.lineCount), 1)
+	}
+	/*get width() {
 		return this.colWidth * this.columnCount
-	}
+	}*/
 	get colWidth() {
 		return this.cellWidth + this.gridSpacing
 		/*return Math.max(
@@ -71,7 +73,8 @@ class Grid {
 		)*/
 	}
 	get itemCount() {
-		return Math.max(this.items.length, this.maxCount)
+		//	return Math.max(this.items.length, this.maxCount)
+		return this.items.length + this.reserveSlot
 	}
 	get lineDepth() {
 		/*	let maxLineDepth = this.cellDepth + this.gridSpacing
@@ -86,11 +89,20 @@ class Grid {
 			return maxLineDepth*/
 		return this.cellDepth + this.gridSpacing
 	}
-	get depth() {
+	/*get depth() {
 		return this.lineDepth * this.lineCount
-	}
+	}*/
 	getUsedWidthAtIndex(colIndex) {
-		return colIndex * this.colWidth
+		if (this.parentItem) {
+			let res = this.gridSpacing / 2
+			for (let i = 0; i < colIndex; ++i) {
+				const item = this.items[i]
+				res += item.width + this.gridSpacing
+
+			}
+			return res
+		}
+		return (colIndex) * this.colWidth
 	}
 	getUsedDepthAtIndex(lineIndex) {
 		return lineIndex * this.lineDepth
@@ -127,7 +139,7 @@ class Grid {
 			item.grid.buildItemCountChart(itemCountChart)
 		}
 		const currentIndex = this.parentItem ? this.parentItem.threeObj.position.y : -1
-		const maxCount = Math.max(this.items.length, itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 0)
+		const maxCount = Math.max(this.items.length, itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 1)
 		itemCountChart[currentIndex] = maxCount
 	}
 	updateBlockSize(cellSizeChart, itemCountChart) {
@@ -135,12 +147,24 @@ class Grid {
 			item.grid.updateBlockSize( cellSizeChart, itemCountChart)
 
 		}
-		const currentIndex = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) : -1
-		const cellIndex = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) + 1 : 0
-		this.cellWidth = cellSizeChart[cellIndex] ? cellSizeChart[cellIndex].width : 1
-		this.cellDepth = cellSizeChart[cellIndex] ? cellSizeChart[cellIndex].depth : 1
-		this.maxCount = itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 0
+		this.width = this.items.reduce((a,i) => a + i.width, this.reserveSlot) + (this.gridSpacing * this.itemCount)
+		this.cellDepth = Math.max(...this.items.map(i => i.depth), 1)
+		this.depth =  this.cellDepth + this.gridSpacing
+		if (this.parentItem)
+			this.items.forEach(i => i.grid.depth = this.cellDepth)
+		//this.cellWidth = Math.max(...this.items.map(i => i.width), 1)
+		/*	const currentIndex = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) : -1
+			const cellIndex = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) + 1 : 0
+			this.cellWidth = cellSizeChart[cellIndex] ? cellSizeChart[cellIndex].width : 1
 
+		//	this.gridSpacing = cellSizeChart[currentIndex] && cellSizeChart[currentIndex].laneWidth ? cellSizeChart[currentIndex].laneWidth : this.gridSpacing
+
+			this.cellDepth = cellSizeChart[cellIndex] ? cellSizeChart[cellIndex].depth : 1
+
+			this.baseWidth = cellSizeChart[currentIndex] ? cellSizeChart[currentIndex].width : 1
+			this.baseDepth = cellSizeChart[currentIndex] ? cellSizeChart[currentIndex].depth : 1
+			this.maxCount = itemCountChart[currentIndex] ? itemCountChart[currentIndex] : 0
+	*/
 
 		//this.updatePlacement()
 
@@ -156,11 +180,9 @@ class Grid {
 
 				if (item && item.threeObj) {
 					item.threeObj.position.x =
-						((this.parentItem ? this.parentItem.threeObj.position.x : 0) - this.width / 2) +
-						this.getUsedWidthAtIndex(col) + this.colWidth/2
-					item.threeObj.position.z =
-						((this.parentItem ? this.parentItem.threeObj.position.z : 0) - this.depth / 2) +
-						this.getUsedDepthAtIndex(line) + this.lineDepth/2
+						((this.parentItem ? this.parentItem.threeObj.position.x : 0) - (this.width / 2)) +
+						this.getUsedWidthAtIndex(col) + item.width/2
+					item.threeObj.position.z = this.parentItem ? this.parentItem.threeObj.position.z : ( this.getUsedDepthAtIndex(line) + this.lineDepth/2 -(this.depth / 2))
 					item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
 					item.basePosition = JSON.parse(JSON.stringify(item.threeObj.position))
 					item.grid.updatePlacement()
