@@ -117,7 +117,7 @@ class Renderer  extends EventEmitter{
 
 			this.itemCountChart = {}
 			this.grid.buildItemCountChart(this.itemCountChart)
-			this.updateCellSizeChart()
+	//		this.updateCellSizeChart()
 			console.log('itemcountchart', this.itemCountChart, this.sizeChart)
 			this.grid.updateBlockSize(this.sizeChart, this.itemCountChart)
 			this.grid.updatePlacement()

@@ -149,6 +149,7 @@ class Grid {
 		}
 		this.width = this.items.reduce((a,i) => a + i.width, this.reserveSlot) + (this.gridSpacing * this.itemCount)
 		this.cellDepth = Math.max(...this.items.map(i => i.depth), 1)
+		this.cellWidth = Math.max(...this.items.map(i => i.width), 1)
 		this.depth =  this.cellDepth + this.gridSpacing
 		if (this.parentItem)
 			this.items.forEach(i => i.grid.depth = this.cellDepth)
@@ -179,11 +180,17 @@ class Grid {
 				if (!item) continue
 
 				if (item && item.threeObj) {
-					item.threeObj.position.x =
-						((this.parentItem ? this.parentItem.threeObj.position.x : 0) - (this.width / 2)) +
-						this.getUsedWidthAtIndex(col) + item.width/2
-					item.threeObj.position.z = this.parentItem ? this.parentItem.threeObj.position.z : ( this.getUsedDepthAtIndex(line) + this.lineDepth/2 -(this.depth / 2))
-					item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
+					if (this.parentItem) {
+						item.threeObj.position.x =
+							(this.parentItem.threeObj.position.x  - (this.width / 2)) +
+							this.getUsedWidthAtIndex(col) + item.width/2
+						item.threeObj.position.z =  this.parentItem.threeObj.position.z
+						item.threeObj.position.y =  this.parentItem.threeObj.position.y + 1
+					} else {
+						item.threeObj.position.x =  this.getUsedWidthAtIndex(col) + this.colWidth/2 - ((this.colWidth * this.columnCount) / 2)
+						item.threeObj.position.z = ( this.getUsedDepthAtIndex(line) + this.lineDepth/2 -((this.lineDepth * this.lineCount) / 2))
+						item.threeObj.position.y  = 0
+					}
 					item.basePosition = JSON.parse(JSON.stringify(item.threeObj.position))
 					item.grid.updatePlacement()
 				}
