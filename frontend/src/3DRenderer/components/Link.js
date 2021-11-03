@@ -12,7 +12,7 @@ class Link {
 		//this.path.v2 = this.endItem.threeObj.position
 		//this.threeObj.needsUpdate = true
 		this.threeObj.geometry.dispose()
-		this.threeObj.geometry = new TubeGeometry(this.path, 20, 0.05, 8, true );
+		this.threeObj.geometry = new TubeGeometry(this.path, 128, 0.05, 8, true );
 		//const material = new MeshBasicMaterial( { color: 0x0000ff } );
 		//this.threeObj = new Mesh(geometry, material)
 	}
@@ -26,7 +26,7 @@ class Link {
 		const geometry = new BufferGeometry().setFromPoints(points)
 		const line = new Line(geometry, material)*/
 		this.path = new LineCurve(this.startItem.threeObj.position, this.endItem.threeObj.position)
-		const geometry = new TubeGeometry(this.path, 20, 0.05, 8, true );
+		const geometry = new TubeGeometry(this.path, 128, 0.05, 8, false );
 		const material = new MeshBasicMaterial( { color: 0x0000ff } );
 		const line = new Mesh(geometry, material)
 
