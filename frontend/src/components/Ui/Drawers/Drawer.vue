@@ -48,22 +48,24 @@
 							/>
 						</template>
 					</q-input>
-					<!-- <div>
+					<div>
 						<MenuAccordion
-							v-for="(item, index) in menu"
+						 v-for="(item, index) in menu"
 							:key="index"
-							:id="item.ID"
-							:logo="item.Logo"
-							:parentLabel="item.Name"
-							:links="item.Name"
-						/>
-					</div> -->
+							:id="item.id"
+							:logo="item.logo"
+							:parentLabel="item.parentName"
+							:links="item.childs.map(item => item.name)"
+						>
+						<MenuAccordion 	
+							 v-for="(child, index) in item.Childs"
+							:key="index"	
+					    :id="itechildm.id"
+							:logo="child.logo"
+							:parentLabel="child.parentName" />
+						</MenuAccordion>
+					</div>
 
-					<ul>
-						<pre v-for="(item, index) in menu" :key="index">
-							<li> {{item}}</li>
-						</pre>
-					</ul>
 				</div>
 			</slot>
 		</q-drawer>
@@ -72,10 +74,10 @@
 <script>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
-// import MenuAccordion from "../Accordion/MenuAccordion";
+import MenuAccordion from "../Accordion/MenuAccordion";
 
 export default {
-	// components: { MenuAccordion },
+	components: { MenuAccordion },
 	props: {
 		data: {
 			type: Array,
@@ -95,10 +97,26 @@ export default {
 				"allDomainTree  childs: ",
 				allDomainTree.value.Childs.map((item) => item.Name)
 			);
-			menu.value = allDomainTree.value;
+			return menu.value = [{
+				id: allDomainTree.value.ID,
+				name: allDomainTree.value.Name,
+				label: allDomainTree.value.Name,
+				value: allDomainTree.value.Name,
+				parentName: allDomainTree.value?.Name,
+				parentId: allDomainTree.value?.ParentID,
+				logo: allDomainTree.value?.Logo,
+				childs: allDomainTree.value?.Childs.map(item => {
+					return {
+						id: item.ID,
+						name: item.Name,
+						logo: item.Logo,
+					}
+				}),
+			}]
+	
+		console.log("	menu.value : ", menu.value);
 		};
 		getMenuData();
-		console.log("	menu.value : ", menu.value);
 
 		// API Testing:
 		// const getDomainTags = store.dispatch(

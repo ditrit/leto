@@ -42,7 +42,7 @@
 					:teamProducts="item.Products"
 					:teamMembers="item.Authorizations"
 					:teamLibraries="item.Libraries"
-					:teamEnvironnements="teamEnvironnements"
+					:teamEnvironnements="item.Environments"
 				/>
 			</div>
 		</q-page>
@@ -72,7 +72,7 @@ export default defineComponent({
 		const getData = async () => {
 			await store.dispatch(
 				"appDomain/fetchDomainById",
-				"622048a9-6706-43a7-89c0-f1a8733392b9"
+				"b13e3d72-db6f-4ee6-af4f-11a2813c19da"
 			);
 			let data = await computed(() => store.getters["appDomain/allDomaines"]);
 			console.log("data: ", data.value);
