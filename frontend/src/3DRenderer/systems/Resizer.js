@@ -11,7 +11,7 @@ class Resizer {
 
 		this.camera.updateProjectionMatrix()
 
-		// update the size of the renderer AND the canvas
+		// update the size of the renderer AND the sideCanvas
 		this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
 
 		// set the pixel ratio (for mobile devices)

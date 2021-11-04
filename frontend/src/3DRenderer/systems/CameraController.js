@@ -9,6 +9,12 @@ class CameraController {
 			MIDDLE: MOUSE.DOLLY,
 			RIGHT: MOUSE.PAN
 		}
+		orbitControls.keys = {
+			LEFT: 'ArrowLeft', //left arrow
+			UP: 'ArrowUp', // up arrow
+			RIGHT: 'ArrowRight', // right arrow
+			BOTTOM: 'ArrowDown' // down arrow
+		}
 		//orbitControls.enablePan = false;
 		orbitControls.enableDamping = false;
 		orbitControls.minDistance = 1;

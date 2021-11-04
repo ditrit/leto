@@ -5,6 +5,7 @@ import { createScene } from './components/scene.js';
 import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import {createAmbientLight} from "src/3DRenderer/components/ambientLight";
+import {createPointLight} from "src/3DRenderer/components/pointLight";
 import {createGridHelper} from "src/3DRenderer/components/gridHelper";
 import {Grid} from "src/3DRenderer/systems/Grid";
 import {EventEmitter} from 'events'
@@ -34,6 +35,8 @@ class Renderer  extends EventEmitter{
 		container.append(this.renderer.domElement)
 		const ambientLight = createAmbientLight()
 		this.scene.add(ambientLight)
+		const pointLight = createPointLight()
+		this.scene.add(pointLight)
 		const gridHelper = createGridHelper
 		this.scene.add(gridHelper())
 		//	this.addItem(new Item({}))
@@ -189,7 +192,9 @@ class Renderer  extends EventEmitter{
 		item.baseDepth = gridToUpdate.cellDepth
 
 		await item.create3DItem()
+		item.createInfoCard()
 		this.scene.add(item.threeObj)
+		this.scene.add(item.infoCard)
 		this.items.push(item)
 		//this.dragController.items.push(item)
 		this.dragController.updateControls()

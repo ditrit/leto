@@ -7,6 +7,7 @@ class Grid {
 		this.cellWidth = 1
 		this.width = 1
 		this.cellDepth = 1
+		this.baseWidth = 3
 		this.gridSpacing = 1
 		this.maxCount = 1
 		this.baseDepth = 1
@@ -94,8 +95,8 @@ class Grid {
 	}*/
 	getUsedWidthAtIndex(colIndex) {
 		if (this.parentItem) {
-			let res = this.gridSpacing / 2
-			for (let i = 0; i < colIndex; ++i) {
+			let res = (this.baseWidth + this.gridSpacing) * this.reserveSlot
+			for (let i = 0; i < (colIndex - this.reserveSlot); ++i) {
 				const item = this.items[i]
 				res += item.width + this.gridSpacing
 
@@ -147,7 +148,7 @@ class Grid {
 			item.grid.updateBlockSize( cellSizeChart, itemCountChart)
 
 		}
-		this.width = this.items.reduce((a,i) => a + i.width, this.reserveSlot) + (this.gridSpacing * this.itemCount)
+		this.width = this.items.reduce((a,i) => a + i.width, this.reserveSlot * this.baseWidth) + (this.gridSpacing * this.itemCount)
 		this.cellDepth = Math.max(...this.items.map(i => i.depth), 1)
 		this.cellWidth = Math.max(...this.items.map(i => i.width), 1)
 		this.depth =  this.cellDepth + this.gridSpacing
@@ -172,9 +173,9 @@ class Grid {
 
 	}
 	updatePlacement() {
-		for (let col = 0; col < this.columnCount; ++col) {
+		for (let col = this.reserveSlot; col < this.columnCount; ++col) {
 			for (let line = 0; line < this.lineCount; ++line) {
-				const item = this.items[(col * this.lineCount) + line]
+				const item = this.items[((col * this.lineCount) + line) - this.reserveSlot]
 				console.log("updating item position", col, line, item, this.columnCount, this.lineCount, this.parentItem)
 
 				if (!item) continue

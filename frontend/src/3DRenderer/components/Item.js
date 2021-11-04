@@ -1,5 +1,6 @@
 import {BoxBufferGeometry, Mesh,BoxGeometry, MeshBasicMaterial, CanvasTexture, MeshStandardMaterial, Group, ImageLoader} from "three";
 import {Grid} from "src/3DRenderer/systems/Grid";
+import {CSS3DObject} from 'three/examples/jsm/renderers/CSS3DRenderer'
 
 class Item {
 	constructor(params) {
@@ -10,8 +11,17 @@ class Item {
 		this.links = []
 		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
 		this.grid.gridSpacing = 1
+		this.img = null
+		this.sideCanvas = document.createElement('canvas');
+		this.topCanvas = document.createElement('canvas');
 
-		this.canvas = document.createElement('canvas');
+		const loader = new ImageLoader()
+		loader.load(this.logo, (image) => {
+			this.img = image
+			this.updateTexture()
+		})
+
+
 
 
 	}
@@ -21,21 +31,25 @@ class Item {
 	get depth() {
 		return this.grid.depth
 	}
-	async updateCanvas() {
+	updateCanvas() {
 		const width = this.width * 500;
-		const height = this.height *500;
-		this.canvas.width  = width;
-		this.canvas.height = height;
+		const cellWidth = this.grid.cellWidth * 500
+		const cellDepth = this.grid.cellDepth * 500
+		const height = this.height * 500;
+		const depth = this.depth * 500
+		this.topCanvas.width = width
+		this.topCanvas.height = depth
+		this.sideCanvas.width  = width;
+		this.sideCanvas.height = height;
 		console.log('item color', this.color)
 		console.log('item name', this.name)
 
-		const loader = new ImageLoader()
 
 
 
 
-		// use the image, e.g. draw part of it on a canvas
-		const ctx = this.canvas.getContext("2d");
+		// use the image, e.g. draw part of it on a sideCanvas
+		let ctx = this.sideCanvas.getContext("2d");
 
 		// Background
 		ctx.beginPath();
@@ -59,10 +73,42 @@ class Item {
 		ctx.fill();
 		ctx.closePath()*/
 
-		loader.load(this.logo, (image) => {
-			ctx.drawImage(image, 0,0, height, height);
-			this.texture.needsUpdate = true
-		})
+
+
+		const tOrigin = {
+			x: (this.width - (this.grid.cellWidth + this.grid.gridSpacing / 2)) * 500,
+			y: 0
+		}
+
+		const tctx = this.topCanvas.getContext('2d')
+
+		// Background
+		tctx.beginPath();
+		tctx.rect(0, 0, width, depth);
+		tctx.fillStyle = this.color;
+		tctx.fill();
+		tctx.closePath();
+
+		tctx.font = '70pt Calibri';
+		tctx.textAlign = 'left';
+		tctx.fillStyle = '#FFFFFF';
+		tctx.fillText(`type: ${this.type}`, (height)+10, 10, this.grid.cellWidth * 500);
+		tctx.font = '90pt Calibri';
+		tctx.fillText(`name: ${this.name}`, (height)+10, depth, this.grid.cellWidth * 500);
+
+
+
+
+		if (this.img) {
+			ctx.drawImage(this.img, 0,0, height, height);
+			tctx.drawImage(this.img, 0,0, height, height);
+		}
+
+
+
+
+
+
 
 
 
@@ -79,21 +125,21 @@ class Item {
 		})*/
 
 	}
-	generateTexture() {
+	generateTexture(canvas) {
 
-		const texture = new CanvasTexture(this.canvas);
+		const texture = new CanvasTexture(canvas);
 
 		return texture
 
 	}
 	generateMaterial() {
 		const material = [
-			new MeshStandardMaterial({ map: this.texture }),	// Right side
-			new MeshStandardMaterial({ map: this.texture }),	// Left side
-			new MeshStandardMaterial({ color: this.color }),	// Top side
+			new MeshStandardMaterial({  /*map: this.sideTexture*/color: this.color }),	// Right side
+			new MeshStandardMaterial({  /*map: this.sideTexture*/color: this.color }),	// Left side
+			new MeshStandardMaterial({ /*color: this.color*/map: this.topTexture }),	// Top side
 			new MeshStandardMaterial({ color: this.color }),	// Bottom side
-			new MeshStandardMaterial({ map: this.texture }),	// Front side
-			new MeshStandardMaterial({ map: this.texture })	// Back side
+			new MeshStandardMaterial({ map: this.sideTexture}),	// Front side
+			new MeshStandardMaterial({ map: this.sideTexture})	// Back side
 		];
 		return material
 	}
@@ -128,7 +174,7 @@ class Item {
 		this.depth = newDepth*/
 		this.threeObj.geometry.dispose()
 		this.threeObj.geometry = new BoxGeometry(this.width, this.height, this.depth)
-		this.updateCanvas()
+		this.updateTexture()
 
 		//this.grid.updatePlacement()
 		/*const newObj = await this.create3DItem()
@@ -141,19 +187,34 @@ class Item {
 	}
 	update(newData) {
 		Object.assign(this, newData)
-		this.updateCanvas()
-		console.log('canvas updated')
+		console.log('sideCanvas updated')
 		if (this.isSelected) {
 			this.threeObj.material.forEach(m =>m.emissive.setHex( 0xff0000 ))
 		} else {
 			this.threeObj.material.forEach(m =>m.emissive.setHex( 0x000000 ))
 		}
-		this.texture.needsUpdate = true
+		this.updateTexture()
 		//this.threeObj.material
+	}
+	updateTexture() {
+		this.updateCanvas()
+		this.sideTexture.needsUpdate = true
+		this.topTexture.needsUpdate = true
+	}
+	createInfoCard() {
+		const element = document.createElement( 'div' );
+		element.className = 'element';
+		element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
+		this.infoCard = new CSS3DObject(element)
+		this.infoCard.position.x = 0
+		this.infoCard.position.y = 0
+		this.infoCard.position.z = 0
+		return this.infoCard
 	}
 	async create3DItem() {
 		this.updateCanvas()
-		this.texture = this.generateTexture()
+		this.sideTexture = this.generateTexture(this.sideCanvas)
+		this.topTexture = this.generateTexture(this.topCanvas)
 		const material = this.generateMaterial();
 
 		this.threeObj =  this.generateComponent(material)
