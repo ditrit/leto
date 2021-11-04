@@ -4,7 +4,7 @@ import {CSS3DObject} from 'three/examples/jsm/renderers/CSS3DRenderer'
 
 class Item {
 	constructor(params) {
-		this.height = 1
+		this.height = 0.4
 		//this.width = 1
 		//this.depth = 1
 		Object.assign(this, params)
@@ -34,11 +34,11 @@ class Item {
 	updateCanvas() {
 		const width = this.width * 500;
 		const cellWidth = (this.grid.baseWidth + this.grid.gridSpacing) * 500
-		const cellDepth = (this.grid.cellDepth + this.grid.gridSpacing) * 500
+		const cellDepth = cellWidth / 3
 		const height = this.height * 500;
 		const depth = this.depth * 500
 		this.topCanvas.width = cellWidth
-		this.topCanvas.height = cellWidth
+		this.topCanvas.height = this.topCanvas.width / 3
 		this.sideCanvas.width  = width;
 		this.sideCanvas.height = height;
 		console.log('item color', this.color)
@@ -60,14 +60,14 @@ class Item {
 		ctx.stroke()
 		ctx.closePath();
 		// Label Type
-		ctx.font = '70pt Calibri';
+		/*ctx.font = '70pt Calibri';
 		ctx.textAlign = 'left';
 		ctx.fillStyle = '#FFFFFF';
 		ctx.fillText(this.type, (height)+10, height/6, width-(height/3)-120);
 		// Label Name
 		ctx.font = '90pt Calibri';
 		ctx.textAlign = 'center';
-		ctx.fillText(this.name, width/2, height/2, width-20);
+		ctx.fillText(this.name, width/2, height/2, width-20);*/
 		// TagColor
 		/*ctx.beginPath();
 		ctx.rect(width-100, 0, 100, 100);
@@ -78,8 +78,8 @@ class Item {
 
 
 		const tOrigin = {
-			x: depth,
-			y: height * 2
+			x: cellWidth / 3,
+			y: 0
 		}
 
 		const tctx = this.topCanvas.getContext('2d')
@@ -107,18 +107,20 @@ class Item {
 		tctx.fill();
 		tctx.closePath()*/
 
-		tctx.font = '200px Helvetica';
+
 		tctx.textAlign = 'left';
 		tctx.fillStyle = '#FFFFFF';
-		tctx.fillText(`type: ${this.type}`, 10 , cellWidth / 2 + 150, cellWidth);
+		tctx.font = 'bold 150px Helvetica';
+		tctx.fillText(this.type, 30,cellWidth/4 + 125 ,   cellWidth / 4);
 		//tctx.font = '90pt Calibri';
-		tctx.fillText(`name: ${this.name}`, 10, cellWidth / 2 + 300, cellWidth);
+		tctx.font = '150px Helvetica';
+		tctx.fillText(this.name, tOrigin.x + 50, 350, 2 * cellWidth / 3);
 
 
 
 		if (this.img) {
-			ctx.drawImage(this.img, 0,0, height, height);
-			tctx.drawImage(this.img, 2,2, cellWidth / 2 , cellWidth / 2);
+			//	ctx.drawImage(this.img, 0,0, height, height);
+			tctx.drawImage(this.img, 0,0, cellWidth / 4 , cellWidth / 4);
 		}
 
 
@@ -151,10 +153,10 @@ class Item {
 	}
 	generateMaterial() {
 		const material = [
-			new MeshStandardMaterial({  /*map: this.sideTexture*/color: this.color }),	// Right side
-			new MeshStandardMaterial({  /*map: this.sideTexture*/color: this.color }),	// Left side
-			new MeshStandardMaterial({ color: this.color/*map: this.topTexture*/ }),	// Top side
-			new MeshStandardMaterial({ color: this.color }),	// Bottom side
+			new MeshStandardMaterial({  map: this.sideTexture/*color: this.color*/ }),	// Right side
+			new MeshStandardMaterial({  map: this.sideTexture/*color: this.color*/ }),	// Left side
+			new MeshStandardMaterial({ map: this.sideTexture}),	// Top side
+			new MeshStandardMaterial({ map: this.sideTexture }),	// Bottom side
 			new MeshStandardMaterial({ map: this.sideTexture}),	// Front side
 			new MeshStandardMaterial({ map: this.sideTexture})	// Back side
 		];
@@ -207,8 +209,10 @@ class Item {
 		console.log('sideCanvas updated')
 		if (this.isSelected) {
 			this.threeObj.material.forEach(m =>m.emissive.setHex( 0xff0000 ))
+			//	this.sprite.material.emissive.setHex( 0xff0000 )
 		} else {
 			this.threeObj.material.forEach(m =>m.emissive.setHex( 0x000000 ))
+			//this.sprite.material.emissive.setHex( 0x000000 )
 		}
 		this.updateTexture()
 		//this.threeObj.material
@@ -233,7 +237,7 @@ class Item {
 		return new Sprite(material)
 	}
 	updateSpritePosition() {
-		this.sprite.position.y = this.threeObj.position.y + (this.grid.baseWidth / 2) + this.height/2
+		this.sprite.position.y = this.threeObj.position.y + (this.grid.baseWidth / 3)
 		this.sprite.position.z = this.threeObj.position.z
 		this.sprite.position.x = this.threeObj.position.x - (this.width / 2) + (this.grid.baseWidth + this.grid.gridSpacing) /2
 	}
@@ -243,7 +247,7 @@ class Item {
 		this.topTexture = this.generateTexture(this.topCanvas)
 		const material = this.generateMaterial();
 		this.sprite = this.createSprite()
-		this.sprite.scale.set(this.grid.baseWidth, this.grid.baseWidth, 1)
+		this.sprite.scale.set(this.grid.baseWidth, this.grid.baseWidth / 3, 1)
 		this.threeObj =  this.generateComponent(material)
 
 		this.updateSpritePosition()

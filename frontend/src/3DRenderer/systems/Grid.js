@@ -127,7 +127,7 @@ class Grid {
 		//item.baseDepth = this.cellDepth
 		if (!this.items.find(i => i.id === item.id))
 			this.items.push(item)
-		item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + 1 : 0
+		item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + this.parentItem.height : 0
 		//this.updatePlacement()
 	}
 	removeItemFromGrid(item) {
@@ -186,7 +186,7 @@ class Grid {
 							(this.parentItem.threeObj.position.x  - (this.width / 2)) +
 							this.getUsedWidthAtIndex(col) + item.width/2
 						item.threeObj.position.z =  this.parentItem.threeObj.position.z
-						item.threeObj.position.y =  this.parentItem.threeObj.position.y + 1
+						item.threeObj.position.y =  this.parentItem.threeObj.position.y + this.parentItem.height
 					} else {
 						item.threeObj.position.x =  this.getUsedWidthAtIndex(col) + this.colWidth/2 - ((this.colWidth * this.columnCount) / 2)
 						item.threeObj.position.z = ( this.getUsedDepthAtIndex(line) + this.lineDepth/2 -((this.lineDepth * this.lineCount) / 2))
