@@ -78,6 +78,7 @@ class DragController extends EventEmitter {
 		event.object.position.y = origItem.basePosition.y*/
 		this.parentRenderer.needsLinkUpdate = true
 		origItem.grid.updatePlacement()
+		origItem.updateSpritePosition()
 	}
 	onDragEnd(event) {
 		const endTime = Date.now()

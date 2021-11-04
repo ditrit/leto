@@ -1,4 +1,4 @@
-import {BoxBufferGeometry, Mesh,BoxGeometry, MeshBasicMaterial, CanvasTexture, MeshStandardMaterial, Group, ImageLoader} from "three";
+import {BoxBufferGeometry, Mesh,BoxGeometry, MeshBasicMaterial,Sprite, SpriteMaterial, CanvasTexture, MeshStandardMaterial, Group, ImageLoader} from "three";
 import {Grid} from "src/3DRenderer/systems/Grid";
 import {CSS3DObject} from 'three/examples/jsm/renderers/CSS3DRenderer'
 
@@ -33,12 +33,12 @@ class Item {
 	}
 	updateCanvas() {
 		const width = this.width * 500;
-		const cellWidth = this.grid.cellWidth * 500
-		const cellDepth = this.grid.cellDepth * 500
+		const cellWidth = (this.grid.baseWidth + this.grid.gridSpacing) * 500
+		const cellDepth = (this.grid.cellDepth + this.grid.gridSpacing) * 500
 		const height = this.height * 500;
 		const depth = this.depth * 500
-		this.topCanvas.width = width
-		this.topCanvas.height = depth
+		this.topCanvas.width = cellWidth
+		this.topCanvas.height = cellWidth
 		this.sideCanvas.width  = width;
 		this.sideCanvas.height = height;
 		console.log('item color', this.color)
@@ -56,6 +56,8 @@ class Item {
 		ctx.rect(0, 0, width, height);
 		ctx.fillStyle = this.color;
 		ctx.fill();
+		ctx.fillStyle = "rgba(0, 0, 0, .1)";
+		ctx.stroke()
 		ctx.closePath();
 		// Label Type
 		ctx.font = '70pt Calibri';
@@ -76,32 +78,47 @@ class Item {
 
 
 		const tOrigin = {
-			x: (this.width - (this.grid.cellWidth + this.grid.gridSpacing / 2)) * 500,
-			y: 0
+			x: depth,
+			y: height * 2
 		}
 
 		const tctx = this.topCanvas.getContext('2d')
 
 		// Background
+
 		tctx.beginPath();
-		tctx.rect(0, 0, width, depth);
+		tctx.rect(0, 0, cellWidth, cellWidth);
 		tctx.fillStyle = this.color;
 		tctx.fill();
 		tctx.closePath();
 
-		tctx.font = '70pt Calibri';
+
+
+		tctx.shadowOffsetX = 5;
+		tctx.shadowOffsetY = 5;
+		tctx.shadowBlur = 2;
+		tctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+		/*tctx.beginPath()
+		tctx.rect(0, 0, cellWidth, depth);
+		tctx.fillStyle = "rgba(0, 0, 0, .1)";
+		tctx.stroke()
+		tctx.fillStyle = "rgba(0, 0, 0, .05)";
+
+		tctx.fill();
+		tctx.closePath()*/
+
+		tctx.font = '200px Helvetica';
 		tctx.textAlign = 'left';
 		tctx.fillStyle = '#FFFFFF';
-		tctx.fillText(`type: ${this.type}`, (height)+10, 10, this.grid.cellWidth * 500);
-		tctx.font = '90pt Calibri';
-		tctx.fillText(`name: ${this.name}`, (height)+10, depth, this.grid.cellWidth * 500);
-
+		tctx.fillText(`type: ${this.type}`, 10 , cellWidth / 2 + 150, cellWidth);
+		//tctx.font = '90pt Calibri';
+		tctx.fillText(`name: ${this.name}`, 10, cellWidth / 2 + 300, cellWidth);
 
 
 
 		if (this.img) {
 			ctx.drawImage(this.img, 0,0, height, height);
-			tctx.drawImage(this.img, 0,0, height, height);
+			tctx.drawImage(this.img, 2,2, cellWidth / 2 , cellWidth / 2);
 		}
 
 
@@ -136,7 +153,7 @@ class Item {
 		const material = [
 			new MeshStandardMaterial({  /*map: this.sideTexture*/color: this.color }),	// Right side
 			new MeshStandardMaterial({  /*map: this.sideTexture*/color: this.color }),	// Left side
-			new MeshStandardMaterial({ /*color: this.color*/map: this.topTexture }),	// Top side
+			new MeshStandardMaterial({ color: this.color/*map: this.topTexture*/ }),	// Top side
 			new MeshStandardMaterial({ color: this.color }),	// Bottom side
 			new MeshStandardMaterial({ map: this.sideTexture}),	// Front side
 			new MeshStandardMaterial({ map: this.sideTexture})	// Back side
@@ -211,13 +228,26 @@ class Item {
 		this.infoCard.position.z = 0
 		return this.infoCard
 	}
+	createSprite() {
+		const material = new SpriteMaterial({map: this.topTexture})
+		return new Sprite(material)
+	}
+	updateSpritePosition() {
+		this.sprite.position.y = this.threeObj.position.y + (this.grid.baseWidth / 2) + this.height/2
+		this.sprite.position.z = this.threeObj.position.z
+		this.sprite.position.x = this.threeObj.position.x - (this.width / 2) + (this.grid.baseWidth + this.grid.gridSpacing) /2
+	}
 	async create3DItem() {
 		this.updateCanvas()
 		this.sideTexture = this.generateTexture(this.sideCanvas)
 		this.topTexture = this.generateTexture(this.topCanvas)
 		const material = this.generateMaterial();
-
+		this.sprite = this.createSprite()
+		this.sprite.scale.set(this.grid.baseWidth, this.grid.baseWidth, 1)
 		this.threeObj =  this.generateComponent(material)
+
+		this.updateSpritePosition()
+
 		return this.threeObj
 
 	}

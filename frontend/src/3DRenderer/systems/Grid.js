@@ -6,7 +6,7 @@ class Grid {
 		//this.lineCount = 1//Math.ceil(items.length / this.columnCount)
 		this.cellWidth = 1
 		this.width = 1
-		this.cellDepth = 1
+		this.cellDepth = 3
 		this.baseWidth = 3
 		this.gridSpacing = 1
 		this.maxCount = 1
@@ -149,8 +149,8 @@ class Grid {
 
 		}
 		this.width = this.items.reduce((a,i) => a + i.width, this.reserveSlot * this.baseWidth) + (this.gridSpacing * this.itemCount)
-		this.cellDepth = Math.max(...this.items.map(i => i.depth), 1)
-		this.cellWidth = Math.max(...this.items.map(i => i.width), 1)
+		this.cellDepth = Math.max(...this.items.map(i => i.depth), 3)
+		this.cellWidth = Math.max(...this.items.map(i => i.width), 3)
 		this.depth =  this.cellDepth + this.gridSpacing
 		if (this.parentItem)
 			this.items.forEach(i => i.grid.depth = this.cellDepth)
@@ -194,6 +194,7 @@ class Grid {
 					}
 					item.basePosition = JSON.parse(JSON.stringify(item.threeObj.position))
 					item.grid.updatePlacement()
+					item.updateSpritePosition()
 				}
 			}
 		}

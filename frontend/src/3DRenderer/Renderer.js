@@ -192,9 +192,8 @@ class Renderer  extends EventEmitter{
 		item.baseDepth = gridToUpdate.cellDepth
 
 		await item.create3DItem()
-		item.createInfoCard()
 		this.scene.add(item.threeObj)
-		this.scene.add(item.infoCard)
+		this.scene.add(item.sprite)
 		this.items.push(item)
 		//this.dragController.items.push(item)
 		this.dragController.updateControls()
