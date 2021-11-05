@@ -44,14 +44,14 @@ class Link {
 		if (!this.points) {
 			this.points = [this.startItem.threeObj.position,
 				new Vector3(
-					this.startItem.threeObj.position.x + (this.startItem.width * xAdjust),
-					this.startItem.threeObj.position.y + this.startItem.height / 2,
-					this.startItem.threeObj.position.z  + (this.startItem.depth * zAdjust)),
+					this.startItem.threeObj.position.x + (this.startItem.width * xAdjust * 2),
+					this.startItem.threeObj.position.y + this.startItem.height,
+					this.startItem.threeObj.position.z  + (this.startItem.depth * zAdjust * 2)),
 				this.endItem.threeObj.position]
 		} else {
-			this.points[1].x = this.startItem.threeObj.position.x + (this.startItem.width * xAdjust)
-			this.points[1].y = this.startItem.threeObj.position.y + this.startItem.height / 2
-			this.points[1].z = this.startItem.threeObj.position.z + (this.startItem.depth * zAdjust)
+			this.points[1].x = this.startItem.threeObj.position.x + (this.startItem.width * xAdjust * 2)
+			this.points[1].y = this.startItem.threeObj.position.y + this.startItem.height
+			this.points[1].z = this.startItem.threeObj.position.z + (this.startItem.depth * zAdjust * 2)
 		}
 
 	}
