@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="menuDrawer">
 		<q-toolbar>
 			<div class="row">
 				<q-btn
@@ -28,9 +28,10 @@
 			style="
 				transform: translateX(90px);
 				box-shadow: 1px 0 6px rgb(0, 0, 0, 0.5);
+				z-index: 1 !important;
 			"
 		>
-			<slot>
+			<slot name="drawerFilter">
 				<div class="search_container">
 					<q-input ref="filterRef" filled v-model="filter" label="Search">
 						<template v-slot:append>
@@ -50,24 +51,26 @@
 					</q-input>
 					<div>
 						<MenuAccordion
-						 v-for="(item, index) in menu"
+							v-for="(item, index) in menu"
 							:key="index"
 							:id="item.id"
 							:logo="item.logo"
 							:parentLabel="item.parentName"
-							:links="item.childs.map(item => item.name)"
+							:links="item.childs.map((item) => item.name)"
 						>
-						<MenuAccordion 	
-							 v-for="(child, index) in item.Childs"
-							:key="index"	
-					    :id="itechildm.id"
-							:logo="child.logo"
-							:parentLabel="child.parentName" />
+							<MenuAccordion
+								v-for="(child, index) in item.Childs"
+								:key="index"
+								:id="itechildm.id"
+								:logo="child.logo"
+								:parentLabel="child.parentName"
+							/>
 						</MenuAccordion>
 					</div>
-
 				</div>
 			</slot>
+
+			<slot name="drawerMenu"> Menu</slot>
 		</q-drawer>
 	</div>
 </template>
@@ -97,24 +100,26 @@ export default {
 				"allDomainTree  childs: ",
 				allDomainTree.value.Childs.map((item) => item.Name)
 			);
-			return menu.value = [{
-				id: allDomainTree.value.ID,
-				name: allDomainTree.value.Name,
-				label: allDomainTree.value.Name,
-				value: allDomainTree.value.Name,
-				parentName: allDomainTree.value?.Name,
-				parentId: allDomainTree.value?.ParentID,
-				logo: allDomainTree.value?.Logo,
-				childs: allDomainTree.value?.Childs.map(item => {
-					return {
-						id: item.ID,
-						name: item.Name,
-						logo: item.Logo,
-					}
-				}),
-			}]
-	
-		console.log("	menu.value : ", menu.value);
+			return (menu.value = [
+				{
+					id: allDomainTree.value.ID,
+					name: allDomainTree.value.Name,
+					label: allDomainTree.value.Name,
+					value: allDomainTree.value.Name,
+					parentName: allDomainTree.value?.Name,
+					parentId: allDomainTree.value?.ParentID,
+					logo: allDomainTree.value?.Logo,
+					childs: allDomainTree.value?.Childs.map((item) => {
+						return {
+							id: item.ID,
+							name: item.Name,
+							logo: item.Logo,
+						};
+					}),
+				},
+			]);
+
+			console.log("	menu.value : ", menu.value);
 		};
 		getMenuData();
 
@@ -167,13 +172,13 @@ Make ids value dynamic
 .menuStyle
 	background: #eeeeee
 	border-radius: 0
-	z-index: 5000
+	z-index: 5000 !important
 
 .hiddenMenu
-	transform: translateX(376px)
+	transform: translateX(278px)
 
 .visibleMenu
-	transform: translateX(78px)
+	transform: translateX(-22px)
 
 .q-tree__node-header-content
 	font-weight: bold

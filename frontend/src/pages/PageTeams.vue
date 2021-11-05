@@ -1,6 +1,15 @@
 <template>
 	<q-layout class="page_padding">
 		<AjaxBar />
+		<Drawer :data="data">
+			<template v-slot:drawerMenu>
+				<ul>
+					<li>4</li>
+					<li>4</li>
+					<li>4</li>
+				</ul>
+			</template>
+		</Drawer>
 		<q-page class="bg-gray">
 			<PageContent
 				v-for="item in dataItems"
@@ -27,14 +36,14 @@
 import { defineComponent, ref } from "vue";
 import Modal from "../components/UI/Dialogs/Modal.vue";
 import getDataItems from "../composables/getDataItems";
-
+import Drawer from "../components/UI/Drawers/Drawer.vue";
 import PageContent from "../components/Content/PageContent";
 import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { PageContent, Modal, CreationFormStepper, AjaxBar },
+	components: { PageContent, Modal, CreationFormStepper, AjaxBar, Drawer },
 
 	setup() {
 		const oepnDialog = ref(false);
