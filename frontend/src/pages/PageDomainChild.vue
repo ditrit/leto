@@ -72,7 +72,7 @@ export default defineComponent({
 		const getData = async () => {
 			await store.dispatch(
 				"appDomain/fetchDomainById",
-				"b13e3d72-db6f-4ee6-af4f-11a2813c19da"
+				"1b5e9b81-a48d-45fe-8ed8-d2a5b12017f0"
 			);
 			let data = await computed(() => store.getters["appDomain/allDomaines"]);
 			console.log("data: ", data.value);

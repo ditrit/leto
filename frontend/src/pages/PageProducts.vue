@@ -1,6 +1,35 @@
 <template>
 	<q-layout class="page_padding">
 		<AjaxBar />
+		<Drawer :data="data">
+			<template v-slot:drawerFilter>
+				<div class="search_container">
+					<q-input ref="filterRef" filled v-model="filter" label="Search">
+						<template v-slot:append>
+							<q-icon
+								v-if="filter !== ''"
+								name="clear"
+								class="cursor-pointer"
+								@click="resetFilter"
+							/>
+							<q-icon
+								v-else
+								name="search"
+								class="cursor-pointer"
+								@click="resetFilter"
+							/>
+						</template>
+					</q-input>
+				</div>
+			</template>
+			<template v-slot:drawerMenu>
+				<ul>
+					<li>7</li>
+					<li>7</li>
+					<li>7</li>
+				</ul>
+			</template>
+		</Drawer>
 		<q-page class="flex bg-gray">
 			<PageContent
 				v-for="item in dataItems"
@@ -56,6 +85,7 @@ import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
 import PageContent from "../components/Content/PageContent";
 import ProductCreationStepper from "../components/UI/Stepper/ProductCreationStepper";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
+import Drawer from "../components/UI/Drawers/Drawer.vue";
 // import CreateItems from "../components/Dialogs/CreateItems.vue";
 const buttonsList = [
 	{
@@ -83,9 +113,17 @@ const buttonsList = [
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { BtnAddNew, PageContent, ProductCreationStepper, AjaxBar },
+	components: {
+		BtnAddNew,
+		PageContent,
+		ProductCreationStepper,
+		AjaxBar,
+		Drawer,
+	},
 
 	setup() {
+		const filter = ref("");
+		const filterRef = ref(null);
 		const oepnDialog = ref(false);
 		const { path, dataItems, error, fetchData } = getDataItems();
 		const data = fetchData("http://localhost:3000/products");
@@ -96,6 +134,12 @@ export default defineComponent({
 			error,
 			buttonsList,
 			oepnDialog,
+			filter,
+			filterRef,
+			resetFilter() {
+				filter.value = "";
+				filterRef.value.focus();
+			},
 		};
 	},
 });

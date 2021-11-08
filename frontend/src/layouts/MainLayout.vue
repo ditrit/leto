@@ -4,15 +4,6 @@
 			<AccountSettings />
 			<!-- <GlobalSearch /> -->
 		</MainHeader>
-		<!-- <Drawer :data="data">
-			<template v-slot:drawerMenu>
-				<ul>
-					<li>1</li>
-					<li>2</li>
-					<li>3</li>
-				</ul>
-			</template>
-		</Drawer> -->
 
 		<q-drawer
 			elevated
@@ -45,7 +36,6 @@
 import EssentialTools from "components/EssentialTools";
 import AccountSettings from "../components/UI/Profil/AccountSettings";
 
-// import Drawer from "../components/UI/Drawers/Drawer";
 import MainHeader from "../components/UI/Headers/mainHeader";
 // import GlobalSearch from "../components/UI/Form/GlobalSearch";
 
@@ -107,7 +97,6 @@ export default {
 	components: {
 		EssentialTools,
 		AccountSettings,
-		// Drawer,
 		MainHeader,
 
 		// GlobalSearch,

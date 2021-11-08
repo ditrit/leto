@@ -12,7 +12,7 @@ const routes = [
 			},
 
 			{
-				path: "teams/b13e3d72-db6f-4ee6-af4f-11a2813c19da",
+				path: "teams/1b5e9b81-a48d-45fe-8ed8-d2a5b12017f0",
 				component: () => import("pages/PageDomainChild.vue"),
 				props: true,
 				meta: { requiresAuth: true },
