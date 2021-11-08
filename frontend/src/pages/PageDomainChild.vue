@@ -1,6 +1,35 @@
 <template>
-	<q-layout class="domain_wrapper left_padding top_padding">
+	<q-layout class="domain_wrapper left_padding top_padding domain_page__child">
 		<AjaxBar />
+			<Drawer>
+			<template v-slot:drawerFilter>
+				<div class="search_container">
+					<q-input ref="filterRef" filled v-model="filter" label="Search">
+						<template v-slot:append>
+							<q-icon
+								v-if="filter !== ''"
+								name="clear"
+								class="cursor-pointer"
+								@click="resetFilter"
+							/>
+							<q-icon
+								v-else
+								name="search"
+								class="cursor-pointer"
+								@click="resetFilter"
+							/>
+						</template>
+					</q-input>
+					<div></div>
+				</div>
+			</template>
+			<template v-slot:drawerMenu>
+			
+				<div class="q-pa-md q-gutter-sm" v-if="menu">
+					<q-tree :nodes="menu" node-key="label" />
+				</div>
+			</template>
+		</Drawer>
 		<q-page class="bg-gray">
 			<div class="content_wrapper">
 				<ContentCard :data="child" />
@@ -57,22 +86,26 @@ import CardButtons from "../components/UI/Cards/CardButtons";
 import ContentCard from "../components/UI/Cards/ContentCard";
 import Tabs from "../components/UI/TabPanels/Tabs";
 import GlobalSearch from "../components/UI/Form/GlobalSearch.vue";
+import Drawer from "../components/UI/Drawers/Drawer.vue";
 
 export default defineComponent({
 	name: "PageDomainChild",
-	components: { AjaxBar, Tabs, ContentCard, CardButtons, GlobalSearch },
-
-	setup() {
+	components: { AjaxBar, Tabs, ContentCard, CardButtons, GlobalSearch, Drawer },
+props: ['id'],
+	setup(props) {
 		const store = useStore();
 		const progress = ref(null);
 		const actionsLinks = ref(["Link One", "Link Two", "Link Three"]);
 		const child = ref([]);
 		const oepnDialog = ref(false);
+		const filter = ref("");
+		const filterRef = ref(null);
+   
 
 		const getData = async () => {
 			await store.dispatch(
 				"appDomain/fetchDomainById",
-				"1b5e9b81-a48d-45fe-8ed8-d2a5b12017f0"
+				`${props.id}`
 			);
 			let data = await computed(() => store.getters["appDomain/allDomaines"]);
 			console.log("data: ", data.value);
@@ -84,6 +117,15 @@ export default defineComponent({
 			oepnDialog,
 			child,
 			actionsLinks,
+			Drawer,
+
+					filter,
+			filterRef,
+	
+			resetFilter() {
+				filter.value = "";
+				filterRef.value.focus();
+			},
 		};
 	},
 });
@@ -97,4 +139,6 @@ export default defineComponent({
   padding-left: 140px
 .q-drawer
   z-index: -1 !important
+
+
 </style>

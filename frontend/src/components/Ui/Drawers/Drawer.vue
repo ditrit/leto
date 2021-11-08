@@ -33,7 +33,7 @@
 		>
 			<slot name="drawerFilter"></slot>
 
-			<slot name="drawerMenu" :drawerManuData="drawerManuData"></slot>
+			<slot name="drawerMenu"></slot>
 		</q-drawer>
 	</div>
 </template>
@@ -70,6 +70,8 @@ export default {
 	background: #eeeeee
 	border-radius: 0
 	z-index: 5000 !important
+	position: absolute
+	top: 0
 
 .hiddenMenu
 	transform: translateX(278px)

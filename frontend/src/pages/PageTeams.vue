@@ -1,7 +1,7 @@
 <template>
 	<q-layout class="page_padding">
 		<AjaxBar />
-		<Drawer :drawerManuData="data">
+		<Drawer nodeID>
 			<template v-slot:drawerFilter>
 				<div class="search_container">
 					<q-input ref="filterRef" filled v-model="filter" label="Search">
@@ -66,14 +66,18 @@ import AjaxBar from "../components/UI/Progress/AjaxBar";
 export default defineComponent({
 	name: "PageTeams",
 	components: { PageContent, Modal, CreationFormStepper, AjaxBar, Drawer },
-
+props: ['nodeID'],
 	setup() {
 			const router = useRouter();
 		const filter = ref("");
 		const filterRef = ref(null);
+		const chosenNodeID = ref('');
 		const goToID = (node) => {
+			chosenNodeID.value = node.id
 				router.push(`/teams/${node.id}`)
+					console.log('chosenNodeID: ', chosenNodeID.value)
     }
+	
 		const oepnDialog = ref(false);
 		const { path, dataItems, error, fetchData } = getDataItems();
 		const data = fetchData("http://localhost:3000/teams");
@@ -139,6 +143,7 @@ export default defineComponent({
 			oepnDialog,
 			filter,
 			filterRef,
+			chosenNodeID,
 			goToID,
 			resetFilter() {
 				filter.value = "";
