@@ -1,7 +1,7 @@
 <template>
 	<q-layout class="domain_wrapper left_padding top_padding domain_page__child">
 		<AjaxBar />
-			<Drawer>
+		<Drawer>
 			<template v-slot:drawerFilter>
 				<div class="search_container">
 					<q-input ref="filterRef" filled v-model="filter" label="Search">
@@ -24,40 +24,43 @@
 				</div>
 			</template>
 			<template v-slot:drawerMenu>
-			
 				<div class="q-pa-md q-gutter-sm" v-if="menu">
 					<q-tree :nodes="menu" node-key="label" />
 				</div>
 			</template>
 		</Drawer>
 		<q-page class="bg-gray">
-			<div class="content_wrapper">
-				<ContentCard :data="child" />
-				<div class="tags_wrapper">
-					<q-card flat bordered class="card_tags_default">
-						<q-card-section>
-							<div class="row items-center no-wrap">
-								<div class="col">
-									<div class="row">
-										<q-icon name="sell" size="30px" class="q-mr-sm" />
-										<div class="text-h6">Tags</div>
+			<div class="row">
+				<div class="col-8">
+					<ContentCard :data="child" />
+				</div>
+				<div class="col-4">
+					<div class="tags_wrapper">
+						<q-card flat bordered class="card_tags_default">
+							<q-card-section>
+								<div class="row items-center no-wrap">
+									<div class="col">
+										<div class="row">
+											<q-icon name="sell" size="30px" class="q-mr-sm" />
+											<div class="text-h6">Tags</div>
+										</div>
 									</div>
+									<CardButtons :links="actionsLinks" />
 								</div>
-								<CardButtons :links="actionsLinks" />
-							</div>
-						</q-card-section>
-						<q-card-section>
-							<ul
-								class="cards_tags_wrapper"
-								v-for="(tag, index) in child"
-								:key="index"
-							>
-								<li v-for="(item, index) in tag.Tags" :key="index">
-									{{ item.Name }}
-								</li>
-							</ul>
-						</q-card-section>
-					</q-card>
+							</q-card-section>
+							<q-card-section>
+								<ul
+									class="cards_tags_wrapper"
+									v-for="(tag, index) in child"
+									:key="index"
+								>
+									<li v-for="(item, index) in tag.Tags" :key="index">
+										{{ item.Name }}
+									</li>
+								</ul>
+							</q-card-section>
+						</q-card>
+					</div>
 				</div>
 			</div>
 			<div
@@ -91,7 +94,7 @@ import Drawer from "../components/UI/Drawers/Drawer.vue";
 export default defineComponent({
 	name: "PageDomainChild",
 	components: { AjaxBar, Tabs, ContentCard, CardButtons, GlobalSearch, Drawer },
-props: ['id'],
+	props: ["id"],
 	setup(props) {
 		const store = useStore();
 		const progress = ref(null);
@@ -100,13 +103,9 @@ props: ['id'],
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
-   
 
 		const getData = async () => {
-			await store.dispatch(
-				"appDomain/fetchDomainById",
-				`${props.id}`
-			);
+			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
 			let data = await computed(() => store.getters["appDomain/allDomaines"]);
 			console.log("data: ", data.value);
 			progress.value = child.value.length;
@@ -119,9 +118,9 @@ props: ['id'],
 			actionsLinks,
 			Drawer,
 
-					filter,
+			filter,
 			filterRef,
-	
+
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();
@@ -139,6 +138,4 @@ props: ['id'],
   padding-left: 140px
 .q-drawer
   z-index: -1 !important
-
-
 </style>

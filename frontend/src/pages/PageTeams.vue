@@ -1,7 +1,7 @@
 <template>
 	<q-layout class="page_padding">
 		<AjaxBar />
-		<Drawer nodeID>
+		<Drawer>
 			<template v-slot:drawerFilter>
 				<div class="search_container">
 					<q-input ref="filterRef" filled v-model="filter" label="Search">
@@ -66,18 +66,18 @@ import AjaxBar from "../components/UI/Progress/AjaxBar";
 export default defineComponent({
 	name: "PageTeams",
 	components: { PageContent, Modal, CreationFormStepper, AjaxBar, Drawer },
-props: ['nodeID'],
+	props: ["nodeID"],
 	setup() {
-			const router = useRouter();
+		const router = useRouter();
 		const filter = ref("");
 		const filterRef = ref(null);
-		const chosenNodeID = ref('');
+		const chosenNodeID = ref("");
 		const goToID = (node) => {
-			chosenNodeID.value = node.id
-				router.push(`/teams/${node.id}`)
-					console.log('chosenNodeID: ', chosenNodeID.value)
-    }
-	
+			chosenNodeID.value = node.id;
+			router.push(`/teams/${node.id}`);
+			console.log("chosenNodeID: ", chosenNodeID.value);
+		};
+
 		const oepnDialog = ref(false);
 		const { path, dataItems, error, fetchData } = getDataItems();
 		const data = fetchData("http://localhost:3000/teams");
@@ -87,7 +87,7 @@ props: ['nodeID'],
 		const menu = ref(null);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
-			const allDomainTree =  computed(
+			const allDomainTree = await computed(
 				() => store.getters["appDomain/allDomainesTree"]
 			);
 			console.log("allDomainTree: ", allDomainTree.value);
@@ -96,30 +96,42 @@ props: ['nodeID'],
 				"allDomainTree  childs: ",
 				allDomainTree.value.Childs.map((item) => item.Name)
 			);
-			return menu.value = [
+			menu.value = [
 				{
+					id: allDomainTree?.value?.ID,
 					label: allDomainTree?.value?.Name,
 					avatar: allDomainTree?.value?.Logo,
+					handler: (node) => goToID(node),
 					children: allDomainTree?.value?.Childs?.map((item) => {
 						return {
 							id: item?.ID,
 							label: item?.Name,
 							avatar: item?.Logo,
 							handler: (item) => goToID(item),
-							children: item?.children?.map((subItem) => {
+							children: item?.Childs?.map((subItem) => {
 								return [
 									{
 										id: subItem?.ID,
 										label: subItem?.Name,
 										avatar: subItem?.Logo,
 										handler: (subItem) => goToID(subItem),
-										children: subItem?.children?.map((subLastItem) => {
+										children: subItem?.Childs?.map((subLastItem) => {
 											return [
 												{
 													id: subLastItem?.ID,
 													label: subLastItem?.Name,
 													avatar: subLastItem?.Logo,
 													handler: (subLastItem) => goToID(subLastItem),
+													children: subLastItem?.Childs?.map((subLastItem2) => {
+														return [
+															{
+																id: subLastItem2.ID,
+																label: subLastItem2?.Name,
+																avatar: subLastItem2?.Logo,
+																handler: (subLastItem2) => goToID(subLastItem2),
+															},
+														];
+													}),
 												},
 											];
 										}),
@@ -132,7 +144,7 @@ props: ['nodeID'],
 			];
 		};
 		getMenuData();
-		console.log("menu.value: ", menu);
+		console.log("menu.value: ", menu.value);
 
 		return {
 			progress: dataItems.length,
