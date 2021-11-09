@@ -9,7 +9,15 @@
 						v-for="(link, index) in links"
 						:key="index"
 					>
-						<q-item-section>{{ link }}</q-item-section>
+						<q-item-section class="flex">
+							<q-icon
+								name="edit"
+								size="1.5em"
+								class="q-mr-sm"
+								@click.prevent="EditEvent"
+							/>
+							{{ link }}
+						</q-item-section>
 					</q-item>
 				</q-list>
 			</q-menu>
@@ -32,5 +40,10 @@ export default {
   display: flex
   flex-direction: column
   justify-content: space-evenly
-  align-items: center
+  align-items: flex-start
+
+.q-item__section
+  display: flex
+  flex-direction: row
+  justify-content: space-between
 </style>

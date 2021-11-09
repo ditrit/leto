@@ -63,9 +63,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row q-mt-lg q-mr-lg">
 				<div
-					class="col-12 panel_wrapper q-mt-lg q-mr-lg"
+					class="col-12 panel_wrapper"
 					v-for="(item, index) in child"
 					:key="index"
 				>

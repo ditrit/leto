@@ -15,6 +15,7 @@
 							<span class="text-uppercase"
 								>{{ item.Name }}
 								<q-popup-edit
+									ref="EditNameRef"
 									buttons
 									v-model="item.Name"
 									class="bg-white text-white"
@@ -31,7 +32,7 @@
 										@keyup.enter="scope.set"
 									>
 										<template v-slot:append>
-											<q-icon name="edit" @click.prevent="scope.set" />
+											<q-icon name="edit" />
 										</template>
 									</q-input>
 								</q-popup-edit>
@@ -40,6 +41,7 @@
 						<div class="text-subtitle3 text-grey-8">
 							{{ item.ShortDescription }}
 							<q-popup-edit
+								ref="EditShortDescRef"
 								buttons
 								v-model="item.ShortDescription"
 								class="bg-white text-white"
@@ -66,6 +68,7 @@
 							<p class="q-ml-md">
 								{{ item.Description }}
 								<q-popup-edit
+									ref="EditLongDescRef"
 									buttons
 									v-model="item.Description"
 									class="bg-white text-white"
@@ -90,7 +93,55 @@
 							</p>
 						</div>
 					</div>
-					<CardButtons :links="links" />
+					<div class="col-auto">
+						<q-btn color="grey-7" round flat icon="more_vert">
+							<q-menu cover auto-close>
+								<q-list>
+									<q-item clickable @click.prevent="$refs.EditNameRef.show()">
+										<q-item-section>
+											<q-icon
+												name="edit"
+												size="1.5em"
+												class="q-mr-sm"
+											/>Name</q-item-section
+										>
+									</q-item>
+									<q-item
+										clickable
+										@click.prevent="$refs.EditShortDescRef.show()"
+									>
+										<q-item-section>
+											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Short
+											description</q-item-section
+										>
+									</q-item>
+									<q-item
+										clickable
+										@click.prevent="$refs.EditLongDescRef.show()"
+									>
+										<q-item-section>
+											<q-icon
+												name="edit"
+												size="1.5em"
+												class="q-mr-sm"
+												@click.prevent="EditEvent"
+											/>Long description</q-item-section
+										>
+									</q-item>
+									<q-item clickable>
+										<q-item-section>
+											<q-icon
+												name="edit"
+												size="1.5em"
+												class="q-mr-sm"
+												@click.prevent="EditEvent"
+											/>Logo</q-item-section
+										>
+									</q-item>
+								</q-list>
+							</q-menu>
+						</q-btn>
+					</div>
 				</div>
 			</q-card-section>
 		</q-card>
@@ -98,28 +149,50 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import CardButtons from "../../UI/Cards/CardButtons.vue";
+import { ref, toRefs } from "vue";
+
 export default {
 	name: "ContentCard",
-	components: { CardButtons },
+	components: {},
 	props: {
 		data: {
 			type: Array,
 		},
 	},
 	setup() {
+		const editName = ref(false);
+		const refs = toRefs();
 		const links = ref([
 			"Name",
 			"Short description",
 			"Long description",
 			"Logo",
 		]);
+		const handleName = () => {
+			// editName.value = true;
+			alert("hello");
+			refs.nameEditRef.show();
+		};
 		return {
 			links,
+			handleName,
 		};
 	},
 };
 </script>
+<style lang="sass" scoped>
+.buttons_wrapper
+  display: flex
+  flex-direction: column
+  justify-content: space-evenly
+  align-items: flex-start
 
-<style></style>
+.q-item__section
+  display: flex
+  flex-direction: row
+  justify-content: flex-start
+
+.button_actions__wrapper
+  margin-top: 80px
+  margin-left: -100px
+</style>

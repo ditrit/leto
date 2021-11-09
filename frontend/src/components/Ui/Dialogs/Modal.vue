@@ -53,7 +53,7 @@ export default {
   display: flex
   flex-direction: row
   justify-content: space-evenly
-  align-items: center
+  align-items: flex-start
 
 .teams_buttons__container
   display: flex
