@@ -63,19 +63,21 @@
 					</div>
 				</div>
 			</div>
-			<div
-				class="panel_wrapper q-mt-lg"
-				v-for="(item, index) in child"
-				:key="index"
-			>
-				<GlobalSearch class="global_Search__right" />
-				<Tabs
-					:allTags="null"
-					:teamProducts="item.Products"
-					:teamMembers="item.Authorizations"
-					:teamLibraries="item.Libraries"
-					:teamEnvironnements="item.Environments"
-				/>
+			<div class="row">
+				<div
+					class="col-12 panel_wrapper q-mt-lg q-mr-lg"
+					v-for="(item, index) in child"
+					:key="index"
+				>
+					<GlobalSearch class="global_Search__right" />
+					<Tabs
+						:allTags="null"
+						:teamProducts="item.Products"
+						:teamMembers="item.Authorizations"
+						:teamLibraries="item.Libraries"
+						:teamEnvironnements="item.Environments"
+					/>
+				</div>
 			</div>
 		</q-page>
 	</q-layout>
@@ -98,7 +100,7 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore();
 		const progress = ref(null);
-		const actionsLinks = ref(["Link One", "Link Two", "Link Three"]);
+		const actionsLinks = ref(["Edit"]);
 		const child = ref([]);
 		const oepnDialog = ref(false);
 		const filter = ref("");
