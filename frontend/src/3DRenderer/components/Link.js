@@ -31,12 +31,12 @@ class Link {
 	updatePoints() {
 		//const angle = this.startItem.threeObj.position.angleTo(this.endItem.threeObj.position)
 		let xAdjust=0, zAdjust=0
-		if (this.startItem.threeObj.position.x > this.endItem.threeObj.position.x)
+		if (this.startItem.threeObj.position.x >= this.endItem.threeObj.position.x)
 			xAdjust = -1
 		else if (this.startItem.threeObj.position.x < this.endItem.threeObj.position.x)
 			xAdjust = 1
 
-		if (this.startItem.threeObj.position.z > this.endItem.threeObj.position.z)
+		if (this.startItem.threeObj.position.z >= this.endItem.threeObj.position.z)
 			zAdjust = -1
 		else if (this.startItem.threeObj.position.z < this.endItem.threeObj.position.z)
 			zAdjust = 1
@@ -44,14 +44,14 @@ class Link {
 		if (!this.points) {
 			this.points = [this.startItem.threeObj.position,
 				new Vector3(
-					this.startItem.threeObj.position.x + (this.startItem.width * xAdjust * 2),
-					this.startItem.threeObj.position.y + this.startItem.height,
-					this.startItem.threeObj.position.z  + (this.startItem.depth * zAdjust * 2)),
+					this.startItem.threeObj.position.x + (this.startItem.width * xAdjust),
+					Math.max(this.startItem.threeObj.position.y, this.endItem.threeObj.position.y) + (this.startItem.height * (this.startItem.threeObj.position.y !== this.endItem.threeObj.position.y)),
+					this.startItem.threeObj.position.z  + (this.startItem.depth * zAdjust)),
 				this.endItem.threeObj.position]
 		} else {
-			this.points[1].x = this.startItem.threeObj.position.x + (this.startItem.width * xAdjust * 2)
-			this.points[1].y = this.startItem.threeObj.position.y + this.startItem.height
-			this.points[1].z = this.startItem.threeObj.position.z + (this.startItem.depth * zAdjust * 2)
+			this.points[1].x = this.startItem.threeObj.position.x + (this.startItem.width * xAdjust)
+			this.points[1].y = Math.max(this.startItem.threeObj.position.y, this.endItem.threeObj.position.y) + (this.startItem.height * (this.startItem.threeObj.position.y !== this.endItem.threeObj.position.y))
+			this.points[1].z = this.startItem.threeObj.position.z + (this.startItem.depth * zAdjust)
 		}
 
 	}
