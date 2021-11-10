@@ -311,6 +311,7 @@ export default {
 			const itemIndex = this.items.findIndex(i => i.id === event.itemId)
 			this.items[itemIndex].parentWasUpdated = event.parentId !== this.items[itemIndex].parentId
 			this.items[itemIndex].parentId = event.parentId
+			this.items[itemIndex].manuallyMoved = true
 
 
 		},

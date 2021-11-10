@@ -178,9 +178,17 @@ class Grid {
 				const item = this.items[((col * this.lineCount) + line) - this.reserveSlot]
 				console.log("updating item position", col, line, item, this.columnCount, this.lineCount, this.parentItem)
 
-				if (!item || (item.threeObj.position.y === 0 && item.manuallyMoved)) continue
+				if (!item ) continue
+
 
 				if (item && item.threeObj) {
+
+					if ((!this.parentItem && item.manuallyMoved)) {
+						item.basePosition = JSON.parse(JSON.stringify(item.threeObj.position))
+						item.grid.updatePlacement()
+						item.updateSpritePosition()
+						continue
+					}
 					if (this.parentItem) {
 						item.threeObj.position.x =
 							(this.parentItem.threeObj.position.x  - (this.width / 2)) +
