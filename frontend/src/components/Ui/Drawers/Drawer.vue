@@ -76,8 +76,9 @@ export default {
 
 .q-tree__node-header-content
 	font-weight: bold
+	text-transform: capitalize !important
 
 .q-tree__node .q-tree__children .q-tree__node-header-content
-	font-weight: 400
 	color: var(--gray)
+	font-weight: 400
 </style>

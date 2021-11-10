@@ -19,19 +19,21 @@
 						<div class="text-subtitle2">{{ name }}</div>
 						<div class="text-h8">{{ role }}</div>
 					</div>
-
-					<div class="col-auto hidden">
+					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>
 									<q-item clickable>
-										<q-item-section>Remove Card</q-item-section>
+										<q-item-section class="action_card__item">
+											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
+											Remove Card</q-item-section
+										>
 									</q-item>
 									<q-item clickable>
-										<q-item-section>Send Feedback</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Share</q-item-section>
+										<q-item-section class="action_card__item">
+											<q-icon name="edit" size="1.5em" class="q-mr-sm" /> Update
+											Card</q-item-section
+										>
 									</q-item>
 								</q-list>
 							</q-menu>
@@ -39,7 +41,6 @@
 					</div>
 				</div>
 			</q-card-section>
-
 			<q-card-section>
 				{{ description }}
 			</q-card-section>
@@ -61,4 +62,8 @@ export default {
 	},
 };
 </script>
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.action_card__item
+	display: flex
+	flex-direction: row
+</style>

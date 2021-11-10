@@ -30,6 +30,7 @@
 										autofocus
 										counter
 										@keyup.enter="scope.set"
+										@save="scope.set"
 									>
 										<template v-slot:append>
 											<q-icon name="edit" />
@@ -56,9 +57,10 @@
 									autofocus
 									counter
 									@keyup.enter="scope.set"
+									@save="scope.set"
 								>
 									<template v-slot:append>
-										<q-icon name="edit" @click.prevent="scope.set" />
+										<q-icon name="edit" />
 									</template>
 								</q-input>
 							</q-popup-edit>
@@ -84,9 +86,10 @@
 										autofocus
 										counter
 										@keyup.enter="scope.set"
+										@save="scope.set"
 									>
 										<template v-slot:append>
-											<q-icon name="edit" @click.prevent="scope.set" />
+											<q-icon name="edit" />
 										</template>
 									</q-input>
 								</q-popup-edit>
@@ -149,7 +152,8 @@
 </template>
 
 <script>
-import { ref, toRefs } from "vue";
+import { ref } from "vue";
+import { useStore } from "vuex";
 
 export default {
 	name: "ContentCard",
@@ -160,22 +164,17 @@ export default {
 		},
 	},
 	setup() {
-		const editName = ref(false);
-		const refs = toRefs();
-		const links = ref([
-			"Name",
-			"Short description",
-			"Long description",
-			"Logo",
-		]);
-		const handleName = () => {
-			// editName.value = true;
-			alert("hello");
-			refs.nameEditRef.show();
+		const store = useStore();
+		// const name = ref("");
+		// const short = ref("");
+		// const long = ref("");
+		// const logo = ref("");
+		const updateName = (update, id) => {
+			console.log(update, id);
+			store.dispatch("appDomain/updateDomain", id);
 		};
 		return {
-			links,
-			handleName,
+			updateName,
 		};
 	},
 };

@@ -87,16 +87,10 @@ export default defineComponent({
 		const menu = ref(null);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
-			const allDomainTree = await computed(
+			const allDomainTree = computed(
 				() => store.getters["appDomain/allDomainesTree"]
 			);
-			console.log("allDomainTree: ", allDomainTree.value);
-			console.log("allDomainTree  name: ", allDomainTree.value.Name);
-			console.log(
-				"allDomainTree  childs: ",
-				allDomainTree.value.Childs.map((item) => item.Name)
-			);
-			menu.value = [
+			return (menu.value = [
 				{
 					id: allDomainTree?.value?.ID,
 					label: allDomainTree?.value?.Name,
@@ -109,42 +103,28 @@ export default defineComponent({
 							avatar: item?.Logo,
 							handler: (item) => goToID(item),
 							children: item?.Childs?.map((subItem) => {
-								return [
-									{
-										id: subItem?.ID,
-										label: subItem?.Name,
-										avatar: subItem?.Logo,
-										handler: (subItem) => goToID(subItem),
-										children: subItem?.Childs?.map((subLastItem) => {
-											return [
-												{
-													id: subLastItem?.ID,
-													label: subLastItem?.Name,
-													avatar: subLastItem?.Logo,
-													handler: (subLastItem) => goToID(subLastItem),
-													children: subLastItem?.Childs?.map((subLastItem2) => {
-														return [
-															{
-																id: subLastItem2.ID,
-																label: subLastItem2?.Name,
-																avatar: subLastItem2?.Logo,
-																handler: (subLastItem2) => goToID(subLastItem2),
-															},
-														];
-													}),
-												},
-											];
-										}),
-									},
-								];
+								return {
+									id: subItem?.ID,
+									label: subItem?.Name,
+									avatar: subItem?.Logo,
+									handler: (subItem) => goToID(subItem),
+									children: subItem?.Childs?.map((subLastItem) => {
+										return {
+											id: subLastItem?.ID,
+											label: subLastItem?.Name,
+											avatar: subLastItem?.Logo,
+											handler: (subLastItem) => goToID(subLastItem),
+										};
+									}),
+								};
 							}),
 						};
 					}),
 				},
-			];
+			]);
 		};
 		getMenuData();
-		console.log("menu.value: ", menu.value);
+		console.log("menu.value: ", menu);
 
 		return {
 			progress: dataItems.length,

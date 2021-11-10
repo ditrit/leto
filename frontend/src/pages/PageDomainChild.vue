@@ -119,10 +119,8 @@ export default defineComponent({
 			child,
 			actionsLinks,
 			Drawer,
-
 			filter,
 			filterRef,
-
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();
