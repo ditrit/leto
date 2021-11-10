@@ -178,7 +178,7 @@ class Grid {
 				const item = this.items[((col * this.lineCount) + line) - this.reserveSlot]
 				console.log("updating item position", col, line, item, this.columnCount, this.lineCount, this.parentItem)
 
-				if (!item) continue
+				if (!item || (item.threeObj.position.y === 0 && item.manuallyMoved)) continue
 
 				if (item && item.threeObj) {
 					if (this.parentItem) {

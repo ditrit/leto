@@ -249,6 +249,8 @@ class Item {
 		this.sprite = this.createSprite()
 		this.sprite.scale.set(this.grid.baseWidth, this.grid.baseWidth / 3, 1)
 		this.threeObj =  this.generateComponent(material)
+		this.threeObj.castShadow = true
+		this.threeObj.recieveShadow = true
 
 		this.updateSpritePosition()
 
