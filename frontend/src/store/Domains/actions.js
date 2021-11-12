@@ -32,6 +32,9 @@ export const fetchDomainTags = async ({ commit }, id) => {
 	await API.get(`/domain/${id}/tag`);
 	commit("GET_DOMAIN_TAGS", id);
 };
+
+// TODO: Make domainID + tagID detection dynamic
+
 export const addDomainTag = async (
 	{ commit },
 	domainId = "703911909106483201",

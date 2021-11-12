@@ -108,12 +108,12 @@ export default defineComponent({
 
 		const getData = async () => {
 			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
-			let data = await computed(() => store.getters["appDomain/allDomaines"]);
-			console.log("data: ", data.value);
+			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			progress.value = child.value.length;
-			return (child.value = data.value);
+			return (child.value = await data.value);
 		};
 		getData();
+		console.log("child data: ", child);
 		return {
 			oepnDialog,
 			child,

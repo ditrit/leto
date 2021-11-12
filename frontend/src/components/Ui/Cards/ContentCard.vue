@@ -30,7 +30,7 @@
 										autofocus
 										counter
 										@keyup.enter="scope.set"
-										@save="scope.set"
+										@save="updateName(item)"
 									>
 										<template v-slot:append>
 											<q-icon name="edit" />
@@ -165,16 +165,22 @@ export default {
 	},
 	setup() {
 		const store = useStore();
-		// const name = ref("");
-		// const short = ref("");
-		// const long = ref("");
-		// const logo = ref("");
-		const updateName = (update, id) => {
-			console.log(update, id);
-			store.dispatch("appDomain/updateDomain", id);
+		const name = ref("");
+		const short = ref("");
+		const long = ref("");
+		const logo = ref("");
+		const parentID = ref("");
+		const updateName = (update) => {
+			console.log(update, update.id, update.Name);
+			store.dispatch("appDomain/updateDomain", update.id);
 		};
 		return {
 			updateName,
+			name,
+			short,
+			long,
+			logo,
+			parentID,
 		};
 	},
 };
