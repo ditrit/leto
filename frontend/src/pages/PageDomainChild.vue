@@ -45,13 +45,20 @@
 											<div class="text-h6">Tags</div>
 										</div>
 									</div>
-									<CardButtons :links="actionsLinks" />
+									<q-btn
+										color="grey-7"
+										round
+										flat
+										icon="more_vert"
+										@click.prevent="toggleEdit"
+									></q-btn>
 								</div>
 							</q-card-section>
 							<q-card-section>
 								<ul
 									v-for="(tag, index) in child"
 									:key="index"
+									:style="editMode ? 'border: 1px dashed grey' : ''"
 									v-mutation="handler1"
 									@dragenter="onDragEnter"
 									@dragleave="onDragLeave"
@@ -67,28 +74,106 @@
 									<li
 										v-for="(item, index) in tag.Tags"
 										:key="index"
-										draggable="true"
+										:draggable="false"
 										@dragstart="onDragStart"
 										:class="item.class"
 										:id="`box ${index + 1}`"
 									>
 										{{ item.Name }}
+										<q-btn
+											v-if="editMode"
+											round
+											dense
+											unelevated
+											size="xs"
+											color="red"
+											text-color="white"
+											icon="delete"
+											@click.prevent="OnDelete(item.ID)"
+											class="q-ml-sm"
+										/>
 									</li>
 								</ul>
-								<ul
-									v-mutation="handler2"
-									@dragenter="onDragEnter"
-									@dragleave="onDragLeave"
-									@dragover="onDragOver"
-									@drop="onDrop"
-									class="
-										cards_tags_wrapper
-										drop-target
-										rounded-borders
-										overflow-hidden
-									"
-								/>
+								<div v-if="showDraggable">
+									<ul
+										:style="editMode ? 'border: 1px dashed grey' : ''"
+										v-mutation="handler2"
+										@dragenter="onDragEnter"
+										@dragleave="onDragLeave"
+										@dragover="onDragOver"
+										@drop="onDrop"
+										class="
+											cards_tags_wrapper
+											drop-target
+											rounded-borders
+											overflow-hidden
+										"
+									>
+										<li
+											v-for="(item, index) in tagsList2"
+											:key="index"
+											:draggable="true"
+											@dragstart="onDragStart"
+											:class="item.class"
+											:id="`box ${index + 10}`"
+										>
+											{{ item.Name }}
+										</li>
+									</ul>
+								</div>
 							</q-card-section>
+							<!-- <div class="add_newtag q-pa-md" style="max-width: 400px">
+								<form class="q-gutter-md" v-if="isNew">
+									<input
+										type="text"
+										:model="tagName"
+										name="name"
+										placeholder="Name"
+									/>
+									<input
+										type="text"
+										name="shortDescription"
+										placeholder="Short description"
+										:model="tagshortDescription"
+									/>
+									<textarea
+										type="text"
+										name="description"
+										placeholder="Description"
+										:model="tagDescription"
+									/>
+									<div class="form_tags">
+										<q-btn label="Submit" type="submit" color="primary" />
+										<q-btn
+											label="Reset"
+											type="reset"
+											color="primary"
+											flat
+											class="q-ml-sm"
+										/>
+									</div>
+								</form>
+							</div> -->
+							<div class="q-gutter-sm float-right" v-if="showButtons">
+								<!-- <q-btn
+									color="white"
+									text-color="primary"
+									label="New"
+									@click.prevent="OnNew"
+								/> -->
+								<q-btn
+									color="white"
+									text-color="primary"
+									label="Edit"
+									@click.prevent="OnEdit"
+								/>
+								<q-btn
+									color="white"
+									text-color="primary"
+									label="Save"
+									@click.prevent="OnSave"
+								/>
+							</div>
 						</q-card>
 					</div>
 				</div>
@@ -117,7 +202,7 @@
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
-import CardButtons from "../components/UI/Cards/CardButtons";
+// import CardButtons from "../components/UI/Cards/CardButtons";
 import ContentCard from "../components/UI/Cards/ContentCard";
 import Tabs from "../components/UI/TabPanels/Tabs";
 import GlobalSearch from "../components/UI/Form/GlobalSearch.vue";
@@ -129,7 +214,7 @@ export default defineComponent({
 		AjaxBar,
 		Tabs,
 		ContentCard,
-		CardButtons,
+
 		GlobalSearch,
 		Drawer,
 	},
@@ -142,8 +227,36 @@ export default defineComponent({
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
+
+		const editMode = ref(false);
+		const showButtons = ref(false);
+		const showDraggable = ref(false);
+		const isNew = ref(false);
 		const status1 = ref([]);
 		const status2 = ref([]);
+
+		const toggleEdit = () => {
+			console.log("Edit Me");
+			showButtons.value = !showButtons.value;
+			showDraggable.value = false;
+			editMode.value = false;
+		};
+
+		const OnNew = () => {
+			console.log("OnNew Function");
+			isNew.value = !isNew.value;
+		};
+		const OnEdit = () => {
+			console.log("OnEdit Function");
+			editMode.value = !editMode.value;
+			showDraggable.value = !showDraggable.value;
+		};
+		const OnDelete = (id) => {
+			console.log("deleted ID:", id);
+		};
+		const OnSave = () => {
+			console.log("OnSave Function");
+		};
 
 		const getData = async () => {
 			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
@@ -164,8 +277,24 @@ export default defineComponent({
 				filter.value = "";
 				filterRef.value.focus();
 			},
+			editMode,
+			showButtons,
+			toggleEdit,
+			showDraggable,
 			status1,
 			status2,
+			isNew,
+			OnNew,
+			OnEdit,
+			OnSave,
+			OnDelete,
+			tagsList2: [
+				{ ID: 10, Name: "Tag 10" },
+				{ ID: 11, Name: "Tag 11" },
+				{ ID: 12, Name: "Tag 12" },
+				{ ID: 14, Name: "Tag 14" },
+				{ ID: 15, Name: "Tag 15" },
+			],
 
 			handler1(mutationRecords) {
 				status1.value = [];
@@ -250,11 +379,12 @@ export default defineComponent({
 .q-drawer
   z-index: -1 !important
 .drop-target
-  min-height: 120px
+  min-height: 140px
   width: 100%
   min-width: 200px
   background-color: transparent
-  border: 1px dashed $grey
+
+
 
 .drag-enter
   outline-style: dashed
@@ -290,4 +420,7 @@ export default defineComponent({
 
 .orange
   background-color: orange
+
+.q-manu
+  display: none !important
 </style>
