@@ -50,14 +50,44 @@
 							</q-card-section>
 							<q-card-section>
 								<ul
-									class="cards_tags_wrapper"
 									v-for="(tag, index) in child"
 									:key="index"
+									v-mutation="handler1"
+									@dragenter="onDragEnter"
+									@dragleave="onDragLeave"
+									@dragover="onDragOver"
+									@drop="onDrop"
+									class="
+										cards_tags_wrapper
+										drop-target
+										rounded-borders
+										overflow-hidden
+									"
 								>
-									<li v-for="(item, index) in tag.Tags" :key="index">
+									<li
+										v-for="(item, index) in tag.Tags"
+										:key="index"
+										draggable="true"
+										@dragstart="onDragStart"
+										:class="item.class"
+										:id="`box ${index + 1}`"
+									>
 										{{ item.Name }}
 									</li>
 								</ul>
+								<ul
+									v-mutation="handler2"
+									@dragenter="onDragEnter"
+									@dragleave="onDragLeave"
+									@dragover="onDragOver"
+									@drop="onDrop"
+									class="
+										cards_tags_wrapper
+										drop-target
+										rounded-borders
+										overflow-hidden
+									"
+								/>
 							</q-card-section>
 						</q-card>
 					</div>
@@ -95,7 +125,14 @@ import Drawer from "../components/UI/Drawers/Drawer.vue";
 
 export default defineComponent({
 	name: "PageDomainChild",
-	components: { AjaxBar, Tabs, ContentCard, CardButtons, GlobalSearch, Drawer },
+	components: {
+		AjaxBar,
+		Tabs,
+		ContentCard,
+		CardButtons,
+		GlobalSearch,
+		Drawer,
+	},
 	props: ["id"],
 	setup(props) {
 		const store = useStore();
@@ -105,12 +142,14 @@ export default defineComponent({
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
+		const status1 = ref([]);
+		const status2 = ref([]);
 
 		const getData = async () => {
 			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			progress.value = child.value.length;
-			return (child.value = await data.value);
+			return (child.value = await data.value.sort());
 		};
 		getData();
 		console.log("child data: ", child);
@@ -125,6 +164,78 @@ export default defineComponent({
 				filter.value = "";
 				filterRef.value.focus();
 			},
+			status1,
+			status2,
+
+			handler1(mutationRecords) {
+				status1.value = [];
+				for (const index in mutationRecords) {
+					const record = mutationRecords[index];
+					const info = `type: ${record.type}, nodes added: ${
+						record.addedNodes.length > 0 ? "true" : "false"
+					}, nodes removed: ${
+						record.removedNodes.length > 0 ? "true" : "false"
+					}, oldValue: ${record.oldValue}`;
+					status1.value.push(info);
+				}
+			},
+
+			handler2(mutationRecords) {
+				status2.value = [];
+				for (const index in mutationRecords) {
+					const record = mutationRecords[index];
+					const info = `type: ${record.type}, nodes added: ${
+						record.addedNodes.length > 0 ? "true" : "false"
+					}, nodes removed: ${
+						record.removedNodes.length > 0 ? "true" : "false"
+					}, oldValue: ${record.oldValue}`;
+					status2.value.push(info);
+				}
+			},
+
+			// store the id of the draggable element
+			onDragStart(e) {
+				e.dataTransfer.setData("text", e.target.id);
+				e.dataTransfer.dropEffect = "move";
+			},
+
+			onDragEnter(e) {
+				// don't drop on other draggables
+				if (e.target.draggable !== true) {
+					e.target.classList.add("drag-enter");
+				}
+			},
+
+			onDragLeave(e) {
+				e.target.classList.remove("drag-enter");
+			},
+
+			onDragOver(e) {
+				e.preventDefault();
+			},
+
+			onDrop(e) {
+				e.preventDefault();
+
+				// don't drop on other draggables
+				if (e.target.draggable === true) {
+					return;
+				}
+
+				const draggedId = e.dataTransfer.getData("text");
+				const draggedEl = document.getElementById(draggedId);
+
+				// check if original parent node
+				if (draggedEl.parentNode === e.target) {
+					e.target.classList.remove("drag-enter");
+					return;
+				}
+
+				// make the exchange
+				draggedEl.parentNode.removeChild(draggedEl);
+				e.target.appendChild(draggedEl);
+				e.target.classList.remove("drag-enter");
+			},
 		};
 	},
 });
@@ -138,4 +249,45 @@ export default defineComponent({
   padding-left: 140px
 .q-drawer
   z-index: -1 !important
+.drop-target
+  min-height: 120px
+  width: 100%
+  min-width: 200px
+  background-color: transparent
+  border: 1px dashed $grey
+
+.drag-enter
+  outline-style: dashed
+
+.box
+  width: 100px
+  height: 100px
+  float: left
+  cursor: pointer
+
+@media only screen and (max-width: 500px)
+  .drop-target
+    height: 200px
+    width: 100px
+    min-width: 100px
+    background-color: gainsboro
+
+  .box
+    width: 50px
+    height: 50px
+
+.box:nth-child(3)
+  clear: both
+
+.navy
+  background-color: navy
+
+.red
+  background-color: firebrick
+
+.green
+  background-color: darkgreen
+
+.orange
+  background-color: orange
 </style>
