@@ -1,7 +1,7 @@
 import {PointLight, DirectionalLight} from "three";
 
 function createPointLight() {
-	const pointLight = new DirectionalLight( 0xffffff, 0.5 )
+	const pointLight = new DirectionalLight( 0xffffff, 1 )
 	//const pointLight = new PointLight(0xFFFFFF, 0.3, 1000);
 	pointLight.position.set(100, 100, 100);
 	pointLight.castShadow = true

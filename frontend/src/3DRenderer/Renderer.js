@@ -7,6 +7,8 @@ import { Resizer } from './systems/Resizer.js';
 import {createAmbientLight} from "src/3DRenderer/components/ambientLight";
 import {createPointLight} from "src/3DRenderer/components/pointLight";
 import {createGridHelper} from "src/3DRenderer/components/gridHelper";
+import {EffectComposer} from "three/examples/jsm/postprocessing/EffectComposer";
+import {RenderPass} from "three/examples/jsm/postprocessing/RenderPass";
 import {Grid} from "src/3DRenderer/systems/Grid";
 import {EventEmitter} from 'events'
 
@@ -14,6 +16,8 @@ import {Item} from "src/3DRenderer/components/Item";
 import {CameraController} from "src/3DRenderer/systems/CameraController";
 import {MouseController} from "src/3DRenderer/systems/MouseController";
 import {DragController} from "src/3DRenderer/systems/DragController"
+import {OutlinePass} from "three/examples/jsm/postprocessing/OutlinePass";
+import {Vector2} from "three";
 
 
 class Renderer  extends EventEmitter{
@@ -49,6 +53,25 @@ class Renderer  extends EventEmitter{
 		this.cameraController = new CameraController(this.camera, this.renderer.domElement)
 		this.dragController = new DragController(this)
 
+		this.composer = new EffectComposer(this.renderer)
+		const renderPass = new RenderPass(this.scene, this.camera)
+		this.composer.addPass(renderPass)
+		this.outlinePass = new OutlinePass( new Vector2( container.clientWidth, container.clientHeight ), this.scene, this.camera );
+		this.visibleEdgeColor = '#ffffff';
+		this.hiddenEdgeColor = '#190a05';
+		this.outlinePass.visibleEdgeColor.set( this.visibleEdgeColor );
+		this.outlinePass.hiddenEdgeColor.set( this.hiddenEdgeColor );
+		this.outlinePass.edgeStrength = 3.0
+		this.outlinePass.edgeGlow = 0.0
+		this.outlinePass.edgeThickness = 1.0
+		this.outlinePass.pulsePeriod = 0
+		this.composer.addPass( this.outlinePass );
+
+
+
+
+
+
 		const mouseController = new MouseController(this.scene, this.renderer, this.camera, this.items)
 		mouseController.on('intersect', (event) => this.onClickSelect(event))
 		mouseController.on('link', (event) => this.onClickLink(event))
@@ -73,9 +96,9 @@ class Renderer  extends EventEmitter{
 
 			let nbObj
 			if (l === -1) {
-				 nbObj =  Math.floor(Math.sqrt(this.itemCountChart[l]))
+				nbObj =  Math.floor(Math.sqrt(this.itemCountChart[l]))
 			} else {
-				 nbObj =  this.itemCountChart[l]
+				nbObj =  this.itemCountChart[l]
 			}
 			const nbLane = nbObj
 			const objWidth = this.sizeChart[l + 1].width
@@ -110,6 +133,12 @@ class Renderer  extends EventEmitter{
 
 		}*/
 	}
+	updateLinkPaths() {
+		this.graph = new PlanarGraph()
+		for (let item of this.items) {
+			this.graph.newPoint(item.threeObj.position.x, item.threeObj.position.z)
+		}
+	}
 	async render() {
 		//console.log('rendering', this.scene, this.camera)
 		if (this.grid.needsUpdate) {
@@ -120,7 +149,7 @@ class Renderer  extends EventEmitter{
 
 			this.itemCountChart = {}
 			this.grid.buildItemCountChart(this.itemCountChart)
-	//		this.updateCellSizeChart()
+			//		this.updateCellSizeChart()
 			console.log('itemcountchart', this.itemCountChart, this.sizeChart)
 			this.grid.updateBlockSize(this.sizeChart, this.itemCountChart)
 			this.grid.updatePlacement()
@@ -136,8 +165,13 @@ class Renderer  extends EventEmitter{
 			this.needsLinkUpdate = false
 			this.links.forEach(l => l.update())
 		}
+		const selectedItems = this.items.filter(i => i.isSelected)
+		this.outlinePass.selectedObjects = selectedItems.map(i => i.threeObj)
 
-		this.renderer.render(this.scene, this.camera);
+
+		//this.outlinePass.selectedObjects = this.items.map(i => i.threeObj)
+		//	this.renderer.render(this.scene, this.camera);
+		this.composer.render()
 	}
 	onClickSelect(object) {
 		console.log('onclickSelect', object)

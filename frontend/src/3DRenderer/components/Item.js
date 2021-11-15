@@ -1,4 +1,17 @@
-import {BoxBufferGeometry, Mesh,BoxGeometry, MeshBasicMaterial,Sprite, SpriteMaterial, CanvasTexture, MeshStandardMaterial, Group, ImageLoader} from "three";
+import {
+	BoxBufferGeometry,
+	Mesh,
+	BoxGeometry,
+	MeshBasicMaterial,
+	Sprite,
+	SpriteMaterial,
+	CanvasTexture,
+	ShaderMaterial,
+	MeshStandardMaterial,
+	Group,
+	ImageLoader,
+	Color
+} from "three";
 import {Grid} from "src/3DRenderer/systems/Grid";
 import {CSS3DObject} from 'three/examples/jsm/renderers/CSS3DRenderer'
 
@@ -9,6 +22,8 @@ class Item {
 		//this.depth = 1
 		Object.assign(this, params)
 		this.links = []
+		this.color = new Color(params.color)
+		this.colorHex = params.color
 		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
 		this.grid.gridSpacing = 1
 		this.img = null
@@ -54,7 +69,7 @@ class Item {
 		// Background
 		ctx.beginPath();
 		ctx.rect(0, 0, width, height);
-		ctx.fillStyle = this.color;
+		ctx.fillStyle = this.colorHex;
 		ctx.fill();
 		ctx.fillStyle = "rgba(0, 0, 0, .1)";
 		ctx.stroke()
@@ -88,7 +103,7 @@ class Item {
 
 		tctx.beginPath();
 		tctx.rect(0, 0, cellWidth, cellWidth);
-		tctx.fillStyle = this.color;
+		tctx.fillStyle = this.colorHex;
 		tctx.fill();
 		tctx.closePath();
 
@@ -152,14 +167,54 @@ class Item {
 
 	}
 	generateMaterial() {
-		const material = [
-			new MeshStandardMaterial({  map: this.sideTexture/*color: this.color*/ }),	// Right side
-			new MeshStandardMaterial({  map: this.sideTexture/*color: this.color*/ }),	// Left side
-			new MeshStandardMaterial({ map: this.sideTexture}),	// Top side
-			new MeshStandardMaterial({ map: this.sideTexture }),	// Bottom side
-			new MeshStandardMaterial({ map: this.sideTexture}),	// Front side
-			new MeshStandardMaterial({ map: this.sideTexture})	// Back side
-		];
+		//const material = [
+			//new MeshStandardMaterial({ color: this.color/*map: this.sideTexture*//*color: this.color*/ }),	// Right side
+		//	new MeshStandardMaterial({ color: this.color/*map: this.sideTexture*//*color: this.color*/ }),	// Left side
+		//	new MeshStandardMaterial({color: this.color/*map: this.sideTexture*/}),	// Top side
+		//	new MeshStandardMaterial({color: this.color/*map: this.sideTexture */}),	// Bottom side
+		//	new MeshStandardMaterial({color: this.color/*map: this.sideTexture*/}),	// Front side
+		//	new MeshStandardMaterial({color: this.color/*map: this.sideTexture*/})	// Back side
+	//	];*/
+
+		const vertexShader = `
+    varying vec2 vUv;
+    void main()	{
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+    }
+  `;
+		console.log('item color', this.color)
+		const fragmentShader = `
+		//#extension GL_OES_standard_derivatives : enable
+
+    varying vec2 vUv;
+    uniform float thickness;
+
+    float edgeFactor(vec2 p){
+    	vec2 grid = abs(fract(p - 0.5) - 0.5) / fwidth(p) / thickness;
+  		return min(grid.x, grid.y);
+    }
+
+    void main() {
+
+      float a = edgeFactor(vUv);
+
+      vec3 c = mix(vec3(0), vec3(${this.color.r},${this.color.g},${this.color.b}), a);
+
+      gl_FragColor = vec4(c, 1.0);
+    }
+  `;
+	const material = new ShaderMaterial({
+
+			uniforms: {
+				color: this.color,
+				thickness: {
+					value: 1
+				}
+			},
+			vertexShader: vertexShader,
+			fragmentShader: fragmentShader
+		});
 		return material
 	}
 	generateComponent(material) {
@@ -208,10 +263,10 @@ class Item {
 		Object.assign(this, newData)
 		console.log('sideCanvas updated')
 		if (this.isSelected) {
-			this.threeObj.material.forEach(m =>m.emissive.setHex( 0xff0000 ))
+			//this.threeObj.material.forEach(m =>m.emissive.setHex( 0xff0000 ))
 			//	this.sprite.material.emissive.setHex( 0xff0000 )
 		} else {
-			this.threeObj.material.forEach(m =>m.emissive.setHex( 0x000000 ))
+			//this.threeObj.material.forEach(m =>m.emissive.setHex( 0x000000 ))
 			//this.sprite.material.emissive.setHex( 0x000000 )
 		}
 		this.updateTexture()

@@ -32,14 +32,14 @@ class Link {
 		//const angle = this.startItem.threeObj.position.angleTo(this.endItem.threeObj.position)
 		let xAdjust=0, zAdjust=0
 		if (this.startItem.threeObj.position.x >= this.endItem.threeObj.position.x)
-			xAdjust = -1
+			xAdjust = -2
 		else if (this.startItem.threeObj.position.x < this.endItem.threeObj.position.x)
-			xAdjust = 1
+			xAdjust = 2
 
 		if (this.startItem.threeObj.position.z >= this.endItem.threeObj.position.z)
-			zAdjust = -1
+			zAdjust = -3
 		else if (this.startItem.threeObj.position.z < this.endItem.threeObj.position.z)
-			zAdjust = 1
+			zAdjust = 3
 
 		if (!this.points) {
 			this.points = [this.startItem.threeObj.position,
