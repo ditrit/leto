@@ -12,13 +12,17 @@
 			<div class="row no-wrap q-pa-md">
 				<q-list separator>
 					<q-item clickable v-ripple>
-						<q-item-section>Link One</q-item-section>
+						<q-item-section>
+							<router-link to="/dashboard">Dashboard</router-link>
+						</q-item-section>
 					</q-item>
 
 					<q-item clickable v-ripple>
 						<q-item-section>
-							<q-item-label>Link Two</q-item-label>
-							<q-item-label caption>Caption</q-item-label>
+							<q-item-label>
+								<router-link to="/settings">Settings</router-link>
+							</q-item-label>
+							<!-- <q-item-label caption></q-item-label> -->
 						</q-item-section>
 					</q-item>
 

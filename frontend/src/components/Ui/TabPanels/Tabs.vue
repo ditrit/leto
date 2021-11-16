@@ -31,6 +31,7 @@
 							:key="product.ID"
 							:name="product.Name"
 							:description="product.ShortDescription"
+							:logo="product.Logo"
 						/>
 					</div>
 				</q-tab-panel>
@@ -42,6 +43,7 @@
 							:name="member.User.LastName"
 							:role="member.Role.Name"
 							:description="member.ShortDescription"
+							:logo="member.Logo"
 						/>
 					</div>
 				</q-tab-panel>
@@ -53,6 +55,7 @@
 							:key="librarie.ID"
 							:name="librarie.Name"
 							:description="librarie.ShortDescription"
+							:logo="librarie.Logo"
 						/>
 					</div>
 				</q-tab-panel>
@@ -64,6 +67,7 @@
 							:key="env.ID"
 							:name="env.Name"
 							:description="env.ShortDescription"
+							:logo="env.Logo"
 						/>
 					</div>
 				</q-tab-panel>

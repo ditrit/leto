@@ -45,13 +45,34 @@
 											<div class="text-h6">Tags</div>
 										</div>
 									</div>
-									<q-btn
-										color="grey-7"
-										round
-										flat
-										icon="more_vert"
-										@click.prevent="toggleEdit"
-									></q-btn>
+									<div class="button_actions__container col-auto">
+										<q-btn color="grey-7" round flat icon="more_vert">
+											<q-menu cover auto-close>
+												<q-list>
+													<q-item clickable @click.prevent="OnEdit">
+														<q-item-section class="action_card__item">
+															<q-icon
+																name="edit"
+																size="1.5em"
+																class="q-mr-sm"
+															/>
+															Edit</q-item-section
+														>
+													</q-item>
+													<q-item clickable @click.prevent="OnSave">
+														<q-item-section class="action_card__item">
+															<q-icon
+																name="save"
+																size="1.5em"
+																class="q-mr-sm"
+															/>
+															Save</q-item-section
+														>
+													</q-item>
+												</q-list>
+											</q-menu>
+										</q-btn>
+									</div>
 								</div>
 							</q-card-section>
 							<q-card-section>
@@ -77,7 +98,7 @@
 										:draggable="false"
 										@dragstart="onDragStart"
 										:class="item.class"
-										:id="`box ${index + 1}`"
+										:id="`box ${item.ID}`"
 									>
 										{{ item.Name }}
 										<q-btn
@@ -110,12 +131,12 @@
 										"
 									>
 										<li
-											v-for="(item, index) in tagsList2"
+											v-for="(item, index) in globalTagsList"
 											:key="index"
 											:draggable="true"
 											@dragstart="onDragStart"
 											:class="item.class"
-											:id="`box ${index + 10}`"
+											:id="`box ${item.ID}`"
 										>
 											{{ item.Name }}
 										</li>
@@ -155,12 +176,6 @@
 								</form>
 							</div> -->
 							<div class="q-gutter-sm float-right" v-if="showButtons">
-								<!-- <q-btn
-									color="white"
-									text-color="primary"
-									label="New"
-									@click.prevent="OnNew"
-								/> -->
 								<q-btn
 									color="white"
 									text-color="primary"
@@ -201,8 +216,8 @@
 <script>
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
-// import CardButtons from "../components/UI/Cards/CardButtons";
 import ContentCard from "../components/UI/Cards/ContentCard";
 import Tabs from "../components/UI/TabPanels/Tabs";
 import GlobalSearch from "../components/UI/Form/GlobalSearch.vue";
@@ -214,20 +229,82 @@ export default defineComponent({
 		AjaxBar,
 		Tabs,
 		ContentCard,
-
 		GlobalSearch,
 		Drawer,
 	},
 	props: ["id"],
 	setup(props) {
 		const store = useStore();
+		const router = useRouter();
 		const progress = ref(null);
 		const actionsLinks = ref(["Edit"]);
 		const child = ref([]);
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
+		const globalTagsList = ref(null);
 
+		const chosenNodeID = ref("");
+		const goToID = async (node) => {
+			chosenNodeID.value = await node.id;
+			router.push(`/teams/${node.id}`);
+			store.dispatch("appDomain/fetchDomainById", `${node.id}`);
+			store.getters["appDomain/allDomaines"];
+			console.log("chosenNodeID: ", chosenNodeID.value);
+			console.log("props.id: ", props.id);
+		};
+		const menu = ref(null);
+		const getMenuData = async () => {
+			await store.dispatch("appDomain/fetchDomainesTree");
+			const allDomainTree = computed(
+				() => store.getters["appDomain/allDomainesTree"]
+			);
+			return (menu.value = [
+				{
+					id: allDomainTree?.value?.ID,
+					parentID: allDomainTree?.value?.ParentID,
+					label: allDomainTree?.value?.Name,
+					avatar: allDomainTree?.value?.Logo,
+					handler: (node) => goToID(node),
+					children: allDomainTree?.value?.Childs?.map((item) => {
+						return {
+							id: item?.ID,
+							parentID: item?.ParentID,
+							label: item?.Name,
+							avatar: item?.Logo,
+							handler: (item) => goToID(item),
+							children: item?.Childs?.map((subItem) => {
+								return {
+									id: subItem?.ID,
+									parentID: subItem?.ParentID,
+									label: subItem?.Name,
+									avatar: subItem?.Logo,
+									handler: (subItem) => goToID(subItem),
+									children: subItem?.Childs?.map((subLastItem) => {
+										return {
+											id: subLastItem?.ID,
+											parentID: subLastItem?.ParentID,
+											label: subLastItem?.Name,
+											avatar: subLastItem?.Logo,
+											handler: (subLastItem) => goToID(subLastItem),
+										};
+									}),
+								};
+							}),
+						};
+					}),
+				},
+			]);
+		};
+		getMenuData();
+		console.log("details page menu.value: ", menu);
+		const getAllTags = async () => {
+			await store.dispatch("appTags/fetchAllTags");
+			let data = computed(() => store.getters["appTags/allTags"]);
+			console.log("globalTagsList.value: ", globalTagsList.value);
+			return (globalTagsList.value = data.value);
+		};
+		getAllTags();
 		const editMode = ref(false);
 		const showButtons = ref(false);
 		const showDraggable = ref(false);
@@ -235,12 +312,12 @@ export default defineComponent({
 		const status1 = ref([]);
 		const status2 = ref([]);
 
-		const toggleEdit = () => {
-			console.log("Edit Me");
-			showButtons.value = !showButtons.value;
-			showDraggable.value = false;
-			editMode.value = false;
-		};
+		// const toggleEdit = () => {
+		// 	console.log("Edit Me");
+		// 	showButtons.value = !showButtons.value;
+		// 	showDraggable.value = false;
+		// 	editMode.value = false;
+		// };
 
 		const OnNew = () => {
 			console.log("OnNew Function");
@@ -262,7 +339,7 @@ export default defineComponent({
 			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			progress.value = child.value.length;
-			return (child.value = await data.value.sort());
+			return (child.value = await data.value);
 		};
 		getData();
 		console.log("child data: ", child);
@@ -271,6 +348,9 @@ export default defineComponent({
 			child,
 			actionsLinks,
 			Drawer,
+			menu,
+			chosenNodeID,
+			goToID,
 			filter,
 			filterRef,
 			resetFilter() {
@@ -279,7 +359,7 @@ export default defineComponent({
 			},
 			editMode,
 			showButtons,
-			toggleEdit,
+			// toggleEdit,
 			showDraggable,
 			status1,
 			status2,
@@ -288,13 +368,7 @@ export default defineComponent({
 			OnEdit,
 			OnSave,
 			OnDelete,
-			tagsList2: [
-				{ ID: 10, Name: "Tag 10" },
-				{ ID: 11, Name: "Tag 11" },
-				{ ID: 12, Name: "Tag 12" },
-				{ ID: 14, Name: "Tag 14" },
-				{ ID: 15, Name: "Tag 15" },
-			],
+			globalTagsList,
 
 			handler1(mutationRecords) {
 				status1.value = [];
@@ -379,7 +453,7 @@ export default defineComponent({
 .q-drawer
   z-index: -1 !important
 .drop-target
-  min-height: 140px
+  min-height: 160px
   width: 100%
   min-width: 200px
   background-color: transparent
@@ -421,6 +495,9 @@ export default defineComponent({
 .orange
   background-color: orange
 
+.action_card__item
+  display: flex
+  flex-direction: row
 .q-manu
   display: none !important
 </style>

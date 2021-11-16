@@ -5,7 +5,7 @@
 				<div class="row items-center no-wrap">
 					<div>
 						<q-img
-							src="https://cdn.quasar.dev/img/parallax2.jpg"
+							:src="logo"
 							alt=""
 							style="
 								height: 38px;
@@ -50,7 +50,7 @@
 <script>
 export default {
 	props: {
-		logo: { type: String },
+		logo: { type: String, default: "https://cdn.quasar.dev/img/parallax2.jpg" },
 		name: { type: String },
 		role: { type: String },
 		description: { type: String },
