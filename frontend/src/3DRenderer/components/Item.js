@@ -178,6 +178,7 @@ class Item {
 
 		const vertexShader = `
     varying vec2 vUv;
+    uniform vec3 uColor;
     void main()	{
       vUv = uv;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
@@ -186,30 +187,30 @@ class Item {
 		console.log('item color', this.color)
 		const fragmentShader = `
 		//#extension GL_OES_standard_derivatives : enable
-
+		precision mediump float;
     varying vec2 vUv;
     uniform float thickness;
+    uniform vec3 uColor;
 
     float edgeFactor(vec2 p){
     	vec2 grid = abs(fract(p - 0.5) - 0.5) / fwidth(p) / thickness;
-  		return min(grid.x, grid.y);
+  		return min(min(grid.x, grid.y), 1.0);
     }
 
     void main() {
 
       float a = edgeFactor(vUv);
 
-      vec3 c = mix(vec3(0), vec3(${this.color.r},${this.color.g},${this.color.b}), a);
+      vec3 c = mix( vec3(0),uColor,  a);
 
       gl_FragColor = vec4(c, 1.0);
     }
   `;
 	const material = new ShaderMaterial({
-
 			uniforms: {
-				color: this.color,
+				uColor: {type: 'c', value: this.color},
 				thickness: {
-					value: 1
+					value: 1.5
 				}
 			},
 			vertexShader: vertexShader,
