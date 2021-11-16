@@ -67,13 +67,7 @@ class Item {
 		let ctx = this.sideCanvas.getContext("2d");
 
 		// Background
-		ctx.beginPath();
-		ctx.rect(0, 0, width, height);
-		ctx.fillStyle = this.colorHex;
-		ctx.fill();
-		ctx.fillStyle = "rgba(0, 0, 0, .1)";
-		ctx.stroke()
-		ctx.closePath();
+
 		// Label Type
 		/*ctx.font = '70pt Calibri';
 		ctx.textAlign = 'left';
@@ -121,6 +115,14 @@ class Item {
 
 		tctx.fill();
 		tctx.closePath()*/
+		tctx.beginPath();
+		tctx.rect(0, 0, this.topCanvas.width-2,
+		this.topCanvas.height -2);
+		tctx.fillStyle = this.colorHex;
+		tctx.fill();
+		tctx.fillStyle = "rgba(0, 0, 0, .1)";
+		tctx.stroke()
+		tctx.closePath();
 
 
 		tctx.textAlign = 'left';
@@ -184,7 +186,7 @@ class Item {
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
     }
   `;
-		console.log('item color', this.color)
+		console.log('item color', this.color, this.color.toArray())
 		const fragmentShader = `
 		//#extension GL_OES_standard_derivatives : enable
 		precision mediump float;
