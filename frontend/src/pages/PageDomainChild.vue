@@ -305,6 +305,15 @@ export default defineComponent({
 			return (globalTagsList.value = data.value);
 		};
 		getAllTags();
+
+		const dropTag = async () => {
+			await store.dispatch(
+				"appDomain/addDomainTag",
+				"5695617e-2f08-4c47-a0d3-dccb35ef98b3",
+				"b6099a6f-7c5e-4b4b-b10a-30a3f6931d54"
+			);
+			store.getters["appTags/allTags"];
+		};
 		const editMode = ref(false);
 		const showButtons = ref(false);
 		const showDraggable = ref(false);
@@ -411,15 +420,19 @@ export default defineComponent({
 
 			onDragLeave(e) {
 				e.target.classList.remove("drag-enter");
+				console.log("onDragLeave");
 			},
 
 			onDragOver(e) {
 				e.preventDefault();
+				console.log("onDragOver");
 			},
 
 			onDrop(e) {
 				e.preventDefault();
+				console.log("onDrop");
 
+				dropTag();
 				// don't drop on other draggables
 				if (e.target.draggable === true) {
 					return;
@@ -427,7 +440,6 @@ export default defineComponent({
 
 				const draggedId = e.dataTransfer.getData("text");
 				const draggedEl = document.getElementById(draggedId);
-
 				// check if original parent node
 				if (draggedEl.parentNode === e.target) {
 					e.target.classList.remove("drag-enter");
