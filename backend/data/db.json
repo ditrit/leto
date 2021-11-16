@@ -1,0 +1,326 @@
+{
+  "domain": [
+  
+    {
+      "name": "team2",
+      "teamParent": "GTS",
+      "shortDescription": "Short",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos sapiente officiis modi at sunt excepturi expedita sint? Sed quibusda recusandae alias error harum maxime adipisci amet laborum. Perspiciatis minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur ugiat, temporibus enim commodi iusto libero magni deleniti quod quam consequuntur! Commodi minima excepturi repudiandae velit hic maxime doloremque. Quaerat provident commodi consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam quasi aliquam eligendi, placeat qui corporis!",
+      "test1": "",
+      "id": 5
+    }
+  ],
+  "teams": [
+    {
+      "id": 1,
+      "icon": "group",
+      "headline": "Teams",
+      "textContent": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos sapiente officiis modi at sunt excepturi expedita sint? Sed quibusda recusandae alias error harum maxime adipisci amet laborum. Perspiciatis minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur ugiat, temporibus enim commodi iusto libero magni deleniti quod quam consequuntur! Commodi minima excepturi repudiandae velit hic maxime doloremque. Quaerat provident commodi consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam quasi aliquam eligendi, placeat qui corporis!",
+      "child": {
+        "id": 1,
+        "icon": "group",
+        "headline": "Groupe SG / BDDF",
+        "subTitle": "Banque de détail SG France",
+        "logo": "https://cdn.quasar.dev/img/parallax2.jpg",
+        "tags": ["Tag One", "Tag Two", "Tag Three", "Tag Four", "Tag Five"],
+        "textContent": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem"
+      }
+    }
+  ],
+  "products": [
+    {
+      "id": 2,
+      "icon": "apps",
+      "headline": "Products",
+      "textContent": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos sapiente officiis modi at sunt excepturi expedita sint? Sed quibusda recusandae alias error harum maxime adipisci amet laborum. Perspiciatis minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur ugiat, temporibus enim commodi iusto libero magni deleniti quod quam consequuntur! Commodi minima excepturi repudiandae velit hic maxime doloremque. Quaerat provident commodi consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam quasi aliquam eligendi, placeat qui corporis!"
+    }
+  ],
+  "libraries": [
+    {
+      "id": 3,
+      "icon": "library_books",
+      "headline": "Libraries",
+      "textContent": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos sapiente officiis modi at sunt excepturi expedita sint? Sed quibusda recusandae alias error harum maxime adipisci amet laborum. Perspiciatis minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur ugiat, temporibus enim commodi iusto libero magni deleniti quod quam consequuntur! Commodi minima excepturi repudiandae velit hic maxime doloremque. Quaerat provident commodi consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam quasi aliquam eligendi, placeat qui corporis!"
+    }
+  ],
+  "dashboard": [
+    {
+      "id": 4,
+      "icon": "dashboard",
+      "headline": "Dashboard",
+      "textContent": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur."
+    }
+  ],
+  "users": [
+    {
+      "email": "Brahim@gmail.com",
+      "password": "$2a$10$rDg3fTNYTMkh.eCO/FwWgeq3s6O3dV2LTruAqlLhlw.UckwJtyNoC",
+      "name": "Brahim",
+      "id": 1
+    },
+    {
+      "email": "Sabine@gmail.com",
+      "password": "$2a$10$.o2ToxwtCbnd5mjl9lmH2uKT9TInnskFTKf8bMSjCUwfSxB.0L38m",
+      "name": "Sabine",
+      "id": 2
+    },
+    {
+      "email": "Sophia@gmail.com",
+      "password": "$2a$10$J2nSmV5tjaEmTDDe8PZFfe5WltSgOo2gD3URiqUYgPKaKvrtrc.vC",
+      "name": "Sophia",
+      "id": 3
+    },
+    {
+      "email": "Anouk@gmail.com",
+      "password": "$2a$10$FnyqrxK.H5/UZNTAcbbJKeECdiBpx0rnoz7l6/G7F00IbrTlLB5I2",
+      "name": "Anouk",
+      "id": 4
+    },
+    {
+      "email": "Romain@gmail.com",
+      "password": "$2a$10$/rlOHJ3Z0LgQ9vgvDF3vTuS8SVj2wUctEOEREq1OtBERa.C03Uo8e",
+      "name": "Romain",
+      "id": 5
+    }
+  ],
+  "login": [],
+  "logout": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 4
+    },
+    {
+      "id": 5
+    },
+    {
+      "id": 6
+    }
+  ],
+  "sourceSideBar": [
+    {
+      "id": 1,
+      "caption": "Parent Item one",
+      "icon": "code",
+      "attr": "Parentone",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Child Item one",
+          "icon": "code",
+          "attr": "childone"
+        },
+        {
+          "id": 2,
+          "caption": "Child Item two",
+          "icon": "code",
+          "attr": "childtwo"
+        },
+        {
+          "id": 3,
+          "caption": "Child Item Three",
+          "icon": "code",
+          "attr": "childthree"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "caption": "Parent Item two",
+      "icon": "code",
+      "attr": "Parenttwo",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Child Item one",
+          "icon": "code",
+          "attr": "childone"
+        },
+        {
+          "id": 2,
+          "caption": "Child Item two",
+          "icon": "code",
+          "attr": "childtwo"
+        },
+        {
+          "id": 3,
+          "caption": "Child Item Three",
+          "icon": "code",
+          "attr": "childthree"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "caption": "Parent Item three",
+      "icon": "code",
+      "attr": "Parentthree",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Child Item one",
+          "icon": "code",
+          "attr": "childone"
+        },
+        {
+          "id": 2,
+          "caption": "Child Item two",
+          "icon": "code",
+          "attr": "childtwo"
+        },
+        {
+          "id": 3,
+          "caption": "Child Item Three",
+          "icon": "code",
+          "attr": "childthree"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "caption": "Parent Item four",
+      "icon": "code",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Element one",
+          "icon": "wifi"
+        },
+        {
+          "id": 2,
+          "caption": "Element two",
+          "icon": "wifi"
+        },
+        {
+          "id": 3,
+          "caption": "Element three",
+          "icon": "wifi"
+        }
+      ]
+    }
+  ],
+  "modelSideBar": [
+    {
+      "id": 1,
+      "caption": "Servers",
+      "icon": "dns",
+      "attr": "servers",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Serveur de fichier",
+          "icon": "folder",
+          "attr": "server1"
+        },
+        {
+          "id": 2,
+          "caption": "Serveur d’impression",
+          "icon": "print",
+          "attr": "server2"
+        },
+        {
+          "id": 3,
+          "caption": "Serveur d’application",
+          "icon": "apps",
+          "attr": "server3"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "caption": "Routers",
+      "icon": "router",
+      "attr": "routers",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Element one",
+          "icon": "router",
+          "attr": "router1"
+        },
+        {
+          "id": 2,
+          "caption": "Element two",
+          "icon": "router",
+          "attr": "router2"
+        },
+        {
+          "id": 3,
+          "caption": "Element three",
+          "icon": "router",
+          "attr": "router3"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "caption": "Database",
+      "icon": "storage",
+      "attr": "storages",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Element one",
+          "icon": "storage",
+          "attr": "storage1"
+        },
+        {
+          "id": 2,
+          "caption": "Element two",
+          "icon": "storage",
+          "attr": "storage2"
+        },
+        {
+          "id": 3,
+          "caption": "Element three",
+          "icon": "storage",
+          "attr": "storage3"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "caption": "Network",
+      "icon": "wifi",
+      "children": [
+        {
+          "id": 1,
+          "caption": "Element one",
+          "icon": "wifi"
+        },
+        {
+          "id": 2,
+          "caption": "Element two",
+          "icon": "wifi"
+        },
+        {
+          "id": 3,
+          "caption": "Element three",
+          "icon": "wifi"
+        },
+        {
+          "id": 4,
+          "caption": "Element four",
+          "icon": "wifi"
+        },
+        {
+          "id": 5,
+          "caption": "Element five",
+          "icon": "wifi"
+        },
+        {
+          "id": 5,
+          "caption": "Element six",
+          "icon": "wifi"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+// app global css in Sass form
+:root 
+  --box-shadow: 0 0 8px rgba(0,0,0,.3) 
+  --light-gray : lightgray
+  --gray: #424242
+  
+html, body
+    width: 100%
+    height: 100%
+    overflow: hidden
+
+.page_padding
+  padding-left:100px
+
+.q-drawer 
+  position: absolute
+  top: 0
+  bottom: 0
+  background: transparent
+
+.domain_page__child .menuStyle
+  background: #eeeeee
+  border-radius: 0
+  z-index: 5000 !important
+  position: absolute
+  top: -54px
+  left: -28px
+
+.menuStyle
+  background: #eeeeee
+  border-radius: 0
+  z-index: 5000 !important
+  position: absolute
+  top: 0
+
+
+.menuDrawer aside
+  z-index: 1 !important
+
+.cards_wrapper
+  display: flex
+  justify-content: flex-start
+  flex-wrap: wrap
+  list-style: none
+  li
+    background: white
+    padding: 8px 12px
+    border-radius: 12px
+    margin-top: 8px
+    margin-right: 8px
+    box-shadow: var(--box-shadow)
+
+.cards_tags_wrapper  
+  display: flex
+  justify-content: flex-start
+  flex-wrap: wrap
+  align-content: center
+  list-style: none
+  li
+    display: flex
+    justify-content: center
+    align-items: center
+    min-width: 80px
+    background: white
+    padding: 6px 8px
+    border-radius: 12px
+    margin-top: 8px
+    margin-right: 8px
+    box-shadow: var(--box-shadow)
+
+.card_default
+  background: transparent !important 
+  border: none
+  border-right: 1px solid var(--light-gray)
+  border-radius:  0
+  padding-right: 8px
+
+.card_tags_default
+  background: transparent !important 
+  margin-left: 8px
+  margin-right: 8px
+  width: 300px
+  border: none
+
+.item_card
+  width: 270px
+  padding: 4px 6px
+  border: none !important
+  max-width: 230px
+  box-shadow: var(--box-shadow) !important
+  
+// .q-card
+//   width: 800px !important
+
+.q-card__section--vert
+  padding: 6px
+
+.q-dialog .button_actions__container
+  display: none !important
+
+.content_wrapper
+  display: flex
+  margin-bottom: 60px
+
+  & img 
+    width: 100px
+    border: 2px solid white
+    height: 100%
+
+.card_actions 
+  min-width: 42px
+  min-height: 39px
+  margin-top: 10px !important
+  margin-left: -50px !important
+
+.q-position-engine 
+  margin-top: 20px !important
+  margin-left: -41px !important
+
+.panel_wrapper 
+  & .q-tab-panel
+    height: 100%
+    width: 100%
+    min-height: 300px !important
+
+  & .q-tabs__content--align-justify .q-tab 
+    flex: 1 1 auto
+    border: 1px solid var(--light-gray)
+
+.q-tab__indicator 
+  height: 4px !important
+  margin-bottom: -1px
+
+.domain_page__child
+  &.hiddenMenu
+    transform: translateX(238px)
+
+  &.visibleMenu 
+.q-textarea.q-field--dense .q-field__control, .q-textarea.q-field--dense .q-field__native 
+  min-height: 300px !important
+
+.q-tree__node 
+  cursor: pointer

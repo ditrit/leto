@@ -1,0 +1,57 @@
+{
+	"name": "leto-quasar",
+	"version": "1.1.0",
+	"description": "User interface for the Leto project based on Vuejs/Quasar",
+	"productName": "Quasar App",
+	"author": "BS",
+	"private": true,
+	"scripts": {
+		"lint": "eslint --ext .js,.vue ./",
+		"test": "echo \"No test specified\" && exit 0",
+		"dev": "quasar dev",
+		"build": "quasar build",
+		"start": "quasar serve",
+		"build:pwa": "quasar build -m pwa"
+	},
+	"dependencies": {
+		"@intlify/vue-i18n-loader": "^3.3.0",
+		"@quasar/extras": "^1.0.0",
+		"axios": "^0.21.1",
+		"core-js": "^3.6.5",
+		"json-bigint": "^1.0.0",
+		"json-server": "^0.16.3",
+		"monaco-editor": "^0.25.2",
+		"quasar": "^2.0.0",
+		"three": "^0.130.1",
+		"vue-i18n": "^9.2.0-beta.16",
+		"vue-threejs": "^0.2.0-alpha.1",
+		"vuex": "^4.0.1",
+		"vuex-persistedstate": "^4.0.0",
+		"yaml-loader": "^0.6.0"
+	},
+	"devDependencies": {
+		"@babel/eslint-parser": "^7.13.14",
+		"@quasar/app": "^3.0.0",
+		"eslint": "^7.14.0",
+		"eslint-config-prettier": "^8.1.0",
+		"eslint-plugin-vue": "^7.0.0",
+		"eslint-webpack-plugin": "^2.4.0",
+		"json-server-auth": "^2.1.0"
+	},
+	"browserslist": [
+		"last 10 Chrome versions",
+		"last 10 Firefox versions",
+		"last 4 Edge versions",
+		"last 7 Safari versions",
+		"last 8 Android versions",
+		"last 8 ChromeAndroid versions",
+		"last 8 FirefoxAndroid versions",
+		"last 10 iOS versions",
+		"last 5 Opera versions"
+	],
+	"engines": {
+		"node": ">= 12.22.1",
+		"npm": ">= 6.13.4",
+		"yarn": ">= 1.21.1"
+	}
+}
