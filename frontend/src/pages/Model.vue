@@ -25,6 +25,7 @@
 			<q-drawer
 				v-model="drawer"
 				@hide="makeMenuVisible"
+				side="left"
 				overlay
 				show-if-above
 				:width="250"
@@ -46,12 +47,15 @@
 						</q-input>
 					</div>
 				</div>
-				<q-tree
-					:nodes="typeTree"
-					node-key="type"
-					label-key="name"
-					v-model:selected="newItemType"
-				></q-tree>
+				<q-list>
+				<q-expansion-item expand-separator label="Components">
+					<model-tree :items="dataItems" node-key="type" label-key="type" @item:selected="addComponent" ></model-tree>
+				</q-expansion-item>
+				<q-expansion-item label="Services" expand-separator>
+					<model-tree :items="dataItems" node-key="type" label-key="type" @item:selected="addService"></model-tree>
+				</q-expansion-item>
+				</q-list>
+
 			</q-drawer>
 			<q-page-container>
 				<div class="row">
@@ -165,9 +169,10 @@
 import { ref, computed } from "vue";
 import getDataItems from "../composables/getDataItems";
 import ModelEdit from "../components/3dModals/ModelEdit.vue";
+import ModelTree from "components/3dModals/ModelTree";
 
 export default {
-	components: { ModelEdit },
+	components: {ModelTree, ModelEdit },
 	setup() {
 		/*const { path, dataItems, error, fetchData } = getDataItems();
 		fetchData("http://localhost:3000/modelSideBar");*/
@@ -413,21 +418,33 @@ export default {
 			const item = this.items.find((i) => i.id === newVal);
 			if (item) this.selectItem(item);
 		},
-		newItemType(newVal) {
+		/*newItemType(newVal) {
 			const item = this.dataItems.find((i) => i.type === newVal);
 			if (item) {
 				this.addItem(item);
 			}
-		},
+		},*/
 	},
 	methods: {
+		addComponent(key) {
+			const item = this.dataItems.find((i) => i.type === key);
+			if (item) {
+				this.addItem(item);
+			}
+		},
+		addService(key) {
+			const item = this.dataItems.find((i) => i.type === key);
+			if (item) {
+				this.addItem(item);
+			}
+		},
 		createKey() {
 			return (
 				Math.random().toString(36).substring(2, 15) +
 				Math.random().toString(36).substring(2, 15)
 			);
 		},
-		selectItem(item) {
+		selectItem(itemId) {
 			if (this.selectedItem) {
 				this.selectedItem.isSelected = false;
 				this.selectedItemKey = null;
