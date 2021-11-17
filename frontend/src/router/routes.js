@@ -21,7 +21,7 @@ const routes = [
 			{
 				path: "model",
 				component: () => import("pages/Model.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 			{
 				path: "source",
