@@ -35,7 +35,6 @@
 <script>
 import EssentialTools from "components/EssentialTools";
 import AccountSettings from "../components/UI/Profil/AccountSettings";
-
 import MainHeader from "../components/UI/Headers/MainHeader";
 // import GlobalSearch from "../components/UI/Form/GlobalSearch";
 
@@ -111,7 +110,6 @@ export default {
 };
 </script>
 <style lang="sass">
-
 
 .full_height
 	height: inherit
