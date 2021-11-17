@@ -36,7 +36,7 @@
 import EssentialTools from "components/EssentialTools";
 import AccountSettings from "../components/UI/Profil/AccountSettings";
 
-import MainHeader from "../components/UI/Headers/mainHeader";
+import MainHeader from "../components/UI/Headers/MainHeader";
 // import GlobalSearch from "../components/UI/Form/GlobalSearch";
 
 const linksToolsList = [
