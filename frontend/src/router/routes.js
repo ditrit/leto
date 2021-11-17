@@ -10,6 +10,14 @@ const routes = [
 				component: () => import("pages/PageTeams.vue"),
 				meta: { requiresAuth: true },
 			},
+
+			{
+				path: "teams/:id",
+				component: () => import("pages/PageDomainChild.vue"),
+				props: true,
+				meta: { requiresAuth: true },
+			},
+
 			{
 				path: "model",
 				component: () => import("pages/Model.vue"),
@@ -55,15 +63,6 @@ const routes = [
 			{
 				path: "/login",
 				component: () => import("pages/Login.vue"),
-				// beforeEnter: (to, from, next) => {
-				// 	const router = useRouter();
-
-				// 	console.log("middleware:", from);
-				// 	console.log(store);
-				// 	if (store.getters["auth/authenticated"]) {
-				// 		next(router.push("/register"));
-				// 	}
-				// },
 			},
 			{
 				path: "/register",

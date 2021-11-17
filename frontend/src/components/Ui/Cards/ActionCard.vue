@@ -1,11 +1,11 @@
 <template>
-	<div class="q-pa-sm row q-gutter-sm wrap">
-		<q-card flat bordered class="my-card bg-grey-1">
+	<div class="row wrap">
+		<q-card flat bordered class="item_card shadow-10">
 			<q-card-section>
 				<div class="row items-center no-wrap">
 					<div>
 						<q-img
-							src="https://cdn.quasar.dev/img/parallax2.jpg"
+							:src="logo"
 							alt=""
 							style="
 								height: 38px;
@@ -19,19 +19,21 @@
 						<div class="text-subtitle2">{{ name }}</div>
 						<div class="text-h8">{{ role }}</div>
 					</div>
-
-					<div class="col-auto hidden">
+					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>
 									<q-item clickable>
-										<q-item-section>Remove Card</q-item-section>
+										<q-item-section class="action_card__item">
+											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
+											Remove Card</q-item-section
+										>
 									</q-item>
 									<q-item clickable>
-										<q-item-section>Send Feedback</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Share</q-item-section>
+										<q-item-section class="action_card__item">
+											<q-icon name="edit" size="1.5em" class="q-mr-sm" /> Update
+											Card</q-item-section
+										>
 									</q-item>
 								</q-list>
 							</q-menu>
@@ -39,237 +41,16 @@
 					</div>
 				</div>
 			</q-card-section>
-
 			<q-card-section>
 				{{ description }}
 			</q-card-section>
 		</q-card>
-		<!-- <q-card flat bordered class="my-card bg-grey-1">
-			<q-card-section>
-				<div class="row items-center no-wrap">
-					<div>
-						<q-img
-							src="https://cdn.quasar.dev/img/parallax2.jpg"
-							alt=""
-							style="
-								height: 38px;
-								width: 38px;
-								border-radius: 50%;
-								margin-right: 10px;
-							"
-						/>
-					</div>
-					<div class="col">
-						<div class="text-subtitle2">Name</div>
-						<div class="text-h8">Role</div>
-					</div>
-
-					<div class="col-auto">
-						<q-btn color="grey-7" round flat icon="more_vert">
-							<q-menu cover auto-close>
-								<q-list>
-									<q-item clickable>
-										<q-item-section>Remove Card</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Send Feedback</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Share</q-item-section>
-									</q-item>
-								</q-list>
-							</q-menu>
-						</q-btn>
-					</div>
-				</div>
-			</q-card-section>
-
-			<q-card-section>
-				{{ lorem }}
-			</q-card-section>
-		</q-card>
-		<q-card flat bordered class="my-card bg-grey-1">
-			<q-card-section>
-				<div class="row items-center no-wrap">
-					<div>
-						<q-img
-							src="https://cdn.quasar.dev/img/parallax2.jpg"
-							alt=""
-							style="
-								height: 38px;
-								width: 38px;
-								border-radius: 50%;
-								margin-right: 10px;
-							"
-						/>
-					</div>
-					<div class="col">
-						<div class="text-subtitle2">Name</div>
-						<div class="text-h8">Role</div>
-					</div>
-
-					<div class="col-auto">
-						<q-btn color="grey-7" round flat icon="more_vert">
-							<q-menu cover auto-close>
-								<q-list>
-									<q-item clickable>
-										<q-item-section>Remove Card</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Send Feedback</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Share</q-item-section>
-									</q-item>
-								</q-list>
-							</q-menu>
-						</q-btn>
-					</div>
-				</div>
-			</q-card-section>
-
-			<q-card-section>
-				{{ lorem }}
-			</q-card-section>
-		</q-card>
-		<q-card flat bordered class="my-card bg-grey-1">
-			<q-card-section>
-				<div class="row items-center no-wrap">
-					<div>
-						<q-img
-							src="https://cdn.quasar.dev/img/parallax2.jpg"
-							alt=""
-							style="
-								height: 38px;
-								width: 38px;
-								border-radius: 50%;
-								margin-right: 10px;
-							"
-						/>
-					</div>
-					<div class="col">
-						<div class="text-subtitle2">Name</div>
-						<div class="text-h8">Role</div>
-					</div>
-
-					<div class="col-auto">
-						<q-btn color="grey-7" round flat icon="more_vert">
-							<q-menu cover auto-close>
-								<q-list>
-									<q-item clickable>
-										<q-item-section>Remove Card</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Send Feedback</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Share</q-item-section>
-									</q-item>
-								</q-list>
-							</q-menu>
-						</q-btn>
-					</div>
-				</div>
-			</q-card-section>
-
-			<q-card-section>
-				{{ lorem }}
-			</q-card-section>
-		</q-card>
-		<q-card flat bordered class="my-card bg-grey-1">
-			<q-card-section>
-				<div class="row items-center no-wrap">
-					<div>
-						<q-img
-							src="https://cdn.quasar.dev/img/parallax2.jpg"
-							alt=""
-							style="
-								height: 38px;
-								width: 38px;
-								border-radius: 50%;
-								margin-right: 10px;
-							"
-						/>
-					</div>
-					<div class="col">
-						<div class="text-subtitle2">Name</div>
-						<div class="text-h8">Role</div>
-					</div>
-
-					<div class="col-auto">
-						<q-btn color="grey-7" round flat icon="more_vert">
-							<q-menu cover auto-close>
-								<q-list>
-									<q-item clickable>
-										<q-item-section>Remove Card</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Send Feedback</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Share</q-item-section>
-									</q-item>
-								</q-list>
-							</q-menu>
-						</q-btn>
-					</div>
-				</div>
-			</q-card-section>
-
-			<q-card-section>
-				{{ lorem }}
-			</q-card-section>
-		</q-card>
-		<q-card flat bordered class="my-card bg-grey-1">
-			<q-card-section>
-				<div class="row items-center no-wrap">
-					<div>
-						<q-img
-							src="https://cdn.quasar.dev/img/parallax2.jpg"
-							alt=""
-							style="
-								height: 38px;
-								width: 38px;
-								border-radius: 50%;
-								margin-right: 10px;
-							"
-						/>
-					</div>
-					<div class="col">
-						<div class="text-subtitle2">Name</div>
-						<div class="text-h8">Role</div>
-					</div>
-
-					<div class="col-auto">
-						<q-btn color="grey-7" round flat icon="more_vert">
-							<q-menu cover auto-close>
-								<q-list>
-									<q-item clickable>
-										<q-item-section>Remove Card</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Send Feedback</q-item-section>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>Share</q-item-section>
-									</q-item>
-								</q-list>
-							</q-menu>
-						</q-btn>
-					</div>
-				</div>
-			</q-card-section>
-
-			<q-card-section>
-				{{ lorem }}
-			</q-card-section>
-		</q-card> -->
 	</div>
 </template>
 <script>
 export default {
 	props: {
-		logo: { type: String },
+		logo: { type: String, default: "https://cdn.quasar.dev/img/parallax2.jpg" },
 		name: { type: String },
 		role: { type: String },
 		description: { type: String },
@@ -282,8 +63,7 @@ export default {
 };
 </script>
 <style lang="sass" scoped>
-.my-card
-  width: 158px
-.q-card__section--vert
-  padding: 6px
+.action_card__item
+	display: flex
+	flex-direction: row
 </style>

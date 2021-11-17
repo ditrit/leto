@@ -4,19 +4,6 @@
 			<div class="leftside text-secondary md">
 				<q-img src="../assets/logoBest2.svg" width="30%" />
 				<span> Orchestrateur TOSTA étendu </span>
-				<!-- <ul v-for="user in all" :key="user.id">
-					<li>
-						{{ user.id }}
-					</li>
-					<li>
-						{{ user.email }}
-					</li>
-					<li>
-						{{ user.password }}
-					</li>
-
-					<button @click="deleteTheUser(user.id)">Delete User</button>
-				</ul> -->
 			</div>
 			<div class="rigthside">
 				<LoginNav />
@@ -26,34 +13,11 @@
 	</div>
 </template>
 <script>
-import { computed } from "vue";
-import { mapActions } from "vuex";
-import { useStore } from "vuex";
-import LoginForm from "../components/Form/LoginForm.vue";
-import LoginNav from "../components/Navigation/LoginNav.vue";
+import LoginForm from "../components/UI/Form/LoginForm";
+import LoginNav from "../components/UI/Navigation/LoginNav";
 
 export default {
 	components: { LoginForm, LoginNav },
-	methods: {
-		...mapActions("appUsers", ["fetchappUsers"]),
-	},
-	created() {
-		// this.fetchappUsers();
-	},
-
-	setup() {
-		const store = useStore();
-		const all = computed(() => store.state.appUsers.logedUsers);
-
-		const deleteTheUser = (id) => {
-			return store.dispatch("appUsers/removeUser", id);
-		};
-
-		return {
-			all,
-			deleteTheUser,
-		};
-	},
 };
 </script>
 

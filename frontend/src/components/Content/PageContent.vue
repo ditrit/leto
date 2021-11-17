@@ -1,14 +1,22 @@
 <template>
 	<div class="teams_header">
-		<div class="row min_heigth__200">
+		<div class="row">
 			<div class="col col-md-8">
 				<div class="flex">
 					<q-icon :name="icon" size="30px" class="q-ml-md q-mr-sm" />
-					<p class="text-bold text-h6">{{ headline }}</p>
+					<div class="title_container">
+						<p class="text-bold text-h6">{{ headline }}</p>
+						<p v-if="subTitle" class="text-subtitle3 text-grey-8">
+							{{ subTitle }}
+						</p>
+					</div>
 				</div>
-				<p class="q-ml-md">
-					{{ textContent }}
-				</p>
+				<div class="content_wrapper">
+					<img v-if="logo" src="logo" alt="logo" />
+					<p class="q-ml-md">
+						{{ textContent }}
+					</p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -21,25 +29,38 @@ export default defineComponent({
 	props: {
 		icon: {
 			type: String,
-			default: "groups",
+			required: true,
 		},
 		headline: {
 			type: String,
-			default: "Teams",
+			required: true,
 		},
 		textContent: {
 			type: String,
-			default: "Lorem ipsum dolor sit amet consectetur adipisicing elit...",
+			required: true,
 		},
+		subTitle: { type: String, required: false },
+		logo: { type: String, required: false },
 	},
 });
 </script>
 
 <style lang="sass" scoped>
+
 .teams_header
   padding-top: 60px
   padding-left: 30px
+  margin-bottom: 60px
 
-.min_heigth__200
-  height: 200px !important
+.title_container
+  display: flex
+  flex-direction: column
+  align-items: center
+  & p:nth-child(2)
+    margin-top: -16px
+
+.content_wrapper
+  & img
+    width: 60px
+    height: 60px
 </style>

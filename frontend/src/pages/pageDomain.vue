@@ -1,7 +1,7 @@
 <template>
-	<q-layout class="bg-grey">
+	<q-layout>
 		<AjaxBar />
-		<q-page padding class="flex bg-gray">
+		<q-page class="flex bg-gray">
 			<PageContent
 				v-for="item in dataItems"
 				:key="item.ID"
@@ -18,7 +18,7 @@
 
 <script>
 import { useStore } from "vuex";
-import AjaxBar from "../components/Progress/AjaxBar.vue";
+import AjaxBar from "../components/UI/Progress/AjaxBar";
 import getDataItems from "../composables/getDataItems";
 import PageContent from "../components/Content/PageContent.vue";
 

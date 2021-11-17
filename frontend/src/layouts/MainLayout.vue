@@ -1,32 +1,12 @@
 <template>
-	<q-layout view="lhh lpR fFf" class="bg-gray">
-		<q-header reveal class="bg-white text-primary">
-			<q-toolbar class="justify-between">
-				<div class="row">
-					<q-tabs
-						caps
-						active-color="secondary"
-						indicator-color="transparent"
-						class="text-primary"
-						v-model="tab"
-					>
-						<q-route-tab
-							v-for="item in essentialTablinks"
-							:key="item.id"
-							:name="item.name"
-							:label="item.label"
-							:to="item.link"
-							:data-id="item.name"
-							exact
-						/>
-					</q-tabs>
-				</div>
-				<global-search />
-				<AccountSettings />
-			</q-toolbar>
-		</q-header>
+	<q-layout view="lhh lpR fFf" class="bg-grey-4 q-pr-md">
+		<MainHeader style="z-index: 1">
+			<AccountSettings />
+			<!-- <GlobalSearch /> -->
+		</MainHeader>
 
 		<q-drawer
+			elevated
 			show-if-above
 			side="left"
 			bordered
@@ -34,36 +14,30 @@
 			class="bg-primary centered"
 		>
 			<q-box class="absolute-top text-secondary centered">
-				<!-- <q-toolbar-title class="centered q-pa-md">Leto</q-toolbar-title> -->
 				<q-img
 					class="q-mt-sm"
 					src="../assets/logoBest2.svg"
-					style="height: 5%; width: 55%"
+					style="height: 5%; width: 55%; z-index: 5000 !important"
 				></q-img>
 			</q-box>
-
 			<EssentialTools
 				v-for="link in linksToolsList"
 				:key="link.title"
 				v-bind="link"
 			/>
 		</q-drawer>
-
-		<q-page-container class="bg-gray">
+		<q-page>
 			<router-view />
-		</q-page-container>
+		</q-page>
 	</q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import EssentialTools from "components/EssentialTools";
+import AccountSettings from "../components/UI/Profil/AccountSettings";
 
-import EssentialTools from "components/EssentialTools.vue";
-import AccountSettings from "../components/Profil/AccountSettings.vue";
-import GlobalSearch from "../components/Form/GlobalSearch.vue";
-
-// import MainMenu from "components/MainMenu";
-// import Accordion from "components/TabsPanels/Accordion";
+import MainHeader from "../components/UI/Headers/mainHeader";
+// import GlobalSearch from "../components/UI/Form/GlobalSearch";
 
 const linksToolsList = [
 	{
@@ -117,61 +91,28 @@ const essentialTablinks = [
 		link: "/source",
 	},
 ];
-const mainMenuList = [
-	{
-		title: "Fichier",
-		link: "",
-	},
-	{
-		title: "Edition",
-		link: "",
-	},
-	{
-		title: "Selection",
-		link: "",
-	},
-	{
-		title: "Affichage",
-		link: "",
-	},
-	{
-		title: "",
-		link: "",
-	},
-];
-const profil = [
-	{
-		id: 1,
-		firstName: "Bs",
-		lastName: "Sr",
-		notification: 2,
-		image: "https://avatars.githubusercontent.com/u/7687826?s=60&v=4",
-	},
-];
 
-export default defineComponent({
+export default {
 	name: "MainLayout",
 	components: {
 		EssentialTools,
 		AccountSettings,
-		GlobalSearch,
-		// Accordion,
+		MainHeader,
+
+		// GlobalSearch,
 	},
 
 	setup() {
-		const leftDrawerOpen = ref(false);
 		return {
-			leftDrawerOpen,
 			essentialTablinks,
-			toggleLeftDrawer() {
-				leftDrawerOpen.value = !leftDrawerOpen.value;
-			},
 			linksToolsList,
 		};
 	},
-});
+};
 </script>
 <style lang="sass">
+
+
 .full_height
 	height: inherit
 
@@ -185,4 +126,8 @@ export default defineComponent({
 	justify-content: center
 	box-sizing: border-box
 	overflow-x: hidden
+
+.teams_buttons__container
+	display: flex
+	flex-direction: column
 </style>

@@ -1,112 +1,150 @@
 <template>
-	<q-layout class="bg-grey">
+	<q-layout class="page_padding">
 		<AjaxBar />
-		<q-page padding class="flex bg-gray">
+		<Drawer>
+			<template v-slot:drawerFilter>
+				<div class="search_container">
+					<q-input ref="filterRef" filled v-model="filter" label="Search">
+						<template v-slot:append>
+							<q-icon
+								v-if="filter !== ''"
+								name="clear"
+								class="cursor-pointer"
+								@click="resetFilter"
+							/>
+							<q-icon
+								v-else
+								name="search"
+								class="cursor-pointer"
+								@click="resetFilter"
+							/>
+						</template>
+					</q-input>
+					<div></div>
+				</div>
+			</template>
+			<template v-slot:drawerMenu>
+				<div class="q-pa-md q-gutter-sm" v-if="menu">
+					<q-tree :nodes="menu" node-key="label" />
+				</div>
+			</template>
+		</Drawer>
+		<q-page class="bg-gray">
 			<PageContent
 				v-for="item in dataItems"
 				:key="item.id"
 				:icon="item.icon"
-				:headline="item.headline"
+				:headline="$t('teams')"
 				:textContent="item.textContent"
 			/>
-
-			<div
-				class="teams_buttons__container"
-				v-for="btn in buttonsList"
-				:key="btn.title"
-			>
-				<BtnAddNew
-					v-show="dataItems.length === 1"
-					:title="btn.title"
-					:class="btn.styles"
-					outline
-					round
-					:color="btn.color"
-					:icon="btn.icon"
-					:href="btn.link"
-					@click="oepnDialog = true"
-				/>
-				<!-- <CreateItems /> -->
-				<q-dialog v-model="oepnDialog">
-					<q-card style="width: 700px; max-width: 80vw">
-						<q-card-section>
-							<div class="text-h6">Create New Team</div>
-						</q-card-section>
-						<q-card-section class="q-pt-none">
-							<!-- <AddNewTeam /> -->
+			<div class="buttons_wrapper">
+				<div class="teams_buttons__container">
+					<Modal :oepnDialog="oepnDialog">
+						<template v-slot:ModalHeadline> Create new Team </template>
+						<template v-slot:ModalBody>
 							<CreationFormStepper />
-						</q-card-section>
-						<q-card-actions align="right" class="bg-white text-teal">
-							<q-btn flat label="Next" v-close-popup />
-						</q-card-actions>
-					</q-card>
-				</q-dialog>
+						</template>
+					</Modal>
+				</div>
 			</div>
 		</q-page>
 	</q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import Modal from "../components/UI/Dialogs/Modal.vue";
 import getDataItems from "../composables/getDataItems";
-
-import BtnAddNew from "../components/Buttons/BtnAddNew.vue";
-import PageContent from "../components/Content/PageContent.vue";
-import CreationFormStepper from "../components/Stepper/CreationFormStepper.vue";
-import AjaxBar from "../components/Progress/AjaxBar.vue";
-
-// import CreateItems from "../components/Dialogs/CreateItems.vue";
-const buttonsList = [
-	{
-		title: "Add new Team",
-		styles: "q-mt-sm",
-		color: "primary",
-		icon: "add",
-		link: "/",
-	},
-	{
-		title: "Add to Favorite",
-		styles: "q-mt-sm",
-		color: "primary",
-		icon: "favorite",
-		link: "#/favorite",
-	},
-	{
-		title: "Root Team",
-		styles: "q-mt-sm",
-		color: "primary",
-		icon: "add",
-		link: "#/teams",
-	},
-];
+import Drawer from "../components/UI/Drawers/Drawer.vue";
+import PageContent from "../components/Content/PageContent";
+import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
+import AjaxBar from "../components/UI/Progress/AjaxBar";
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { BtnAddNew, PageContent, CreationFormStepper, AjaxBar },
-
+	components: { PageContent, Modal, CreationFormStepper, AjaxBar, Drawer },
+	props: ["nodeID"],
 	setup() {
+		const router = useRouter();
+		const filter = ref("");
+		const filterRef = ref(null);
+		const chosenNodeID = ref("");
+		const goToID = (node) => {
+			chosenNodeID.value = node.id;
+			router.push(`/teams/${node.id}`);
+			console.log("chosenNodeID: ", chosenNodeID.value);
+		};
+
 		const oepnDialog = ref(false);
 		const { path, dataItems, error, fetchData } = getDataItems();
 		const data = fetchData("http://localhost:3000/teams");
 		dataItems.value = data;
 
+		const store = useStore();
+		const menu = ref(null);
+		const getMenuData = async () => {
+			await store.dispatch("appDomain/fetchDomainesTree");
+			const allDomainTree = computed(
+				() => store.getters["appDomain/allDomainesTree"]
+			);
+			return (menu.value = [
+				{
+					id: allDomainTree?.value?.ID,
+					parentID: allDomainTree?.value?.ParentID,
+					label: allDomainTree?.value?.Name,
+					avatar: allDomainTree?.value?.Logo,
+					handler: (node) => goToID(node),
+					children: allDomainTree?.value?.Childs?.map((item) => {
+						return {
+							id: item?.ID,
+							parentID: item?.ParentID,
+							label: item?.Name,
+							avatar: item?.Logo,
+							handler: (item) => goToID(item),
+							children: item?.Childs?.map((subItem) => {
+								return {
+									id: subItem?.ID,
+									parentID: subItem?.ParentID,
+									label: subItem?.Name,
+									avatar: subItem?.Logo,
+									handler: (subItem) => goToID(subItem),
+									children: subItem?.Childs?.map((subLastItem) => {
+										return {
+											id: subLastItem?.ID,
+											parentID: subLastItem?.ParentID,
+											label: subLastItem?.Name,
+											avatar: subLastItem?.Logo,
+											handler: (subLastItem) => goToID(subLastItem),
+										};
+									}),
+								};
+							}),
+						};
+					}),
+				},
+			]);
+		};
+		getMenuData();
+		console.log("menu.value: ", menu);
+
 		return {
 			progress: dataItems.length,
 			path,
+			menu,
 			dataItems,
 			error,
-			buttonsList,
 			oepnDialog,
+			filter,
+			filterRef,
+			chosenNodeID,
+			goToID,
+			resetFilter() {
+				filter.value = "";
+				filterRef.value.focus();
+			},
 		};
 	},
 });
 </script>
-<style lang="sass" scoped>
-
-.teams_buttons__container
-  display: flex
-  flex-direction: row
-  justify-content: space-evenly
-  align-items: flex-start
-  flex: 1
-</style>

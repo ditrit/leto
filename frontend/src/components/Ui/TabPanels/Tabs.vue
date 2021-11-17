@@ -1,82 +1,78 @@
 <template>
-	<div class="q-pa-md">
-		<div class="col col-md-12 q-gutter-y-md" style="max-width: 600px">
-			<q-card>
-				<q-tabs
-					v-model="tab"
-					class="text-grey"
-					active-color="primary"
-					indicator-color="primary"
-					align="justify"
-					narrow-indicator
-				>
-					<q-tab name="tags" label="Tags" />
-					<q-tab name="team_members" label="Team members" />
-					<q-tab name="libraries" label="Libraries" />
-					<q-tab name="environnements" label="Environnements" />
-				</q-tabs>
+	<div class="col col-md-12">
+		<q-card>
+			<q-tabs
+				v-model="tab"
+				class="text-grey"
+				active-color="primary"
+				indicator-color="primary"
+				align="justify"
+				narrow-indicator
+			>
+				<q-tab v-if="tags" dense name="tags" label="Tags" icon="sell" />
+				<q-tab dense name="products" label="Products" icon="apps" />
+				<q-tab dense name="team_members" label="Team members" icon="group" />
+				<q-tab dense name="libraries" label="Libraries" icon="library_books" />
+				<q-tab dense name="environnements" label="Environnements" icon="code" />
+			</q-tabs>
+			<q-separator />
 
-				<q-separator />
+			<q-tab-panels v-model="tab" animated>
+				<q-tab-panel name="tags">
+					<ul class="cards_wrapper">
+						<li v-for="(tag, index) in allTags" :key="index">{{ tag }}</li>
+					</ul>
+				</q-tab-panel>
 
-				<q-tab-panels v-model="tab" animated>
-					<q-tab-panel name="tags">
-						<ul class="tags_default">
-							<li>Tag1</li>
-							<li>Tag2</li>
-							<li>Tag3</li>
-							<li>Tag4</li>
-							<li>Tag5</li>
-							<li>Tag6</li>
-							<li>Tag7</li>
-							<li>Tag8</li>
-							<li>Tag9</li>
-							<li>Tag10</li>
-							<li>Tag11</li>
-							<li>Tag12</li>
-							<li>Tag13</li>
-							<li>Tag14</li>
-							<li>Tag15</li>
-							<li>Tag16</li>
-						</ul>
-					</q-tab-panel>
+				<q-tab-panel name="products">
+					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+						<ActionCard
+							v-for="product in teamProducts"
+							:key="product.ID"
+							:name="product.Name"
+							:description="product.ShortDescription"
+							:logo="product.Logo"
+						/>
+					</div>
+				</q-tab-panel>
+				<q-tab-panel name="team_members">
+					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+						<ActionCard
+							v-for="member in teamMembers"
+							:key="member.ID"
+							:name="member.User.LastName"
+							:role="member.Role.Name"
+							:description="member.ShortDescription"
+							:logo="member.Logo"
+						/>
+					</div>
+				</q-tab-panel>
 
-					<q-tab-panel name="team_members">
-						<div class="row items-center wrap">
-							<ActionCard
-								v-for="member in teamNembers"
-								:key="member.id"
-								:name="member.name"
-								:role="member.role"
-								:description="member.description"
-							/>
-						</div>
-					</q-tab-panel>
+				<q-tab-panel name="libraries">
+					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+						<ActionCard
+							v-for="librarie in teamLibraries"
+							:key="librarie.ID"
+							:name="librarie.Name"
+							:description="librarie.ShortDescription"
+							:logo="librarie.Logo"
+						/>
+					</div>
+				</q-tab-panel>
 
-					<q-tab-panel name="libraries">
-						<div class="row items-center wrap">
-							<ActionCard
-								env
-								v-for="librarie in teamLibraries"
-								:key="librarie.id"
-								:name="librarie.name"
-								:description="librarie.description"
-							/>
-						</div>
-					</q-tab-panel>
-
-					<q-tab-panel name="environnements">
-						<div class="row items-center wrap">
-							<ActionCard
-								v-for="env in teamEnvironnements"
-								:key="env.id"
-								:name="env.name"
-								:description="env.description"
-							/>
-						</div>
-					</q-tab-panel>
-				</q-tab-panels>
-			</q-card>
-		</div>
+				<q-tab-panel name="environnements">
+					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+						<ActionCard
+							v-for="env in teamEnvironnements"
+							:key="env.ID"
+							:name="env.Name"
+							:description="env.ShortDescription"
+							:logo="env.Logo"
+						/>
+					</div>
+				</q-tab-panel>
+			</q-tab-panels>
+		</q-card>
 	</div>
 </template>
 <script>
@@ -85,146 +81,120 @@ import ActionCard from "../Cards/ActionCard.vue";
 
 export default {
 	components: { ActionCard },
+	props: {
+		allTags: {
+			type: [],
+			default: ["tag-1", "tag-2", "tag-3"],
+		},
+		teamMembers: {
+			type: [],
+			default: [
+				{
+					id: 0,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Brahim",
+					role: "Admin",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 1,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Sabine",
+					role: "Dev",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 2,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Sophia",
+					role: "DevOps",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 3,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Gabriel",
+					role: "DevOps",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 4,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Anouk",
+					role: "DevOps",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+			],
+		},
+		teamProducts: {
+			type: [],
+		},
+		teamLibraries: {
+			type: [],
+			default: [
+				{
+					id: 0,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Library 1",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 1,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Library 2",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 2,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Library 3",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+			],
+		},
+		teamEnvironnements: {
+			type: [],
+			default: [
+				{
+					id: 0,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Env 1",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 1,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Env 2",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+				{
+					id: 2,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Env 3",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+				},
+			],
+		},
+	},
 	setup() {
-		const teamNembers = ref([
-			{
-				id: 0,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Brahim",
-				role: "Admin",
-				description: "Ceci est une description",
-			},
-			{
-				id: 1,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Sabine",
-				role: "Dev",
-				description: "Ceci est une description",
-			},
-			{
-				id: 2,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Sophia",
-				role: "DevOps",
-				description: "Ceci est une description",
-			},
-			{
-				id: 3,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Gabriel",
-				role: "Admin",
-				description: "Ceci est une description",
-			},
-			{
-				id: 4,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Anouk",
-				role: "Dev",
-				description: "Ceci est une description",
-			},
-			{
-				id: 5,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Dada",
-				role: "Dev2",
-				description: "Ceci est une long description",
-			},
-		]);
-		const teamLibraries = ref([
-			{
-				id: 0,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 1",
-				description: "Ceci est une description",
-			},
-			{
-				id: 1,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 2",
-				description: "Ceci est une description",
-			},
-			{
-				id: 2,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 3",
-				description: "Ceci est une description",
-			},
-			{
-				id: 3,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 4",
-				description: "Ceci est une description",
-			},
-			{
-				id: 4,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 5",
-				description: "Ceci est une description",
-			},
-			{
-				id: 5,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Library 6",
-				description: "Ceci est une long description",
-			},
-		]);
-		const teamEnvironnements = ref([
-			{
-				id: 0,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 1",
-				description: "Ceci est une description",
-			},
-			{
-				id: 1,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 2",
-				description: "Ceci est une description",
-			},
-			{
-				id: 2,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 3",
-				description: "Ceci est une description",
-			},
-			{
-				id: 3,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 4",
-				description: "Ceci est une description",
-			},
-			{
-				id: 4,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 5",
-				description: "Ceci est une description",
-			},
-			{
-				id: 5,
-				logo: "https://cdn.quasar.dev/img/parallax2.jpg",
-				name: "Env 6",
-				description: "Ceci est une long description",
-			},
-		]);
 		return {
 			tab: ref("tags"),
-			teamNembers,
-			teamLibraries,
-			teamEnvironnements,
 		};
 	},
 };
 </script>
 <style lang="sass" scoped>
-.tags_default
-  display: flex
-  justify-content: flex-start
-  flex-wrap: wrap
-  list-style: none
-  li
-    background: beige
-    padding: 8px 20px
-    border-radius: 12px
-    margin-top: 8px
-    margin-right: 8px
+.q-tab-panel
+	padding: 25px
 </style>

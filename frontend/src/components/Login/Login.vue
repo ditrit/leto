@@ -26,9 +26,9 @@
 
 <script>
 import { ref } from "vue";
-import LoginForm from "../Form/LoginForm.vue";
-import RegistrationForm from "../Form/RegistrationForm.vue";
-import SocialConnect from "./SocialConnect.vue";
+import LoginForm from "../UI/Form/LoginForm.vue";
+import RegistrationForm from "../UI/Form/RegistrationForm";
+import SocialConnect from "../Login/SocialConnect.vue";
 export default {
 	components: { LoginForm, RegistrationForm, SocialConnect },
 	setup() {

@@ -1,1 +1,1 @@
-export const loggedIn = (state) => !!state.user;
+export const user = (state) => state.user;
