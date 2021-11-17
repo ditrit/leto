@@ -66,8 +66,6 @@ export default {
 </script>
 <style lang="sass">
 
-
-
 .hiddenMenu
 	transform: translateX(278px)
 
