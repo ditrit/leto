@@ -1,7 +1,24 @@
 <template>
-	<q-layout class="page_padding">
+	<q-layout container style="height: 100vh" view="lHh lpR lFf">
+
+		<q-header class="bg-white">
+			<q-toolbar>
+				<div class="row">
+					<q-btn
+						flat
+						@click="drawer = !drawer"
+						round
+						color="primary"
+						icon="menu"
+					/>
+				</div>
+				<AccountSettings></AccountSettings>
+
+			</q-toolbar>
+		</q-header>
+
 		<AjaxBar />
-		<Drawer>
+		<Drawer v-model="drawer">
 			<template v-slot:drawerFilter>
 				<div class="search_container">
 					<q-input ref="filterRef" filled v-model="filter" label="Search">
@@ -29,25 +46,27 @@
 				</div>
 			</template>
 		</Drawer>
-		<q-page class="bg-gray">
-			<PageContent
-				v-for="item in dataItems"
-				:key="item.id"
-				:icon="item.icon"
-				:headline="$t('teams')"
-				:textContent="item.textContent"
-			/>
-			<div class="buttons_wrapper">
-				<div class="teams_buttons__container">
-					<Modal :oepnDialog="oepnDialog">
-						<template v-slot:ModalHeadline> Create new Team </template>
-						<template v-slot:ModalBody>
-							<CreationFormStepper />
-						</template>
-					</Modal>
+		<q-page-container class="bg-gray">
+			<q-page :style-fn="pageSizeTweak">
+				<PageContent
+					v-for="item in teamData"
+					:key="item.id"
+					:icon="item.icon"
+					:headline="$t('teams')"
+					:textContent="$t('text_content')"
+				/>
+				<div class="buttons_wrapper">
+					<div class="teams_buttons__container">
+						<Modal :oepnDialog="oepnDialog">
+							<template v-slot:ModalHeadline> {{ $t('add_team') }} </template>
+							<template v-slot:ModalBody>
+								<CreationFormStepper />
+							</template>
+						</Modal>
+					</div>
 				</div>
-			</div>
-		</q-page>
+			</q-page>
+		</q-page-container>
 	</q-layout>
 </template>
 
@@ -61,12 +80,32 @@ import Drawer from "../components/UI/Drawers/Drawer.vue";
 import PageContent from "../components/Content/PageContent";
 import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
+import AccountSettings from "components/UI/Profil/AccountSettings";
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { PageContent, Modal, CreationFormStepper, AjaxBar, Drawer },
+	components: {AccountSettings, PageContent, Modal, CreationFormStepper, AjaxBar, Drawer },
 	props: ["nodeID"],
 	setup() {
+		const teamData = ref([
+			{
+				id: 1,
+				icon: "group",
+				headline: "Teamssss",
+				textContent:
+					"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos sapiente officiis modi at sunt excepturi expedita sint? Sed quibusda recusandae alias error harum maxime adipisci amet laborum. Perspiciatis minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur ugiat, temporibus enim commodi iusto libero magni deleniti quod quam consequuntur! Commodi minima excepturi repudiandae velit hic maxime doloremque. Quaerat provident commodi consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam quasi aliquam eligendi, placeat qui corporis!",
+				child: {
+					id: 1,
+					icon: "group",
+					headline: "Groupe SG / BDDF",
+					subTitle: "Banque de détail SG France",
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					tags: ["Tag One", "Tag Two", "Tag Three", "Tag Four", "Tag Five"],
+					textContent:
+						"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem",
+				},
+			},
+		]);
 		const router = useRouter();
 		const filter = ref("");
 		const filterRef = ref(null);
@@ -78,12 +117,10 @@ export default defineComponent({
 		};
 
 		const oepnDialog = ref(false);
-		const { path, dataItems, error, fetchData } = getDataItems();
-		const data = fetchData("http://localhost:3000/teams");
-		dataItems.value = data;
 
 		const store = useStore();
 		const menu = ref(null);
+		const drawer = ref(true);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
 			const allDomainTree = computed(
@@ -130,11 +167,11 @@ export default defineComponent({
 		console.log("menu.value: ", menu);
 
 		return {
-			progress: dataItems.length,
-			path,
+			teamData,
+			progress: teamData.value.length,
+
 			menu,
-			dataItems,
-			error,
+			drawer,
 			oepnDialog,
 			filter,
 			filterRef,
@@ -146,5 +183,10 @@ export default defineComponent({
 			},
 		};
 	},
+	methods: {
+		pageSizeTweak(offset) {
+			return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
+		}
+	}
 });
 </script>
