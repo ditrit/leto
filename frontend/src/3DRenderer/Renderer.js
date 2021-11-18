@@ -242,7 +242,7 @@ class Renderer  extends EventEmitter{
 	updateItem(item) {
 		const rendererItem = this.items.find(i => i.id === item.id)
 		if (!rendererItem)
-			return this.addItem(item)
+			return //this.addItem(item)
 		if (item.parentWasUpdated) {
 			this.grid.needsUpdate = true
 			this.needsLinkUpdate = true
