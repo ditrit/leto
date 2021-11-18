@@ -130,5 +130,5 @@ export default {
 
 #container
 	width: 100%
-	height: 80vh
+	height: 95vh
 </style>

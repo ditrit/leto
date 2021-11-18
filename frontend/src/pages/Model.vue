@@ -2,26 +2,26 @@
 	<q-layout container view="hHh lpR fFf" class="global bg-grey-3">
 		<q-header>
 			<q-toolbar>
-					<q-btn
-						flat
-						@click="drawer = !drawer"
-						round
-						dense
-						icon="menu"
-					/>
-					<q-toolbar-title>
-						<!--<q-avatar>
-							<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
-						</q-avatar>
-						Title-->
-					</q-toolbar-title>
-					<q-btn
-						flat
-						@click="rightDrawer = !rightDrawer"
-						round
-						dense
-						icon="menu"
-					/>
+				<q-btn
+					flat
+					@click="drawer = !drawer"
+					round
+					dense
+					icon="menu"
+				/>
+				<q-toolbar-title>
+					<!--<q-avatar>
+						<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+					</q-avatar>
+					Title-->
+				</q-toolbar-title>
+				<q-btn
+					flat
+					@click="rightDrawer = !rightDrawer"
+					round
+					dense
+					icon="menu"
+				/>
 			</q-toolbar>
 		</q-header>
 		<q-drawer
@@ -34,20 +34,7 @@
 			bordered
 			class="bg-grey-3"
 		>
-			<div class="q-mt-md" style="max-width: 350px">
-				<div class="q-gutter-md">
-					<q-input
-						v-model="search"
-						debounce="500"
-						label="Search"
-						class="search_input q-mb-lg q-pa-md"
-					>
-						<template v-slot:append>
-							<q-icon name="search" />
-						</template>
-					</q-input>
-				</div>
-			</div>
+
 			<q-list>
 				<q-expansion-item expand-separator label="Components">
 					<model-tree :items="componentItems" node-key="type" label-key="type" @item:selected="addComponent" ></model-tree>
@@ -59,21 +46,16 @@
 
 		</q-drawer>
 		<q-page-container>
-			<div class="row">
-				<div class="col">
-					<ModelEdit
-						:items="items"
-						:links="links"
-						@item:select="selectItem"
-						@item:link="onItemLink"
-						@item:updateParent="updateItemParent"
-					/>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col col-1"></div>
-				<div class="col col-4"></div>
-			</div>
+			<q-page :style-fn="pageSizeTweak">
+
+						<ModelEdit
+							:items="items"
+							:links="links"
+							@item:select="selectItem"
+							@item:link="onItemLink"
+							@item:updateParent="updateItemParent"
+						/>
+			</q-page>
 		</q-page-container>
 		<q-drawer
 			v-model="rightDrawer"
@@ -85,7 +67,7 @@
 			bordered
 			class="bg-grey-3"
 		>
-			<div class="q-mt-md">
+			<div >
 				<!--<div class="q-gutter-md">
 					<q-input
 						v-model="search"
@@ -430,6 +412,9 @@ export default {
 		},*/
 	},
 	methods: {
+		pageSizeTweak(offset) {
+			return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
+		},
 		addComponent(key) {
 			const item = this.dataItems.find((i) => i.type === key);
 			if (item) {
@@ -508,9 +493,8 @@ export default {
 	margin-left: 100px
 
 .global
-	height: 95vh
+	height: 100vh
 	overflow: hidden
-	min-height: 95vh
 .menuStyle
 	background: #eeeeee
 	border-radius: 0
