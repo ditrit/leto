@@ -49,10 +49,10 @@
 				</div>
 				<q-list>
 				<q-expansion-item expand-separator label="Components">
-					<model-tree :items="dataItems" node-key="type" label-key="type" @item:selected="addComponent" ></model-tree>
+					<model-tree :items="componentItems" node-key="type" label-key="type" @item:selected="addComponent" ></model-tree>
 				</q-expansion-item>
 				<q-expansion-item label="Services" expand-separator>
-					<model-tree :items="dataItems" node-key="type" label-key="type" @item:selected="addService"></model-tree>
+					<model-tree :items="serviceItems" node-key="type" label-key="type" @item:selected="addService"></model-tree>
 				</q-expansion-item>
 				</q-list>
 
@@ -360,6 +360,8 @@ export default {
 		const baseItems = computed(() => {
 			return items.value.filter((i) => !i.parentId);
 		});
+		const serviceItems = computed(() => dataItems.filter(i => i.nature === 'service'))
+		const componentItems = computed(() => dataItems.filter(i => i.nature !== 'service'))
 		const itemTree = computed(() => {
 			const localItems = JSON.parse(JSON.stringify(items.value));
 			const tree = [];
@@ -399,6 +401,8 @@ export default {
 			dataItems,
 			search,
 			items,
+			serviceItems,
+			componentItems,
 			links,
 			itemTree,
 			newLinkTarget,
