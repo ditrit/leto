@@ -49,11 +49,6 @@ const routes = [
 				component: () => import("pages/PageSettings.vue"),
 				meta: { requiresAuth: true },
 			},
-			{
-				path: "domain",
-				component: () => import("pages/PageDomain.vue"),
-				meta: { requiresAuth: true },
-			},
 		],
 	},
 	{

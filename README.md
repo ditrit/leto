@@ -56,16 +56,6 @@ git clone --branch swaggerAPI https://github.com/ditrit/gandalf.git
 Cd :
 
 ```bash
-cd gandalf
-```
-
-```bash
-git checkout swaggerAPI 
-```
-
-Cd :
-
-```bash
 cd gandalf/core/
 ```
 
