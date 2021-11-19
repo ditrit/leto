@@ -30,7 +30,6 @@
 
 <script>
 import EssentialTools from "components/EssentialTools";
-
 const linksToolsList = [
 	{
 		title: "",
@@ -69,7 +68,6 @@ const linksToolsList = [
 		link: "#/settings",
 	},
 ];
-
 export default {
 	name: "MainLayout",
 	components: {

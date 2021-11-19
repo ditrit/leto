@@ -49,11 +49,11 @@
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak" class="flex bg-gray">
 				<PageContent
-					v-for="item in dataItems"
+					v-for="item in librariesData"
 					:key="item.id"
 					:icon="item.icon"
-					:headline="item.headline"
-					:textContent="item.textContent"
+					:headline="$t('library')"
+					:textContent="$t('text_content')"
 				/>
 
 				<div
@@ -62,7 +62,7 @@
 					:key="btn.title"
 				>
 					<BtnAddNew
-						:title="btn.title"
+						:title="$t('add_library')"
 						:class="btn.styles"
 						outline
 						round
@@ -75,7 +75,7 @@
 					<q-dialog v-model="oepnDialog">
 						<q-card style="width: 700px; max-width: 80vw">
 							<q-card-section>
-								<div class="text-h6">Create New Product</div>
+								<div class="text-h6">{{ $t("create_library") }}</div>
 							</q-card-section>
 
 							<q-card-section class="q-pt-none">

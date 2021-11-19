@@ -3,6 +3,7 @@ export default {
 	add_team: "Nouvelle équipe",
 
 	dashboard: "Tableau de bord",
+	settings: "Paramètres",
 
 	products: "Produits",
 	add_product: "Nouveau produit",
