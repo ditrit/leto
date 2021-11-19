@@ -1,41 +1,20 @@
 <template>
-	<div class="menuDrawer">
-		<q-toolbar>
-			<div class="row">
-				<q-btn
-					flat
-					@click="drawer = !drawer"
-					round
-					color="white"
-					icon="menu"
-					:class="
-						drawer
-							? 'q-pa-md bg-primary menuStyle hiddenMenu'
-							: ' q-pa-md bg-primary menuStyle visibleMenu'
-					"
-				/>
-			</div>
-		</q-toolbar>
-		<q-drawer
-			v-model="drawer"
-			@hide="makeMenuVisible"
-			show-if-above
-			@click.capture="drawerClick"
-			:width="300"
-			:breakpoint="500"
-			bordered
-			class="bg-grey-3"
-			style="
-				transform: translateX(90px);
-				box-shadow: 1px 0 6px rgb(0, 0, 0, 0.5);
-				z-index: 1 !important;
-			"
-		>
-			<slot name="drawerFilter"></slot>
 
-			<slot name="drawerMenu"></slot>
-		</q-drawer>
-	</div>
+	<q-drawer
+		v-model="drawer"
+		@hide="makeMenuVisible"
+		show-if-above
+		@click.capture="drawerClick"
+		:width="300"
+		:breakpoint="500"
+		bordered
+		elevated
+		class="bg-grey-3"
+	>
+		<slot name="drawerFilter"></slot>
+
+		<slot name="drawerMenu"></slot>
+	</q-drawer>
 </template>
 <script>
 import { ref, computed } from "vue";
@@ -45,15 +24,21 @@ import { useStore } from "vuex";
 export default {
 	components: {},
 	props: {
+		modelValue: {
+			type: Boolean
+		},
 		drawerManuData: {
 			type: Array,
 		},
 	},
-	setup() {
+	setup(props, {emit}) {
 		const filter = ref("");
 		const filterRef = ref(null);
 		return {
-			drawer: ref(false),
+			drawer: computed({
+				get:() => props.modelValue,
+				set: (value) => emit('update:modelValue', value)
+			}),
 			filter,
 			filterRef,
 			resetFilter() {
@@ -64,7 +49,7 @@ export default {
 	},
 };
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
 
 .hiddenMenu
 	transform: translateX(278px)

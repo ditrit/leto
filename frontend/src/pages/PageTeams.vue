@@ -1,7 +1,24 @@
 <template>
-	<q-layout class="page_padding">
+	<q-layout container style="height: 100vh" view="lHh lpR lFf">
+
+		<q-header class="bg-white">
+			<q-toolbar>
+				<div class="row">
+					<q-btn
+						flat
+						@click="drawer = !drawer"
+						round
+						color="primary"
+						icon="menu"
+					/>
+				</div>
+				<AccountSettings></AccountSettings>
+
+			</q-toolbar>
+		</q-header>
+
 		<AjaxBar />
-		<Drawer>
+		<Drawer v-model="drawer">
 			<template v-slot:drawerFilter>
 				<div class="search_container">
 					<q-input ref="filterRef" filled v-model="filter" label="Search">
@@ -29,25 +46,28 @@
 				</div>
 			</template>
 		</Drawer>
-		<q-page class="bg-gray">
-			<PageContent
-				v-for="item in teamData"
-				:key="item.id"
-				:icon="item.icon"
-				:headline="$t('teams')"
-				:textContent="$t('text_content')"
-			/>
-			<div class="buttons_wrapper">
-				<div class="teams_buttons__container">
-					<Modal :oepnDialog="oepnDialog">
-						<template v-slot:ModalHeadline> {{ $t("add_team") }} </template>
-						<template v-slot:ModalBody>
-							<CreationFormStepper />
-						</template>
-					</Modal>
+
+		<q-page-container class="bg-gray">
+			<q-page :style-fn="pageSizeTweak">
+				<PageContent
+					v-for="item in teamData"
+					:key="item.id"
+					:icon="item.icon"
+					:headline="$t('teams')"
+					:textContent="$t('text_content')"
+				/>
+				<div class="buttons_wrapper">
+					<div class="teams_buttons__container">
+						<Modal :oepnDialog="oepnDialog">
+							<template v-slot:ModalHeadline> {{ $t('add_team') }} </template>
+							<template v-slot:ModalBody>
+								<CreationFormStepper />
+							</template>
+						</Modal>
+					</div>
 				</div>
-			</div>
-		</q-page>
+			</q-page>
+		</q-page-container>
 	</q-layout>
 </template>
 
@@ -60,10 +80,11 @@ import Drawer from "../components/UI/Drawers/Drawer.vue";
 import PageContent from "../components/Content/PageContent";
 import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
+import AccountSettings from "components/UI/Profil/AccountSettings";
 
 export default defineComponent({
 	name: "PageTeams",
-	components: { PageContent, Modal, CreationFormStepper, AjaxBar, Drawer },
+	components: {AccountSettings, PageContent, Modal, CreationFormStepper, AjaxBar, Drawer },
 	props: ["nodeID"],
 	setup() {
 		const teamData = ref([
@@ -99,6 +120,7 @@ export default defineComponent({
 
 		const store = useStore();
 		const menu = ref(null);
+		const drawer = ref(true);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
 			const allDomainTree = computed(
@@ -150,6 +172,10 @@ export default defineComponent({
 
 			menu,
 
+			drawer,
+
+
+
 			oepnDialog,
 			filter,
 			filterRef,
@@ -161,5 +187,10 @@ export default defineComponent({
 			},
 		};
 	},
+	methods: {
+		pageSizeTweak(offset) {
+			return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
+		}
+	}
 });
 </script>

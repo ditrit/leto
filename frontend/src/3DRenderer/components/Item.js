@@ -20,10 +20,11 @@ class Item {
 		this.height = 0.4
 		//this.width = 1
 		//this.depth = 1
+		this.baseColor = params.color
+		delete params.color
 		Object.assign(this, params)
 		this.links = []
-		this.color = new Color(params.color)
-		this.colorHex = params.color
+
 		this.grid = new Grid(/*this.items.filter(i => i.parentId === item.id)*/ [], this, true)
 		this.grid.gridSpacing = 1
 		this.img = null
@@ -36,10 +37,24 @@ class Item {
 			this.updateTexture()
 		})
 
-
-
-
 	}
+
+	get color() {
+
+		if (this.nature === 'service')
+			return new Color('#2cab4c')
+		if (this.nature === 'concrete')
+			return new Color('#00359f')
+		if (this.nature === 'abstract')
+			return new Color('#3a5b9d')
+
+		return new Color(this.baseColor)
+	}
+	get colorHex() {
+		return `#${this.color.getHexString()}`
+	}
+
+
 	get width() {
 		return this.grid.width
 	}
@@ -56,7 +71,7 @@ class Item {
 		this.topCanvas.height = this.topCanvas.width / 3
 		this.sideCanvas.width  = width;
 		this.sideCanvas.height = height;
-		console.log('item color', this.color)
+		console.log('item color', this.color, this.colorHex)
 		console.log('item name', this.name)
 
 
