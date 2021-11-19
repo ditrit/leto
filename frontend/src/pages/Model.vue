@@ -433,7 +433,7 @@ export default {
 				Math.random().toString(36).substring(2, 15)
 			);
 		},
-		selectItem(itemId) {
+		selectItem(item) {
 			if (this.selectedItem) {
 				this.selectedItem.isSelected = false;
 				this.selectedItemKey = null;
