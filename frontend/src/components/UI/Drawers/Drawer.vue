@@ -51,8 +51,6 @@ export default {
 </script>
 <style lang="sass" scoped>
 
-
-
 .hiddenMenu
 	transform: translateX(278px)
 

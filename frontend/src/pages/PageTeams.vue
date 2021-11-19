@@ -46,6 +46,7 @@
 				</div>
 			</template>
 		</Drawer>
+
 		<q-page-container class="bg-gray">
 			<q-page :style-fn="pageSizeTweak">
 				<PageContent
@@ -75,7 +76,6 @@ import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Modal from "../components/UI/Dialogs/Modal.vue";
-import getDataItems from "../composables/getDataItems";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import PageContent from "../components/Content/PageContent";
 import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
@@ -171,7 +171,11 @@ export default defineComponent({
 			progress: teamData.value.length,
 
 			menu,
+
 			drawer,
+
+
+
 			oepnDialog,
 			filter,
 			filterRef,

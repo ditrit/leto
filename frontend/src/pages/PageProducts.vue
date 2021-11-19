@@ -47,14 +47,15 @@
 				</ul>
 			</template>
 		</Drawer>
+
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak" class="flex bg-gray">
 				<PageContent
-					v-for="item in dataItems"
-					:key="item.id"
-					:icon="item.icon"
-					:headline="$t('products')"
-					:textContent="item.textContent"
+								v-for="item in productsData"
+				:key="item.id"
+				:icon="item.icon"
+				:headline="$t('products')"
+				:textContent="$t('text_content')"
 				/>
 
 				<div
@@ -94,17 +95,17 @@
 				</div>
 			</q-page>
 		</q-page-container>
+
 	</q-layout>
 </template>
 
 <script>
 import { defineComponent, ref } from "vue";
-import getDataItems from "../composables/getDataItems";
-import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
 import PageContent from "../components/Content/PageContent";
 import ProductCreationStepper from "../components/UI/Stepper/ProductCreationStepper";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
+
 import AccountSettings from "components/UI/Profil/AccountSettings";
 // import CreateItems from "../components/Dialogs/CreateItems.vue";
 const buttonsList = [
@@ -131,15 +132,19 @@ const buttonsList = [
 	},
 ];
 
+
 export default defineComponent({
 	name: "PageTeams",
 	components: {
+
 		AccountSettings,
 		BtnAddNew,
+
 		PageContent,
-		ProductCreationStepper,
+		// ProductCreationStepper,
 		AjaxBar,
 		Drawer,
+		// Modal,
 	},
 	methods: {
 		pageSizeTweak(offset) {
@@ -148,19 +153,33 @@ export default defineComponent({
 	},
 
 	setup() {
+
 		const drawer = ref(true)
+
+		const productsData = ref([
+			{
+				id: 2,
+				icon: "apps",
+				headline: "Products",
+				textContent:
+					"Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit, tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit, quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos sapiente officiis modi at sunt excepturi expedita sint? Sed quibusda recusandae alias error harum maxime adipisci amet laborum. Perspiciatis minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur ugiat, temporibus enim commodi iusto libero magni deleniti quod quam consequuntur! Commodi minima excepturi repudiandae velit hic maxime doloremque. Quaerat provident commodi consectetur veniam similique ad earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam quasi aliquam eligendi, placeat qui corporis!",
+			},
+		]);
+
 		const filter = ref("");
 		const filterRef = ref(null);
 		const oepnDialog = ref(false);
-		const { path, dataItems, error, fetchData } = getDataItems();
-		const data = fetchData("http://localhost:3000/products");
-		dataItems.value = data;
+
 		return {
+
 			path,
 			drawer,
 			dataItems,
 			error,
 			buttonsList,
+
+			productsData,
+
 			oepnDialog,
 			filter,
 			filterRef,

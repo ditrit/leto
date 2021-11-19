@@ -379,7 +379,7 @@ export default {
 
 		return {
 			drawer: ref(true),
-			rightDrawer: ref(true),
+			rightDrawer: ref(false),
 			dataItems,
 			search,
 			items,
