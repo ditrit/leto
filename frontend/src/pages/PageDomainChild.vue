@@ -1,6 +1,7 @@
 <template>
 	<q-layout class="domain_wrapper left_padding top_padding domain_page__child">
 		<AjaxBar />
+
 		<Drawer>
 			<template v-slot:drawerFilter>
 				<div class="search_container">

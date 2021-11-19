@@ -1,6 +1,5 @@
 <template>
 	<q-layout container style="height: 100vh" view="lHh lpR lFf">
-
 		<q-header class="bg-white">
 			<q-toolbar>
 				<div class="row">
@@ -13,7 +12,6 @@
 					/>
 				</div>
 				<AccountSettings></AccountSettings>
-
 			</q-toolbar>
 		</q-header>
 
@@ -58,14 +56,12 @@
 					:textContent="item.textContent"
 				/>
 
-
 				<div
 					class="teams_buttons__container"
 					v-for="btn in buttonsList"
 					:key="btn.title"
 				>
 					<BtnAddNew
-						v-show="dataItems.length === 1"
 						:title="btn.title"
 						:class="btn.styles"
 						outline
@@ -75,7 +71,7 @@
 						:href="btn.link"
 						@click="oepnDialog = true"
 					/>
-			
+
 					<q-dialog v-model="oepnDialog">
 						<q-card style="width: 700px; max-width: 80vw">
 							<q-card-section>
@@ -86,7 +82,6 @@
 								<ProductCreationStepper />
 							</q-card-section>
 
-
 							<q-card-actions align="right" class="bg-white text-teal">
 								<q-btn flat label="Next" v-close-popup />
 							</q-card-actions>
@@ -95,7 +90,6 @@
 				</div>
 			</q-page>
 		</q-page-container>
-
 	</q-layout>
 </template>
 
@@ -110,7 +104,6 @@ import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 
 import Modal from "../components/UI/Dialogs/Modal.vue";
-
 
 const buttonsList = [
 	{
@@ -139,12 +132,11 @@ const buttonsList = [
 export default defineComponent({
 	name: "PageLibraries",
 	components: {
-		// BtnAddNew,
+		BtnAddNew,
 		PageContent,
 
 		ProductCreationStepper,
 		AccountSettings,
-
 
 		AjaxBar,
 		Drawer,
@@ -167,9 +159,8 @@ export default defineComponent({
 		const oepnDialog = ref(false);
 
 		return {
-
 			librariesData,
-
+			drawer,
 			buttonsList,
 			oepnDialog,
 			filter,
@@ -182,8 +173,8 @@ export default defineComponent({
 	},
 	methods: {
 		pageSizeTweak(offset) {
-			return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
-		}
+			return { minHeight: offset ? `calc(100vh - ${offset}px)` : "100vh" };
+		},
 	},
 });
 </script>

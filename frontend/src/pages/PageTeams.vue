@@ -1,6 +1,5 @@
 <template>
 	<q-layout container style="height: 100vh" view="lHh lpR lFf">
-
 		<q-header class="bg-white">
 			<q-toolbar>
 				<div class="row">
@@ -12,8 +11,7 @@
 						icon="menu"
 					/>
 				</div>
-				<AccountSettings></AccountSettings>
-
+				<AccountSettings />
 			</q-toolbar>
 		</q-header>
 
@@ -59,7 +57,7 @@
 				<div class="buttons_wrapper">
 					<div class="teams_buttons__container">
 						<Modal :oepnDialog="oepnDialog">
-							<template v-slot:ModalHeadline> {{ $t('add_team') }} </template>
+							<template v-slot:ModalHeadline> {{ $t("add_team") }} </template>
 							<template v-slot:ModalBody>
 								<CreationFormStepper />
 							</template>
@@ -84,7 +82,14 @@ import AccountSettings from "components/UI/Profil/AccountSettings";
 
 export default defineComponent({
 	name: "PageTeams",
-	components: {AccountSettings, PageContent, Modal, CreationFormStepper, AjaxBar, Drawer },
+	components: {
+		AccountSettings,
+		PageContent,
+		Modal,
+		CreationFormStepper,
+		AjaxBar,
+		Drawer,
+	},
 	props: ["nodeID"],
 	setup() {
 		const teamData = ref([
@@ -169,13 +174,8 @@ export default defineComponent({
 		return {
 			teamData,
 			progress: teamData.value.length,
-
 			menu,
-
 			drawer,
-
-
-
 			oepnDialog,
 			filter,
 			filterRef,
@@ -189,8 +189,8 @@ export default defineComponent({
 	},
 	methods: {
 		pageSizeTweak(offset) {
-			return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
-		}
-	}
+			return { minHeight: offset ? `calc(100vh - ${offset}px)` : "100vh" };
+		},
+	},
 });
 </script>

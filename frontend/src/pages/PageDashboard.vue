@@ -1,6 +1,5 @@
 <template>
 	<q-layout container style="height: 100vh" view="lHh lpR lFf">
-
 		<q-header class="bg-white">
 			<q-toolbar>
 				<div class="row">
@@ -12,8 +11,7 @@
 						icon="menu"
 					/>
 				</div>
-				<AccountSettings></AccountSettings>
-
+				<AccountSettings />
 			</q-toolbar>
 		</q-header>
 
@@ -64,7 +62,6 @@
 				</Modal>
 			</q-page>
 		</q-page-container>
-
 	</q-layout>
 </template>
 
@@ -74,14 +71,19 @@ import { useStore } from "vuex";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import PageContent from "../components/Content/PageContent";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
-
 import AccountSettings from "components/UI/Profil/AccountSettings";
 
 export default {
-	components: { AjaxBar, PageContent, Modal, CreationFormStepperVue, Drawer, AccountSettings },
+	components: {
+		AjaxBar,
+		PageContent,
+		Drawer,
+		AccountSettings,
+	},
 
 	setup() {
 		const store = useStore();
+		const drawer = ref(false);
 		const dashboardData = ref([
 			{
 				id: 1,
@@ -112,18 +114,11 @@ export default {
 		};
 
 		return {
-
-			progress: dataItems.length,
-			path,
-			drawer,
-			dataItems,
-			error,
-
 			dashboardData,
 			progress: dashboardData.value.length,
-
 			user,
 			store,
+			drawer,
 			logout,
 			filter,
 			filterRef,
@@ -135,8 +130,8 @@ export default {
 	},
 	methods: {
 		pageSizeTweak(offset) {
-			return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
-		}
+			return { minHeight: offset ? `calc(100vh - ${offset}px)` : "100vh" };
+		},
 	},
 };
 </script>

@@ -1,6 +1,5 @@
 <template>
 	<q-layout container style="height: 100vh" view="lHh lpR lFf">
-
 		<q-header class="bg-white">
 			<q-toolbar>
 				<div class="row">
@@ -12,8 +11,7 @@
 						icon="menu"
 					/>
 				</div>
-				<AccountSettings></AccountSettings>
-
+				<AccountSettings />
 			</q-toolbar>
 		</q-header>
 
@@ -51,11 +49,11 @@
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak" class="flex bg-gray">
 				<PageContent
-								v-for="item in productsData"
-				:key="item.id"
-				:icon="item.icon"
-				:headline="$t('products')"
-				:textContent="$t('text_content')"
+					v-for="item in productsData"
+					:key="item.id"
+					:icon="item.icon"
+					:headline="$t('products')"
+					:textContent="$t('text_content')"
 				/>
 
 				<div
@@ -95,7 +93,6 @@
 				</div>
 			</q-page>
 		</q-page-container>
-
 	</q-layout>
 </template>
 
@@ -105,6 +102,7 @@ import PageContent from "../components/Content/PageContent";
 import ProductCreationStepper from "../components/UI/Stepper/ProductCreationStepper";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
+import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
 
 import AccountSettings from "components/UI/Profil/AccountSettings";
 // import CreateItems from "../components/Dialogs/CreateItems.vue";
@@ -132,11 +130,9 @@ const buttonsList = [
 	},
 ];
 
-
 export default defineComponent({
 	name: "PageTeams",
 	components: {
-
 		AccountSettings,
 		BtnAddNew,
 
@@ -148,14 +144,12 @@ export default defineComponent({
 	},
 	methods: {
 		pageSizeTweak(offset) {
-			return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
-		}
+			return { minHeight: offset ? `calc(100vh - ${offset}px)` : "100vh" };
+		},
 	},
 
 	setup() {
-
-		const drawer = ref(true)
-
+		const drawer = ref(false);
 		const productsData = ref([
 			{
 				id: 2,
@@ -171,15 +165,9 @@ export default defineComponent({
 		const oepnDialog = ref(false);
 
 		return {
-
-			path,
 			drawer,
-			dataItems,
-			error,
 			buttonsList,
-
 			productsData,
-
 			oepnDialog,
 			filter,
 			filterRef,
