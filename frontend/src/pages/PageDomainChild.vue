@@ -1,6 +1,6 @@
 <template>
 	<q-layout container style="height: 100vh" view="lHh lpR lFf">
-		<q-header class="bg-white">
+		<q-header class="bg-white main_header">
 			<q-toolbar>
 				<div class="row">
 					<q-btn
@@ -208,7 +208,7 @@ import Tabs from "../components/UI/TabPanels/Tabs";
 import GlobalSearch from "../components/UI/Form/GlobalSearch.vue";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-
+import { pageSizeTweak } from "../common/index";
 export default defineComponent({
 	name: "PageDomainChild",
 	components: {
@@ -218,11 +218,6 @@ export default defineComponent({
 		GlobalSearch,
 		Drawer,
 		AccountSettings,
-	},
-	methods: {
-		pageSizeTweak(offset) {
-			return { minHeight: offset ? `calc(100vh - ${offset}px)` : "100vh" };
-		},
 	},
 	props: ["id"],
 	setup(props) {
@@ -314,13 +309,6 @@ export default defineComponent({
 		const status1 = ref([]);
 		const status2 = ref([]);
 
-		// const toggleEdit = () => {
-		// 	console.log("Edit Me");
-		// 	showButtons.value = !showButtons.value;
-		// 	showDraggable.value = false;
-		// 	editMode.value = false;
-		// };
-
 		const OnNew = () => {
 			console.log("OnNew Function");
 			isNew.value = !isNew.value;
@@ -360,9 +348,9 @@ export default defineComponent({
 				filter.value = "";
 				filterRef.value.focus();
 			},
+			pageSizeTweak,
 			editMode,
 			showButtons,
-			// toggleEdit,
 			showDraggable,
 			status1,
 			status2,

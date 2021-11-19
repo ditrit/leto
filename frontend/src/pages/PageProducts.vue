@@ -1,6 +1,6 @@
 <template>
 	<q-layout container style="height: 100vh" view="lHh lpR lFf">
-		<q-header class="bg-white">
+		<q-header class="bg-white main_header">
 			<q-toolbar>
 				<div class="row">
 					<q-btn
@@ -103,9 +103,10 @@ import ProductCreationStepper from "../components/UI/Stepper/ProductCreationStep
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
+import { pageSizeTweak } from "../common/index";
 
 import AccountSettings from "components/UI/Profil/AccountSettings";
-// import CreateItems from "../components/Dialogs/CreateItems.vue";
+
 const buttonsList = [
 	{
 		title: "Add new product",
@@ -135,17 +136,9 @@ export default defineComponent({
 	components: {
 		AccountSettings,
 		BtnAddNew,
-
 		PageContent,
-		// ProductCreationStepper,
 		AjaxBar,
 		Drawer,
-		// Modal,
-	},
-	methods: {
-		pageSizeTweak(offset) {
-			return { minHeight: offset ? `calc(100vh - ${offset}px)` : "100vh" };
-		},
 	},
 
 	setup() {
@@ -175,6 +168,7 @@ export default defineComponent({
 				filter.value = "";
 				filterRef.value.focus();
 			},
+			pageSizeTweak,
 		};
 	},
 });

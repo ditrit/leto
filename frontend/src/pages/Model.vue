@@ -1,14 +1,8 @@
 <template>
 	<q-layout container view="hHh lpR fFf" class="global bg-grey-3">
-		<q-header>
+		<q-header class="bg-primary main_header">
 			<q-toolbar>
-				<q-btn
-					flat
-					@click="drawer = !drawer"
-					round
-					dense
-					icon="menu"
-				/>
+				<q-btn flat @click="drawer = !drawer" round dense icon="menu" />
 				<q-toolbar-title>
 					<!--<q-avatar>
 						<img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
@@ -34,27 +28,34 @@
 			bordered
 			class="bg-grey-3"
 		>
-
 			<q-list>
 				<q-expansion-item expand-separator label="Components">
-					<model-tree :items="componentItems" node-key="type" label-key="type" @item:selected="addComponent" ></model-tree>
+					<model-tree
+						:items="componentItems"
+						node-key="type"
+						label-key="type"
+						@item:selected="addComponent"
+					></model-tree>
 				</q-expansion-item>
 				<q-expansion-item label="Services" expand-separator>
-					<model-tree :items="serviceItems" node-key="type" label-key="type" @item:selected="addService"></model-tree>
+					<model-tree
+						:items="serviceItems"
+						node-key="type"
+						label-key="type"
+						@item:selected="addService"
+					></model-tree>
 				</q-expansion-item>
 			</q-list>
-
 		</q-drawer>
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak">
-
-						<ModelEdit
-							:items="items"
-							:links="links"
-							@item:select="selectItem"
-							@item:link="onItemLink"
-							@item:updateParent="updateItemParent"
-						/>
+				<ModelEdit
+					:items="items"
+					:links="links"
+					@item:select="selectItem"
+					@item:link="onItemLink"
+					@item:updateParent="updateItemParent"
+				/>
 			</q-page>
 		</q-page-container>
 		<q-drawer
@@ -67,7 +68,7 @@
 			bordered
 			class="bg-grey-3"
 		>
-			<div >
+			<div>
 				<!--<div class="q-gutter-md">
 					<q-input
 						v-model="search"
@@ -149,12 +150,12 @@
 
 <script>
 import { ref, computed } from "vue";
-import getDataItems from "../composables/getDataItems";
 import ModelEdit from "../components/3dModals/ModelEdit.vue";
 import ModelTree from "components/3dModals/ModelTree";
+import { pageSizeTweak } from "../common/index";
 
 export default {
-	components: {ModelTree, ModelEdit },
+	components: { ModelTree, ModelEdit },
 	setup() {
 		/*const { path, dataItems, error, fetchData } = getDataItems();
 		fetchData("http://localhost:3000/modelSideBar");*/
@@ -357,8 +358,12 @@ export default {
 		const baseItems = computed(() => {
 			return items.value.filter((i) => !i.parentId);
 		});
-		const serviceItems = computed(() => dataItems.filter(i => i.nature === 'service'))
-		const componentItems = computed(() => dataItems.filter(i => i.nature !== 'service'))
+		const serviceItems = computed(() =>
+			dataItems.filter((i) => i.nature === "service")
+		);
+		const componentItems = computed(() =>
+			dataItems.filter((i) => i.nature !== "service")
+		);
 		const itemTree = computed(() => {
 			const localItems = JSON.parse(JSON.stringify(items.value));
 			const tree = [];
@@ -412,6 +417,7 @@ export default {
 			//error,
 			//path,
 			filterdSidebarItem,
+			pageSizeTweak,
 		};
 	},
 	watch: {
@@ -427,9 +433,6 @@ export default {
 		},*/
 	},
 	methods: {
-		pageSizeTweak(offset) {
-			return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
-		},
 		addComponent(key) {
 			const item = this.dataItems.find((i) => i.type === key);
 			if (item) {
