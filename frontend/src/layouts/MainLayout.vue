@@ -1,10 +1,6 @@
 <template>
-	<q-layout view="lhh lpR fFf" class="bg-grey-4 q-pr-md">
-		<!--<MainHeader style="z-index: 1">
-			<AccountSettings />
-			<GlobalSearch />
-		</MainHeader>-->
-
+	<q-layout view="lhh lpR fFf" class="bg-grey-4">
+		<!-- Main Menu Drawer-->
 		<q-drawer
 			elevated
 			show-if-above
@@ -34,9 +30,6 @@
 
 <script>
 import EssentialTools from "components/EssentialTools";
-//import AccountSettings from "../components/UI/Profil/AccountSettings";
-import MainHeader from "../components/UI/Headers/MainHeader";
-// import GlobalSearch from "../components/UI/Form/GlobalSearch";
 
 const linksToolsList = [
 	{
@@ -76,34 +69,15 @@ const linksToolsList = [
 		link: "#/settings",
 	},
 ];
-const essentialTablinks = [
-	{
-		id: 1,
-		name: "modal",
-		label: "Model",
-		link: "/model",
-	},
-	{
-		id: 2,
-		name: "source",
-		label: "Source",
-		link: "/source",
-	},
-];
 
 export default {
 	name: "MainLayout",
 	components: {
 		EssentialTools,
-	//	AccountSettings,
-		//MainHeader,
-
-		// GlobalSearch,
 	},
 
 	setup() {
 		return {
-			essentialTablinks,
 			linksToolsList,
 		};
 	},
