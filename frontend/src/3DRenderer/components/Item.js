@@ -195,7 +195,6 @@ class Item {
 
 		const vertexShader = `
     varying vec2 vUv;
-    uniform vec3 uColor;
     void main()	{
       vUv = uv;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
