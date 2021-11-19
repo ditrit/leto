@@ -1,7 +1,24 @@
 <template>
-	<q-layout class="page_padding">
+	<q-layout container style="height: 100vh" view="lHh lpR lFf">
+
+		<q-header class="bg-white">
+			<q-toolbar>
+				<div class="row">
+					<q-btn
+						flat
+						@click="drawer = !drawer"
+						round
+						color="primary"
+						icon="menu"
+					/>
+				</div>
+				<AccountSettings></AccountSettings>
+
+			</q-toolbar>
+		</q-header>
+
 		<AjaxBar />
-		<Drawer :data="data">
+		<Drawer v-model="drawer" :data="data">
 			<template v-slot:drawerFilter>
 				<div class="search_container">
 					<q-input ref="filterRef" filled v-model="filter" label="Search">
@@ -30,15 +47,24 @@
 				</ul>
 			</template>
 		</Drawer>
-		<q-page class="bg-gray">
-			<PageContent
-				v-for="item in dashboardData"
-				:key="item.id"
-				:icon="item.icon"
-				:headline="$t('dashboard')"
-				:textContent="$t('text_content')"
-			/>
-		</q-page>
+
+		<q-page-container>
+			<q-page :style-fn="pageSizeTweak" class="flex">
+				<PageContent
+					v-for="item in dataItems"
+					:key="item.id"
+					:icon="item.icon"
+					:headline="item.headline"
+					:textContent="item.textContent"
+				/>
+				<Modal>
+					<template v-slot:ModalBody>
+						<CreationFormStepperVue />
+					</template>
+				</Modal>
+			</q-page>
+		</q-page-container>
+
 	</q-layout>
 </template>
 
@@ -49,12 +75,11 @@ import AjaxBar from "../components/UI/Progress/AjaxBar";
 import PageContent from "../components/Content/PageContent";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 
+import AccountSettings from "components/UI/Profil/AccountSettings";
+
 export default {
-	components: {
-		AjaxBar,
-		PageContent,
-		Drawer,
-	},
+	components: { AjaxBar, PageContent, Modal, CreationFormStepperVue, Drawer, AccountSettings },
+
 	setup() {
 		const store = useStore();
 		const dashboardData = ref([
@@ -76,6 +101,7 @@ export default {
 				},
 			},
 		]);
+
 		const user = ref(null);
 		const filter = ref("");
 		const filterRef = ref(null);
@@ -86,8 +112,16 @@ export default {
 		};
 
 		return {
+
+			progress: dataItems.length,
+			path,
+			drawer,
+			dataItems,
+			error,
+
 			dashboardData,
 			progress: dashboardData.value.length,
+
 			user,
 			store,
 			logout,
@@ -98,6 +132,11 @@ export default {
 				filterRef.value.focus();
 			},
 		};
+	},
+	methods: {
+		pageSizeTweak(offset) {
+			return { minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh' }
+		}
 	},
 };
 </script>

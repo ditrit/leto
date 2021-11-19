@@ -81,7 +81,7 @@ export default {
 	},
 };
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
 .profil_settings
 	position: absolute
 	right: 20px

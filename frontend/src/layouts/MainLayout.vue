@@ -1,9 +1,9 @@
 <template>
 	<q-layout view="lhh lpR fFf" class="bg-grey-4 q-pr-md">
-		<MainHeader style="z-index: 1">
+		<!--<MainHeader style="z-index: 1">
 			<AccountSettings />
-			<!-- <GlobalSearch /> -->
-		</MainHeader>
+			<GlobalSearch />
+		</MainHeader>-->
 
 		<q-drawer
 			elevated
@@ -26,15 +26,15 @@
 				v-bind="link"
 			/>
 		</q-drawer>
-		<q-page>
+		<q-page-container>
 			<router-view />
-		</q-page>
+		</q-page-container>
 	</q-layout>
 </template>
 
 <script>
 import EssentialTools from "components/EssentialTools";
-import AccountSettings from "../components/UI/Profil/AccountSettings";
+//import AccountSettings from "../components/UI/Profil/AccountSettings";
 import MainHeader from "../components/UI/Headers/MainHeader";
 // import GlobalSearch from "../components/UI/Form/GlobalSearch";
 
@@ -95,8 +95,8 @@ export default {
 	name: "MainLayout",
 	components: {
 		EssentialTools,
-		AccountSettings,
-		MainHeader,
+	//	AccountSettings,
+		//MainHeader,
 
 		// GlobalSearch,
 	},
