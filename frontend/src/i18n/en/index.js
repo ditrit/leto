@@ -4,6 +4,12 @@ export default {
 
 	dashboard: "Dashboard",
 	settings: "Settings",
+	manage_profil: "Manage Profile",
+	manage_users: "Manage Users",
+	manage_users: "Manage Users",
+	manage_roles: "Manage Roles",
+	manage_tags: "Manage Tags",
+	manage_environments: "Manage Environments",
 
 	products: "Products",
 	add_product: "Add new product",

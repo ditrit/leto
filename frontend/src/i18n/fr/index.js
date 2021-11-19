@@ -4,6 +4,12 @@ export default {
 
 	dashboard: "Tableau de bord",
 	settings: "Paramètres",
+	manage_profil: "Gérer le profil",
+	manage_users: "Manage Users",
+	manage_users: "Gérer les utilisateurs",
+	manage_roles: "Gérer les rôles",
+	manage_tags: "Gérer les tags",
+	manage_environments: "Gérer les environnements",
 
 	products: "Produits",
 	add_product: "Nouveau produit",
