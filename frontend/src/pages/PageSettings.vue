@@ -37,11 +37,27 @@
 				</div>
 			</template>
 			<template v-slot:drawerMenu>
-				<ul>
-					<li>15</li>
-					<li>15</li>
-					<li>15</li>
-				</ul>
+				<div class="q-pa-md" style="max-width: 350px">
+					<q-list dense padding class="rounded-borders">
+						<q-item clickable v-ripple>
+							<q-item-section> Profile </q-item-section>
+						</q-item>
+
+						<q-item clickable v-ripple>
+							<q-item-section> Users </q-item-section>
+						</q-item>
+
+						<q-item clickable v-ripple>
+							<q-item-section> Roles </q-item-section>
+						</q-item>
+						<q-item clickable v-ripple>
+							<q-item-section> Tags </q-item-section>
+						</q-item>
+						<q-item clickable v-ripple>
+							<q-item-section> Environments </q-item-section>
+						</q-item>
+					</q-list>
+				</div>
 			</template>
 		</Drawer>
 
@@ -52,6 +68,7 @@
 					:key="item.id"
 					:icon="item.icon"
 					:headline="$t('settings')"
+					:subTitle="$t('manage_profil')"
 					:textContent="$t('text_content')"
 				/>
 				<Modal>
