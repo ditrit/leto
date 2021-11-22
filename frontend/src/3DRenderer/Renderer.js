@@ -229,7 +229,7 @@ class Renderer  extends EventEmitter{
 		item.baseWidth = gridToUpdate.cellWidth
 		item.baseDepth = gridToUpdate.cellDepth
 
-		await item.create3DItem()
+		await item.create3DItem(this.renderer)
 		this.scene.add(item.threeObj)
 		this.scene.add(item.sprite)
 		this.items.push(item)

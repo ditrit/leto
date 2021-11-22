@@ -156,6 +156,7 @@ class Item {
 	}
 	generateTexture(canvas) {
 		const texture = new CanvasTexture(canvas);
+		texture.anisotropy = this.anisotropy;
 
 		return texture;
 	}
@@ -295,7 +296,8 @@ class Item {
 		this.sprite.position.x = this.threeObj.position.x
 		this.sprite.scale.set(this.grid.width, this.grid.baseWidth / 3, 1);
 	}
-	async create3DItem() {
+	async create3DItem(renderer) {
+		this.anisotropy = renderer.getMaxAnisotropy();
 		this.updateCanvas();
 		this.sideTexture = this.generateTexture(this.sideCanvas);
 		this.topTexture = this.generateTexture(this.topCanvas);
