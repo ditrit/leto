@@ -23,10 +23,11 @@ import {Vector2, Vector3} from "three";
 class Renderer  extends EventEmitter{
 	constructor(container) {
 		super()
-		this.camera = createCamera( 70,
+		/*this.camera = createCamera( 70,
 			container.clientWidth / container.clientHeight,
 			0.01,
-			1000);
+			1000);*/
+		this.camera = createCamera(container.clientWidth / 100, container.clientHeight / 100, 0.1, 1000)
 		this.camera.position.x = 0
 		this.camera.position.y = 10
 		this.camera.position.z = 0
@@ -60,7 +61,7 @@ class Renderer  extends EventEmitter{
 		const renderPass = new RenderPass(this.scene, this.camera)
 		this.composer.addPass(renderPass)
 		this.outlinePass = new OutlinePass( new Vector2( container.clientWidth, container.clientHeight ), this.scene, this.camera );
-		this.visibleEdgeColor = '#FFFF00';
+		this.visibleEdgeColor = '#ffcc00';
 		this.hiddenEdgeColor = '#000000';
 		this.outlinePass.visibleEdgeColor.set( this.visibleEdgeColor );
 		this.outlinePass.hiddenEdgeColor.set( this.hiddenEdgeColor );
