@@ -17,7 +17,7 @@ import {CameraController} from "src/3DRenderer/systems/CameraController";
 import {MouseController} from "src/3DRenderer/systems/MouseController";
 import {DragController} from "src/3DRenderer/systems/DragController"
 import {OutlinePass} from "three/examples/jsm/postprocessing/OutlinePass";
-import {Vector2} from "three";
+import {Vector2, Vector3} from "three";
 
 
 class Renderer  extends EventEmitter{
@@ -27,6 +27,9 @@ class Renderer  extends EventEmitter{
 			container.clientWidth / container.clientHeight,
 			0.01,
 			1000);
+		this.camera.position.x = 0
+		this.camera.position.y = 10
+		this.camera.position.z = 0
 		this.scene = createScene();
 		this.renderer = createRenderer();
 		this.items = []
@@ -41,8 +44,8 @@ class Renderer  extends EventEmitter{
 		this.scene.add(ambientLight)
 		const pointLight = createPointLight()
 		this.scene.add(pointLight)
-		const gridHelper = createGridHelper
-		this.scene.add(gridHelper())
+		//const gridHelper = createGridHelper
+		//this.scene.add(gridHelper())
 		//	this.addItem(new Item({}))
 
 		//const cube = createCube();

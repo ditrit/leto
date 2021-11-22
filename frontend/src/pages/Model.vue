@@ -21,6 +21,7 @@
 		<q-drawer
 			v-model="drawer"
 			@hide="makeMenuVisible"
+			overlay
 			side="left"
 			show-if-above
 			:width="250"
@@ -60,11 +61,12 @@
 		</q-page-container>
 		<q-drawer
 			v-model="rightDrawer"
-			@hide="makeMenuVisible"
+			v-if="rightDrawer"
 			overlay
 			side="right"
 			:width="450"
-			:breakpoint="500"
+			:breakpoint="600"
+			show-if-above
 			bordered
 			class="bg-grey-3"
 		>
@@ -399,7 +401,7 @@ export default {
 
 		return {
 			drawer: ref(true),
-			rightDrawer: ref(false),
+			rightDrawer: ref(true),
 			dataItems,
 			search,
 			items,
