@@ -1,11 +1,14 @@
 export default {
 	teams: "Equipe",
 	add_team: "Nouvelle équipe",
-
+	profile: "Profil",
+	users: "Utilisateurs",
 	dashboard: "Tableau de bord",
 	settings: "Paramètres",
-	manage_profil: "Gérer le profil",
-	manage_users: "Manage Users",
+	manage_settings: "Gérer les Paramètres",
+
+	manage_profile: "Gérer le profil",
+
 	manage_users: "Gérer les utilisateurs",
 	manage_roles: "Gérer les rôles",
 	manage_tags: "Gérer les tags",

@@ -44,9 +44,9 @@
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak" class="flex">
 				<PageContent
-					icon="settings"
-					:headline="$t('settings')"
-					:subTitle="$t('manage_settings')"
+					icon="person"
+					:headline="$t('profile')"
+					:subTitle="$t('manage_profile')"
 					:textContent="$t('text_content')"
 				/>
 				<Modal>

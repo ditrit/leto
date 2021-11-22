@@ -42,13 +42,15 @@
 		</Drawer>
 
 		<q-page-container>
-			<q-page :style-fn="pageSizeTweak" class="flex">
+			<q-page :style-fn="pageSizeTweak" class="">
 				<PageContent
-					icon="settings"
-					:headline="$t('settings')"
-					:subTitle="$t('manage_settings')"
-					:textContent="$t('text_content')"
+					icon="groups"
+					:headline="$t('users')"
+					:subTitle="$t('manage_users')"
+					textContent=""
 				/>
+				<div class="q-px-lg"><Table /></div>
+				
 				<Modal>
 					<template v-slot:ModalBody>
 						<CreationFormStepperVue />
@@ -67,6 +69,7 @@ import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import SettingsNav from "../components/Navigations/SettingsNav";
 import { pageSizeTweak } from "../common/index";
+import Table from "../components/UI/Tables/Table";
 export default {
 	components: {
 		AjaxBar,
@@ -74,6 +77,7 @@ export default {
 		Drawer,
 		AccountSettings,
 		SettingsNav,
+		Table
 	},
 	setup() {
 		const drawer = ref(false);

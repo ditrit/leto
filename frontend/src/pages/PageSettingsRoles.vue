@@ -44,10 +44,10 @@
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak" class="flex">
 				<PageContent
-					icon="settings"
-					:headline="$t('settings')"
-					:subTitle="$t('manage_settings')"
-					:textContent="$t('text_content')"
+					icon="groups"
+					:headline="$t('roles')"
+					:subTitle="$t('manage_roles')"
+					textContent=""
 				/>
 				<Modal>
 					<template v-slot:ModalBody>

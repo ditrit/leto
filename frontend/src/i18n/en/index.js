@@ -1,10 +1,12 @@
 export default {
 	teams: "Teams",
 	add_team: "Add new Team",
-
+	profile: "Profile",
+	users: "Users",
 	dashboard: "Dashboard",
 	settings: "Settings",
-	manage_profil: "Manage Profile",
+	manage_settings: "Manage Settings",
+	manage_profile: "Manage Profile",
 	manage_users: "Manage Users",
 	manage_users: "Manage Users",
 	manage_roles: "Manage Roles",
