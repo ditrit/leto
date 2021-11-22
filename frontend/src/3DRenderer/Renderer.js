@@ -60,8 +60,8 @@ class Renderer  extends EventEmitter{
 		const renderPass = new RenderPass(this.scene, this.camera)
 		this.composer.addPass(renderPass)
 		this.outlinePass = new OutlinePass( new Vector2( container.clientWidth, container.clientHeight ), this.scene, this.camera );
-		this.visibleEdgeColor = '#ffffff';
-		this.hiddenEdgeColor = '#190a05';
+		this.visibleEdgeColor = '#FFFF00';
+		this.hiddenEdgeColor = '#000000';
 		this.outlinePass.visibleEdgeColor.set( this.visibleEdgeColor );
 		this.outlinePass.hiddenEdgeColor.set( this.hiddenEdgeColor );
 		this.outlinePass.edgeStrength = 3.0
