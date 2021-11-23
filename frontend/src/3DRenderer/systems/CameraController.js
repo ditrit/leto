@@ -5,15 +5,9 @@ class CameraController {
 	constructor(camera, domElement) {
 		const orbitControls = new OrbitControls(camera, domElement)
 		orbitControls.mouseButtons = {
-			LEFT: MOUSE.ROTATE,
+			LEFT: MOUSE.PAN,
 			MIDDLE: MOUSE.DOLLY,
-			RIGHT: MOUSE.PAN
-		}
-		orbitControls.keys = {
-			LEFT: 'ArrowLeft', //left arrow
-			UP: 'ArrowUp', // up arrow
-			RIGHT: 'ArrowRight', // right arrow
-			BOTTOM: 'ArrowDown' // down arrow
+		//	RIGHT: MOUSE.PAN
 		}
 		//orbitControls.enablePan = false;
 		orbitControls.enableDamping = false;

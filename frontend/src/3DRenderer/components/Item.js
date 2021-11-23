@@ -44,8 +44,8 @@ class Item {
 
 	get color() {
 		if (this.nature === "service") return new Color("#2cab4c");
-		if (this.nature === "concrete") return new Color("#00359f");
-		if (this.nature === "abstract") return new Color("#3a5b9d");
+		if (this.nature === "concrete") return new Color("#dedede");
+		if (this.nature === "abstract") return new Color("#ffffff");
 
 		return new Color(this.baseColor);
 	}
@@ -60,20 +60,21 @@ class Item {
 		return this.grid.depth;
 	}
 	updateCanvas() {
-		const width = this.width * 500;
-		const cellWidth = (this.grid.baseWidth + this.grid.gridSpacing) * 500;
-		const cellDepth = cellWidth / 3;
-		const height = this.height * 500;
-		const depth = this.depth * 500;
-		this.topCanvas.width = cellWidth;
-		this.topCanvas.height = this.topCanvas.width / 3;
-		this.sideCanvas.width = width;
-		this.sideCanvas.height = height;
+		const width = 0.99 * this.width * 1500;
+		/*const cellWidth = (this.grid.baseWidth + this.grid.gridSpacing) * 500;
+		const cellDepth = cellWidth / 3;*/
+		const height =  width / 3;
+		//this.topCanvas.width = cellWidth;
+		//this.topCanvas.height = this.topCanvas.width / 3;
+		this.topCanvas.width = width;
+		this.topCanvas.height = height;
+		/*this.sideCanvas.width = width;
+		this.sideCanvas.height = height;*/
 		console.log("item color", this.color, this.colorHex);
 		console.log("item name", this.name);
 
 		// use the image, e.g. draw part of it on a sideCanvas
-		let ctx = this.sideCanvas.getContext("2d");
+		//let ctx = this.sideCanvas.getContext("2d");
 
 		// Background
 
@@ -93,25 +94,22 @@ class Item {
 		ctx.fill();
 		ctx.closePath()*/
 
-		const tOrigin = {
-			x: cellWidth / 3,
-			y: 0,
-		};
+
 
 		const tctx = this.topCanvas.getContext("2d");
 
 		// Background
 
-		tctx.beginPath();
-		tctx.rect(0, 0, cellWidth, cellWidth);
+		/*tctx.beginPath();
+		tctx.rect(0, 0, width, height);
 		tctx.fillStyle = this.colorHex;
 		tctx.fill();
-		tctx.closePath();
+		tctx.closePath();*/
 
-		tctx.shadowOffsetX = 5;
-		tctx.shadowOffsetY = 5;
-		tctx.shadowBlur = 2;
-		tctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+		//tctx.shadowOffsetX = 5;
+		//tctx.shadowOffsetY = 5;
+		//tctx.shadowBlur = 2;
+		//tctx.shadowColor = "rgba(0, 0, 0, 0.5)";
 		/*tctx.beginPath()
 		tctx.rect(0, 0, cellWidth, depth);
 		tctx.fillStyle = "rgba(0, 0, 0, .1)";
@@ -120,25 +118,29 @@ class Item {
 
 		tctx.fill();
 		tctx.closePath()*/
-		tctx.beginPath();
-		tctx.rect(0, 0, this.topCanvas.width - 2, this.topCanvas.height - 2);
+		/*tctx.beginPath();
+		tctx.rect(0, 0, width - 2, height - 2);
 		tctx.fillStyle = this.colorHex;
 		tctx.fill();
-		tctx.fillStyle = "rgba(0, 0, 0, .1)";
-		tctx.stroke();
-		tctx.closePath();
+		tctx.closePath();*/
+		const imageHeight = Math.min(width / 4, 0.75 * height)
+		const imageWidth = width / 4
+		const tOrigin = {
+			x: width / 4,
+			y: 0,
+		};
 
 		tctx.textAlign = "left";
-		tctx.fillStyle = "#FFFFFF";
-		tctx.font = "bold 150px Helvetica";
-		tctx.fillText(this.type, 30, cellWidth / 4 + 125, cellWidth / 4);
+		tctx.fillStyle = "#000000";
+		tctx.font = "bold 550px Helvetica";
+		tctx.fillText(this.type, 30,  1.30 * imageHeight);
 		//tctx.font = '90pt Calibri';
-		tctx.font = "150px Helvetica";
-		tctx.fillText(this.name, tOrigin.x + 50, 350, (2 * cellWidth) / 3);
+		tctx.font = "550px Helvetica";
+		tctx.fillText(this.name, imageWidth + 60, height / 3, (2 * width) / 3);
 
 		if (this.img) {
 			//	ctx.drawImage(this.img, 0,0, height, height);
-			tctx.drawImage(this.img, 0, 0, cellWidth / 4, cellWidth / 4);
+			tctx.drawImage(this.img, 6, 5, imageWidth, imageHeight);
 		}
 
 		/*return new Promise((resolve) => {
@@ -154,6 +156,7 @@ class Item {
 	}
 	generateTexture(canvas) {
 		const texture = new CanvasTexture(canvas);
+		texture.anisotropy = this.anisotropy;
 
 		return texture;
 	}
@@ -289,19 +292,18 @@ class Item {
 	}
 	updateSpritePosition() {
 		this.sprite.position.y = this.threeObj.position.y + this.grid.baseWidth / 3;
-		this.sprite.position.z = this.threeObj.position.z;
-		this.sprite.position.x =
-			this.threeObj.position.x -
-			this.width / 2 +
-			(this.grid.baseWidth + this.grid.gridSpacing) / 2;
+		this.sprite.position.z = this.threeObj.position.z - this.depth / 2 +  1.01 * (this.grid.baseWidth / 3 / 2);
+		this.sprite.position.x = this.threeObj.position.x
+		this.sprite.scale.set(this.grid.width, this.grid.baseWidth / 3, 1);
 	}
-	async create3DItem() {
+	async create3DItem(renderer) {
+		this.anisotropy = renderer.getMaxAnisotropy();
 		this.updateCanvas();
 		this.sideTexture = this.generateTexture(this.sideCanvas);
 		this.topTexture = this.generateTexture(this.topCanvas);
 		const material = this.generateMaterial();
 		this.sprite = this.createSprite();
-		this.sprite.scale.set(this.grid.baseWidth, this.grid.baseWidth / 3, 1);
+
 		this.threeObj = this.generateComponent(material);
 		this.threeObj.castShadow = true;
 		this.threeObj.recieveShadow = true;

@@ -17,16 +17,20 @@ import {CameraController} from "src/3DRenderer/systems/CameraController";
 import {MouseController} from "src/3DRenderer/systems/MouseController";
 import {DragController} from "src/3DRenderer/systems/DragController"
 import {OutlinePass} from "three/examples/jsm/postprocessing/OutlinePass";
-import {Vector2} from "three";
+import {Vector2, Vector3} from "three";
 
 
 class Renderer  extends EventEmitter{
 	constructor(container) {
 		super()
-		this.camera = createCamera( 70,
+		/*this.camera = createCamera( 70,
 			container.clientWidth / container.clientHeight,
 			0.01,
-			1000);
+			1000);*/
+		this.camera = createCamera(container.clientWidth / 100, container.clientHeight / 100, 0.1, 1000)
+		this.camera.position.x = 0
+		this.camera.position.y = 10
+		this.camera.position.z = 0
 		this.scene = createScene();
 		this.renderer = createRenderer();
 		this.items = []
@@ -41,8 +45,8 @@ class Renderer  extends EventEmitter{
 		this.scene.add(ambientLight)
 		const pointLight = createPointLight()
 		this.scene.add(pointLight)
-		const gridHelper = createGridHelper
-		this.scene.add(gridHelper())
+		//const gridHelper = createGridHelper
+		//this.scene.add(gridHelper())
 		//	this.addItem(new Item({}))
 
 		//const cube = createCube();
@@ -57,8 +61,8 @@ class Renderer  extends EventEmitter{
 		const renderPass = new RenderPass(this.scene, this.camera)
 		this.composer.addPass(renderPass)
 		this.outlinePass = new OutlinePass( new Vector2( container.clientWidth, container.clientHeight ), this.scene, this.camera );
-		this.visibleEdgeColor = '#ffffff';
-		this.hiddenEdgeColor = '#190a05';
+		this.visibleEdgeColor = '#ffcc00';
+		this.hiddenEdgeColor = '#000000';
 		this.outlinePass.visibleEdgeColor.set( this.visibleEdgeColor );
 		this.outlinePass.hiddenEdgeColor.set( this.hiddenEdgeColor );
 		this.outlinePass.edgeStrength = 3.0
@@ -225,7 +229,7 @@ class Renderer  extends EventEmitter{
 		item.baseWidth = gridToUpdate.cellWidth
 		item.baseDepth = gridToUpdate.cellDepth
 
-		await item.create3DItem()
+		await item.create3DItem(this.renderer)
 		this.scene.add(item.threeObj)
 		this.scene.add(item.sprite)
 		this.items.push(item)
