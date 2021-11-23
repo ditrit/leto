@@ -59,10 +59,10 @@ class Grid {
 		return false
 	}
 	get lineCount() {
-		return this.parentItem ? 1 : Math.max(Math.ceil(Math.sqrt(this.itemCount)) , 1);
+		return this.parentItem ? this.itemCount : Math.max(Math.ceil(Math.sqrt(this.itemCount)) , 1);
 	}
 	get columnCount() {
-		return this.parentItem ? this.itemCount : Math.max(Math.ceil((this.itemCount) / this.lineCount), 1)
+		return this.parentItem ? 1 : Math.max(Math.ceil((this.itemCount) / this.lineCount), 1)
 	}
 	/*get width() {
 		return this.colWidth * this.columnCount
@@ -106,6 +106,15 @@ class Grid {
 		return (colIndex) * this.colWidth
 	}
 	getUsedDepthAtIndex(lineIndex) {
+		if (this.parentItem) {
+			let res = (this.baseDepth + this.gridSpacing) * this.reserveSlot
+			for (let i = 0; i < (lineIndex - this.reserveSlot); ++i) {
+				const item = this.items[i]
+				res += item.depth + this.gridSpacing
+
+			}
+			return res
+		}
 		return lineIndex * this.lineDepth
 	}
 	findItemOnGrid(item) {
@@ -127,6 +136,8 @@ class Grid {
 		//item.baseDepth = this.cellDepth
 		if (!this.items.find(i => i.id === item.id))
 			this.items.push(item)
+		item.grid.width = this.cellWidth
+		item.grid.depth = this.cellDepth
 		item.threeObj.position.y = this.parentItem ? this.parentItem.threeObj.position.y + this.parentItem.height : 0
 		//this.updatePlacement()
 	}
@@ -148,12 +159,15 @@ class Grid {
 			item.grid.updateBlockSize( cellSizeChart, itemCountChart)
 
 		}
-		this.width = this.items.reduce((a,i) => a + i.width, this.reserveSlot * this.baseWidth) + (this.gridSpacing * this.itemCount)
 		this.cellDepth = Math.max(...this.items.map(i => i.depth), 3)
 		this.cellWidth = Math.max(...this.items.map(i => i.width), 3)
-		this.depth =  this.cellDepth + (this.gridSpacing * !this.parentItem)
+		this.width = this.colWidth//this.items.reduce((a,i) => a + i.width, this.reserveSlot * this.baseWidth) + (this.gridSpacing * this.itemCount)
+
+
+		this.depth =  this.items.reduce((a,i) => a + i.depth, this.reserveSlot * this.baseDepth) + (this.gridSpacing * this.itemCount)
 		if (this.parentItem)
-			this.items.forEach(i => i.grid.depth = this.cellDepth)
+			this.items.forEach(i => i.grid.width = this.cellWidth)
+
 		//this.cellWidth = Math.max(...this.items.map(i => i.width), 1)
 		/*	const currentIndex = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) : -1
 			const cellIndex = this.parentItem ? Math.ceil(this.parentItem.threeObj.position.y) + 1 : 0
@@ -173,8 +187,8 @@ class Grid {
 
 	}
 	updatePlacement() {
-		for (let col = this.reserveSlot; col < this.columnCount; ++col) {
-			for (let line = 0; line < this.lineCount; ++line) {
+		for (let col = 0; col < this.columnCount; ++col) {
+			for (let line = this.reserveSlot; line < this.lineCount; ++line) {
 				const item = this.items[((col * this.lineCount) + line) - this.reserveSlot]
 				console.log("updating item position", col, line, item, this.columnCount, this.lineCount, this.parentItem)
 
@@ -190,10 +204,11 @@ class Grid {
 						continue
 					}
 					if (this.parentItem) {
-						item.threeObj.position.x =
-							(this.parentItem.threeObj.position.x  - (this.width / 2)) +
-							this.getUsedWidthAtIndex(col) + item.width/2
-						item.threeObj.position.z =  this.parentItem.threeObj.position.z
+						item.threeObj.position.x = this.parentItem.threeObj.position.x
+							/*(this.parentItem.threeObj.position.x  - (this.width / 2)) +
+							this.getUsedWidthAtIndex(col) + item.width/2*/
+						item.threeObj.position.z =  (this.parentItem.threeObj.position.z - (this.depth / 2)) +
+							this.getUsedDepthAtIndex(line) + item.depth/2
 						item.threeObj.position.y =  this.parentItem.threeObj.position.y + this.parentItem.height
 					} else {
 						item.threeObj.position.x =  this.getUsedWidthAtIndex(col) + this.colWidth/2 - ((this.colWidth * this.columnCount) / 2)
