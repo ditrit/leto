@@ -6,26 +6,26 @@
 				text-color="primary"
 				label="Add new User"
 				class="q-my-md"
+				@click.prevent="AddUser"
 			/>
 		</div>
 		<q-table
+			v-if="rowsData"
 			title=""
 			:rows="rowsData"
 			:columns="columns"
 			row-key="name"
-			selection="single"
-			v-model:selected="selected"
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-actions="props">
+			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
 					<q-btn
 						dense
 						round
 						flat
 						color="grey"
-						@click="editRow(props)"
+						@click="editRow(props.row)"
 						icon="edit"
 					></q-btn>
 					<q-btn
@@ -33,18 +33,128 @@
 						round
 						flat
 						color="grey"
-						@click="deleteRow(props)"
+						@click="deleteRow(props.row)"
 						icon="delete"
 					></q-btn>
 				</q-td>
 			</template>
 		</q-table>
 
-		<div class="q-mt-md">
-			<pre>
-      Selected Element:  {{ selected }}
-      </pre>
-		</div>
+		<!-- Modification Dialog -->
+		<q-dialog v-model="opendDialog" persistent>
+			<q-card style="width: 750px; max-width: 80vw">
+				<q-card-section>
+					<div class="text-h6 q-pa-md">Edit User</div>
+				</q-card-section>
+
+				<q-card-section class="q-pt-none">
+					<q-form
+						@submit.prevent="onSubmitUpdate"
+						@reset.prevent="onResetUpdate"
+						class="q-gutter-md q-pa-md"
+					>
+						<q-input
+							filled
+							v-model="userObj[2]"
+							label="Your First Name *"
+							lazy-rules
+							:rules="[
+								(val) => (val && val.length > 0) || 'Please type something',
+							]"
+						/>
+						<q-input
+							filled
+							v-model="userObj[3]"
+							label="Your Last Name *"
+							lazy-rules
+							:rules="[
+								(val) => (val && val.length > 0) || 'Please type something',
+							]"
+						/>
+						<q-input
+							filled
+							v-model="userObj[4]"
+							label="Your Email *"
+							lazy-rules
+							:rules="[
+								(val) => (val && val.length > 0) || 'Please type something',
+							]"
+						/>
+
+						<q-card-actions
+							align="right"
+							class="text-primary flex justify-center"
+						>
+							<q-btn type="reset" label="Cancel" v-close-popup />
+							<q-btn
+								label="Update"
+								type="submit"
+								color="primary"
+								v-close-popup
+							/>
+						</q-card-actions>
+					</q-form>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
+
+		<!-- Delete Dialog -->
+		<q-dialog v-model="openAddUserDialog" persistent>
+			<q-card style="width: 750px; max-width: 80vw">
+				<q-card-section>
+					<div class="text-h6 q-pa-md">Create New User</div>
+				</q-card-section>
+
+				<q-card-section class="q-pt-none">
+					<q-form
+						@submit.prevent="onSubmitAdd"
+						@reset.prevent="onResetAdd"
+						class="q-gutter-md q-pa-md"
+					>
+						<q-input
+							filled
+							label="Your First Name *"
+							lazy-rules
+							:rules="[
+								(val) => (val && val.length > 0) || 'Please type something',
+							]"
+							v-model="userFirstName"
+						/>
+						<q-input
+							filled
+							label="Your Last Name *"
+							lazy-rules
+							:rules="[
+								(val) => (val && val.length > 0) || 'Please type something',
+							]"
+							v-model="userLastName"
+						/>
+						<q-input
+							filled
+							label="Your Email *"
+							lazy-rules
+							:rules="[
+								(val) => (val && val.length > 0) || 'Please type something',
+							]"
+							v-model="userEmail"
+						/>
+
+						<q-card-actions
+							align="right"
+							class="text-primary flex justify-center"
+						>
+							<q-btn type="reset" label="Cancel" v-close-popup />
+							<q-btn
+								label="Create"
+								type="submit"
+								color="primary"
+								v-close-popup
+							/>
+						</q-card-actions>
+					</q-form>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
 	</div>
 </template>
 
@@ -85,10 +195,10 @@ const columns = [
 		sortable: true,
 	},
 	{
-		name: "actions",
+		name: "actionsButtons",
 		label: "",
 		align: "left",
-		field: "actions",
+		field: "actionsButtons",
 		sortable: false,
 	},
 ];
@@ -96,7 +206,13 @@ const columns = [
 export default {
 	setup() {
 		const store = useStore();
+		const opendDialog = ref(false);
+		const openAddUserDialog = ref(false);
+		const userObj = ref(null);
 		const rowsData = ref([]);
+		const userFirstName = ref("");
+		const userLastName = ref("");
+		const userEmail = ref("");
 		const allUsers = async () => {
 			// fetch All Users
 			await store.dispatch("appUsers/fetchUsers");
@@ -130,20 +246,54 @@ export default {
 			));
 		};
 		allUsers();
-		const editRow = (event) => {
-			console.log(event);
+
+		const AddUser = (currentTarget) => {
+			console.log("currentTarget to Edit: ", currentTarget);
+			openAddUserDialog.value = true;
+		};
+		const onSubmitAdd = async () => {
+			console.log("onSubmitAdd");
+			const userData = {
+				firstName: userFirstName.value,
+				lastName: userLastName.value,
+				Email: userEmail.value,
+			};
+			console.log(userData);
+			await store.dispatch("appUsers/addUser", userData);
+			// await getUsers();
+			rowsData.value.unshift(userData);
+		};
+		const onResetAdd = async () => {
+			console.log("onResetAdd");
+		};
+		const editRow = (currentTarget) => {
+			console.log("currentTarget to Edit: ", currentTarget);
+			opendDialog.value = true;
+			userObj.value = Object.values(currentTarget);
+		};
+		const deleteRow = (currentTarget) => {
+			console.log(Object.values(currentTarget));
+			rowsData.value.splice(currentTarget, 1);
+			console.log(Object.values(currentTarget));
+			const userID = Object.values(currentTarget)[0];
+			store.dispatch("appUsers/removeUser", userID);
 		};
 
-		editRow();
-		const deleteRow = (event) => {
-			console.log(event);
-		};
-		deleteRow();
 		return {
-			selected: ref([]),
 			columns,
 			rowsData,
 			store,
+			userObj,
+			AddUser,
+			userFirstName,
+			userLastName,
+			userEmail,
+			editRow,
+			deleteRow,
+			onSubmitAdd,
+			onResetAdd,
+			opendDialog,
+			openAddUserDialog,
 		};
 	},
 };
