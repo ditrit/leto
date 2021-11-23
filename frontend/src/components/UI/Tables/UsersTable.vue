@@ -84,6 +84,13 @@ const columns = [
 		field: "email",
 		sortable: true,
 	},
+	{
+		name: "actions",
+		label: "",
+		align: "left",
+		field: "actions",
+		sortable: false,
+	},
 ];
 
 export default {
@@ -100,6 +107,8 @@ export default {
 					getUsers.value.map((item) => {
 						return {
 							id: item.ID,
+							avatar:
+								"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
 							firstName: item.FirstName,
 							lastName: item.LastName,
 							email: item.Email,
@@ -111,6 +120,8 @@ export default {
 				getUsers.value.map((item) => {
 					return {
 						id: item.ID,
+						avatar:
+							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
 						firstName: item.FirstName,
 						lastName: item.LastName,
 						email: item.Email,
