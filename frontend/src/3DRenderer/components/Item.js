@@ -133,14 +133,14 @@ class Item {
 		tctx.textAlign = "left";
 		tctx.fillStyle = "#000000";
 		tctx.font = "bold 550px Helvetica";
-		tctx.fillText(this.type, 30,  1.25 * imageHeight);
+		tctx.fillText(this.type, 30,  1.30 * imageHeight);
 		//tctx.font = '90pt Calibri';
 		tctx.font = "550px Helvetica";
-		tctx.fillText(this.name, imageWidth + 50, height / 3, (2 * width) / 3);
+		tctx.fillText(this.name, imageWidth + 60, height / 3, (2 * width) / 3);
 
 		if (this.img) {
 			//	ctx.drawImage(this.img, 0,0, height, height);
-			tctx.drawImage(this.img, 0, 0, imageWidth, imageHeight);
+			tctx.drawImage(this.img, 6, 5, imageWidth, imageHeight);
 		}
 
 		/*return new Promise((resolve) => {
