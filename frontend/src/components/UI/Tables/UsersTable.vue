@@ -10,7 +10,7 @@
 			/>
 		</div>
 		<q-table
-			v-if="rowsData"
+			:key="updateKey"
 			title=""
 			:rows="rowsData"
 			:columns="columns"
@@ -18,6 +18,71 @@
 			field
 			table-header-class="table_header"
 		>
+			<template v-slot:body-cell-avatar="props">
+				<!-- Modification Dialog -->
+				<q-dialog v-model="opendDialog" persistent>
+					<q-card style="width: 750px; max-width: 80vw">
+						<q-card-section>
+							<div class="text-h6 q-pa-md">Edit User</div>
+						</q-card-section>
+
+						<q-card-section class="q-pt-none">
+							<q-form
+								@submit.prevent="onSubmitUpdate"
+								@reset.prevent="onResetUpdate"
+								class="q-gutter-md q-pa-md"
+							>
+								<q-input
+									filled
+									v-model="userObj[2]"
+									label="Your First Name *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+								/>
+								<q-input
+									filled
+									v-model="userObj[3]"
+									label="Your Last Name *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+								/>
+								<q-input
+									filled
+									v-model="userObj[4]"
+									label="Your Email *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+								/>
+
+								<q-card-actions
+									align="right"
+									class="text-primary flex justify-center"
+								>
+									<q-btn type="reset" label="Cancel" v-close-popup />
+									<q-btn
+										label="Update"
+										type="submit"
+										color="primary"
+										v-close-popup
+									/>
+								</q-card-actions>
+							</q-form>
+						</q-card-section>
+					</q-card>
+				</q-dialog>
+
+				<q-td :props="props">
+					<q-avatar size="26px">
+						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+					</q-avatar>
+				</q-td>
+			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
 					<q-btn
@@ -40,65 +105,7 @@
 			</template>
 		</q-table>
 
-		<!-- Modification Dialog -->
-		<q-dialog v-model="opendDialog" persistent>
-			<q-card style="width: 750px; max-width: 80vw">
-				<q-card-section>
-					<div class="text-h6 q-pa-md">Edit User</div>
-				</q-card-section>
-
-				<q-card-section class="q-pt-none">
-					<q-form
-						@submit.prevent="onSubmitUpdate"
-						@reset.prevent="onResetUpdate"
-						class="q-gutter-md q-pa-md"
-					>
-						<q-input
-							filled
-							v-model="userObj[2]"
-							label="Your First Name *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-						/>
-						<q-input
-							filled
-							v-model="userObj[3]"
-							label="Your Last Name *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-						/>
-						<q-input
-							filled
-							v-model="userObj[4]"
-							label="Your Email *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-						/>
-
-						<q-card-actions
-							align="right"
-							class="text-primary flex justify-center"
-						>
-							<q-btn type="reset" label="Cancel" v-close-popup />
-							<q-btn
-								label="Update"
-								type="submit"
-								color="primary"
-								v-close-popup
-							/>
-						</q-card-actions>
-					</q-form>
-				</q-card-section>
-			</q-card>
-		</q-dialog>
-
-		<!-- Delete Dialog -->
+		<!-- Create Dialog -->
 		<q-dialog v-model="openAddUserDialog" persistent>
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
@@ -194,6 +201,13 @@ const columns = [
 		field: "email",
 		sortable: true,
 	},
+	// {
+	// 	name: "password",
+	// 	label: "Password",
+	// 	align: "left",
+	// 	field: "password",
+	// 	sortable: false,
+	// },
 	{
 		name: "actionsButtons",
 		label: "",
@@ -204,12 +218,26 @@ const columns = [
 ];
 
 export default {
+	data() {
+		return {
+			updateKey: 0,
+		};
+	},
+	methods: {
+		forceUpdate() {
+			this.updateKey += 1;
+		},
+		updated() {
+			console.log(this.updateKey);
+		},
+	},
 	setup() {
 		const store = useStore();
 		const opendDialog = ref(false);
 		const openAddUserDialog = ref(false);
 		const userObj = ref(null);
 		const rowsData = ref([]);
+		const editedIndex = ref(null);
 		const userFirstName = ref("");
 		const userLastName = ref("");
 		const userEmail = ref("");
@@ -228,6 +256,7 @@ export default {
 							firstName: item.FirstName,
 							lastName: item.LastName,
 							email: item.Email,
+							password: item.Password,
 						};
 					})
 				)
@@ -241,6 +270,7 @@ export default {
 						firstName: item.FirstName,
 						lastName: item.LastName,
 						email: item.Email,
+						password: item.Password,
 					};
 				})
 			));
@@ -256,12 +286,31 @@ export default {
 			const userData = {
 				firstName: userFirstName.value,
 				lastName: userLastName.value,
-				Email: userEmail.value,
+				email: userEmail.value,
 			};
 			console.log(userData);
 			await store.dispatch("appUsers/addUser", userData);
-			// await getUsers();
 			rowsData.value.unshift(userData);
+		};
+
+		const onSubmitUpdate = async () => {
+			const userData = {
+				id: userObj.value[0],
+				firstName: userObj.value[2],
+				lastName: userObj.value[3],
+				email: userObj.value[4],
+			};
+			console.log(" the submited value", userData);
+			await store.dispatch("appUsers/updateUser", userData);
+		};
+		const onResetUpdate = async () => {
+			console.log("onResetUpdate");
+			const userData = {
+				firstName: "",
+				lastName: "",
+				email: "",
+			};
+			console.log(userData);
 		};
 		const onResetAdd = async () => {
 			console.log("onResetAdd");
@@ -270,6 +319,7 @@ export default {
 			console.log("currentTarget to Edit: ", currentTarget);
 			opendDialog.value = true;
 			userObj.value = Object.values(currentTarget);
+			console.log("userObj value: ", userObj.value);
 		};
 		const deleteRow = (currentTarget) => {
 			console.log(Object.values(currentTarget));
@@ -280,9 +330,9 @@ export default {
 		};
 
 		return {
+			editedIndex,
 			columns,
 			rowsData,
-			store,
 			userObj,
 			AddUser,
 			userFirstName,
@@ -291,9 +341,13 @@ export default {
 			editRow,
 			deleteRow,
 			onSubmitAdd,
+			onSubmitUpdate,
+			onResetUpdate,
 			onResetAdd,
 			opendDialog,
 			openAddUserDialog,
+			password: ref(""),
+			isPwd: ref(true),
 		};
 	},
 };
