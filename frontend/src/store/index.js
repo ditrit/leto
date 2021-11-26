@@ -6,6 +6,7 @@ import auth from "./Auth/index";
 import appUsers from "./Users/index";
 import appDomain from "./Domains/index";
 import appTags from "./Tags/index";
+import appRoles from "./Roles/index";
 import appAuthorization from "./Authorization/index";
 
 /*
@@ -23,6 +24,7 @@ export default store(function (/* { ssrContext } */) {
 			auth,
 			appUsers,
 			appDomain,
+			appRoles,
 			appTags,
 			appAuthorization,
 		},

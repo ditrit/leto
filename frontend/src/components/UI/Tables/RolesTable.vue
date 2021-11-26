@@ -4,9 +4,9 @@
 			<q-btn
 				color="white"
 				text-color="primary"
-				label="Add new User"
+				label="Add new Role"
 				class="q-my-md"
-				@click.prevent="AddUser"
+				@click.prevent="AddRole"
 			/>
 		</div>
 		<q-table
@@ -23,7 +23,7 @@
 				<q-dialog v-model="opendDialog" persistent>
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
-							<div class="text-h6 q-pa-md">{{ $t("edit_user") }}</div>
+							<div class="text-h6 q-pa-md">{{ $t("edit_role") }}</div>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
@@ -34,8 +34,8 @@
 							>
 								<q-input
 									filled
-									v-model="userObj[2]"
-									label="Your First Name *"
+									v-model="roleObj[2]"
+									label="Name *"
 									lazy-rules
 									:rules="[
 										(val) => (val && val.length > 0) || 'Please type something',
@@ -44,7 +44,7 @@
 								<q-input
 									filled
 									v-model="userObj[3]"
-									label="Your Last Name *"
+									label="Short Description *"
 									lazy-rules
 									:rules="[
 										(val) => (val && val.length > 0) || 'Please type something',
@@ -53,7 +53,7 @@
 								<q-input
 									filled
 									v-model="userObj[4]"
-									label="Your Email *"
+									label="Description *"
 									lazy-rules
 									:rules="[
 										(val) => (val && val.length > 0) || 'Please type something',
@@ -106,10 +106,10 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddUserDialog" persistent>
+		<q-dialog v-model="openAddRoleDialog" persistent>
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("create_user") }}</div>
+					<div class="text-h6 q-pa-md">{{ $t("create_role") }}</div>
 				</q-card-section>
 
 				<q-card-section class="q-pt-none">
@@ -120,25 +120,25 @@
 					>
 						<q-input
 							filled
-							label="Your First Name *"
+							label="Name *"
 							lazy-rules
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
 							]"
-							v-model="userFirstName"
+							v-model="roleName"
 						/>
 						<q-input
 							filled
-							label="Your Last Name *"
+							label="Short Description *"
 							lazy-rules
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
 							]"
-							v-model="userLastName"
+							v-model="roleShortDescription"
 						/>
 						<q-input
 							filled
-							label="Your Email *"
+							label="Description *"
 							lazy-rules
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
@@ -182,24 +182,24 @@ const columns = [
 	},
 
 	{
-		name: "firstName",
-		label: "First Name",
+		name: "name",
+		label: "Name",
 		align: "left",
-		field: "firstName",
+		field: "name",
 		sortable: true,
 	},
 	{
-		name: "lastName",
-		label: "Last Name",
+		name: "shortDescription",
+		label: "Short Description",
 		align: "left",
-		field: "lastName",
+		field: "shortDescription",
 		sortable: true,
 	},
 	{
-		name: "email",
-		label: "Email",
+		name: "description",
+		label: "Description",
 		align: "left",
-		field: "email",
+		field: "description",
 		sortable: true,
 	},
 	// {
@@ -223,50 +223,49 @@ export default {
 		const store = useStore();
 		const $q = useQuasar();
 		const opendDialog = ref(false);
-		const openAddUserDialog = ref(false);
-		const userObj = ref(null);
+		const openAddRoleDialog = ref(false);
+		const roleObj = ref(null);
 		const rowsData = ref([]);
 		const editedIndex = ref(null);
-		const userFirstName = ref("");
-		const userLastName = ref("");
+		const roleName = ref("");
+		const roleShortDescription = ref("");
 		const userEmail = ref("");
-		const allUsers = async () => {
+		const allRoles = async () => {
 			// fetch All Users
-			await store.dispatch("appUsers/fetchUsers");
-			const getUsers = computed(() => store.getters["appUsers/allUsers"]);
+			await store.dispatch("appRoles/fetchAllRole");
+			const getRoles = computed(() => store.getters["appRoles/allRoles"]);
 
 			return (rowsData.value = Object.values(
-				getUsers.value.map((item) => {
+				getRoles.value.map((item) => {
 					return {
 						id: item.ID,
 						avatar:
 							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-						firstName: item.FirstName,
-						lastName: item.LastName,
-						email: item.Email,
-						password: item.Password,
+						name: item.Name,
+						shortDescription: item.ShortDescription,
+						description: item.Description,
 					};
 				})
 			));
 		};
-		allUsers();
+		allRoles();
 
-		const AddUser = () => {
-			openAddUserDialog.value = true;
+		const AddRole = () => {
+			openAddRoleDialog.value = true;
 		};
 		const onSubmitAdd = async () => {
 			console.log("onSubmitAdd");
 			const userData = {
-				firstName: userFirstName.value,
-				lastName: userLastName.value,
+				firstName: roleName.value,
+				lastName: roleShortDescription.value,
 				email: userEmail.value,
 			};
 
 			try {
-				await store.dispatch("appUsers/addUser", userData);
-				await allUsers();
-				(userFirstName.value = ""),
-					(userLastName.value = ""),
+				await store.dispatch("appRoles/addRole", userData);
+				await allRoles();
+				(roleName.value = ""),
+					(roleShortDescription.value = ""),
 					(userEmail.value = ""),
 					$q.notify({
 						type: "positive",
@@ -282,15 +281,15 @@ export default {
 
 		const onSubmitUpdate = async () => {
 			const userData = {
-				id: userObj.value[0],
-				firstName: userObj.value[2],
-				lastName: userObj.value[3],
-				email: userObj.value[4],
+				id: roleObj.value[0],
+				firstName: roleObj.value[2],
+				lastName: roleObj.value[3],
+				email: roleObj.value[4],
 			};
 
 			try {
-				await store.dispatch("appUsers/updateUser", userData);
-				await allUsers();
+				await store.dispatch("appRoles/updateRole", userData);
+				await allRoles();
 				$q.notify({
 					type: "positive",
 					message: "User has been successfully updated",
@@ -303,20 +302,20 @@ export default {
 			}
 		};
 		const onResetUpdate = () => {
-			return (openAddUserDialog.value = false);
+			return (openAddRoleDialog.value = false);
 		};
 		const onResetAdd = () => {
-			return (openAddUserDialog.value = false);
+			return (openAddRoleDialog.value = false);
 		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
-			userObj.value = Object.values(currentTarget);
+			roleObj.value = Object.values(currentTarget);
 		};
 		const deleteRow = async (currentTarget) => {
 			try {
 				const userID = Object.values(currentTarget)[0];
-				await store.dispatch("appUsers/removeUser", userID);
-				await allUsers();
+				await store.dispatch("appRoles/removeRole", userID);
+				await allRoles();
 				$q.notify({
 					type: "positive",
 					message: "User has been successfully deleted",
@@ -333,10 +332,10 @@ export default {
 			editedIndex,
 			columns,
 			rowsData,
-			userObj,
-			AddUser,
-			userFirstName,
-			userLastName,
+			roleObj,
+			AddRole,
+			roleName,
+			roleShortDescription,
 			userEmail,
 			editRow,
 			deleteRow,
@@ -345,7 +344,7 @@ export default {
 			onResetUpdate,
 			onResetAdd,
 			opendDialog,
-			openAddUserDialog,
+			openAddRoleDialog,
 			password: ref(""),
 			isPwd: ref(true),
 		};

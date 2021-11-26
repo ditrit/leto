@@ -20,7 +20,7 @@ export default {
 		const navigationItem = ref([
 			{ label: "Profile", link: "/settings/profile", icon: "user" },
 			{ label: "Users", link: "/settings/users", icon: "group" },
-			{ label: "Roles", link: "/settings/users", icon: "group"  },
+			{ label: "Roles", link: "/settings/roles", icon: "group" },
 			{ label: "Tags", link: "/settings/users", icon: "tag" },
 			{ label: "Environments Type", link: "/settings/users", icon: "tag" },
 		]);

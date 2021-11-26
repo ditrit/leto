@@ -42,13 +42,14 @@
 		</Drawer>
 
 		<q-page-container>
-			<q-page :style-fn="pageSizeTweak" class="flex">
+			<q-page :style-fn="pageSizeTweak">
 				<PageContent
-					icon="groups"
+					icon="person"
 					:headline="$t('roles')"
 					:subTitle="$t('manage_roles')"
 					textContent=""
 				/>
+				<div class="q-px-lg"><RolesTable /></div>
 				<Modal>
 					<template v-slot:ModalBody>
 						<CreationFormStepperVue />
@@ -67,6 +68,7 @@ import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import SettingsNav from "../components/Navigations/SettingsNav";
 import { pageSizeTweak } from "../common/index";
+import RolesTable from "src/components/UI/Tables/RolesTable.vue";
 export default {
 	components: {
 		AjaxBar,
@@ -74,6 +76,7 @@ export default {
 		Drawer,
 		AccountSettings,
 		SettingsNav,
+		RolesTable,
 	},
 	setup() {
 		const drawer = ref(false);
