@@ -168,6 +168,7 @@
 <script>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
 const columns = [
 	{
@@ -233,6 +234,7 @@ export default {
 	},
 	setup() {
 		const store = useStore();
+		const $q = useQuasar();
 		const opendDialog = ref(false);
 		const openAddUserDialog = ref(false);
 		const userObj = ref(null);
@@ -277,8 +279,7 @@ export default {
 		};
 		allUsers();
 
-		const AddUser = (currentTarget) => {
-			console.log("currentTarget to Edit: ", currentTarget);
+		const AddUser = () => {
 			openAddUserDialog.value = true;
 		};
 		const onSubmitAdd = async () => {
@@ -289,8 +290,22 @@ export default {
 				email: userEmail.value,
 			};
 			console.log(userData);
-			await store.dispatch("appUsers/addUser", userData);
-			rowsData.value.unshift(userData);
+			try {
+				await store.dispatch("appUsers/addUser", userData);
+				await allUsers();
+				(userFirstName.value = ""),
+					(userLastName.value = ""),
+					(userEmail.value = ""),
+					$q.notify({
+						type: "positive",
+						message: "User has been successfully created",
+					});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: "Sorry, user has not been created",
+				});
+			}
 		};
 
 		const onSubmitUpdate = async () => {
@@ -301,15 +316,23 @@ export default {
 				email: userObj.value[4],
 			};
 			console.log(" the submited value", userData);
-			await store.dispatch("appUsers/updateUser", userData);
+			try {
+				await store.dispatch("appUsers/updateUser", userData);
+				await allUsers();
+				$q.notify({
+					type: "positive",
+					message: "User has been successfully updated",
+				});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: "Sorry, user has not been updated",
+				});
+			}
 		};
-		const onResetUpdate = async () => {
+		const onResetUpdate = async (currentTarget) => {
 			console.log("onResetUpdate");
-			const userData = {
-				firstName: "",
-				lastName: "",
-				email: "",
-			};
+			const userData = currentTarget;
 			console.log(userData);
 		};
 		const onResetAdd = async () => {
@@ -321,12 +344,23 @@ export default {
 			userObj.value = Object.values(currentTarget);
 			console.log("userObj value: ", userObj.value);
 		};
-		const deleteRow = (currentTarget) => {
-			console.log(Object.values(currentTarget));
-			rowsData.value.splice(currentTarget, 1);
-			console.log(Object.values(currentTarget));
-			const userID = Object.values(currentTarget)[0];
-			store.dispatch("appUsers/removeUser", userID);
+		const deleteRow = async (currentTarget) => {
+			try {
+				console.log(Object.values(currentTarget));
+				console.log(Object.values(currentTarget));
+				const userID = Object.values(currentTarget)[0];
+				await store.dispatch("appUsers/removeUser", userID);
+				await allUsers();
+				$q.notify({
+					type: "positive",
+					message: "User has been successfully deleted",
+				});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: "Sorry, user has not been deleted",
+				});
+			}
 		};
 
 		return {

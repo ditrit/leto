@@ -3,6 +3,8 @@ export default {
 	add_team: "Nouvelle équipe",
 	profile: "Profil",
 	users: "Utilisateurs",
+	add_users_success: "L'utilisateur a été créé avec succès",
+	add_users_failed: "Désolé, l'utilisateur n'a pas été créé",
 	dashboard: "Tableau de bord",
 	settings: "Paramètres",
 	manage_settings: "Gérer les Paramètres",

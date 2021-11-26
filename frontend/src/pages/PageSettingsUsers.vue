@@ -70,6 +70,7 @@ import AccountSettings from "components/UI/Profil/AccountSettings";
 import SettingsNav from "../components/Navigations/SettingsNav";
 import { pageSizeTweak } from "../common/index";
 import UsersTable from "../components/UI/Tables/UsersTable";
+
 export default {
 	components: {
 		AjaxBar,
@@ -83,6 +84,7 @@ export default {
 		const drawer = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
+
 		return {
 			drawer,
 			filter,
