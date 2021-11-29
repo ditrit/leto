@@ -43,7 +43,7 @@
 								/>
 								<q-input
 									filled
-									v-model="userObj[3]"
+									v-model="roleObj[3]"
 									label="Short Description *"
 									lazy-rules
 									:rules="[
@@ -52,7 +52,7 @@
 								/>
 								<q-input
 									filled
-									v-model="userObj[4]"
+									v-model="roleObj[4]"
 									label="Description *"
 									lazy-rules
 									:rules="[
@@ -259,8 +259,8 @@ export default {
 				shortDescription: roleShortDescription.value,
 				description: roleDescription.value,
 			};
+			console.log("roleData", roleData);
 
-			console.log("roleData");
 			try {
 				await store.dispatch("appRoles/addRole", roleData);
 				await allRoles();
@@ -280,24 +280,25 @@ export default {
 		};
 
 		const onSubmitUpdate = async () => {
-			const userData = {
+			const roleData = {
 				id: roleObj.value[0],
-				firstName: roleObj.value[2],
-				lastName: roleObj.value[3],
-				email: roleObj.value[4],
+				name: roleObj.value[2],
+				shortDescription: roleObj.value[3],
+				description: roleObj.value[4],
 			};
+			console.log("roleObj: ", roleObj.value);
 
 			try {
-				await store.dispatch("appRoles/updateRole", userData);
+				await store.dispatch("appRoles/updateRole", roleData);
 				await allRoles();
 				$q.notify({
 					type: "positive",
-					message: "User has been successfully updated",
+					message: "Role has been successfully updated",
 				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, user has not been updated",
+					message: "Sorry, role has not been updated",
 				});
 			}
 		};
