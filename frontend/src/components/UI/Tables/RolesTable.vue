@@ -143,7 +143,7 @@
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
 							]"
-							v-model="userEmail"
+							v-model="roleDescription"
 						/>
 
 						<q-card-actions
@@ -229,23 +229,24 @@ export default {
 		const editedIndex = ref(null);
 		const roleName = ref("");
 		const roleShortDescription = ref("");
-		const userEmail = ref("");
+		const roleDescription = ref("");
+
 		const allRoles = async () => {
 			// fetch All Users
-			let response = await store.dispatch("appRoles/fetchAllRoles");
-			console.log("response: ", response);
+			await store.dispatch("appRoles/fetchAllRoles");
 			const getRoles = computed(() => store.getters["appRoles/allRoles"]);
-			console.log(getRoles.value);
-			return (rowsData.value = getRoles.value.map((item) => {
-				return {
-					id: item.ID,
-					avatar:
-						"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-					name: item.Name,
-					shortDescription: item.ShortDescription,
-					description: item.Description,
-				};
-			}));
+			return (rowsData.value = Object.values(
+				getRoles.value.map((item) => {
+					return {
+						id: item.ID,
+						avatar:
+							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+						name: item.Name,
+						shortDescription: item.ShortDescription,
+						description: item.Description,
+					};
+				})
+			));
 		};
 		allRoles();
 
@@ -253,27 +254,27 @@ export default {
 			openAddRoleDialog.value = true;
 		};
 		const onSubmitAdd = async () => {
-			console.log("onSubmitAdd");
-			const userData = {
-				firstName: roleName.value,
-				lastName: roleShortDescription.value,
-				email: userEmail.value,
+			const roleData = {
+				name: roleName.value,
+				shortDescription: roleShortDescription.value,
+				description: roleDescription.value,
 			};
 
+			console.log("roleData");
 			try {
-				await store.dispatch("appRoles/addRole", userData);
+				await store.dispatch("appRoles/addRole", roleData);
 				await allRoles();
 				(roleName.value = ""),
 					(roleShortDescription.value = ""),
-					(userEmail.value = ""),
+					(roleDescription.value = ""),
 					$q.notify({
 						type: "positive",
-						message: "User has been successfully created",
+						message: "Role has been successfully created",
 					});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, user has not been created",
+					message: "Sorry, role has not been created",
 				});
 			}
 		};
@@ -335,7 +336,7 @@ export default {
 			AddRole,
 			roleName,
 			roleShortDescription,
-			userEmail,
+			roleDescription,
 			editRow,
 			deleteRow,
 			onSubmitAdd,
