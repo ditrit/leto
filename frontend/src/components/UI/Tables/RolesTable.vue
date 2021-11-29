@@ -232,21 +232,20 @@ export default {
 		const userEmail = ref("");
 		const allRoles = async () => {
 			// fetch All Users
-			await store.dispatch("appRoles/fetchAllRole");
+			let response = await store.dispatch("appRoles/fetchAllRoles");
+			console.log("response: ", response);
 			const getRoles = computed(() => store.getters["appRoles/allRoles"]);
-
-			return (rowsData.value = Object.values(
-				getRoles.value.map((item) => {
-					return {
-						id: item.ID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-						name: item.Name,
-						shortDescription: item.ShortDescription,
-						description: item.Description,
-					};
-				})
-			));
+			console.log(getRoles.value);
+			return (rowsData.value = getRoles.value.map((item) => {
+				return {
+					id: item.ID,
+					avatar:
+						"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+					name: item.Name,
+					shortDescription: item.ShortDescription,
+					description: item.Description,
+				};
+			}));
 		};
 		allRoles();
 
