@@ -65,11 +65,16 @@ const routes = [
 				component: () => import("pages/PageSettingsRoles.vue"),
 				meta: { requiresAuth: true },
 			},
-			// {
-			// 	path: "settings/environmentstypes",
-			// 	component: () => import("pages/PageSettingsEnvironmentsTypes.vue"),
-			// 	meta: { requiresAuth: true },
-			// },
+			{
+				path: "settings/tags",
+				component: () => import("pages/PageSettingsTags.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "settings/environmentstypes",
+				component: () => import("pages/PageSettingsEnviType.vue"),
+				meta: { requiresAuth: true },
+			},
 		],
 	},
 	{

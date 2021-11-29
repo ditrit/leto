@@ -4,9 +4,9 @@
 			<q-btn
 				color="white"
 				text-color="primary"
-				label="Add new Role"
+				label="Add new tag"
 				class="q-my-md"
-				@click.prevent="AddRole"
+				@click.prevent="AddEnviType"
 			/>
 		</div>
 		<q-table
@@ -23,7 +23,7 @@
 				<q-dialog v-model="opendDialog" persistent>
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
-							<div class="text-h6 q-pa-md">{{ $t("edit_role") }}</div>
+							<div class="text-h6 q-pa-md">{{ $t("edit_environments") }}</div>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
@@ -34,7 +34,7 @@
 							>
 								<q-input
 									filled
-									v-model="roleObj[2]"
+									v-model="enviTypeObj[3]"
 									label="Name *"
 									lazy-rules
 									:rules="[
@@ -43,7 +43,7 @@
 								/>
 								<q-input
 									filled
-									v-model="roleObj[3]"
+									v-model="enviTypeObj[4]"
 									label="Short Description *"
 									lazy-rules
 									:rules="[
@@ -52,7 +52,7 @@
 								/>
 								<q-input
 									filled
-									v-model="roleObj[4]"
+									v-model="enviTypeObj[5]"
 									label="Description *"
 									lazy-rules
 									:rules="[
@@ -106,10 +106,10 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddRoleDialog" persistent>
+		<q-dialog v-model="openAddEnviTypeDialog" persistent>
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("create_role") }}</div>
+					<div class="text-h6 q-pa-md">{{ $t("create_tag") }}</div>
 				</q-card-section>
 
 				<q-card-section class="q-pt-none">
@@ -125,7 +125,7 @@
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
 							]"
-							v-model="roleName"
+							v-model="enviTypeName"
 						/>
 						<q-input
 							filled
@@ -134,7 +134,7 @@
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
 							]"
-							v-model="roleShortDescription"
+							v-model="enviTypeShortDescription"
 						/>
 						<q-input
 							filled
@@ -143,7 +143,7 @@
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
 							]"
-							v-model="roleDescription"
+							v-model="enviTypeDescription"
 						/>
 
 						<q-card-actions
@@ -188,6 +188,7 @@ const columns = [
 		field: "name",
 		sortable: true,
 	},
+
 	{
 		name: "shortDescription",
 		label: "Short Description",
@@ -216,22 +217,43 @@ export default {
 		const store = useStore();
 		const $q = useQuasar();
 		const opendDialog = ref(false);
-		const openAddRoleDialog = ref(false);
-		const roleObj = ref(null);
+		const openAddEnviTypeDialog = ref(false);
+		const enviTypeObj = ref(null);
 		const rowsData = ref([]);
 		const editedIndex = ref(null);
-		const roleName = ref("");
-		const roleShortDescription = ref("");
-		const roleDescription = ref("");
+		const parentID = ref("");
+		const enviTypeName = ref("");
+		const enviTypeShortDescription = ref("");
+		const enviTypeDescription = ref("");
 
-		const allRoles = async () => {
+		const allEnviTypes = async () => {
 			// fetch All Users
-			await store.dispatch("appRoles/fetchAllRoles");
-			const getRoles = computed(() => store.getters["appRoles/allRoles"]);
-			return (rowsData.value = Object.values(
-				getRoles.value.map((item) => {
+			await store.dispatch("appEnviType/fetchAllEnviTypes");
+			const getEnviTypes = computed(
+				() => store.getters["appEnviType/allEnviTypes"]
+			);
+			console.log("	getEnviTypes", getEnviTypes.value);
+
+			console.log(
+				"rowsData:",
+				getEnviTypes.value.map((item) => {
 					return {
 						id: item.ID,
+						parentID: item.ParentID,
+						avatar:
+							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+						name: item.Name,
+						shortDescription: item.ShortDescription,
+						description: item.Description,
+					};
+				})
+			);
+
+			return (rowsData.value = Object.values(
+				getEnviTypes.value.map((item) => {
+					return {
+						id: item.ID,
+						parentID: item.ParentID,
 						avatar:
 							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
 						name: item.Name,
@@ -241,83 +263,97 @@ export default {
 				})
 			));
 		};
-		allRoles();
+		allEnviTypes();
 
-		const AddRole = () => {
-			openAddRoleDialog.value = true;
+		// const getParentID = computed(() => {
+		// 	return rowsData.value.find((item) => item.parentID);
+		// });
+
+		// const getParentID = computed(() => {
+		// 	store.dispatch("appEnviType/fetchAllTags");
+		// 	const getEnviTypes = computed(() => store.getters["appEnviType/allTags"]);
+		// 	console.log("	getTags", getTags.value);
+		// 	let response = Object.values(getTags.value).map((item) => item.ParentID);
+		// 	console.log("response one: ", response[0]);
+
+		// 	return response[0];
+		// });
+
+		const AddEnviType = () => {
+			openAddEnviTypeDialog.value = true;
 		};
 		const onSubmitAdd = async () => {
-			const roleData = {
-				name: roleName.value,
-				shortDescription: roleShortDescription.value,
-				description: roleDescription.value,
+			const enviTypeData = {
+				name: enviTypeName.value,
+				shortDescription: enviTypeShortDescription.value,
+				description: enviTypeDescription.value,
 			};
-			console.log("roleData", roleData);
+			console.log("enviTypeData", enviTypeData);
 
 			try {
-				await store.dispatch("appRoles/addRole", roleData);
-				await allRoles();
-				(roleName.value = ""),
-					(roleShortDescription.value = ""),
-					(roleDescription.value = ""),
+				await store.dispatch("appEnviType/addEnviType", enviTypeData);
+				await allEnviTypes();
+				(enviTypeName.value = ""),
+					(enviTypeShortDescription.value = ""),
+					(enviTypeDescription.value = ""),
 					$q.notify({
 						type: "positive",
-						message: "Role has been successfully created",
+						message: " Tag has been successfully created",
 					});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, role has not been created",
+					message: "Sorry,  has not been created",
 				});
 			}
 		};
 
 		const onSubmitUpdate = async () => {
-			const roleData = {
-				id: roleObj.value[0],
-				name: roleObj.value[2],
-				shortDescription: roleObj.value[3],
-				description: roleObj.value[4],
+			const enviTypeData = {
+				id: enviTypeObj.value[0],
+				name: enviTypeObj.value[3],
+				shortDescription: enviTypeObj.value[4],
+				description: enviTypeObj.value[5],
 			};
-			console.log("roleObj: ", roleObj.value);
+			console.log("enviTypeObj: ", enviTypeObj.value);
 
 			try {
-				await store.dispatch("appRoles/updateRole", roleData);
-				await allRoles();
+				await store.dispatch("appEnviType/updateEnviType", enviTypeData);
+				await allEnviTypes();
 				$q.notify({
 					type: "positive",
-					message: "Role has been successfully updated",
+					message: "Tag has been successfully updated",
 				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, role has not been updated",
+					message: "Sorry, tag has not been updated",
 				});
 			}
 		};
 		const onResetUpdate = () => {
-			return (openAddRoleDialog.value = false);
+			return (openAddEnviTypeDialog.value = false);
 		};
 		const onResetAdd = () => {
-			return (openAddRoleDialog.value = false);
+			return (openAddEnviTypeDialog.value = false);
 		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
-			roleObj.value = Object.values(currentTarget);
+			enviTypeObj.value = Object.values(currentTarget);
 		};
 		const deleteRow = async (currentTarget) => {
 			try {
-				const roleID = Object.values(currentTarget)[0];
-				await store.dispatch("appRoles/removeRole", roleID);
-				await allRoles();
+				const tagID = Object.values(currentTarget)[0];
+				await store.dispatch("appEnviType/removeEnviType", tagID);
+				await allEnviTypes();
 				$q.notify({
 					type: "positive",
-					message: "Role has been successfully deleted",
+					message: "Tag has been successfully deleted",
 				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, role has not been deleted",
+					message: "Sorry,  has not been deleted",
 				});
 			}
 		};
@@ -326,11 +362,12 @@ export default {
 			editedIndex,
 			columns,
 			rowsData,
-			roleObj,
-			AddRole,
-			roleName,
-			roleShortDescription,
-			roleDescription,
+			enviTypeObj,
+			AddEnviType,
+			enviTypeName,
+			parentID,
+			enviTypeShortDescription,
+			enviTypeDescription,
 			editRow,
 			deleteRow,
 			onSubmitAdd,
@@ -338,7 +375,7 @@ export default {
 			onResetUpdate,
 			onResetAdd,
 			opendDialog,
-			openAddRoleDialog,
+			openAddEnviTypeDialog,
 			password: ref(""),
 			isPwd: ref(true),
 		};

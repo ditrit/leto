@@ -10,16 +10,16 @@ export const fetchTagsById = async ({ commit }, tag) => {
 	commit("GET_TAGS_BY_ID", response.data);
 };
 
-export const addTags = async ({ commit }, tag) => {
-	let response = await API.post(`/tag/${tag.id}`, tag);
-	commit("NEW_TAGS", response.data);
+export const addTag = async ({ commit }, tag) => {
+	let response = await API.post(`/tag/${tag.parentID}`, tag);
+	commit("NEW_TAG", response.data);
 };
-export const updateTags = async ({ commit }, tag) => {
+export const updateTag = async ({ commit }, tag) => {
 	let response = await API.put(`/tag/${tag.id}`, tag);
 	commit("UPDATE_TAGS", response.data);
 };
 
-export const removeTags = async ({ commit }, id) => {
+export const removeTag = async ({ commit }, id) => {
 	await API.delete(`/tag/${id}`);
 	commit("DELETE_TAGS", id);
 };
