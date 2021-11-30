@@ -1,3 +1,4 @@
+export const GET_TAGS_TREE = (state, tags) => (state.tagsTree = tags);
 export const GET_TAGS = (state, tags) => (state.tags = tags);
 
 export const GET_TAG_BY_ID = (state, id) => {

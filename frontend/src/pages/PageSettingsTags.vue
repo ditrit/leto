@@ -49,7 +49,7 @@
 					:subTitle="$t('manage_tags')"
 					textContent=""
 				/>
-				<div class="q-px-lg"><TagsTable /></div>
+				<div class="q-px-lg"><NodeTreePresentation /></div>
 				<Modal>
 					<template v-slot:ModalBody>
 						<CreationFormStepperVue />
@@ -66,9 +66,9 @@ import AjaxBar from "../components/UI/Progress/AjaxBar";
 import PageContent from "../components/Content/PageContent";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-import SettingsNav from "../components/Navigations/SettingsNav";
+import SettingsNav from "../components/UI/Navigation/SettingsNav";
 import { pageSizeTweak } from "../common/index";
-import TagsTable from "src/components/UI/Tables/TagsTable.vue";
+import NodeTreePresentation from "../components/UI/Navigation/NodeTreePresentation.vue";
 export default {
 	components: {
 		AjaxBar,
@@ -76,7 +76,8 @@ export default {
 		Drawer,
 		AccountSettings,
 		SettingsNav,
-		TagsTable,
+
+		NodeTreePresentation,
 	},
 	setup() {
 		const drawer = ref(false);
