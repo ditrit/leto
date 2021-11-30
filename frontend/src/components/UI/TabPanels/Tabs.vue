@@ -33,6 +33,17 @@
 							:description="product.ShortDescription"
 							:logo="product.Logo"
 						/>
+						<div
+							class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right"
+						>
+							<q-btn
+								color="white"
+								text-color="primary"
+								icon="add"
+								class="text-primary"
+								label="New product"
+							/>
+						</div>
 					</div>
 				</q-tab-panel>
 				<q-tab-panel name="team_members">
@@ -45,6 +56,16 @@
 							:description="member.ShortDescription"
 							:logo="member.Logo"
 						/>
+						<div
+							class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right"
+						>
+							<q-btn
+								color="white"
+								text-color="primary"
+								icon="add"
+								label="New Authorization"
+							/>
+						</div>
 					</div>
 				</q-tab-panel>
 
@@ -57,6 +78,16 @@
 							:description="librarie.ShortDescription"
 							:logo="librarie.Logo"
 						/>
+						<div
+							class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right"
+						>
+							<q-btn
+								color="white"
+								text-color="primary"
+								icon="add"
+								label="New library"
+							/>
+						</div>
 					</div>
 				</q-tab-panel>
 
@@ -69,6 +100,16 @@
 							:description="env.ShortDescription"
 							:logo="env.Logo"
 						/>
+						<div
+							class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right"
+						>
+							<q-btn
+								color="white"
+								text-color="primary"
+								icon="add"
+								label="New Environnement"
+							/>
+						</div>
 					</div>
 				</q-tab-panel>
 			</q-tab-panels>
