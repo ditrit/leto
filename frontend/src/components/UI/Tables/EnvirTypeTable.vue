@@ -4,7 +4,7 @@
 			<q-btn
 				color="white"
 				text-color="primary"
-				label="Add new tag"
+				label="Add new Environment Type"
 				class="q-my-md"
 				@click.prevent="AddEnviType"
 			/>
@@ -34,7 +34,7 @@
 							>
 								<q-input
 									filled
-									v-model="enviTypeObj[3]"
+									v-model="enviTypeObj[2]"
 									label="Name *"
 									lazy-rules
 									:rules="[
@@ -43,7 +43,7 @@
 								/>
 								<q-input
 									filled
-									v-model="enviTypeObj[4]"
+									v-model="enviTypeObj[3]"
 									label="Short Description *"
 									lazy-rules
 									:rules="[
@@ -52,7 +52,7 @@
 								/>
 								<q-input
 									filled
-									v-model="enviTypeObj[5]"
+									v-model="enviTypeObj[4]"
 									label="Description *"
 									lazy-rules
 									:rules="[
@@ -232,28 +232,11 @@ export default {
 			const getEnviTypes = computed(
 				() => store.getters["appEnviType/allEnviTypes"]
 			);
-			console.log("	getEnviTypes", getEnviTypes.value);
-
-			console.log(
-				"rowsData:",
-				getEnviTypes.value.map((item) => {
-					return {
-						id: item.ID,
-						parentID: item.ParentID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-						name: item.Name,
-						shortDescription: item.ShortDescription,
-						description: item.Description,
-					};
-				})
-			);
 
 			return (rowsData.value = Object.values(
 				getEnviTypes.value.map((item) => {
 					return {
 						id: item.ID,
-						parentID: item.ParentID,
 						avatar:
 							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
 						name: item.Name,
@@ -265,20 +248,6 @@ export default {
 		};
 		allEnviTypes();
 
-		// const getParentID = computed(() => {
-		// 	return rowsData.value.find((item) => item.parentID);
-		// });
-
-		// const getParentID = computed(() => {
-		// 	store.dispatch("appEnviType/fetchAllTags");
-		// 	const getEnviTypes = computed(() => store.getters["appEnviType/allTags"]);
-		// 	console.log("	getTags", getTags.value);
-		// 	let response = Object.values(getTags.value).map((item) => item.ParentID);
-		// 	console.log("response one: ", response[0]);
-
-		// 	return response[0];
-		// });
-
 		const AddEnviType = () => {
 			openAddEnviTypeDialog.value = true;
 		};
@@ -288,7 +257,6 @@ export default {
 				shortDescription: enviTypeShortDescription.value,
 				description: enviTypeDescription.value,
 			};
-			console.log("enviTypeData", enviTypeData);
 
 			try {
 				await store.dispatch("appEnviType/addEnviType", enviTypeData);
@@ -298,12 +266,12 @@ export default {
 					(enviTypeDescription.value = ""),
 					$q.notify({
 						type: "positive",
-						message: " Tag has been successfully created",
+						message: "Environment Type has been successfully created",
 					});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry,  has not been created",
+					message: "Sorry, Environment Type has not been created",
 				});
 			}
 		};
@@ -311,23 +279,22 @@ export default {
 		const onSubmitUpdate = async () => {
 			const enviTypeData = {
 				id: enviTypeObj.value[0],
-				name: enviTypeObj.value[3],
-				shortDescription: enviTypeObj.value[4],
-				description: enviTypeObj.value[5],
+				name: enviTypeObj.value[2],
+				shortDescription: enviTypeObj.value[3],
+				description: enviTypeObj.value[4],
 			};
-			console.log("enviTypeObj: ", enviTypeObj.value);
 
 			try {
 				await store.dispatch("appEnviType/updateEnviType", enviTypeData);
 				await allEnviTypes();
 				$q.notify({
 					type: "positive",
-					message: "Tag has been successfully updated",
+					message: "Environment Type has been successfully updated",
 				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, tag has not been updated",
+					message: "Sorry, environment Type has not been updated",
 				});
 			}
 		};
@@ -348,12 +315,12 @@ export default {
 				await allEnviTypes();
 				$q.notify({
 					type: "positive",
-					message: "Tag has been successfully deleted",
+					message: "Environment Type has been successfully deleted",
 				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry,  has not been deleted",
+					message: "Sorry, environment Type has not been deleted",
 				});
 			}
 		};

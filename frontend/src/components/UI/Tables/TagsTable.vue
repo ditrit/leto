@@ -232,20 +232,20 @@ export default {
 			const getTags = computed(() => store.getters["appTags/allTags"]);
 			console.log("	getTags", getTags.value);
 
-			console.log(
-				"rowsData:",
-				getTags.value.map((item) => {
-					return {
-						id: item.ID,
-						parentID: item.ParentID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-						name: item.Name,
-						shortDescription: item.ShortDescription,
-						description: item.Description,
-					};
-				})
-			);
+			// console.log(
+			// 	"rowsData:",
+			// 	getTags.value.map((item) => {
+			// 		return {
+			// 			id: item.ID,
+			// 			parentID: item.ParentID,
+			// 			avatar:
+			// 				"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+			// 			name: item.Name,
+			// 			shortDescription: item.ShortDescription,
+			// 			description: item.Description,
+			// 		};
+			// 	})
+			// );
 
 			return (rowsData.value = Object.values(
 				getTags.value.map((item) => {
