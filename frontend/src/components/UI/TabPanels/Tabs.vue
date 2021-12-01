@@ -24,11 +24,14 @@
 					</ul>
 				</q-tab-panel>
 
-				<q-tab-panel name="products">
-					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+				<q-tab-panel name="products" class="flex q-gutter-md">
+					<div
+						class="cards_wrapper"
+						v-for="product in teamProducts"
+						:key="product.ID"
+					>
 						<ActionCard
-							v-for="product in teamProducts"
-							:key="product.ID"
+							v-if="product.Name"
 							:name="product.Name"
 							:description="product.ShortDescription"
 							:logo="product.Logo"
@@ -47,11 +50,14 @@
 						</div>
 					</div>
 				</q-tab-panel>
-				<q-tab-panel name="team_members">
-					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+				<q-tab-panel name="team_members" class="flex q-gutter-md">
+					<div
+						class="cards_wrapper"
+						v-for="member in teamMembers"
+						:key="member.ID"
+					>
 						<ActionCard
-							v-for="member in teamMembers"
-							:key="member.ID"
+							v-if="member.User.LastName"
 							:name="member.User.LastName"
 							:role="member.Role.Name"
 							:description="member.ShortDescription"
@@ -71,11 +77,14 @@
 					</div>
 				</q-tab-panel>
 
-				<q-tab-panel name="libraries">
-					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+				<q-tab-panel name="libraries" class="flex q-gutter-md">
+					<div
+						class="cards_wrapper"
+						v-for="librarie in teamLibraries"
+						:key="librarie.ID"
+					>
 						<ActionCard
-							v-for="librarie in teamLibraries"
-							:key="librarie.ID"
+							v-if="librarie.Name"
 							:name="librarie.Name"
 							:description="librarie.ShortDescription"
 							:logo="librarie.Logo"
@@ -94,11 +103,14 @@
 					</div>
 				</q-tab-panel>
 
-				<q-tab-panel name="environnements">
-					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+				<q-tab-panel name="environnements" class="flex q-gutter-md">
+					<div
+						class="cards_wrapper"
+						v-for="env in teamEnvironnements"
+						:key="env.ID"
+					>
 						<ActionCard
-							v-for="env in teamEnvironnements"
-							:key="env.ID"
+							v-if="env.Name"
 							:name="env.Name"
 							:description="env.ShortDescription"
 							:logo="env.Logo"
