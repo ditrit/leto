@@ -32,22 +32,21 @@
 					>
 						<ActionCard
 							v-if="product.Name"
+							:id="product.ID"
 							:name="product.Name"
 							:description="product.ShortDescription"
 							:logo="product.Logo"
 						/>
-						<div
-							class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right"
-						>
-							<q-btn
-								color="white"
-								text-color="primary"
-								icon="add"
-								class="text-primary"
-								label="New product"
-								@click.prevent="openModal(teamProducts)"
-							/>
-						</div>
+					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							class="text-primary"
+							label="New product"
+							@click.prevent="openModal(teamProducts)"
+						/>
 					</div>
 				</q-tab-panel>
 				<q-tab-panel name="team_members" class="flex q-gutter-md">
@@ -58,48 +57,46 @@
 					>
 						<ActionCard
 							v-if="member.User.LastName"
+							:id="member.ID"
 							:name="member.User.LastName"
 							:role="member.Role.Name"
 							:description="member.ShortDescription"
 							:logo="member.Logo"
 						/>
-						<div
-							class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right"
-						>
-							<q-btn
-								color="white"
-								text-color="primary"
-								icon="add"
-								label="New Authorization"
-								@click.prevent="openModal(teamMembers)"
-							/>
-						</div>
+					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							label="New Authorization"
+							@click.prevent="openModal(teamMembers)"
+						/>
 					</div>
 				</q-tab-panel>
 
 				<q-tab-panel name="libraries" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="librarie in teamLibraries"
-						:key="librarie.ID"
+						v-for="library in teamLibraries"
+						:key="library.ID"
 					>
 						<ActionCard
-							v-if="librarie.Name"
-							:name="librarie.Name"
-							:description="librarie.ShortDescription"
-							:logo="librarie.Logo"
+							v-if="library.Name"
+							:id="library.ID"
+							:name="library.Name"
+							:description="library.ShortDescription"
+							:logo="library.Logo"
 						/>
-						<div
-							class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right"
-						>
-							<q-btn
-								color="white"
-								text-color="primary"
-								icon="add"
-								label="New library"
-								@click.prevent="openModal(teamLibraries)"
-							/>
-						</div>
+					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							label="New library"
+							@click.prevent="openModal(teamLibraries)"
+						/>
 					</div>
 				</q-tab-panel>
 
@@ -111,21 +108,22 @@
 					>
 						<ActionCard
 							v-if="env.Name"
+							:id="env.ID"
 							:name="env.Name"
 							:description="env.ShortDescription"
 							:logo="env.Logo"
+							:environmentTypeID="env.EnvironmentTypeID"
+							:domainID="env.DomainID"
 						/>
-						<div
-							class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right"
-						>
-							<q-btn
-								color="white"
-								text-color="primary"
-								icon="add"
-								label="New Environnement"
-								@click.prevent="openModal(teamEnvironnements)"
-							/>
-						</div>
+					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							label="New Environnement"
+							@click.prevent="openModal(teamEnvironnements)"
+						/>
 					</div>
 				</q-tab-panel>
 			</q-tab-panels>
