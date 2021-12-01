@@ -42,6 +42,7 @@
 								icon="add"
 								class="text-primary"
 								label="New product"
+								@click.prevent="openModal(teamProducts)"
 							/>
 						</div>
 					</div>
@@ -64,6 +65,7 @@
 								text-color="primary"
 								icon="add"
 								label="New Authorization"
+								@click.prevent="openModal(teamMembers)"
 							/>
 						</div>
 					</div>
@@ -86,6 +88,7 @@
 								text-color="primary"
 								icon="add"
 								label="New library"
+								@click.prevent="openModal(teamLibraries)"
 							/>
 						</div>
 					</div>
@@ -108,6 +111,7 @@
 								text-color="primary"
 								icon="add"
 								label="New Environnement"
+								@click.prevent="openModal(teamEnvironnements)"
 							/>
 						</div>
 					</div>
@@ -122,6 +126,7 @@ import ActionCard from "../Cards/ActionCard.vue";
 
 export default {
 	components: { ActionCard },
+	emits: ["openModalToAddItem"],
 	props: {
 		allTags: {
 			type: [],
@@ -228,9 +233,14 @@ export default {
 			],
 		},
 	},
-	setup() {
+	setup(props, { emit }) {
+		const openModal = (item) => {
+			emit("openModalToAddItem", item);
+			console.table({ ID: item[0].ID, DomainID: item[0].DomainID });
+		};
 		return {
 			tab: ref("tags"),
+			openModal,
 		};
 	},
 };

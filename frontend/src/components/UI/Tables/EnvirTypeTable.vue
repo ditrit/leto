@@ -23,7 +23,7 @@
 				<q-dialog v-model="opendDialog" persistent>
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
-							<div class="text-h6 q-pa-md">{{ $t("edit_environments") }}</div>
+							<div class="text-h6 q-pa-md">{{ $t("edit_environment") }}</div>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">

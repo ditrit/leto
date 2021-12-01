@@ -24,7 +24,8 @@ export default {
 	manage_users: "Manage Users",
 	manage_roles: "Manage Roles",
 	manage_tags: "Manage Tags",
-	manage_environments: "Manage Environments",
+	manage_environment: "Manage Environments",
+	edit_environment: "Edit environment",
 
 	products: "Products",
 	add_product: "Add new product",
