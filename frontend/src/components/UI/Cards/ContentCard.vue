@@ -12,87 +12,15 @@
 					<div class="col">
 						<div class="flex text-h6 items-start">
 							<q-icon name="group" size="30px" class="q-mr-sm" />
-							<span class="text-uppercase"
-								>{{ item.Name }}
-								<q-popup-edit
-									ref="EditNameRef"
-									buttons
-									v-model="item.Name"
-									class="bg-white text-white"
-									v-slot="scope"
-									label-set="Update"
-									label-cancel="Reset"
-								>
-									<q-input
-										color="primary"
-										v-model="scope.value"
-										dense
-										autofocus
-										counter
-										@keyup.enter="scope.set"
-										@save="updateName(item)"
-									>
-										<template v-slot:append>
-											<q-icon name="edit" />
-										</template>
-									</q-input>
-								</q-popup-edit>
-							</span>
+							<span class="text-uppercase">{{ item.Name }} </span>
 						</div>
 						<div class="text-subtitle3 text-grey-8">
 							{{ item.ShortDescription }}
-							<q-popup-edit
-								ref="EditShortDescRef"
-								buttons
-								v-model="item.ShortDescription"
-								class="bg-white text-white"
-								v-slot="scope"
-								label-set="Update"
-								label-cancel="Reset"
-							>
-								<q-input
-									color="primary"
-									v-model="scope.value"
-									dense
-									autofocus
-									counter
-									@keyup.enter="scope.set"
-									@save="scope.set"
-								>
-									<template v-slot:append>
-										<q-icon name="edit" />
-									</template>
-								</q-input>
-							</q-popup-edit>
 						</div>
 						<div class="content_wrapper q-mt-md">
 							<img :src="item.Logo" alt="domain logo" />
 							<p class="q-ml-md">
 								{{ item.Description }}
-								<q-popup-edit
-									ref="EditLongDescRef"
-									buttons
-									v-model="item.Description"
-									class="bg-white text-white"
-									v-slot="scope"
-									label-set="Update"
-									label-cancel="Reset"
-								>
-									<q-input
-										type="textarea"
-										color="primary"
-										v-model="scope.value"
-										dense
-										autofocus
-										counter
-										@keyup.enter="scope.set"
-										@save="scope.set"
-									>
-										<template v-slot:append>
-											<q-icon name="edit" />
-										</template>
-									</q-input>
-								</q-popup-edit>
 							</p>
 						</div>
 					</div>
@@ -100,45 +28,19 @@
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>
-									<q-item clickable @click.prevent="$refs.EditNameRef.show()">
+									<q-item clickable @click.prevent="EditDomain(item)">
 										<q-item-section>
 											<q-icon
 												name="edit"
 												size="1.5em"
 												class="q-mr-sm"
-											/>Name</q-item-section
+											/>Edit</q-item-section
 										>
 									</q-item>
-									<q-item
-										clickable
-										@click.prevent="$refs.EditShortDescRef.show()"
-									>
+									<q-item clickable @click.prevent="DeleteDomain(item)">
 										<q-item-section>
-											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Short
-											description</q-item-section
-										>
-									</q-item>
-									<q-item
-										clickable
-										@click.prevent="$refs.EditLongDescRef.show()"
-									>
-										<q-item-section>
-											<q-icon
-												name="edit"
-												size="1.5em"
-												class="q-mr-sm"
-												@click.prevent="EditEvent"
-											/>Long description</q-item-section
-										>
-									</q-item>
-									<q-item clickable>
-										<q-item-section>
-											<q-icon
-												name="edit"
-												size="1.5em"
-												class="q-mr-sm"
-												@click.prevent="EditEvent"
-											/>Logo</q-item-section
+											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
+											Delete</q-item-section
 										>
 									</q-item>
 								</q-list>
@@ -152,6 +54,7 @@
 </template>
 
 <script>
+import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useStore } from "vuex";
 
@@ -163,24 +66,41 @@ export default {
 			type: Array,
 		},
 	},
-	setup() {
+	emit: ["emitUpdateDomain", "emitRemoveDomain"],
+	setup(props, { emit }) {
 		const store = useStore();
+		const route = useRouter();
 		const name = ref("");
 		const short = ref("");
 		const long = ref("");
 		const logo = ref("");
 		const parentID = ref("");
-		const updateName = (update) => {
-			console.log(update, update.id, update.Name);
-			store.dispatch("appDomain/updateDomain", update.id);
+		const EditDomain = (props) => {
+			emit("emitUpdateDomain", props);
+			console.log(props);
+			// store.dispatch("appDomain/updateDomain", update.id);
 		};
+		const DeleteDomain = async (props) => {
+			emit("emitUpdateDomain", props);
+			console.log(props);
+			await store.dispatch("appDomain/removeDomain", props.ID);
+			getDomainstree();
+		};
+
+		const getDomainstree = async () => {
+			await store.dispatch("appDomain/fetchDomainesTree");
+			await store.getters["appDomain/allDomainesTree"];
+			await route.push("/teams");
+		};
+
 		return {
-			updateName,
 			name,
 			short,
 			long,
 			logo,
 			parentID,
+			EditDomain,
+			DeleteDomain,
 		};
 	},
 };

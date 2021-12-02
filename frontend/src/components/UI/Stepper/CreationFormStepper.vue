@@ -132,6 +132,8 @@
 </template>
 <script>
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import Tabs from "../TabPanels/Tabs";
@@ -146,6 +148,7 @@ export default {
 
 	setup() {
 		const store = useStore();
+		const route = useRouter();
 		const name = ref("");
 		const teamParent = ref("");
 		const domainID = ref("");
@@ -168,7 +171,6 @@ export default {
 		 * 	2 - regroupe functions by thematique
 		 */
 
-		// fetch All Domaines
 		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
 		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
 		console.log("getDomaies: ", getDomaies.value);
@@ -194,6 +196,13 @@ export default {
 		optionsSelections.value = [...new Set(dataReturned)].filter(
 			(item) => item != null
 		);
+
+		// fetch Domaine tree
+		const getDomainstree = async (id) => {
+			await store.dispatch("appDomain/fetchDomainesTree");
+			await store.getters["appDomain/allDomainesTree"];
+			await route.push(`/teams/${id}`);
+		};
 
 		return {
 			step: ref(1),
@@ -227,7 +236,7 @@ export default {
 					};
 					if (newDomain.name.length && newDomain.teamParent.length) {
 						store.dispatch("appDomain/addDomain", newDomain);
-						console.log(newDomain);
+						getDomainstree(newDomain.pid);
 
 						$q.notify({
 							type: "positive",

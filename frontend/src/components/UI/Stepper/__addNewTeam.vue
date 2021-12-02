@@ -102,7 +102,7 @@ export default {
 				};
 
 				store.dispatch("appDomain/addDomain", newDomain);
-				console.log(newDomain);
+				console.log("newDomain: ", newDomain);
 			},
 		};
 	},
