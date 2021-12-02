@@ -1,6 +1,7 @@
 export default {
 	teams: "Equipe",
 	add_team: "Nouvelle équipe",
+	edit_team: "Modifier l'équipe",
 	profile: "Profil",
 	users: "Utilisateurs",
 	roles: "Rôles",

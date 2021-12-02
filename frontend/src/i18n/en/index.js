@@ -1,6 +1,7 @@
 export default {
 	teams: "Teams",
 	add_team: "Add new Team",
+	edit_team: "Edit Team",
 	profile: "Profile",
 	users: "Users",
 	enviType: "Environments Type",
