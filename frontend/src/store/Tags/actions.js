@@ -1,5 +1,9 @@
 import API from "../../services/index";
 
+export const fetchAllTagsTree = async ({ commit }) => {
+	let response = await API.get("/tag/tree");
+	commit("GET_TAGS_TREE", response.data);
+};
 export const fetchAllTags = async ({ commit }) => {
 	let response = await API.get("/tag");
 	commit("GET_TAGS", response.data);

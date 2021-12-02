@@ -24,50 +24,105 @@
 					</ul>
 				</q-tab-panel>
 
-				<q-tab-panel name="products">
-					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+				<q-tab-panel name="products" class="flex q-gutter-md">
+					<div
+						class="cards_wrapper"
+						v-for="product in teamProducts"
+						:key="product.ID"
+					>
 						<ActionCard
-							v-for="product in teamProducts"
-							:key="product.ID"
+							v-if="product.Name"
+							:id="product.ID"
 							:name="product.Name"
 							:description="product.ShortDescription"
 							:logo="product.Logo"
 						/>
 					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							class="text-primary"
+							label="New product"
+							@click.prevent="openModal(teamProducts)"
+						/>
+					</div>
 				</q-tab-panel>
-				<q-tab-panel name="team_members">
-					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+				<q-tab-panel name="team_members" class="flex q-gutter-md">
+					<div
+						class="cards_wrapper"
+						v-for="member in teamMembers"
+						:key="member.ID"
+					>
 						<ActionCard
-							v-for="member in teamMembers"
-							:key="member.ID"
+							v-if="member.User.LastName"
+							:id="member.ID"
 							:name="member.User.LastName"
 							:role="member.Role.Name"
 							:description="member.ShortDescription"
 							:logo="member.Logo"
 						/>
 					</div>
-				</q-tab-panel>
-
-				<q-tab-panel name="libraries">
-					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
-						<ActionCard
-							v-for="librarie in teamLibraries"
-							:key="librarie.ID"
-							:name="librarie.Name"
-							:description="librarie.ShortDescription"
-							:logo="librarie.Logo"
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							label="New Authorization"
+							@click.prevent="openModal(teamMembers)"
 						/>
 					</div>
 				</q-tab-panel>
 
-				<q-tab-panel name="environnements">
-					<div class="cards_wrapper q-gutter-x-md q-gutter-y-sm">
+				<q-tab-panel name="libraries" class="flex q-gutter-md">
+					<div
+						class="cards_wrapper"
+						v-for="library in teamLibraries"
+						:key="library.ID"
+					>
 						<ActionCard
-							v-for="env in teamEnvironnements"
-							:key="env.ID"
+							v-if="library.Name"
+							:id="library.ID"
+							:name="library.Name"
+							:description="library.ShortDescription"
+							:logo="library.Logo"
+						/>
+					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							label="New library"
+							@click.prevent="openModal(teamLibraries)"
+						/>
+					</div>
+				</q-tab-panel>
+
+				<q-tab-panel name="environnements" class="flex q-gutter-md">
+					<div
+						class="cards_wrapper"
+						v-for="env in teamEnvironnements"
+						:key="env.ID"
+					>
+						<ActionCard
+							v-if="env.Name"
+							:id="env.ID"
 							:name="env.Name"
 							:description="env.ShortDescription"
 							:logo="env.Logo"
+							:environmentTypeID="env.EnvironmentTypeID"
+							:domainID="env.DomainID"
+						/>
+					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							label="New Environnement"
+							@click.prevent="openModal(teamEnvironnements)"
 						/>
 					</div>
 				</q-tab-panel>
@@ -81,6 +136,7 @@ import ActionCard from "../Cards/ActionCard.vue";
 
 export default {
 	components: { ActionCard },
+	emits: ["openModalToAddItem"],
 	props: {
 		allTags: {
 			type: [],
@@ -187,9 +243,14 @@ export default {
 			],
 		},
 	},
-	setup() {
+	setup(props, { emit }) {
+		const openModal = (item) => {
+			emit("openModalToAddItem", item);
+			console.table({ ID: item[0].ID, DomainID: item[0].DomainID });
+		};
 		return {
 			tab: ref("tags"),
+			openModal,
 		};
 	},
 };

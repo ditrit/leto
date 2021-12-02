@@ -66,7 +66,7 @@ import AjaxBar from "../components/UI/Progress/AjaxBar";
 import PageContent from "../components/Content/PageContent";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-import SettingsNav from "../components/Navigations/SettingsNav";
+import SettingsNav from "../components/UI/Navigation/SettingsNav";
 import { pageSizeTweak } from "../common/index";
 import EnvirTypeTable from "src/components/UI/Tables/EnvirTypeTable.vue";
 export default {

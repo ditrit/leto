@@ -69,8 +69,7 @@
 								files
 								hide-upload-btn="true"
 								auto-upload
-								@uploaded="onFileUpload" 
-							
+								@uploaded="onFileUpload"
 							/>
 						</div>
 					</div>
@@ -211,10 +210,10 @@ export default {
 			shortDescription,
 			description,
 
-			onFileUpload(event){
-				console.log('file name', event.files[0].name)
-				console.log('file upload number', event.files[0].__uploaded)
-				console.log('file Id', event.files[0].xhr.response)
+			onFileUpload(event) {
+				console.log("file name", event.files[0].name);
+				console.log("file upload number", event.files[0].__uploaded);
+				console.log("file Id", event.files[0].xhr.response);
 			},
 
 			onSubmit() {
