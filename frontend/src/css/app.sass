@@ -20,6 +20,17 @@ html, body
   top: 0
   bottom: 0
   background: transparent
+.q-tree 
+  color: $primary
+  &__node-header-content
+    color: $primary
+    font-weight: bold
+  &__children div
+    color: $primary
+    font-weight: 500 !important
+  &__node--child div
+    color: $primary
+    font-weight: 400 !important
 
 .domain_page__child .menuStyle
   background: #eeeeee
@@ -90,6 +101,7 @@ html, body
   padding: 4px 6px
   border: none !important
   max-width: 230px
+  height: max-content
   box-shadow: var(--box-shadow) !important
   
 // .q-card
@@ -144,3 +156,6 @@ html, body
 
 .q-tree__node 
   cursor: pointer
+
+.q-dialog--modal .panel_add__btn 
+  display: none !important

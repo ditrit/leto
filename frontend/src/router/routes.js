@@ -46,7 +46,33 @@ const routes = [
 			},
 			{
 				path: "settings",
-				component: () => import("pages/PageSettings.vue"),
+				component: () => import("pages/PageSettingsProfile.vue"),
+				meta: { requiresAuth: true },
+			},
+
+			{
+				path: "settings/profile",
+				component: () => import("pages/PageSettingsProfile.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "settings/users",
+				component: () => import("pages/PageSettingsUsers.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "settings/roles",
+				component: () => import("pages/PageSettingsRoles.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "settings/tags",
+				component: () => import("pages/PageSettingsTags.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "settings/environmentstypes",
+				component: () => import("pages/PageSettingsEnviType.vue"),
 				meta: { requiresAuth: true },
 			},
 		],

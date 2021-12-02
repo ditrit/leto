@@ -59,11 +59,17 @@
 						<div class="col">
 							<q-uploader
 								style="max-width: 100%"
-								url="http://localhost:8080/upload"
-								label="Logo"
+								url="http://localhost:3000/upload"
+								label="Your Logo"
 								multiple
 								accept=".jpg, svg, image/*"
 								@rejected="onRejected"
+								color="primary"
+								factory
+								files
+								hide-upload-btn="true"
+								auto-upload
+								@uploaded="onFileUpload"
 							/>
 						</div>
 					</div>
@@ -197,13 +203,18 @@ export default {
 			optionsSelections,
 			options,
 			domainID,
-
 			onRejected,
 			store,
 			name,
 			teamParent,
 			shortDescription,
 			description,
+
+			onFileUpload(event) {
+				console.log("file name", event.files[0].name);
+				console.log("file upload number", event.files[0].__uploaded);
+				console.log("file Id", event.files[0].xhr.response);
+			},
 
 			onSubmit() {
 				try {
@@ -213,10 +224,6 @@ export default {
 						teamParent: selectedParentData.value.parentName,
 						shortDescription: shortDescription.value,
 						description: description.value,
-						// authorizations: selectedParentData.value.authorizations,
-						// libraries: selectedParentData.value.libraries,
-						/* TODO  Whats is the heritage ?*/
-						// products: selectedParentData.value.products,
 					};
 					if (newDomain.name.length && newDomain.teamParent.length) {
 						store.dispatch("appDomain/addDomain", newDomain);

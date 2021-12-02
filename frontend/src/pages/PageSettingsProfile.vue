@@ -44,9 +44,9 @@
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak" class="flex">
 				<PageContent
-					icon="settings"
-					:headline="$t('settings')"
-					:subTitle="$t('manage_settings')"
+					icon="person"
+					:headline="$t('profile')"
+					:subTitle="$t('manage_profile')"
 					:textContent="$t('text_content')"
 				/>
 				<Modal>
@@ -65,7 +65,7 @@ import AjaxBar from "../components/UI/Progress/AjaxBar";
 import PageContent from "../components/Content/PageContent";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-import SettingsNav from "../components/Navigations/SettingsNav";
+import SettingsNav from "../components/UI/Navigation/SettingsNav";
 import { pageSizeTweak } from "../common/index";
 export default {
 	components: {

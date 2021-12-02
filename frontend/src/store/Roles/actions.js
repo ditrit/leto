@@ -1,6 +1,6 @@
 import API from "../../services/index";
 
-export const fetchAllRole = async ({ commit }) => {
+export const fetchAllRoles = async ({ commit }) => {
 	let response = await API.get("/role");
 	commit("GET_ROLE", response.data);
 };

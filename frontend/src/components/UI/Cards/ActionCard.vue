@@ -16,6 +16,9 @@
 						/>
 					</div>
 					<div class="col">
+						<!-- <span>{{ id }}</span> -->
+						<span>{{ environmentTypeID }}</span>
+						<span>{{ domainID }}</span>
 						<div class="text-subtitle2">{{ name }}</div>
 						<div class="text-h8">{{ role }}</div>
 					</div>
@@ -23,21 +26,77 @@
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>
-									<q-item clickable>
+									<q-item clickable @click.prevent="openModal(props)">
+										<q-item-section class="action_card__item">
+											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
+										</q-item-section>
+									</q-item>
+									<q-item clickable @click.prevent="delteItem">
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
-											Remove Card</q-item-section
-										>
-									</q-item>
-									<q-item clickable>
-										<q-item-section class="action_card__item">
-											<q-icon name="edit" size="1.5em" class="q-mr-sm" /> Update
-											Card</q-item-section
-										>
+											Remove
+										</q-item-section>
 									</q-item>
 								</q-list>
 							</q-menu>
 						</q-btn>
+						<!-- Modification dialog -->
+						<q-dialog v-model="isOpened" persistent>
+							<q-card style="width: 750px; max-width: 80vw">
+								<q-card-section>
+									<div class="text-h6 q-pa-md">{{ $t("edit_tag") }}</div>
+								</q-card-section>
+
+								<q-card-section class="q-pt-none">
+									<q-form
+										@submit.prevent="onSubmitUpdate"
+										@reset="onResetUpdate"
+										class="q-gutter-md q-pa-md"
+									>
+										<q-input
+											filled
+											label="Name *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+										<q-input
+											filled
+											label="Short Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+										<q-input
+											filled
+											label="Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+
+										<q-card-actions
+											align="right"
+											class="text-primary flex justify-center"
+										>
+											<q-btn type="reset" label="Cancel" v-close-popup />
+											<q-btn
+												label="Update"
+												type="submit"
+												color="primary"
+												v-close-popup
+											/>
+										</q-card-actions>
+									</q-form>
+								</q-card-section>
+							</q-card>
+						</q-dialog>
 					</div>
 				</div>
 			</q-card-section>
@@ -48,15 +107,43 @@
 	</div>
 </template>
 <script>
+import { ref } from "vue";
 export default {
+	emits: ["openEditModal", "deleteAction"],
 	props: {
+		id: { type: String },
 		logo: { type: String, default: "https://cdn.quasar.dev/img/parallax2.jpg" },
 		name: { type: String },
 		role: { type: String },
+		shortDescription: { type: String },
 		description: { type: String },
+		environmentTypeID: { type: String },
+		domainID: { type: String },
 	},
-	setup() {
+	setup(props, { emit }) {
+		const isOpened = ref(false);
+		const openModal = () => {
+			isOpened.value = true;
+			emit("openEditModal", props);
+			console.log("event: ", props);
+		};
+		const delteItem = () => {
+			emit("deleteAction", props);
+			console.table({ id: props.id, domainID: props.id });
+		};
+		const onSubmitUpdate = () => {
+			console.log("event: ", props.id);
+		};
+		const onResetUpdate = () => {
+			console.log("event: ", props.id);
+		};
+
 		return {
+			isOpened,
+			openModal,
+			delteItem,
+			onSubmitUpdate,
+			onResetUpdate,
 			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		};
 	},

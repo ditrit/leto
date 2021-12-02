@@ -57,6 +57,7 @@ export default {
 	watch: {
 		selectedItem(newVal) {
 			this.$emit('item:selected', newVal)
+			this.selectedItem = null
 		}
 	}
 }
