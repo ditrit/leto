@@ -5,11 +5,12 @@
 			v-for="(item, index) in navigationItem"
 			:key="index"
 		>
-			<q-item clickable>
+			<q-item clickable :active="link === link">
 				<q-item-section>
 					<router-link :to="item.link">{{ item.label }}</router-link>
 				</q-item-section>
 			</q-item>
+			<q-separator spaced inset />
 		</q-list>
 	</div>
 </template>
@@ -32,4 +33,11 @@ export default {
 	},
 };
 </script>
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+a
+	text-decoration: none
+	font-weight: bold
+	font-size: 14px
+	&:active
+		color: $grey
+</style>
