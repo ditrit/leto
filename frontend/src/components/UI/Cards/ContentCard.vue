@@ -159,13 +159,8 @@ export default {
 	setup(props, { emit }) {
 		const store = useStore();
 		const route = useRouter();
-		// const name = ref("");
-		// const short = ref("");
-		// const long = ref("");
-		// const logo = ref("");
 		const parentID = ref("");
 		const isOpend = ref(false);
-
 		const editModal = () => {
 			isOpend.value = true;
 		};
@@ -216,10 +211,6 @@ export default {
 		};
 
 		return {
-			// name,
-			// short,
-			// long,
-			// logo,
 			editModal,
 			parentID,
 			onSubmitUpdate,

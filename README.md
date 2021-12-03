@@ -63,11 +63,5 @@ cd gandalf/core/
 - Run this command:
 
 ```bash
-./prepare_docker.sh
+./testbackend.sh run <Storage> <-- This is optional
 ```
-
-- After that run this other command:
-
-```bash
- docker run -p 127.0.0.1:9203:9203/tcp gandalfdocker
- ```
