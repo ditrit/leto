@@ -103,17 +103,18 @@
 				<q-tab-panel name="environnements" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="env in teamEnvironnements"
+						v-for="env in environmentTeam"
 						:key="env.ID"
 					>
 						<ActionCard
-							v-if="env.Name"
+							v-show="env.ID"
 							:id="env.ID"
 							:name="env.Name"
 							:description="env.ShortDescription"
 							:logo="env.Logo"
 							:environmentTypeID="env.EnvironmentTypeID"
 							:domainID="env.DomainID"
+							@deleteAction="deleteEnvironement"
 						/>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
@@ -132,6 +133,7 @@
 </template>
 <script>
 import { ref } from "vue";
+import { useStore } from "vuex";
 import ActionCard from "../Cards/ActionCard.vue";
 
 export default {
@@ -244,13 +246,30 @@ export default {
 		},
 	},
 	setup(props, { emit }) {
+		const store = useStore();
+		const environmentTeam = ref(props.teamEnvironnements);
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
 			console.table({ ID: item[0].ID, DomainID: item[0].DomainID });
 		};
+
+		const deleteEnvironement = async (evironment) => {
+			console.log("props is: ", props, evironment.id);
+			await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
+			refreshEnvironments();
+		};
+
+		// Refrech tabs items data
+		const refreshEnvironments = async () => {
+			await store.dispatch("appEnvironment/fetchAllEnvironments");
+			let data = store.getters["appEnvironment/allEnvironments"];
+			environmentTeam.value = data;
+		};
 		return {
-			tab: ref("tags"),
+			environmentTeam,
+			tab: ref("environnements"),
 			openModal,
+			deleteEnvironement,
 		};
 	},
 };

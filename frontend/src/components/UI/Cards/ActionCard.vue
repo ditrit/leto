@@ -17,8 +17,8 @@
 					</div>
 					<div class="col">
 						<!-- <span>{{ id }}</span> -->
-						<span>{{ environmentTypeID }}</span>
-						<span>{{ domainID }}</span>
+						<!-- <span>{{ environmentTypeID }}</span>
+						<span>{{ domainID }}</span> -->
 						<div class="text-subtitle2">{{ name }}</div>
 						<div class="text-h8">{{ role }}</div>
 					</div>
@@ -31,7 +31,7 @@
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
 									</q-item>
-									<q-item clickable @click.prevent="delteItem">
+									<q-item clickable @click.prevent="delteItem()">
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
 											Remove
