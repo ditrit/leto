@@ -3,6 +3,7 @@
   --box-shadow: 0 0 8px rgba(0,0,0,.3) 
   --light-gray : lightgray
   --gray: #424242
+  --card-height : 140px
   
 html, body
     width: 100%
@@ -101,7 +102,8 @@ html, body
   padding: 4px 6px
   border: none !important
   max-width: 230px
-  height: max-content
+  max-height: var(--card-height)
+  height: max-content !important
   box-shadow: var(--box-shadow) !important
   
 // .q-card

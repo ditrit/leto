@@ -26,7 +26,7 @@
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>
-									<q-item clickable @click.prevent="openModal(props)">
+									<q-item clickable @click.prevent="openModal()">
 										<q-item-section class="action_card__item">
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
@@ -61,6 +61,7 @@
 												(val) =>
 													(val && val.length > 0) || 'Please type something',
 											]"
+											v-model="name"
 										/>
 										<q-input
 											filled
@@ -109,7 +110,7 @@
 <script>
 import { ref } from "vue";
 export default {
-	emits: ["openEditModal", "deleteAction"],
+	emits: ["openEditModal", "deleteAction", "updateAction"],
 	props: {
 		id: { type: String },
 		logo: { type: String, default: "https://cdn.quasar.dev/img/parallax2.jpg" },
@@ -122,10 +123,14 @@ export default {
 	},
 	setup(props, { emit }) {
 		const isOpened = ref(false);
-		const openModal = () => {
+		const openModal = (props) => {
 			isOpened.value = true;
 			emit("openEditModal", props);
-			console.log("event: ", props);
+			console.log("props: ", props);
+		};
+		const updateItem = () => {
+			emit("updateAction", props);
+			console.table({ id: props.id, domainID: props.id });
 		};
 		const delteItem = () => {
 			emit("deleteAction", props);
@@ -141,6 +146,7 @@ export default {
 		return {
 			isOpened,
 			openModal,
+			updateItem,
 			delteItem,
 			onSubmitUpdate,
 			onResetUpdate,

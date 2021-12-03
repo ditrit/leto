@@ -114,6 +114,7 @@
 							:logo="env.Logo"
 							:environmentTypeID="env.EnvironmentTypeID"
 							:domainID="env.DomainID"
+							@updateAction="updateEnvironement"
 							@deleteAction="deleteEnvironement"
 						/>
 					</div>
@@ -254,8 +255,12 @@ export default {
 		};
 
 		const deleteEnvironement = async (evironment) => {
-			console.log("props is: ", props, evironment.id);
 			await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
+			refreshEnvironments();
+		};
+		const updateEnvironement = async (evironment) => {
+			console.log("props is: ", props, evironment.id);
+			await store.dispatch("appEnvironment/updateEnvironment", evironment);
 			refreshEnvironments();
 		};
 
@@ -269,6 +274,7 @@ export default {
 			environmentTeam,
 			tab: ref("environnements"),
 			openModal,
+			updateEnvironement,
 			deleteEnvironement,
 		};
 	},
