@@ -45,7 +45,7 @@
 							icon="add"
 							class="text-primary"
 							label="New product"
-							@click.prevent="openModal(teamProducts)"
+							@click.prevent="openCreationModal(teamProducts)"
 						/>
 					</div>
 				</q-tab-panel>
@@ -70,7 +70,7 @@
 							text-color="primary"
 							icon="add"
 							label="New Authorization"
-							@click.prevent="openModal(teamMembers)"
+							@click.prevent="openCreationModal(teamMembers)"
 						/>
 					</div>
 				</q-tab-panel>
@@ -95,7 +95,7 @@
 							text-color="primary"
 							icon="add"
 							label="New library"
-							@click.prevent="openModal(teamLibraries)"
+							@click.prevent="openCreationModal(teamLibraries)"
 						/>
 					</div>
 				</q-tab-panel>
@@ -124,17 +124,115 @@
 							text-color="primary"
 							icon="add"
 							label="New Environnement"
-							@click.prevent="openModal(teamEnvironnements)"
+							@click.prevent="openCreationModal"
 						/>
 					</div>
+					<!-- Creation dialog -->
+					<q-dialog v-model="isCreationOpened" persistent>
+						<q-card style="width: 750px; max-width: 80vw">
+							<q-card-section>
+								<div class="text-h6 q-pa-md">{{ $t("add_environment") }}</div>
+							</q-card-section>
+
+							<q-card-section class="q-pt-none">
+								<q-form
+									@submit.prevent="addNewEnvironment"
+									@reset="onResetEnvironment"
+									class="q-gutter-md q-pa-md"
+								>
+									<div class="row col-md-12 q-gutter-md">
+										<div class="col">
+											<q-input
+												filled
+												label="Name *"
+												hint=""
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="environmentName"
+											/>
+										</div>
+										<div class="col">
+											<q-select
+												filled
+												:options="optionsSelections"
+												label="Environment Type"
+												v-model="selectedParentData"
+											/>
+										</div>
+									</div>
+									<q-input
+										class="q-gutter-md"
+										filled
+										label="Short Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+										v-model="environmentShortDescription"
+									/>
+
+									<div class="row q-gutter-md">
+										<div class="col col-md-8">
+											<q-input
+												class="q-gutter-md"
+												filled
+												type="textarea"
+												label="Description *"
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="environmentDescription"
+											/>
+										</div>
+										<div class="col">
+											<q-uploader
+												style="max-width: 100%"
+												url="http://localhost:3000/upload"
+												label="Your Logo"
+												multiple
+												accept=".jpg, svg, image/*"
+												@rejected="onRejected"
+												color="primary"
+												factory
+												files
+												hide-upload-btn="true"
+												auto-upload
+												@uploaded="onFileUpload"
+											/>
+										</div>
+									</div>
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Update"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</q-card-section>
+						</q-card>
+					</q-dialog>
 				</q-tab-panel>
 			</q-tab-panels>
 		</q-card>
 	</div>
 </template>
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 import ActionCard from "../Cards/ActionCard.vue";
 
 export default {
@@ -248,12 +346,58 @@ export default {
 	},
 	setup(props, { emit }) {
 		const store = useStore();
+		const route = useRouter();
+		const $q = useQuasar();
+		const optionsSelections = ref(null);
+		const selectedParentData = ref(null);
+		const environmentName = ref("");
+		const environmentShortDescription = ref("");
+		const environmentDescription = ref("");
+		const isCreationOpened = ref(false);
 		const environmentTeam = ref(props.teamEnvironnements);
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
-			console.table({ ID: item[0].ID, DomainID: item[0].DomainID });
+			// console.table({
+			// 	ID: item[0].ID,
+			// 	DomainID: item[0].DomainID,
+			// 	EnvironmentTypeID: item[0].EnvironmentTypeID,
+			// });
 		};
 
+		const openCreationModal = (props) => {
+			isCreationOpened.value = true;
+			emit("openNewItemModal", props);
+
+			console.log("openCreationModal props: ", props);
+		};
+
+		const addNewEnvironment = async () => {
+			console.log("selectedParentData", selectedParentData.value);
+			let newEnvironment = {
+				domainID: route.currentRoute.value.params.id,
+				environmentTypeID: selectedParentData.value.ID,
+				name: environmentName.value,
+				shortDescription: environmentShortDescription.value,
+				description: environmentDescription.value,
+			};
+			try {
+				await store.dispatch("appEnvironment/addEnvironment", newEnvironment);
+				await refreshEnvironments();
+				$q.notify({
+					type: "positive",
+					message: `${environmentName.value} environment was succefuly created`,
+				});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: `${environmentName.value} environment was not created`,
+				});
+			}
+			selectedParentData.value = "";
+			environmentName.value = "";
+			environmentShortDescription.value = "";
+			environmentDescription.value = "";
+		};
 		const deleteEnvironement = async (evironment) => {
 			await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
 			refreshEnvironments();
@@ -270,12 +414,67 @@ export default {
 			let data = store.getters["appEnvironment/allEnvironments"];
 			environmentTeam.value = data;
 		};
+
+		const getAllEnviTypes = async () => {
+			await store.dispatch("appEnviType/fetchAllEnviTypes");
+			const allEnviTypes = computed(
+				() => store.getters["appEnviType/allEnviTypes"]
+			);
+			console.log("allEnviTypes: ", allEnviTypes.value);
+			// Get input Select options value
+
+			let dataReturned = allEnviTypes.value.map((payload) => {
+				return {
+					id: payload.ID,
+					name: payload.Name,
+					label: payload.Name,
+					value: payload.Name,
+					parentName: payload?.Name,
+					shortDescription: payload.ShortDescription,
+					description: payload.Description,
+					logo: payload.Logo,
+				};
+			});
+			console.log("dataReturned from form: ", [...dataReturned]);
+			// optionsSelections.value = dataReturned;
+
+			optionsSelections.value = [...new Set(dataReturned)].filter(
+				(item) => item != null
+			);
+		};
+		getAllEnviTypes();
+		console.log("selectedParentData: ", optionsSelections.value);
+
+		const onFileUpload = (event) => {
+			console.log("file name", event.files[0].name);
+			console.log("file upload number", event.files[0].__uploaded);
+			console.log("file Id", event.files[0].xhr.response);
+		};
+
+		const onRejected = (rejectedEntries) => {
+			$q.notify({
+				type: "negative",
+				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
+			});
+		};
+
 		return {
 			environmentTeam,
 			tab: ref("environnements"),
+			environmentName,
+			environmentShortDescription,
+			environmentDescription,
 			openModal,
+			isCreationOpened,
+			addNewEnvironment,
+			openCreationModal,
 			updateEnvironement,
 			deleteEnvironement,
+			optionsSelections,
+			selectedParentData,
+			route,
+			onFileUpload,
+			onRejected,
 		};
 	},
 };

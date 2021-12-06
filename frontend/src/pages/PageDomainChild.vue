@@ -231,14 +231,14 @@ export default defineComponent({
 		const filter = ref("");
 		const filterRef = ref(null);
 		const globalTagsList = ref(null);
+		const chodosenNodeID = ref("");
 
-		const chosenNodeID = ref("");
 		const goToID = async (node) => {
-			chosenNodeID.value = await node.id;
+			chodosenNodeID.value = await node.id;
 			router.push(`/teams/${node.id}`);
 			store.dispatch("appDomain/fetchDomainById", `${node.id}`);
 			store.getters["appDomain/allDomaines"];
-			console.log("chosenNodeID: ", chosenNodeID.value);
+			console.log("chodosenNodeID: ", chodosenNodeID.value);
 			console.log("props.id: ", props.id);
 		};
 		const menu = ref(null);
@@ -340,7 +340,7 @@ export default defineComponent({
 			actionsLinks,
 			Drawer,
 			menu,
-			chosenNodeID,
+			chodosenNodeID,
 			goToID,
 			filter,
 			filterRef,

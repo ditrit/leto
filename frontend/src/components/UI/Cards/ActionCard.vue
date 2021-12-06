@@ -26,7 +26,7 @@
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>
-									<q-item clickable @click.prevent="openModal()">
+									<q-item clickable @click.prevent="openEditionModal()">
 										<q-item-section class="action_card__item">
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
@@ -44,7 +44,7 @@
 						<q-dialog v-model="isOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
-									<div class="text-h6 q-pa-md">{{ $t("edit_tag") }}</div>
+									<div class="text-h6 q-pa-md">{{ `Edit ${name}` }}</div>
 								</q-card-section>
 
 								<q-card-section class="q-pt-none">
@@ -53,34 +53,66 @@
 										@reset="onResetUpdate"
 										class="q-gutter-md q-pa-md"
 									>
-										<q-input
-											filled
-											label="Name *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-											v-model="name"
-										/>
-										<q-input
-											filled
-											label="Short Description *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-										<q-input
-											filled
-											label="Description *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
+										<div class="row col-md-12 q-gutter-md">
+											<div class="col">
+												<q-input
+													filled
+													label="Name *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+												/>
+											</div>
+										</div>
+										<div class="row col-md-12 q-gutter-md">
+											<div class="col">
+												<q-input
+													filled
+													label="Short Description *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+												/>
+											</div>
+										</div>
+										<div class="row q-gutter-md">
+											<div class="col col-md-8">
+												<q-input
+													class="q-gutter-md"
+													filled
+													type="textarea"
+													label="Description *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+												/>
+											</div>
+											<div class="col">
+												<q-uploader
+													style="max-width: 100%"
+													url="http://localhost:3000/upload"
+													label="Your Logo"
+													multiple
+													accept=".jpg, svg, image/*"
+													@rejected="onRejected"
+													color="primary"
+													factory
+													files
+													hide-upload-btn="true"
+													auto-upload
+													@uploaded="onFileUpload"
+												/>
+											</div>
+										</div>
 
 										<q-card-actions
 											align="right"
@@ -110,7 +142,7 @@
 <script>
 import { ref } from "vue";
 export default {
-	emits: ["openEditModal", "deleteAction", "updateAction"],
+	emits: ["openEditModal", "deleteAction", "updateAction", "openNewItemModal"],
 	props: {
 		id: { type: String },
 		logo: { type: String, default: "https://cdn.quasar.dev/img/parallax2.jpg" },
@@ -123,11 +155,12 @@ export default {
 	},
 	setup(props, { emit }) {
 		const isOpened = ref(false);
-		const openModal = (props) => {
+		const openEditionModal = (props) => {
 			isOpened.value = true;
 			emit("openEditModal", props);
 			console.log("props: ", props);
 		};
+
 		const updateItem = () => {
 			emit("updateAction", props);
 			console.table({ id: props.id, domainID: props.id });
@@ -143,13 +176,28 @@ export default {
 			console.log("event: ", props.id);
 		};
 
+		const onFileUpload = (event) => {
+			console.log("file name", event.files[0].name);
+			console.log("file upload number", event.files[0].__uploaded);
+			console.log("file Id", event.files[0].xhr.response);
+		};
+
+		const onRejected = (rejectedEntries) => {
+			$q.notify({
+				type: "negative",
+				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
+			});
+		};
+
 		return {
 			isOpened,
-			openModal,
+			openEditionModal,
 			updateItem,
 			delteItem,
 			onSubmitUpdate,
 			onResetUpdate,
+			onFileUpload,
+			onRejected,
 			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		};
 	},

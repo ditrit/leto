@@ -6,7 +6,7 @@ export const fetchAllEnvironments = async ({ commit }) => {
 };
 
 export const fetchEnvironmentyId = async ({ commit }, environment) => {
-	let response = await API.put(`/environment/${environment.id}`, environment);
+	let response = await API.get(`/environment/${environment.id}`, environment);
 	commit("GET_ENVIRONMENT_BY_ID", response.data);
 };
 
