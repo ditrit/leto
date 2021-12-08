@@ -325,6 +325,7 @@ export default {
 					id: 0,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Env 1",
+					environmentTypeName: "EnvType",
 					description:
 						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
@@ -391,11 +392,13 @@ export default {
 			console.log("selectedParentData", selectedParentData.value);
 			let newEnvironment = {
 				domainID: route.currentRoute.value.params.id,
-				environmentTypeID: selectedParentData.value.ID,
+				environmentTypeID: selectedParentData.value.id,
+				environmentTypeName: selectedParentData.value.name,
 				name: environmentName.value,
 				shortDescription: environmentShortDescription.value,
 				description: environmentDescription.value,
 			};
+			console.log("newEnvironment: ", newEnvironment);
 			try {
 				await store.dispatch("appEnvironment/addEnvironment", newEnvironment);
 				await refreshEnvironments();

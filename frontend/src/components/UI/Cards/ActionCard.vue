@@ -19,7 +19,6 @@
 						<div class="text-subtitle2">{{ name }}</div>
 						<div class="text-h8">{{ role }}</div>
 						<div class="text-h8 text-grey-8">{{ environmentTypeName }}</div>
-						<!-- <span>{{ environmentTypeID }}</span> -->
 					</div>
 					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
