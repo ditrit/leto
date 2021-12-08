@@ -37,7 +37,7 @@
 											/>Edit</q-item-section
 										>
 									</q-item>
-									<q-item clickable @click.prevent="DeleteDomain(item)">
+									<q-item clickable @click="confirm(item)">
 										<q-item-section>
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
 											Delete</q-item-section
@@ -146,6 +146,7 @@
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
 export default {
 	name: "ContentCard",
@@ -159,12 +160,27 @@ export default {
 	setup(props, { emit }) {
 		const store = useStore();
 		const route = useRouter();
+		const $q = useQuasar();
 		const parentID = ref("");
 		const isOpend = ref(false);
 		const editModal = () => {
 			isOpend.value = true;
 		};
 
+		const confirm = (props) => {
+			$q.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
+				.onOk(() => {
+					DeleteDomain(props);
+				})
+				.onCancel(() => {
+					console.log(">>>> Cancel");
+				});
+		};
 		const DeleteDomain = async (props) => {
 			emit("emitRemoveDomain", props);
 			console.log(props);
@@ -218,6 +234,7 @@ export default {
 			isOpend,
 			onFileUpload,
 			onRejected,
+			confirm,
 		};
 	},
 };

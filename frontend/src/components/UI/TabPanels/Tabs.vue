@@ -113,9 +113,10 @@
 							:description="env.ShortDescription"
 							:logo="env.Logo"
 							:environmentTypeID="env.EnvironmentTypeID"
+							:environmentTypeName="env.EnvironmentType.Name"
 							:domainID="env.DomainID"
 							@updateAction="updateEnvironement"
-							@deleteAction="deleteEnvironement"
+							@deleteAction="confirmDeleteEnvironment"
 						/>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
@@ -364,6 +365,21 @@ export default {
 			// });
 		};
 
+		const confirmDeleteEnvironment = (props) => {
+			$q.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
+				.onOk(() => {
+					deleteEnvironement(props);
+				})
+				.onCancel(() => {
+					console.log(">>>> Cancel");
+				});
+		};
+
 		const openCreationModal = (props) => {
 			isCreationOpened.value = true;
 			emit("openNewItemModal", props);
@@ -400,6 +416,9 @@ export default {
 		};
 		const deleteEnvironement = async (evironment) => {
 			await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
+			// await store.dispatch("appDomain/fetchDomainesTree");
+			// let getDomainTree = await store.getters["appDomain/allDomainesTree"];
+			// console.log("getDomainTree: ", getDomainTree);
 			refreshEnvironments();
 		};
 		const updateEnvironement = async (evironment) => {
@@ -475,6 +494,7 @@ export default {
 			route,
 			onFileUpload,
 			onRejected,
+			confirmDeleteEnvironment,
 		};
 	},
 };
