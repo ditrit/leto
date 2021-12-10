@@ -132,6 +132,7 @@
 </template>
 <script>
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import Tabs from "../TabPanels/Tabs";
@@ -146,6 +147,7 @@ export default {
 
 	setup() {
 		const store = useStore();
+		const route = useRouter();
 		const name = ref("");
 		const teamParent = ref("");
 		const domainID = ref("");
@@ -168,37 +170,44 @@ export default {
 		 * 	2 - regroupe functions by thematique
 		 */
 
-		// fetch All Domaines
-		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
-		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
-		console.log("getDomaies: ", getDomaies.value);
+		const getAllDomains = async () => {
+			await store.dispatch("appDomain/fetchAllDomaines");
+			const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
+			console.log("getDomaies: ", getDomaies.value);
+			// Get input Select options value
+			let dataReturned = getDomaies.value.map((payload) => {
+				return {
+					id: payload.ID,
+					name: payload.Name,
+					label: payload.Name,
+					value: payload.Name,
+					parentName: payload?.Name,
+					parentId: payload?.ParentID,
+					authorizations: payload?.Authorizations,
+					libraries: payload?.Libraries,
+					products: payload?.Products,
+					environments: payload?.Environments,
+				};
+			});
+			console.log("dataReturned from stepper: ", [...dataReturned]);
+			// optionsSelections.value = dataReturned;
+			// console.log("selectedParentData: ", optionsSelections.value);
+			optionsSelections.value = [...new Set(dataReturned)].filter(
+				(item) => item != null
+			);
+		};
+		getAllDomains();
 
-		// Get input Select options value
-		let dataReturned = getDomaies.value.map((payload) => {
-			return {
-				id: payload.ID,
-				name: payload.Name,
-				label: payload.Name,
-				value: payload.Name,
-				parentName: payload?.Name,
-				parentId: payload?.ParentID,
-				authorizations: payload?.Authorizations,
-				libraries: payload?.Libraries,
-				products: payload?.Products,
-				environments: payload?.Environments,
-			};
-		});
-		console.log("dataReturned from stepper: ", [...dataReturned]);
-		// optionsSelections.value = dataReturned;
-		// console.log("selectedParentData: ", optionsSelections.value);
-		optionsSelections.value = [...new Set(dataReturned)].filter(
-			(item) => item != null
-		);
+		// fetch Domaine tree
+		const getDomainstree = async (id) => {
+			await store.dispatch("appDomain/fetchDomainesTree");
+			await store.getters["appDomain/allDomainesTree"];
+			await route.push(`/teams/${id}`);
+		};
 
 		return {
 			step: ref(1),
 			selectedParentData,
-			fetchDomaines,
 			SelectedDomain,
 			optionsSelections,
 			options,
@@ -227,7 +236,7 @@ export default {
 					};
 					if (newDomain.name.length && newDomain.teamParent.length) {
 						store.dispatch("appDomain/addDomain", newDomain);
-						console.log(newDomain);
+						getDomainstree(newDomain.pid);
 
 						$q.notify({
 							type: "positive",

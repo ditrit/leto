@@ -16,22 +16,36 @@
 						/>
 					</div>
 					<div class="col">
-						<!-- <span>{{ id }}</span> -->
-						<span>{{ environmentTypeID }}</span>
-						<span>{{ domainID }}</span>
 						<div class="text-subtitle2">{{ name }}</div>
 						<div class="text-h8">{{ role }}</div>
+						<div class="text-h8 text-grey-8">{{ environmentTypeName }}</div>
 					</div>
 					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>
-									<q-item clickable @click.prevent="openModal(props)">
+									<q-item
+										clickable
+										@click.prevent="
+											openEditionModal([
+												{
+													name,
+													role,
+													environmentTypeName,
+													logo,
+													shortDescription,
+													description,
+													environmentTypeID,
+													domainID,
+												},
+											])
+										"
+									>
 										<q-item-section class="action_card__item">
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
 									</q-item>
-									<q-item clickable @click.prevent="delteItem">
+									<q-item clickable @click.prevent="delteItem()">
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
 											Remove
@@ -44,42 +58,78 @@
 						<q-dialog v-model="isOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
-									<div class="text-h6 q-pa-md">{{ $t("edit_tag") }}</div>
+									<div class="text-h6 q-pa-md">{{ `Edit ${name}` }}</div>
 								</q-card-section>
 
 								<q-card-section class="q-pt-none">
 									<q-form
-										@submit.prevent="onSubmitUpdate"
+										@submit.prevent="onSubmitUpdate(item)"
 										@reset="onResetUpdate"
-										class="q-gutter-md q-pa-md"
+										class="q-gutter-sm q-pa-md"
 									>
-										<q-input
-											filled
-											label="Name *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-										<q-input
-											filled
-											label="Short Description *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-										<q-input
-											filled
-											label="Description *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
+										<div class="row col-md-12 q-gutter-md">
+											<div class="col">
+												<q-input
+													filled
+													label="Name *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+													v-model="itemName"
+												/>
+											</div>
+										</div>
+										<div class="row col-md-12 q-gutter-md">
+											<div class="col">
+												<q-input
+													filled
+													label="Short Description *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+													v-model="itemShortDescription"
+												/>
+											</div>
+										</div>
+										<div class="row q-gutter-md">
+											<div class="col col-md-8">
+												<q-input
+													class="q-gutter-md"
+													filled
+													type="textarea"
+													label="Description *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+													v-model="itemDescription"
+												/>
+											</div>
+											<div class="col">
+												<q-uploader
+													style="max-width: 100%"
+													url="http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/50"
+													label="Your Logo"
+													multiple
+													accept=".jpg, svg, image/*"
+													@rejected="onRejected"
+													color="primary"
+													factory
+													files
+													hide-upload-btn="true"
+													auto-upload
+													@uploaded="onFileUpload"
+												/>
+											</div>
+										</div>
 
 										<q-card-actions
 											align="right"
@@ -108,8 +158,11 @@
 </template>
 <script>
 import { ref } from "vue";
+import { useQuasar } from "quasar";
+import { useStore } from "vuex";
+import API from "../../../services/index";
 export default {
-	emits: ["openEditModal", "deleteAction"],
+	emits: ["openEditModal", "deleteAction", "updateAction", "openNewItemModal"],
 	props: {
 		id: { type: String },
 		logo: { type: String, default: "https://cdn.quasar.dev/img/parallax2.jpg" },
@@ -118,32 +171,108 @@ export default {
 		shortDescription: { type: String },
 		description: { type: String },
 		environmentTypeID: { type: String },
+		environmentTypeName: { type: String },
 		domainID: { type: String },
 	},
 	setup(props, { emit }) {
+		const store = useStore();
+		const $q = useQuasar();
+		const itemName = ref(props.name);
+		const itemLogo = ref(props.logo);
+		const itemRole = ref(props.role);
+		const itemShortDescription = ref(props.shortDescription);
+		const itemDescription = ref(props.description);
+		const itemEnvironmentTypeID = ref(props.environmentTypeID);
+		const itemEnvironmentTypeName = ref(props.environmentTypeName);
+		const itemDomainID = ref(props.domainID);
+
 		const isOpened = ref(false);
-		const openModal = () => {
+		const openEditionModal = (props) => {
 			isOpened.value = true;
 			emit("openEditModal", props);
-			console.log("event: ", props);
+			console.log("props: ", props);
+		};
+
+		const updateItem = () => {
+			emit("updateAction", props);
+			console.table({ id: props.id, domainID: props.id });
 		};
 		const delteItem = () => {
 			emit("deleteAction", props);
 			console.table({ id: props.id, domainID: props.id });
 		};
-		const onSubmitUpdate = () => {
-			console.log("event: ", props.id);
+		const onSubmitUpdate = async () => {
+			console.log("updates to submit: ", props);
+			let updates = {
+				id: props.id,
+				name: itemName.value,
+				shortDescription: itemShortDescription.value,
+				description: itemDescription.value,
+				environmentTypeID: itemEnvironmentTypeID.value,
+				environmentTypeName: itemEnvironmentTypeName.value,
+				domainID: itemDomainID.value,
+			};
+			console.log("updates: ", updates);
+			try {
+				await store.dispatch("appEnvironment/updateEnvironment", updates);
+				refreshEnvironments();
+				(itemName.value = ""),
+					(itemShortDescription.value = ""),
+					(itemDescription.value = ""),
+					(itemEnvironmentTypeID.value = ""),
+					(itemEnvironmentTypeName.value = ""),
+					(itemDomainID.value = ""),
+					$q.notify({
+						type: "positive",
+						message: `${itemName.value} environment was succefuly updated`,
+					});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: `${itemName.value} environment was not updated`,
+				});
+			}
 		};
 		const onResetUpdate = () => {
 			console.log("event: ", props.id);
 		};
 
+		const onFileUpload = (event) => {
+			console.log("file name", event.files[0].name);
+			console.log("file upload number", event.files[0].__uploaded);
+			console.log("file Id", event.files[0].xhr.response);
+		};
+
+		const onRejected = (rejectedEntries) => {
+			$q.notify({
+				type: "negative",
+				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
+			});
+		};
+
+		// Refrech tabs items data
+		const refreshEnvironments = async () => {
+			await store.dispatch("appEnvironment/fetchAllEnvironments");
+			await store.getters["appEnvironment/allEnvironments"];
+		};
 		return {
 			isOpened,
-			openModal,
+			itemName,
+			itemLogo,
+			itemRole,
+			itemShortDescription,
+			itemDescription,
+			itemEnvironmentTypeID,
+			itemEnvironmentTypeName,
+			itemDomainID,
+			openEditionModal,
+			updateItem,
 			delteItem,
 			onSubmitUpdate,
 			onResetUpdate,
+			onFileUpload,
+			onRejected,
+
 			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		};
 	},

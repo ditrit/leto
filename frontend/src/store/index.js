@@ -8,6 +8,7 @@ import appDomain from "./Domains/index";
 import appTags from "./Tags/index";
 import appRoles from "./Roles/index";
 import appEnviType from "./EnviType/index";
+import appEnvironment from "./Environment/index";
 import appAuthorization from "./Authorization/index";
 
 /*
@@ -28,6 +29,7 @@ export default store(function (/* { ssrContext } */) {
 			appRoles,
 			appTags,
 			appEnviType,
+			appEnvironment,
 			appAuthorization,
 		},
 		strict: process.env.DEBUGGING,

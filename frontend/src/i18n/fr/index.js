@@ -1,6 +1,7 @@
 export default {
 	teams: "Equipe",
 	add_team: "Nouvelle équipe",
+	edit_team: "Modifier l'équipe",
 	profile: "Profil",
 	users: "Utilisateurs",
 	roles: "Rôles",
@@ -18,13 +19,16 @@ export default {
 	add_users_failed: "Désolé, l'utilisateur n'a pas été créé",
 	dashboard: "Tableau de bord",
 	settings: "Paramètres",
+
 	manage_settings: "Gérer les Paramètres",
 	manage_profile: "Gérer le profil",
 	manage_users: "Gérer les utilisateurs",
 	manage_roles: "Gérer les rôles",
 	manage_tags: "Gérer les tags",
+
 	manage_environments: "Gérer les environnements",
-	edit_environment: "Modifier l'environment",
+	add_environment: "Créer un nouvel environement",
+	edit_environment: "Modifier l'environement",
 
 	products: "Produits",
 	add_product: "Nouveau produit",

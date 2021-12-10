@@ -1,6 +1,7 @@
 export default {
 	teams: "Teams",
 	add_team: "Add new Team",
+	edit_team: "Edit Team",
 	profile: "Profile",
 	users: "Users",
 	enviType: "Environments Type",
@@ -25,6 +26,7 @@ export default {
 	manage_roles: "Manage Roles",
 	manage_tags: "Manage Tags",
 	manage_environment: "Manage Environments",
+	add_environment: "Add environment",
 	edit_environment: "Edit environment",
 
 	products: "Products",
