@@ -60,7 +60,8 @@
 							:id="member.ID"
 							:name="member.User.LastName"
 							:role="member.Role.Name"
-							:description="member.ShortDescription"
+							:shortDescription="member.ShortDescription"
+							:description="member.Description"
 							:logo="member.Logo"
 						/>
 					</div>
@@ -110,12 +111,13 @@
 							v-show="env.ID"
 							:id="env.ID"
 							:name="env.Name"
-							:description="env.ShortDescription"
+							:shortDescription="env.ShortDescription"
+							:description="env.Description"
 							:logo="env.Logo"
 							:environmentTypeID="env.EnvironmentTypeID"
 							:environmentTypeName="env.EnvironmentType.Name"
 							:domainID="env.DomainID"
-							@updateAction="updateEnvironement"
+							@updateAction="updateEnvironement(env)"
 							@deleteAction="confirmDeleteEnvironment"
 						/>
 					</div>
@@ -139,7 +141,7 @@
 								<q-form
 									@submit.prevent="addNewEnvironment"
 									@reset="onResetEnvironment"
-									class="q-gutter-md q-pa-md"
+									class="q-gutter-sm q-pa-md"
 								>
 									<div class="row col-md-12 q-gutter-md">
 										<div class="col">

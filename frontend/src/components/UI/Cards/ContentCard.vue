@@ -178,7 +178,7 @@ export default {
 					DeleteDomain(props);
 				})
 				.onCancel(() => {
-					console.log(">>>> Cancel");
+					console.log("Cancel");
 				});
 		};
 		const DeleteDomain = async (props) => {
@@ -189,11 +189,12 @@ export default {
 		};
 		const onSubmitUpdate = async (props) => {
 			emit("emitUpdateDomain", props);
-			console.log("Domain to edit:", props);
+			console.log("Domain to edit:", Object.values(props));
 			let domain = await Object.values(props);
 			console.log("domain: ", domain);
 			let updatedDomain = {
 				id: domain[0],
+				ParentID: domain[5],
 				name: domain[4],
 				shortDescription: domain[12],
 				description: domain[13],
@@ -202,7 +203,7 @@ export default {
 			console.log("updatedDomain: ", updatedDomain);
 
 			store.dispatch("appDomain/updateDomain", updatedDomain);
-			// getDomainstree();
+			getDomainstree();
 		};
 		const onResetUpdate = async (props) => {
 			emit("emitResetDomain", props);

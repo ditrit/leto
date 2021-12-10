@@ -24,7 +24,23 @@
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>
-									<q-item clickable @click.prevent="openEditionModal()">
+									<q-item
+										clickable
+										@click.prevent="
+											openEditionModal([
+												{
+													name,
+													role,
+													environmentTypeName,
+													logo,
+													shortDescription,
+													description,
+													environmentTypeID,
+													domainID,
+												},
+											])
+										"
+									>
 										<q-item-section class="action_card__item">
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
@@ -47,9 +63,9 @@
 
 								<q-card-section class="q-pt-none">
 									<q-form
-										@submit.prevent="onSubmitUpdate"
+										@submit.prevent="onSubmitUpdate(item)"
 										@reset="onResetUpdate"
-										class="q-gutter-md q-pa-md"
+										class="q-gutter-sm q-pa-md"
 									>
 										<div class="row col-md-12 q-gutter-md">
 											<div class="col">
@@ -62,6 +78,7 @@
 															(val && val.length > 0) ||
 															'Please type something',
 													]"
+													v-model="itemName"
 												/>
 											</div>
 										</div>
@@ -76,6 +93,7 @@
 															(val && val.length > 0) ||
 															'Please type something',
 													]"
+													v-model="itemShortDescription"
 												/>
 											</div>
 										</div>
@@ -92,6 +110,7 @@
 															(val && val.length > 0) ||
 															'Please type something',
 													]"
+													v-model="itemDescription"
 												/>
 											</div>
 											<div class="col">
@@ -138,7 +157,9 @@
 	</div>
 </template>
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useQuasar } from "quasar";
+import { useStore } from "vuex";
 export default {
 	emits: ["openEditModal", "deleteAction", "updateAction", "openNewItemModal"],
 	props: {
@@ -153,6 +174,17 @@ export default {
 		domainID: { type: String },
 	},
 	setup(props, { emit }) {
+		const store = useStore();
+		const $q = useQuasar();
+		const itemName = ref(props.name);
+		const itemLogo = ref(props.logo);
+		const itemRole = ref(props.role);
+		const itemShortDescription = ref(props.shortDescription);
+		const itemDescription = ref(props.description);
+		const itemEnvironmentTypeID = ref(props.environmentTypeID);
+		const itemEnvironmentTypeName = ref(props.environmentTypeName);
+		const itemDomainID = ref(props.domainID);
+
 		const isOpened = ref(false);
 		const openEditionModal = (props) => {
 			isOpened.value = true;
@@ -168,8 +200,35 @@ export default {
 			emit("deleteAction", props);
 			console.table({ id: props.id, domainID: props.id });
 		};
-		const onSubmitUpdate = () => {
-			console.log("event: ", props.id);
+		const onSubmitUpdate = async () => {
+			console.log("updates to submit: ", props);
+			let updates = {
+				id: props.id,
+				name: itemName.value,
+				shortDescription: itemShortDescription.value,
+				description: itemDescription.value,
+				environmentTypeID: itemEnvironmentTypeID.value,
+				environmentTypeName: itemEnvironmentTypeName.value,
+				domainID: itemDomainID.value,
+			};
+			console.log("updates: ", updates);
+			try {
+				await store.dispatch("appEnvironment/updateEnvironment", updates);
+				await store.dispatch("appEnvironment/fetchAllEnvironments");
+				await setTimeout(
+					() => store.getters["appEnvironment/allEnvironments"],
+					1000
+				);
+				$q.notify({
+					type: "positive",
+					message: `${itemName.value} environment was succefuly updated`,
+				});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: `${itemName.value} environment was not updated`,
+				});
+			}
 		};
 		const onResetUpdate = () => {
 			console.log("event: ", props.id);
@@ -190,6 +249,14 @@ export default {
 
 		return {
 			isOpened,
+			itemName,
+			itemLogo,
+			itemRole,
+			itemShortDescription,
+			itemDescription,
+			itemEnvironmentTypeID,
+			itemEnvironmentTypeName,
+			itemDomainID,
 			openEditionModal,
 			updateItem,
 			delteItem,
@@ -197,6 +264,7 @@ export default {
 			onResetUpdate,
 			onFileUpload,
 			onRejected,
+
 			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		};
 	},
