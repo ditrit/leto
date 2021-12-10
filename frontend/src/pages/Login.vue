@@ -1,7 +1,7 @@
 <template>
 	<div class="text-white">
 		<div class="row">
-			<div class="leftside text-secondary md">
+			<div class="leftside text-secondary sm-hide xs-hide">
 				<q-img src="../assets/logoBest2.svg" width="30%" />
 				<span> Orchestrateur TOSTA étendu </span>
 			</div>

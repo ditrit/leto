@@ -116,7 +116,7 @@
 											<div class="col">
 												<q-uploader
 													style="max-width: 100%"
-													url="http://localhost:3000/upload"
+													url="http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/50"
 													label="Your Logo"
 													multiple
 													accept=".jpg, svg, image/*"
@@ -157,9 +157,10 @@
 	</div>
 </template>
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
+import API from "../../../services/index";
 export default {
 	emits: ["openEditModal", "deleteAction", "updateAction", "openNewItemModal"],
 	props: {
@@ -214,15 +215,17 @@ export default {
 			console.log("updates: ", updates);
 			try {
 				await store.dispatch("appEnvironment/updateEnvironment", updates);
-				await store.dispatch("appEnvironment/fetchAllEnvironments");
-				await setTimeout(
-					() => store.getters["appEnvironment/allEnvironments"],
-					1000
-				);
-				$q.notify({
-					type: "positive",
-					message: `${itemName.value} environment was succefuly updated`,
-				});
+				refreshEnvironments();
+				(itemName.value = ""),
+					(itemShortDescription.value = ""),
+					(itemDescription.value = ""),
+					(itemEnvironmentTypeID.value = ""),
+					(itemEnvironmentTypeName.value = ""),
+					(itemDomainID.value = ""),
+					$q.notify({
+						type: "positive",
+						message: `${itemName.value} environment was succefuly updated`,
+					});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -247,6 +250,11 @@ export default {
 			});
 		};
 
+		// Refrech tabs items data
+		const refreshEnvironments = async () => {
+			await store.dispatch("appEnvironment/fetchAllEnvironments");
+			await store.getters["appEnvironment/allEnvironments"];
+		};
 		return {
 			isOpened,
 			itemName,
