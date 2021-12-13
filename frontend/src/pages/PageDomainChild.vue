@@ -202,6 +202,7 @@
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import ContentCard from "../components/UI/Cards/ContentCard";
 import Tabs from "../components/UI/TabPanels/Tabs";
@@ -224,6 +225,7 @@ export default defineComponent({
 		const store = useStore();
 		const drawer = ref(false);
 		const router = useRouter();
+
 		const progress = ref(null);
 		const actionsLinks = ref(["Edit"]);
 		const child = ref([]);
@@ -241,6 +243,7 @@ export default defineComponent({
 			console.log("chodosenNodeID: ", chodosenNodeID.value);
 			console.log("props.id: ", props.id);
 		};
+
 		const menu = ref(null);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");

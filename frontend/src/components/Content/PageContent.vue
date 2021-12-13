@@ -16,9 +16,7 @@
 					<p class="q-ml-md">
 						{{ textContent }}
 					</p>
-					<p v-if="repo" class="text-subtitle3">
-						{{ repo }}
-					</p>
+					<p v-if="repo" class="text-subtitle3">{{ repo }}</p>
 				</div>
 			</div>
 		</div>

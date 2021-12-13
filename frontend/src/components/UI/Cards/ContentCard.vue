@@ -18,8 +18,8 @@
 							{{ item.ShortDescription }}
 						</div>
 						<div class="flex items-center text-subtitle3 q-py-sm">
-							<q-icon name="link" size="30px" class="q-mr-sm" />
-							<a :href="item.GitURL"> {{ item.GitURL }}</a>
+							<q-icon name="link" size="30px" class="q-mr-sm" /> Repository:
+							<a :href="item.GitURL" class="q-pl-sm"> {{ item.GitURL }}</a>
 						</div>
 						<div class="content_wrapper q-mt-sm">
 							<img :src="item.Logo" alt="domain logo" />

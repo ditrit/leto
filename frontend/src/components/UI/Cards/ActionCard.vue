@@ -19,6 +19,7 @@
 						<div class="text-subtitle2">{{ name }}</div>
 						<div class="text-h8">{{ role }}</div>
 						<div class="text-h8 text-grey-8">{{ environmentTypeName }}</div>
+						<div class="text-h8 text-grey-8">{{ repo }}</div>
 					</div>
 					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
@@ -178,6 +179,7 @@ export default {
 		const store = useStore();
 		const $q = useQuasar();
 		const itemName = ref(props.name);
+		const itemRepo = ref(props.repo);
 		const itemLogo = ref(props.logo);
 		const itemRole = ref(props.role);
 		const itemShortDescription = ref(props.shortDescription);
@@ -259,6 +261,7 @@ export default {
 			isOpened,
 			itemName,
 			itemLogo,
+			itemRepo,
 			itemRole,
 			itemShortDescription,
 			itemDescription,

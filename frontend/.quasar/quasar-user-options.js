@@ -17,4 +17,6 @@ import iconSet from 'quasar/icon-set/material-icons'
 import {Notify,Dialog} from 'quasar'
 
 
+
 export default { config: {},iconSet,plugins: {Notify,Dialog} }
+

@@ -59,7 +59,7 @@
 						<div class="col">
 							<q-uploader
 								style="max-width: 100%"
-								url="http://localhost:3000/upload"
+								:url="getUploadedImageUrl"
 								label="Your Logo"
 								multiple
 								accept=".jpg, svg, image/*"
@@ -135,6 +135,8 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
+import API from "../../../services";
+import { v4 as uuidv4 } from "uuid";
 import Tabs from "../TabPanels/Tabs";
 
 export default {
@@ -148,6 +150,7 @@ export default {
 	setup() {
 		const store = useStore();
 		const route = useRouter();
+		const imagesUID = uuidv4();
 		const name = ref("");
 		const teamParent = ref("");
 		const domainID = ref("");
@@ -169,6 +172,10 @@ export default {
 		 * TODO
 		 * 	2 - regroupe functions by thematique
 		 */
+
+		// getUploadedImageUrl
+		const getUploadedImageUrl = () =>
+			`http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/${imagesUID}`;
 
 		const getAllDomains = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
@@ -218,6 +225,7 @@ export default {
 			teamParent,
 			shortDescription,
 			description,
+			getUploadedImageUrl,
 
 			onFileUpload(event) {
 				console.log("file name", event.files[0].name);
