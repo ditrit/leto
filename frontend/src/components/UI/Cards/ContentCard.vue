@@ -17,7 +17,11 @@
 						<div class="text-subtitle3 text-grey-8">
 							{{ item.ShortDescription }}
 						</div>
-						<div class="content_wrapper q-mt-md">
+						<div class="flex items-center text-subtitle3 q-py-sm">
+							<q-icon name="link" size="30px" class="q-mr-sm" />
+							<a :href="item.GitURL"> {{ item.GitURL }}</a>
+						</div>
+						<div class="content_wrapper q-mt-sm">
 							<img :src="item.Logo" alt="domain logo" />
 							<p class="q-ml-md">
 								{{ item.Description }}
@@ -88,6 +92,21 @@
 																'Please type something',
 														]"
 														v-model="item.ShortDescription"
+													/>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col">
+													<q-input
+														filled
+														label="Repository"
+														lazy-rules
+														:rules="[
+															(val) =>
+																(val && val.length > 0) ||
+																'Please type something',
+														]"
+														v-model="item.GitURL"
 													/>
 												</div>
 											</div>
@@ -197,6 +216,7 @@ export default {
 				ParentID: domain[5],
 				name: domain[4],
 				shortDescription: domain[12],
+				gitUrl: domain[15],
 				description: domain[13],
 			};
 
@@ -241,6 +261,9 @@ export default {
 };
 </script>
 <style lang="sass" scoped>
+a
+  color: $grey
+
 .buttons_wrapper
   display: flex
   flex-direction: column

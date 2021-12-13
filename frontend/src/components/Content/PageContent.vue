@@ -16,6 +16,9 @@
 					<p class="q-ml-md">
 						{{ textContent }}
 					</p>
+					<p v-if="repo" class="text-subtitle3">
+						{{ repo }}
+					</p>
 				</div>
 			</div>
 		</div>
@@ -41,6 +44,7 @@ export default defineComponent({
 		},
 		subTitle: { type: String, required: false },
 		logo: { type: String, required: false },
+		repo: { type: String, required: false },
 	},
 });
 </script>
