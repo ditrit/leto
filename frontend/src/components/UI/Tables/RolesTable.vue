@@ -52,6 +52,7 @@
 								/>
 								<q-input
 									filled
+									type="textarea"
 									v-model="roleObj[4]"
 									label="Description *"
 									lazy-rules

@@ -52,6 +52,7 @@
 								/>
 								<q-input
 									filled
+									type="textarea"
 									v-model="userObj[4]"
 									label="Your Email *"
 									lazy-rules
