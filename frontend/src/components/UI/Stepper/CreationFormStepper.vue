@@ -59,15 +59,12 @@
 						<div class="col">
 							<q-uploader
 								style="max-width: 100%"
-								:url="getUploadedImageUrl"
 								label="Your Logo"
 								multiple
 								accept=".jpg, svg, image/*"
 								@rejected="onRejected"
 								color="primary"
-								factory
-								files
-								hide-upload-btn="true"
+								:factory="uploadFile"
 								auto-upload
 								@uploaded="onFileUpload"
 							/>
@@ -173,9 +170,22 @@ export default {
 		 * 	2 - regroupe functions by thematique
 		 */
 
+		const uploadFile = async (file) => {
+			console.log("file name", file[0].name);
+			console.log("file size", file[0].__sizeLabel);
+			console.log("file Id", imagesUID);
+			const data = new FormData();
+			await data.append("id", imagesUID);
+			await data.append("name", file[0].name);
+			await data.append("size", file[0].__sizeLabel);
+			return API.post(`/file/${imagesUID}`, data);
+		};
+
 		// getUploadedImageUrl
-		const getUploadedImageUrl = () =>
-			`http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/${imagesUID}`;
+		const imageUrl = () => {
+			const baseURL = "http://127.0.0.1:9203/ditrit/Gandalf/1.0.0";
+			return `${baseURL}/file/`;
+		};
 
 		const getAllDomains = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
@@ -225,7 +235,10 @@ export default {
 			teamParent,
 			shortDescription,
 			description,
-			getUploadedImageUrl,
+			imageUrl,
+			imagesUID,
+			API,
+			uploadFile,
 
 			onFileUpload(event) {
 				console.log("file name", event.files[0].name);
