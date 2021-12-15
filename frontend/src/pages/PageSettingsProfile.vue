@@ -42,21 +42,34 @@
 		</Drawer>
 
 		<q-page-container>
-			<q-page :style-fn="pageSizeTweak" class="flex">
+			<q-page :style-fn="pageSizeTweak" class="">
 				<PageContent
 					icon="person"
 					:headline="$t('profile')"
 					:subTitle="$t('manage_profile')"
-					:textContent="$t('text_content')"
 				/>
-				<div class="profil_forms">
+				<div class="profil_forms" v-if="user">
 					<div class="col">
-						<q-avatar class="q-my-lg" size="100px">
-							<img src="img/profil.png" />
-						</q-avatar>
-						<q-btn round class="profil_edit" size="10px">
+						<q-file round class="profil_edit" size="10px" @click="editAvatar">
 							<q-icon name="edit" style="font-size: 2em" />
-						</q-btn>
+						</q-file>
+						<q-avatar class="q-my-lg" size="100px">
+							<img :src="user.Logo" />
+						</q-avatar>
+						<div class="button_actions__container">
+							<q-btn color="grey-7" round flat icon="more_vert">
+								<q-menu cover auto-close>
+									<q-list>
+										<q-item clickable @click.prevent="OnEdit">
+											<q-item-section class="action_card__item">
+												<q-icon name="edit" size="1.5em" class="q-mr-sm" />
+												Edit</q-item-section
+											>
+										</q-item>
+									</q-list>
+								</q-menu>
+							</q-btn>
+						</div>
 						<q-form
 							@submit="onSubmit"
 							@reset="onReset"
@@ -64,7 +77,8 @@
 						>
 							<q-input
 								filled
-								v-model="firstName"
+								:disable="disabled"
+								v-model="user.FirstName"
 								label="Your First Name *"
 								lazy-rules
 								:rules="[
@@ -73,7 +87,8 @@
 							/>
 							<q-input
 								filled
-								v-model="lastName"
+								:disable="disabled"
+								v-model="user.LastName"
 								label="Your Last Name *"
 								lazy-rules
 								:rules="[
@@ -91,7 +106,7 @@
 								]"
 							/>
 
-							<div>
+							<div v-if="showButton">
 								<q-btn label="Submit" type="submit" color="primary" />
 								<q-btn
 									label="Reset"
@@ -103,30 +118,15 @@
 							</div>
 						</q-form>
 					</div>
-					<div class="col-4">
+					<div class="col-4" style="margin-top: 95px">
+						<div class="text-h7 text-grey q-pa-md q-ml-sm">Update password</div>
 						<q-form
 							@submit="onSubmit"
 							@reset="onReset"
 							class="q-gutter-md q-pl-lg"
 						>
-							<q-input
-								filled
-								v-model="password"
-								label="New password *"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-							<q-input
-								filled
-								v-model="password"
-								label="Enter again password *"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
+							<q-input filled label="New password *" />
+							<q-input filled label="Enter again password *" />
 
 							<div>
 								<q-btn label="Submit" type="submit" color="primary" />
@@ -153,6 +153,7 @@
 
 <script>
 import { ref } from "vue";
+import { useStore } from "vuex";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import PageContent from "../components/Content/PageContent";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
@@ -171,10 +172,36 @@ export default {
 		const drawer = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
+		const store = useStore();
+		const user = ref(null);
+		const disabled = ref(true);
+		const showButton = ref(false);
+
+		const currentUser = async () => {
+			let response = await store.getters["auth/user"];
+			user.value = response;
+			console.log("user.value : ", user.value);
+		};
+		currentUser();
+
+		const OnEdit = () => {
+			disabled.value = false;
+			showButton.value = true;
+		};
+
+		const editAvatar = () => {
+			console.log("Try to upload image");
+		};
+
 		return {
 			drawer,
 			filter,
 			filterRef,
+			disabled,
+			user,
+			OnEdit,
+			showButton,
+			editAvatar,
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();
@@ -186,14 +213,25 @@ export default {
 </script>
 
 <style lang="sass">
+.button_actions__container
+	display: flex
+	flex-direction: row
+	justify-content: flex-end
+.action_card__item
+	display: flex
+	flex-direction: row
+
 .profil_forms
 	display: flex
 	flex-direction: row
 	justify-content: space-between
 	padding: 0 60px 0 60px
-	width: 100%
+
 .profil_edit
 	margin-top: -80px
 	margin-left: -30px
 	background: $white
+	width: 30px
+	height: 30px
+	border-radius: 100%
 </style>
