@@ -16,10 +16,10 @@
 						/>
 					</div>
 					<div class="col">
-						<div class="text-subtitle2">{{ name }}</div>
+						<div class="text-subtitle2 ellipsis">{{ name }}</div>
 						<div class="text-h8">{{ role }}</div>
 						<div class="text-h8 text-grey-8">{{ environmentTypeName }}</div>
-						<div class="text-h8 text-grey-8">{{ repo }}</div>
+						<div class="text-h8 text-grey-8 ellipsis">{{ repo }}</div>
 					</div>
 					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
@@ -151,8 +151,8 @@
 					</div>
 				</div>
 			</q-card-section>
-			<q-card-section>
-				{{ description }}
+			<q-card-section class="ellipsis-2-lines">
+				{{ shortDescription }}
 			</q-card-section>
 		</q-card>
 	</div>

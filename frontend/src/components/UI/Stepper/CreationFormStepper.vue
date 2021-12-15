@@ -65,7 +65,6 @@
 								@rejected="onRejected"
 								color="primary"
 								:factory="uploadFile"
-								auto-upload
 								@uploaded="onFileUpload"
 							/>
 						</div>
@@ -170,15 +169,19 @@ export default {
 		 * 	2 - regroupe functions by thematique
 		 */
 
-		const uploadFile = async (file) => {
+		const uploadFile = (file) => {
 			console.log("file name", file[0].name);
 			console.log("file size", file[0].__sizeLabel);
 			console.log("file Id", imagesUID);
 			const data = new FormData();
-			await data.append("id", imagesUID);
-			await data.append("name", file[0].name);
-			await data.append("size", file[0].__sizeLabel);
-			return API.post(`/file/${imagesUID}`, data);
+			data.append("id", imagesUID);
+			data.append("file", file[0].name);
+			// data.append("size", file[0].__sizeLabel);
+			// console.log("file[0]: ", file[0]);
+			API.post(`/file/${imagesUID}`, Object.entries(data));
+			console.log("data: ", Object.entries(data));
+			// .then((response) => console.log("response:", response))
+			// .then((err) => console.log("err", err));
 		};
 
 		// getUploadedImageUrl
@@ -292,8 +295,8 @@ export default {
 	max-height: 100%
 .q-uploader__list
 	// display: none
-.q-card__actions
-	display: none
+// .q-card__actions
+// 	display: none
 .q-stepper__dot
 	width: 40px
 	height: 40px

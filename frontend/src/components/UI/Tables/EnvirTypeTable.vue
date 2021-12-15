@@ -139,6 +139,7 @@
 						/>
 						<q-input
 							filled
+							type="textarea"
 							label="Description *"
 							lazy-rules
 							:rules="[

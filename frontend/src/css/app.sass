@@ -10,6 +10,8 @@ html, body
     height: 100%
     overflow: hidden
 
+.q-page
+  overflow-x: hidden
 .page_padding
   padding-left:100px
 
@@ -97,12 +99,21 @@ html, body
   width: 300px
   border: none
 
+.q-stepper__step .item_card
+  width: 270px
+  padding: 4px 6px
+  border: none !important
+  max-width: 230px
+  max-height:  max-content !important
+  height: max-content !important
+  box-shadow: var(--box-shadow) !important
+
 .item_card
   width: 270px
   padding: 4px 6px
   border: none !important
   max-width: 230px
-  max-height: var(--card-height)
+  // max-height: var(--card-height)
   height: max-content !important
   box-shadow: var(--box-shadow) !important
   
@@ -110,7 +121,7 @@ html, body
 //   width: 800px !important
 
 .q-card__section--vert
-  padding: 6px
+  padding: 4px
 
 .q-dialog .button_actions__container
   display: none !important
