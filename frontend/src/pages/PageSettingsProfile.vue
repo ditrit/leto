@@ -49,6 +49,98 @@
 					:subTitle="$t('manage_profile')"
 					:textContent="$t('text_content')"
 				/>
+				<div class="profil_forms">
+					<div class="col">
+						<q-avatar class="q-my-lg" size="100px">
+							<img src="img/profil.png" />
+						</q-avatar>
+						<q-btn round class="profil_edit" size="10px">
+							<q-icon name="edit" style="font-size: 2em" />
+						</q-btn>
+						<q-form
+							@submit="onSubmit"
+							@reset="onReset"
+							class="q-gutter-sm q-pr-lg q-mr-lg"
+						>
+							<q-input
+								filled
+								v-model="firstName"
+								label="Your First Name *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+							<q-input
+								filled
+								v-model="lastName"
+								label="Your Last Name *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+							<q-input
+								filled
+								type="textarea"
+								v-model="biography"
+								label="Your Biography *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+
+							<div>
+								<q-btn label="Submit" type="submit" color="primary" />
+								<q-btn
+									label="Reset"
+									type="reset"
+									color="primary"
+									flat
+									class="q-ml-sm"
+								/>
+							</div>
+						</q-form>
+					</div>
+					<div class="col-4">
+						<q-form
+							@submit="onSubmit"
+							@reset="onReset"
+							class="q-gutter-md q-pl-lg"
+						>
+							<q-input
+								filled
+								v-model="password"
+								label="New password *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+							<q-input
+								filled
+								v-model="password"
+								label="Enter again password *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+
+							<div>
+								<q-btn label="Submit" type="submit" color="primary" />
+								<q-btn
+									label="Reset"
+									type="reset"
+									color="primary"
+									flat
+									class="q-ml-sm"
+								/>
+							</div>
+						</q-form>
+					</div>
+				</div>
 				<Modal>
 					<template v-slot:ModalBody>
 						<CreationFormStepperVue />
@@ -93,4 +185,15 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="sass">
+.profil_forms
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	padding: 0 60px 0 60px
+	width: 100%
+.profil_edit
+	margin-top: -80px
+	margin-left: -30px
+	background: $white
+</style>

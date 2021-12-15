@@ -57,7 +57,7 @@ export default defineComponent({
 .title_container
   display: flex
   flex-direction: column
-  align-items: center
+  align-items: flex-start
   & p:nth-child(2)
     margin-top: -16px
 
