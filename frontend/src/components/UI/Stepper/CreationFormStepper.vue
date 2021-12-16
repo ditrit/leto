@@ -157,6 +157,7 @@ export default {
 		const options = ref([]);
 		const SelectedDomain = ref([]);
 		const $q = useQuasar();
+		const avatarUrl = ref(null);
 
 		function onRejected(rejectedEntries) {
 			$q.notify({
@@ -170,24 +171,16 @@ export default {
 		 */
 
 		const uploadFile = (file) => {
-			console.log("file name", file[0].name);
-			console.log("file size", file[0].__sizeLabel);
-			console.log("file Id", imagesUID);
-			const data = new FormData();
-			data.append("id", imagesUID);
-			data.append("file", file[0].name);
-			// data.append("size", file[0].__sizeLabel);
-			// console.log("file[0]: ", file[0]);
-			API.post(`/file/${imagesUID}`, Object.entries(data));
-			console.log("data: ", Object.entries(data));
-			// .then((response) => console.log("response:", response))
-			// .then((err) => console.log("err", err));
-		};
-
-		// getUploadedImageUrl
-		const imageUrl = () => {
-			const baseURL = "http://127.0.0.1:9203/ditrit/Gandalf/1.0.0";
-			return `${baseURL}/file/`;
+			const formData = new FormData();
+			formData.append("id", imagesUID);
+			formData.append("file", file[0], file[0].name);
+			API.post(`/file/${imagesUID}`, formData).then((res) => {
+				avatarUrl.value = res.request.responseURL;
+				console.log("avatarUrl.value: ", avatarUrl.value);
+				console.log(res);
+			});
+			console.log("formData: ", formData);
+			console.log("file: ", file);
 		};
 
 		const getAllDomains = async () => {
@@ -238,16 +231,13 @@ export default {
 			teamParent,
 			shortDescription,
 			description,
-			imageUrl,
+			avatarUrl,
 			imagesUID,
 			API,
+
 			uploadFile,
 
-			onFileUpload(event) {
-				console.log("file name", event.files[0].name);
-				console.log("file upload number", event.files[0].__uploaded);
-				console.log("file Id", event.files[0].xhr.response);
-			},
+			onFileUpload(event) {},
 
 			onSubmit() {
 				try {

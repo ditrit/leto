@@ -48,97 +48,118 @@
 					:headline="$t('profile')"
 					:subTitle="$t('manage_profile')"
 				/>
-				<div class="profil_forms" v-if="user">
+				<div class="flex-col p_padding" v-if="user">
 					<div class="col">
-						<q-file round class="profil_edit" size="10px" @click="editAvatar">
-							<q-icon name="edit" style="font-size: 2em" />
-						</q-file>
+						<q-form @submit="uploadAvatar" class="q-gutter-md">
+							<q-file
+								v-model="file"
+								type="file"
+								round
+								:loading="showSubmitBtn"
+								class="profil_edit"
+								@click="editAvatar"
+							>
+								<q-icon
+									:name="showSubmitBtn ? '' : 'edit'"
+									class="profil_icon"
+								/>
+							</q-file>
+							<div class="profil_submit__btn" v-if="showSubmitBtn">
+								<q-btn label="Submit" type="submit" color="primary" />
+							</div>
+						</q-form>
 						<q-avatar class="q-my-lg" size="100px">
 							<img :src="user.Logo" />
 						</q-avatar>
-						<div class="button_actions__container">
-							<q-btn color="grey-7" round flat icon="more_vert">
-								<q-menu cover auto-close>
-									<q-list>
-										<q-item clickable @click.prevent="OnEdit">
-											<q-item-section class="action_card__item">
-												<q-icon name="edit" size="1.5em" class="q-mr-sm" />
-												Edit</q-item-section
-											>
-										</q-item>
-									</q-list>
-								</q-menu>
-							</q-btn>
-						</div>
-						<q-form
-							@submit="onSubmit"
-							@reset="onReset"
-							class="q-gutter-sm q-pr-lg q-mr-lg"
-						>
-							<q-input
-								filled
-								:disable="disabled"
-								v-model="user.FirstName"
-								label="Your First Name *"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-							<q-input
-								filled
-								:disable="disabled"
-								v-model="user.LastName"
-								label="Your Last Name *"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-							<q-input
-								filled
-								type="textarea"
-								v-model="biography"
-								label="Your Biography *"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-
-							<div v-if="showButton">
-								<q-btn label="Submit" type="submit" color="primary" />
-								<q-btn
-									label="Reset"
-									type="reset"
-									color="primary"
-									flat
-									class="q-ml-sm"
-								/>
-							</div>
-						</q-form>
 					</div>
-					<div class="col-4" style="margin-top: 95px">
-						<div class="text-h7 text-grey q-pa-md q-ml-sm">Update password</div>
-						<q-form
-							@submit="onSubmit"
-							@reset="onReset"
-							class="q-gutter-md q-pl-lg"
-						>
-							<q-input filled label="New password *" />
-							<q-input filled label="Enter again password *" />
-
-							<div>
-								<q-btn label="Submit" type="submit" color="primary" />
-								<q-btn
-									label="Reset"
-									type="reset"
-									color="primary"
-									flat
-									class="q-ml-sm"
-								/>
+					<div class="row">
+						<div class="col">
+							<div class="button_actions__container">
+								<q-btn color="grey-7" round flat icon="more_vert">
+									<q-menu cover auto-close>
+										<q-list>
+											<q-item clickable @click.prevent="OnEdit">
+												<q-item-section class="action_card__item">
+													<q-icon name="edit" size="1.5em" class="q-mr-sm" />
+													Edit</q-item-section
+												>
+											</q-item>
+										</q-list>
+									</q-menu>
+								</q-btn>
 							</div>
-						</q-form>
+							<q-form
+								@submit="onSubmit"
+								@reset="onReset"
+								class="q-gutter-sm q-pr-lg q-mr-lg"
+							>
+								<q-input
+									filled
+									:disable="disabled"
+									v-model="user.FirstName"
+									label="Your First Name *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+								/>
+								<q-input
+									filled
+									:disable="disabled"
+									v-model="user.LastName"
+									label="Your Last Name *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+								/>
+								<q-input
+									filled
+									type="textarea"
+									:disable="disabled"
+									v-model="biography"
+									label="Your Biography *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+								/>
+								<div v-if="showButton">
+									<q-btn label="Submit" type="submit" color="primary" />
+									<q-btn
+										label="Reset"
+										type="reset"
+										color="primary"
+										flat
+										class="q-ml-sm"
+									/>
+								</div>
+							</q-form>
+						</div>
+						<div class="col-4">
+							<div class="text-subtitle3 text-grey-8 q-pl-lg">
+								Update password
+							</div>
+							<q-form
+								@submit="onSubmit"
+								@reset="onReset"
+								class="q-gutter-lg q-pt-lg q-pl-lg"
+							>
+								<q-input filled label="New password *" />
+								<q-input filled label="Enter again password *" />
+
+								<div>
+									<q-btn label="Submit" type="submit" color="primary" />
+									<q-btn
+										label="Reset"
+										type="reset"
+										color="primary"
+										flat
+										class="q-ml-sm"
+									/>
+								</div>
+							</q-form>
+						</div>
 					</div>
 				</div>
 				<Modal>
@@ -154,6 +175,8 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex";
+import API from "../services/index";
+import { v4 as uuidv4 } from "uuid";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import PageContent from "../components/Content/PageContent";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
@@ -173,9 +196,12 @@ export default {
 		const filter = ref("");
 		const filterRef = ref(null);
 		const store = useStore();
+		const imagesUID = uuidv4();
 		const user = ref(null);
 		const disabled = ref(true);
+		const showSubmitBtn = ref(false);
 		const showButton = ref(false);
+		const file = ref(null);
 
 		const currentUser = async () => {
 			let response = await store.getters["auth/user"];
@@ -185,14 +211,36 @@ export default {
 		currentUser();
 
 		const OnEdit = () => {
-			disabled.value = false;
-			showButton.value = true;
+			disabled.value = !disabled.value;
+			showButton.value = !showButton.value;
 		};
 
 		const editAvatar = () => {
-			console.log("Try to upload image");
+			showSubmitBtn.value = !showSubmitBtn.value;
 		};
 
+		const selectAvatar = (e) => {
+			console.log("e: ", e.target.files[0]);
+			file.value = e.target.files[0];
+			// const formData = new FormData();
+			// formData.append("test", "Helloo");
+			// formData.append("id", imagesUID);
+			// formData.append("name", file.value.name);
+			// formData.append("size", file.value.size);
+			// console.log("file value:", file.value);
+			// console.log("file:", file);
+			// console.log("e:", e);
+			// console.log("formData: ", formData);
+
+			// API.post(`/file/${imagesUID}`, formData);
+		};
+		const uploadAvatar = () => {
+			console.log("Load Avatar");
+			console.log("file is:", file.value);
+			const formData = new FormData();
+			formData.append("file", file.value, file.value.name);
+			API.post(`/file/${imagesUID}`, formData).then((res) => console.log(res));
+		};
 		return {
 			drawer,
 			filter,
@@ -201,6 +249,10 @@ export default {
 			user,
 			OnEdit,
 			showButton,
+			showSubmitBtn,
+			selectAvatar,
+			file,
+			uploadAvatar,
 			editAvatar,
 			resetFilter() {
 				filter.value = "";
@@ -214,24 +266,61 @@ export default {
 
 <style lang="sass">
 .button_actions__container
-	display: flex
-	flex-direction: row
-	justify-content: flex-end
+  display: flex
+  flex-direction: row
+  justify-content: flex-end
 .action_card__item
-	display: flex
-	flex-direction: row
+  display: flex
+  flex-direction: row
 
 .profil_forms
-	display: flex
-	flex-direction: row
-	justify-content: space-between
-	padding: 0 60px 0 60px
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  padding: 0 60px 0 60px
 
 .profil_edit
-	margin-top: -80px
-	margin-left: -30px
-	background: $white
-	width: 30px
-	height: 30px
-	border-radius: 100%
+  display: flex
+  justify-content: center
+  align-items: center
+  align-content: center
+  top: 10px
+  left: 70px
+  background: $white
+  width: 30px
+  height: 30px
+  border-radius: 100%
+  position: absolute
+  z-index: 1
+  cursor: pointer
+
+.q-field--standard .q-field__control:before, .q-file__filler input[type="file" i]
+  border-bottom: none !important
+
+.q-file .q-field__native
+  position: absolute
+  top: 50%
+  left: 50px
+  transform: translate(-105%, -5%)
+  color: rgb(245 222 179)
+  width: 100px
+  font-size: 10px
+
+.profil_icon
+  display: block
+  position: absolute
+  margin-left: 50%
+  margin-right: 50%
+  transform: translate(-50%, 25%)
+  font-size: 1.4em
+
+.profil_submit__btn
+  position: absolute
+  margin-left: 150px
+  margin-top: 55px
+
+.q-spinner
+  position: absolute
+  top: 3px
+  left: 3px
 </style>
