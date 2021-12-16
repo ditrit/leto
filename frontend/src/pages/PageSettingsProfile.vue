@@ -68,8 +68,8 @@
 								<q-btn label="Submit" type="submit" color="primary" />
 							</div>
 						</q-form>
-						<q-avatar class="q-my-lg" size="100px">
-							<img :src="user.Logo" />
+						<q-avatar class="q-my-lg" size="100px" v-if="avatar">
+							<img :src="avatar" />
 						</q-avatar>
 					</div>
 					<div class="row">
@@ -191,6 +191,7 @@ export default {
 		AccountSettings,
 		SettingsNav,
 	},
+
 	setup() {
 		const drawer = ref(false);
 		const filter = ref("");
@@ -202,11 +203,13 @@ export default {
 		const showSubmitBtn = ref(false);
 		const showButton = ref(false);
 		const file = ref(null);
+		const avatar = ref(null);
 
 		const currentUser = async () => {
 			let response = await store.getters["auth/user"];
 			user.value = response;
 			console.log("user.value : ", user.value);
+			avatar.value = response?.Logo;
 		};
 		currentUser();
 
@@ -219,27 +222,17 @@ export default {
 			showSubmitBtn.value = !showSubmitBtn.value;
 		};
 
-		const selectAvatar = (e) => {
-			console.log("e: ", e.target.files[0]);
-			file.value = e.target.files[0];
-			// const formData = new FormData();
-			// formData.append("test", "Helloo");
-			// formData.append("id", imagesUID);
-			// formData.append("name", file.value.name);
-			// formData.append("size", file.value.size);
-			// console.log("file value:", file.value);
-			// console.log("file:", file);
-			// console.log("e:", e);
-			// console.log("formData: ", formData);
-
-			// API.post(`/file/${imagesUID}`, formData);
-		};
 		const uploadAvatar = () => {
-			console.log("Load Avatar");
 			console.log("file is:", file.value);
 			const formData = new FormData();
 			formData.append("file", file.value, file.value.name);
-			API.post(`/file/${imagesUID}`, formData).then((res) => console.log(res));
+			console.log("formData: ", formData);
+			API.post(`/file/${imagesUID}`, formData).then((res) => {
+				avatar.value = res.request.responseURL;
+				console.log(res);
+			});
+			// store.dispatch("appFiles/uploadFile", imagesUID, formData);
+			showSubmitBtn.value = false;
 		};
 		return {
 			drawer,
@@ -247,10 +240,10 @@ export default {
 			filterRef,
 			disabled,
 			user,
+			avatar,
 			OnEdit,
 			showButton,
 			showSubmitBtn,
-			selectAvatar,
 			file,
 			uploadAvatar,
 			editAvatar,
