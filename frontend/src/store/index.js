@@ -10,6 +10,7 @@ import appRoles from "./Roles/index";
 import appEnviType from "./EnviType/index";
 import appEnvironment from "./Environment/index";
 import appAuthorization from "./Authorization/index";
+import appFiles from "./Files/index";
 
 /*
  * If not building with SSR mode, you can
@@ -31,6 +32,7 @@ export default store(function (/* { ssrContext } */) {
 			appEnviType,
 			appEnvironment,
 			appAuthorization,
+			appFiles,
 		},
 		strict: process.env.DEBUGGING,
 	});

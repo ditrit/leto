@@ -60,7 +60,7 @@
 												<div class="text-h6">Tags</div>
 											</div>
 										</div>
-										<div class="button_actions__contai #ner col-auto">
+										<div class="button_actions__container col-auto">
 											<q-btn color="grey-7" round flat icon="more_vert">
 												<q-menu cover auto-close>
 													<q-list>
