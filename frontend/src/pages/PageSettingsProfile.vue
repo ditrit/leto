@@ -50,7 +50,11 @@
 				/>
 				<div class="flex-col p_padding" v-if="user">
 					<div class="col">
-						<q-form @submit="uploadAvatar" class="q-gutter-md">
+						<q-form
+							@submit="uploadAvatar"
+							class="q-gutter-md"
+							v-if="showButton"
+						>
 							<q-file
 								v-model="file"
 								type="file"
@@ -117,7 +121,7 @@
 									filled
 									type="textarea"
 									:disable="disabled"
-									v-model="biography"
+									v-model="user.Description"
 									label="Your Biography *"
 									lazy-rules
 									:rules="[
@@ -141,12 +145,16 @@
 								Update password
 							</div>
 							<q-form
-								@submit="onSubmit"
+								@submit="submitPassword"
 								@reset="onReset"
 								class="q-gutter-lg q-pt-lg q-pl-lg"
 							>
-								<q-input filled label="New password *" />
-								<q-input filled label="Enter again password *" />
+								<q-input filled label="New password *" v-model="password" />
+								<q-input
+									filled
+									label="Enter again password *"
+									v-model="confirmPassword"
+								/>
 
 								<div>
 									<q-btn label="Submit" type="submit" color="primary" />
@@ -175,6 +183,7 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 import API from "../services/index";
 import { v4 as uuidv4 } from "uuid";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
@@ -193,6 +202,7 @@ export default {
 	},
 
 	setup() {
+		const $q = useQuasar();
 		const drawer = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
@@ -204,6 +214,8 @@ export default {
 		const showButton = ref(false);
 		const file = ref(null);
 		const avatar = ref(null);
+		const password = ref(null);
+		const confirmPassword = ref(null);
 
 		const currentUser = async () => {
 			let response = await store.getters["auth/user"];
@@ -234,6 +246,34 @@ export default {
 			// store.dispatch("appFiles/uploadFile", imagesUID, formData);
 			showSubmitBtn.value = false;
 		};
+
+		const submitPassword = () => {
+			const userUpdate = {
+				id: user.value.ID,
+				logo: user.value.Logo,
+				firstName: user.value.FirstName,
+				lastName: user.value.LastName,
+				email: user.value.Email,
+				password: password.value,
+				description: user.value.Description,
+			};
+			console.log(userUpdate);
+
+			if (password.value === confirmPassword.value) {
+				console.log("Password do match: ", password.value);
+				store.dispatch("appUsers/updateUser", userUpdate);
+				$q.notify({
+					type: "positive",
+					message: "Password has been updated.",
+				});
+			} else {
+				$q.notify({
+					type: "negative",
+					message: "Password has not been updated.",
+				});
+			}
+			(password.value = ""), (confirmPassword.value = "");
+		};
 		return {
 			drawer,
 			filter,
@@ -245,6 +285,9 @@ export default {
 			showButton,
 			showSubmitBtn,
 			file,
+			password,
+			confirmPassword,
+			submitPassword,
 			uploadAvatar,
 			editAvatar,
 			resetFilter() {
