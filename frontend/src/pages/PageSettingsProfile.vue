@@ -73,7 +73,7 @@
 							</div>
 						</q-form>
 						<q-avatar class="q-my-lg" size="100px" v-if="avatar">
-							<img :src="avatar" />
+							<img :src="user.Logo" />
 						</q-avatar>
 					</div>
 					<div class="row">
@@ -221,7 +221,10 @@ export default {
 			let response = await store.getters["auth/user"];
 			user.value = response;
 			console.log("user.value : ", user.value);
-			avatar.value = response?.Logo;
+			avatar.value = store.dispatch(
+				"appFiles/downloadFile",
+				"e0ef591c-a45d-4ebe-ad21-9588806a952c"
+			);
 		};
 		currentUser();
 
@@ -240,8 +243,9 @@ export default {
 			formData.append("file", file.value, file.value.name);
 			console.log("formData: ", formData);
 			API.post(`/file/${imagesUID}`, formData).then((res) => {
-				avatar.value = res.request.responseURL;
+				avatar.value = user.value.Logo;
 				console.log(res);
+				console.log("avatar.value: ", avatar.value);
 			});
 			// store.dispatch("appFiles/uploadFile", imagesUID, formData);
 			showSubmitBtn.value = false;
@@ -250,7 +254,7 @@ export default {
 		const submitPassword = () => {
 			const userUpdate = {
 				id: user.value.ID,
-				logo: user.value.Logo,
+				logo: imagesUID,
 				firstName: user.value.FirstName,
 				lastName: user.value.LastName,
 				email: user.value.Email,

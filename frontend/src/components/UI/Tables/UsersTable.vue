@@ -32,35 +32,73 @@
 								@reset="onResetUpdate"
 								class="q-gutter-md q-pa-md"
 							>
-								<q-input
-									filled
-									v-model="userObj[2]"
-									label="Your First Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-								<q-input
-									filled
-									v-model="userObj[3]"
-									label="Your Last Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-								<q-input
-									filled
-									type="textarea"
-									v-model="userObj[4]"
-									label="Your Email *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-
+								<div class="row col-md-12 q-gutter-sm">
+									<div class="col">
+										<q-input
+											filled
+											v-model="userObj[2]"
+											label="Your First Name *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+									</div>
+									<div class="col">
+										<q-input
+											filled
+											v-model="userObj[3]"
+											label="Your Last Name *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+									</div>
+								</div>
+								<div class="row col-md-12 q-gutter-sm">
+									<div class="col">
+										<q-input
+											filled
+											v-model="userObj[4]"
+											label="Your Email *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+									</div>
+									<div class="col">
+										<q-input
+											filled
+											v-model="userObj[5]"
+											label="password *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+									</div>
+								</div>
+								<div class="row col-md-12 q-gutter-sm">
+									<div class="col">
+										<q-input
+											filled
+											type="textarea"
+											v-model="userObj[6]"
+											label="Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+									</div>
+								</div>
 								<q-card-actions
 									align="right"
 									class="text-primary flex justify-center"
@@ -117,36 +155,71 @@
 					<q-form
 						@submit.prevent="onSubmitAdd"
 						@reset="onResetAdd"
-						class="q-gutter-md q-pa-md"
+						class="q-gutter-sm"
 					>
-						<q-input
-							filled
-							label="Your First Name *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="userFirstName"
-						/>
-						<q-input
-							filled
-							label="Your Last Name *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="userLastName"
-						/>
-						<q-input
-							filled
-							label="Your Email *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="userEmail"
-						/>
+						<div class="row col-md-12 q-gutter-sm">
+							<div class="col">
+								<q-input
+									filled
+									label="Your First Name *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="userFirstName"
+								/>
+							</div>
 
+							<div class="col">
+								<q-input
+									filled
+									label="Your Last Name *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="userLastName"
+								/>
+							</div>
+						</div>
+						<div class="row col-md-12 q-gutter-sm">
+							<div class="col">
+								<q-input
+									filled
+									label="Your Email *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="userEmail"
+								/>
+							</div>
+							<div class="col">
+								<q-input
+									filled
+									label="Your password *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="userPassword"
+								/>
+							</div>
+						</div>
+						<div class="row col-md-12 q-gutter-sm">
+							<div class="col">
+								<q-input
+									filled
+									type="textarea"
+									label="Descripiton *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="userDescription"
+								/>
+							</div>
+						</div>
 						<q-card-actions
 							align="right"
 							class="text-primary flex justify-center"
@@ -203,6 +276,20 @@ const columns = [
 		field: "email",
 		sortable: true,
 	},
+	{
+		name: "password",
+		label: "Password",
+		align: "left",
+		field: "password",
+		sortable: false,
+	},
+	{
+		name: "description",
+		label: "Description",
+		align: "left",
+		field: "description",
+		sortable: false,
+	},
 	// {
 	// 	name: "password",
 	// 	label: "Password",
@@ -231,11 +318,13 @@ export default {
 		const userFirstName = ref("");
 		const userLastName = ref("");
 		const userEmail = ref("");
+		const userPassword = ref("");
+		const userDescription = ref("");
+
 		const allUsers = async () => {
 			// fetch All Users
 			await store.dispatch("appUsers/fetchUsers");
 			const getUsers = computed(() => store.getters["appUsers/allUsers"]);
-
 			return (rowsData.value = Object.values(
 				getUsers.value.map((item) => {
 					return {
@@ -246,6 +335,7 @@ export default {
 						lastName: item.LastName,
 						email: item.Email,
 						password: item.Password,
+						description: item.Description,
 					};
 				})
 			));
@@ -261,6 +351,8 @@ export default {
 				firstName: userFirstName.value,
 				lastName: userLastName.value,
 				email: userEmail.value,
+				password: userPassword.value,
+				description: userDescription.value,
 			};
 
 			try {
@@ -287,6 +379,8 @@ export default {
 				firstName: userObj.value[2],
 				lastName: userObj.value[3],
 				email: userObj.value[4],
+				password: userObj.value[5],
+				description: userObj.value[6],
 			};
 
 			try {
@@ -347,6 +441,8 @@ export default {
 			onResetAdd,
 			opendDialog,
 			openAddUserDialog,
+			userPassword,
+			userDescription,
 			password: ref(""),
 			isPwd: ref(true),
 		};
