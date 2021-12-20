@@ -14,6 +14,8 @@
 			title=""
 			:rows="rowsData"
 			:columns="columns"
+			:fullscreen="fullscreen"
+			:grid="$q.screen.xs"
 			row-key="name"
 			field
 			table-header-class="table_header"
@@ -122,6 +124,11 @@
 					</q-avatar>
 				</q-td>
 			</template>
+			<!-- <template style="width: 100px">
+				<q-td key="password" :props="props" class="ellipsis">
+					{{ props.row.password }}
+				</q-td>
+			</template> -->
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
 					<q-btn
@@ -282,6 +289,7 @@ const columns = [
 		align: "left",
 		field: "password",
 		sortable: false,
+		classes: "tr_width ellipsis",
 	},
 	{
 		name: "description",
@@ -453,4 +461,7 @@ export default {
 .table_header
   background-color: $secondary !important
   color: $primary !important
+
+.tr_width
+  width: 80px !important
 </style>

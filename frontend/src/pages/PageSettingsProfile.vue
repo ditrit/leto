@@ -72,7 +72,7 @@
 								<q-btn label="Submit" type="submit" color="primary" />
 							</div>
 						</q-form>
-						<q-avatar class="q-my-lg" size="100px" v-if="avatar">
+						<q-avatar class="q-my-lg" size="100px">
 							<img :src="user.Logo" />
 						</q-avatar>
 					</div>
@@ -213,20 +213,22 @@ export default {
 		const showSubmitBtn = ref(false);
 		const showButton = ref(false);
 		const file = ref(null);
+		const logoID = ref(null);
 		const avatar = ref(null);
 		const password = ref(null);
 		const confirmPassword = ref(null);
 
+		console.log("	logoID.value: ", logoID.value);
+
 		const currentUser = async () => {
 			let response = await store.getters["auth/user"];
+			logoID.value = imagesUID;
 			user.value = response;
 			console.log("user.value : ", user.value);
-			avatar.value = store.dispatch(
-				"appFiles/downloadFile",
-				"e0ef591c-a45d-4ebe-ad21-9588806a952c"
-			);
+			await store.dispatch("appFiles/downloadFile", `${logoID.value}`);
 		};
 		currentUser();
+		console.log("	download avatar : ", avatar.value);
 
 		const OnEdit = () => {
 			disabled.value = !disabled.value;
@@ -237,15 +239,15 @@ export default {
 			showSubmitBtn.value = !showSubmitBtn.value;
 		};
 
-		const uploadAvatar = () => {
+		const uploadAvatar = async () => {
 			console.log("file is:", file.value);
 			const formData = new FormData();
 			formData.append("file", file.value, file.value.name);
+			formData.append("id", logoID.value);
 			console.log("formData: ", formData);
-			API.post(`/file/${imagesUID}`, formData).then((res) => {
-				avatar.value = user.value.Logo;
+			await API.post(`/file/${logoID.value}`, formData).then((res) => {
 				console.log(res);
-				console.log("avatar.value: ", avatar.value);
+				console.log(" upload avatar: ", avatar.value);
 			});
 			// store.dispatch("appFiles/uploadFile", imagesUID, formData);
 			showSubmitBtn.value = false;
@@ -294,6 +296,8 @@ export default {
 			submitPassword,
 			uploadAvatar,
 			editAvatar,
+			logoID,
+
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();
