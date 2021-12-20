@@ -95,17 +95,7 @@
 										v-for="(tag, index) in child"
 										:key="index"
 										:style="editMode ? 'border: 1px dashed grey' : ''"
-										v-mutation="handler1"
-										@dragenter="onDragEnter"
-										@dragleave="onDragLeave"
-										@dragover="onDragOver"
-										@drop="onDrop"
-										class="
-											cards_tags_wrapper
-											drop-target
-											rounded-borders
-											overflow-hidden
-										"
+										class="cards_tags_wrapper rounded-borders overflow-hidden"
 									>
 										<li
 											v-for="(item, index) in tag.Tags"
@@ -132,26 +122,12 @@
 									</ul>
 									<div v-if="showDraggable">
 										<ul
-											:style="editMode ? 'border: 1px dashed grey' : ''"
-											v-mutation="handler2"
-											@dragenter="onDragEnter"
-											@dragleave="onDragLeave"
-											@dragover="onDragOver"
-											@drop="onDrop"
-											class="
-												cards_tags_wrapper
-												drop-target
-												rounded-borders
-												overflow-hidden
-											"
+											class="cards_tags_wrapper rounded-borders overflow-hidden"
 										>
 											<li
-												v-for="(item, index) in globalTagsList"
+												v-for="(item, index) in globalTagsTreeList"
 												:key="index"
-												:draggable="true"
-												@dragstart="onDragStart"
 												:class="item.class"
-												:id="`box ${item.ID}`"
 											>
 												{{ item.Name }}
 											</li>
@@ -232,7 +208,7 @@ export default defineComponent({
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
-		const globalTagsList = ref(null);
+		const globalTagsTreeList = ref(null);
 		const chodosenNodeID = ref("");
 
 		const goToID = async (node) => {
@@ -289,22 +265,15 @@ export default defineComponent({
 		};
 		getMenuData();
 		console.log("details page menu.value: ", menu);
-		const getAllTags = async () => {
-			await store.dispatch("appTags/fetchAllTags");
-			let data = computed(() => store.getters["appTags/allTags"]);
-			console.log("globalTagsList.value: ", globalTagsList.value);
-			return (globalTagsList.value = data.value);
+		const getTagsTree = async () => {
+			await store.dispatch("appTags/fetchAllTagsTree");
+			let data = computed(() => store.getters["appTags/allTagsTree"]);
+			console.log("data: ", data.value);
+			return (globalTagsTreeList.value = Object.values(data.value));
 		};
-		getAllTags();
+		getTagsTree();
+		console.log("globalTagsTreeList.value: ", globalTagsTreeList.value);
 
-		const dropTag = async () => {
-			await store.dispatch(
-				"appDomain/addDomainTag",
-				"5695617e-2f08-4c47-a0d3-dccb35ef98b3",
-				"b6099a6f-7c5e-4b4b-b10a-30a3f6931d54"
-			);
-			store.getters["appTags/allTags"];
-		};
 		const editMode = ref(false);
 		const showButtons = ref(false);
 		const showDraggable = ref(false);
@@ -362,80 +331,7 @@ export default defineComponent({
 			OnEdit,
 			OnSave,
 			OnDelete,
-			globalTagsList,
-
-			handler1(mutationRecords) {
-				status1.value = [];
-				for (const index in mutationRecords) {
-					const record = mutationRecords[index];
-					const info = `type: ${record.type}, nodes added: ${
-						record.addedNodes.length > 0 ? "true" : "false"
-					}, nodes removed: ${
-						record.removedNodes.length > 0 ? "true" : "false"
-					}, oldValue: ${record.oldValue}`;
-					status1.value.push(info);
-				}
-			},
-
-			handler2(mutationRecords) {
-				status2.value = [];
-				for (const index in mutationRecords) {
-					const record = mutationRecords[index];
-					const info = `type: ${record.type}, nodes added: ${
-						record.addedNodes.length > 0 ? "true" : "false"
-					}, nodes removed: ${
-						record.removedNodes.length > 0 ? "true" : "false"
-					}, oldValue: ${record.oldValue}`;
-					status2.value.push(info);
-				}
-			},
-
-			// store the id of the draggable element
-			onDragStart(e) {
-				e.dataTransfer.setData("text", e.target.id);
-				e.dataTransfer.dropEffect = "move";
-			},
-
-			onDragEnter(e) {
-				// don't drop on other draggables
-				if (e.target.draggable !== true) {
-					e.target.classList.add("drag-enter");
-				}
-			},
-
-			onDragLeave(e) {
-				e.target.classList.remove("drag-enter");
-				console.log("onDragLeave");
-			},
-
-			onDragOver(e) {
-				e.preventDefault();
-				console.log("onDragOver");
-			},
-
-			onDrop(e) {
-				e.preventDefault();
-				console.log("onDrop");
-
-				dropTag();
-				// don't drop on other draggables
-				if (e.target.draggable === true) {
-					return;
-				}
-
-				const draggedId = e.dataTransfer.getData("text");
-				const draggedEl = document.getElementById(draggedId);
-				// check if original parent node
-				if (draggedEl.parentNode === e.target) {
-					e.target.classList.remove("drag-enter");
-					return;
-				}
-
-				// make the exchange
-				draggedEl.parentNode.removeChild(draggedEl);
-				e.target.appendChild(draggedEl);
-				e.target.classList.remove("drag-enter");
-			},
+			globalTagsTreeList,
 		};
 	},
 });
@@ -449,48 +345,6 @@ export default defineComponent({
   padding-left: 140px
 .q-drawer
   z-index: -1 !important
-.drop-target
-  min-height: 160px
-  width: 100%
-  min-width: 200px
-  background-color: transparent
-
-
-
-.drag-enter
-  outline-style: dashed
-
-.box
-  width: 100px
-  height: 100px
-  float: left
-  cursor: pointer
-
-@media only screen and (max-width: 500px)
-  .drop-target
-    height: 200px
-    width: 100px
-    min-width: 100px
-    background-color: gainsboro
-
-  .box
-    width: 50px
-    height: 50px
-
-.box:nth-child(3)
-  clear: both
-
-.navy
-  background-color: navy
-
-.red
-  background-color: firebrick
-
-.green
-  background-color: darkgreen
-
-.orange
-  background-color: orange
 
 .action_card__item
   display: flex
