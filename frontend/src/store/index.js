@@ -11,6 +11,7 @@ import appEnviType from "./EnviType/index";
 import appEnvironment from "./Environment/index";
 import appAuthorization from "./Authorization/index";
 import appFiles from "./Files/index";
+import appGit from "./Git/index";
 
 /*
  * If not building with SSR mode, you can
@@ -33,6 +34,7 @@ export default store(function (/* { ssrContext } */) {
 			appEnvironment,
 			appAuthorization,
 			appFiles,
+			appGit,
 		},
 		strict: process.env.DEBUGGING,
 	});
