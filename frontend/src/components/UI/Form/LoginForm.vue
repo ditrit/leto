@@ -65,33 +65,29 @@ export default {
 			isPwd,
 
 			login() {
-				try {
-					const newUser = {
-						email: email.value,
-						password: password.value,
-					};
-					console.log("newUser: ", newUser);
-					store.dispatch("auth/login", newUser).then(() => {
-						router.push("/dashboard");
-					});
-					store.dispatch("auth/currentUser");
-
+				const newUser = {
+					email: email.value,
+					password: password.value,
+				};
+				console.log("newUser: ", newUser);
+				store.dispatch("auth/login", newUser).then(() => {
 					$q.notify({
 						color: "green-4",
 						textColor: "white",
 						icon: "cloud_done",
 						message: "Submitted successfully",
 					});
-				} catch (error) {
-					// error.value = err.response.data.error;
-					console.log("	error.value : ", response.error);
+
+					store.dispatch("auth/currentUser");
+					router.push("/dashboard");
+				}).catch(() => {
 					$q.notify({
 						color: "negative",
 						textColor: "white",
-						icon: "danger",
+						icon: "error",
 						message: "Sorry,you can not login",
 					});
-				}
+				});
 			},
 		};
 	},
