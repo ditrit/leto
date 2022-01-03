@@ -108,7 +108,7 @@
 											{{ item.Name }}
 											<q-btn
 												v-if="editMode"
-												round
+												roundπ
 												dense
 												unelevated
 												size="xs"
@@ -120,18 +120,32 @@
 											/>
 										</li>
 									</ul>
-									<div v-if="showDraggable">
-										<ul
-											class="cards_tags_wrapper rounded-borders overflow-hidden"
+									<div v-if="globalTagsTreeList">
+										<q-input
+											ref="filterTagRef"
+											filled
+											v-model="filterTag"
+											label="Filter"
 										>
-											<li
-												v-for="(item, index) in globalTagsTreeList"
-												:key="index"
-												:class="item.class"
-											>
-												{{ item.Name }}
-											</li>
-										</ul>
+											<template v-slot:append>
+												<q-icon
+													v-if="filterTag !== ''"
+													name="clear"
+													class="cursor-pointer"
+													@click="resetFilterTag"
+												/>
+											</template>
+										</q-input>
+										<div class="q-pa-md q-gutter-sm">
+											<q-tree
+												dense
+												:nodes="globalTagsTreeList"
+												v-model:selected="isSelected"
+												node-key="label"
+												:filter="filterTag"
+												default-expand-all
+											/>
+										</div>
 									</div>
 								</q-card-section>
 
@@ -201,24 +215,33 @@ export default defineComponent({
 		const store = useStore();
 		const drawer = ref(false);
 		const router = useRouter();
-
 		const progress = ref(null);
 		const actionsLinks = ref(["Edit"]);
 		const child = ref([]);
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
-		const globalTagsTreeList = ref(null);
-		const chodosenNodeID = ref("");
+		const filterTag = ref("");
+		const filterTagRef = ref(null);
+		const globalTagsTreeList = ref([]);
+		const choosenNodeID = ref("");
+		const isSelected = ref(null);
 
 		const goToID = async (node) => {
-			chodosenNodeID.value = await node.id;
+			choosenNodeID.value = await node.id;
 			router.push(`/teams/${node.id}`);
 			store.dispatch("appDomain/fetchDomainById", `${node.id}`);
 			store.getters["appDomain/allDomaines"];
-			console.log("chodosenNodeID: ", chodosenNodeID.value);
+			console.log("choosenNodeID: ", choosenNodeID.value);
+
 			console.log("props.id: ", props.id);
 		};
+
+		const addTagtoDomain = async (node) => {
+			console.log(node);
+			console.log("props.id: ", props.id);
+		};
+		addTagtoDomain();
 
 		const menu = ref(null);
 		const getMenuData = async () => {
@@ -264,22 +287,31 @@ export default defineComponent({
 			]);
 		};
 		getMenuData();
-		console.log("details page menu.value: ", menu);
+		// console.log("details page menu.value: ", menu);
 		const getTagsTree = async () => {
 			await store.dispatch("appTags/fetchAllTagsTree");
 			let data = computed(() => store.getters["appTags/allTagsTree"]);
-			console.log("data: ", data.value);
-			return (globalTagsTreeList.value = Object.values(data.value));
+			globalTagsTreeList.value = [data.value].map((tag) => {
+				return {
+					id: tag?.ID,
+					label: tag?.Name,
+					handler: (tag) => addTagtoDomain(tag),
+					children: tag.Childs?.map((child) => {
+						return {
+							id: child.ID,
+							label: child.Name,
+							handler: (child) => addTagtoDomain(child),
+						};
+					}),
+				};
+			});
+			console.log("globalTagsTreeList: ", globalTagsTreeList.value);
 		};
 		getTagsTree();
-		console.log("globalTagsTreeList.value: ", globalTagsTreeList.value);
-
 		const editMode = ref(false);
 		const showButtons = ref(false);
 		const showDraggable = ref(false);
 		const isNew = ref(false);
-		const status1 = ref([]);
-		const status2 = ref([]);
 
 		const OnNew = () => {
 			console.log("OnNew Function");
@@ -304,7 +336,7 @@ export default defineComponent({
 			return (child.value = await data.value);
 		};
 		getData();
-		console.log("child data: ", child);
+		// console.log("child data: ", child);
 		return {
 			drawer,
 			oepnDialog,
@@ -312,20 +344,27 @@ export default defineComponent({
 			actionsLinks,
 			Drawer,
 			menu,
-			chodosenNodeID,
+			choosenNodeID,
 			goToID,
 			filter,
 			filterRef,
+			filterTag,
+			filterTagRef,
+			isSelected,
+
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();
+			},
+			resetFilterTag() {
+				filterTag.value = "";
+				filterTagRef.value.focus();
 			},
 			pageSizeTweak,
 			editMode,
 			showButtons,
 			showDraggable,
-			status1,
-			status2,
+
 			isNew,
 			OnNew,
 			OnEdit,
