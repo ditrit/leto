@@ -50,7 +50,7 @@ import Headline6 from "../Headlines/Headline6";
 export default {
 	components: { Headline6 },
 	setup() {
-		const isPwd = ref(false);
+		const isPwd = ref(true);
 		const router = useRouter();
 		const $q = useQuasar();
 		const store = useStore();

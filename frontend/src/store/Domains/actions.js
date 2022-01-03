@@ -39,17 +39,12 @@ export const fetchEnvironmentByDomainID = async ({ commit }, domainID) => {
 	commit("GET_ENVIRONMENT_BY_DOMAINID", response.data);
 };
 // TODO: Make domainID + tagID detection dynamic
-
 export const addDomainTag = async ({ commit }, domainId, tagId) => {
 	await API.post(`/domain/${domainId}/tag/${tagId}`);
 	commit("ADD_DOMAIN_TAGS", domainId, tagId);
 };
 
-export const removeDomainTag = async (
-	{ commit },
-	domainId = "703911909106483201",
-	tagId = "703911909124931585"
-) => {
+export const removeDomainTag = async ({ commit }, domainId, tagId) => {
 	await API.delete(`/domain/${domainId}/tag/${tagId}`);
 	commit("DELETE_DOMAIN_TAG", domainId, tagId);
 };
