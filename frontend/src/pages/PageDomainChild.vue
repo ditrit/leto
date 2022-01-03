@@ -108,7 +108,7 @@
 											{{ item.Name }}
 											<q-btn
 												v-if="editMode"
-												roundπ
+												round
 												dense
 												unelevated
 												size="xs"
@@ -140,7 +140,6 @@
 											<q-tree
 												dense
 												:nodes="globalTagsTreeList"
-												v-model:selected="isSelected"
 												node-key="label"
 												:filter="filterTag"
 												default-expand-all
@@ -233,16 +232,16 @@ export default defineComponent({
 			store.dispatch("appDomain/fetchDomainById", `${node.id}`);
 			store.getters["appDomain/allDomaines"];
 			console.log("choosenNodeID: ", choosenNodeID.value);
-
 			console.log("props.id: ", props.id);
 		};
 
 		const addTagtoDomain = async (node) => {
-			console.log(node);
+			console.log("node:", node);
+			console.log("node id:", node.id);
 			console.log("props.id: ", props.id);
+			store.dispatch("appDomain/addDomainTag", props.id, node.id);
 		};
 		addTagtoDomain();
-
 		const menu = ref(null);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");

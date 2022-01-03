@@ -39,7 +39,6 @@ export const fetchEnvironmentByDomainID = async ({ commit }, domainID) => {
 	commit("GET_ENVIRONMENT_BY_DOMAINID", response.data);
 };
 // TODO: Make domainID + tagID detection dynamic
-
 export const addDomainTag = async ({ commit }, domainId, tagId) => {
 	await API.post(`/domain/${domainId}/tag/${tagId}`);
 	commit("ADD_DOMAIN_TAGS", domainId, tagId);
