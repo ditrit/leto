@@ -173,7 +173,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, watch } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -230,22 +230,10 @@ export default defineComponent({
 			//TODO: Modify Axios action
 			await API.post(`/domain/${props.id}/tag/${tag.id}`)
 				.then((response) => console.log(response))
+				.then(() => refreshTags())
 				.catch((err) => console.log(err));
 		};
 
-		// const refreshTags = async () => {
-		// 	const dataTags = await store.dispatch(
-		// 		"appDonain/fetchDomainTags",
-		// 		props.id
-		// 	);
-		// 	console.log("dataTags: ", dataTags);
-		// 	const tagsTree = computed(() => {
-		// 		return store.getters["appDomain/allDomainTag"];
-		// 	});
-		// 	console.log("tagsTree: ", tagsTree.value);
-		// };
-
-		// refreshTags();
 		const menu = ref(null);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
@@ -329,8 +317,8 @@ export default defineComponent({
 			//TODO: Add Axios Action
 			await API.delete(`/domain/${props.id}/tag/${id}`)
 				.then((response) => console.log(response))
+				.then(() => refreshTags())
 				.catch((error) => console.log(error));
-			API.get(`/domain/${props.id}/tag`);
 		};
 		const OnSave = () => {
 			console.log("OnSave Function");
@@ -345,15 +333,14 @@ export default defineComponent({
 			return (child.value = await data.value);
 		};
 		getData();
-		watch(
-			() => domainTags.value,
-			(prev, next) => {
-				console.log("prev:", prev.length);
-				console.log("next:", next.length);
-				API.get(`/domain/${props.id}/tag`);
-			}
-		);
-		// console.log("child data: ", child);
+
+		const refreshTags = async () => {
+			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
+			let data = computed(() => store.getters["appDomain/allDomaines"]);
+			domainTags.value = await data.value[0].Tags;
+			console.log("	Refresh domainTags.value: ", domainTags.value);
+		};
+
 		return {
 			drawer,
 			oepnDialog,
