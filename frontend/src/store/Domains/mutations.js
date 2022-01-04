@@ -21,8 +21,8 @@ export const DELETE_DOMAIN = (state, domainId) =>
 export const GET_DOMAIN_TAGS = (state, domainTag) =>
 	(state.domainTags = domainTag);
 
-export const ADD_DOMAIN_TAGS = (state, domainId, tagId) =>
-	state.domainTags.unshift(domainId, tagId);
+export const ADD_DOMAIN_TAGS = (state, domainTag) =>
+	state.domainTags.unshift(domainTag);
 
 export const DELETE_DOMAIN_TAG = (state, tagId) =>
 	(state.domainTags = state.domainTags.filter(

@@ -77,17 +77,20 @@ html, body
   flex-wrap: wrap
   align-content: center
   list-style: none
+  padding: 8px
+  box-sizing: border-box
   li
     display: flex
     justify-content: center
     align-items: center
-    min-width: 80px
+    min-width: fit-content
     background: white
-    padding: 6px 8px
+    padding: 2px 4px
     border-radius: 12px
-    margin-top: 8px
-    margin-right: 8px
+    margin-top: 4px
+    margin-right: 4px
     box-shadow: var(--box-shadow)
+    text-transform: capitalize
 
 .card_default
   background: transparent !important 
@@ -100,7 +103,7 @@ html, body
   background: transparent !important 
   margin-left: 8px
   margin-right: 8px
-  width: 300px
+
   border: none
 
 .q-stepper__step .item_card

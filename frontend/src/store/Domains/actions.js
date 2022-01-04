@@ -41,7 +41,7 @@ export const fetchEnvironmentByDomainID = async ({ commit }, domainID) => {
 // TODO: Make domainID + tagID detection dynamic
 export const addDomainTag = async ({ commit }, domainId, tagId) => {
 	await API.post(`/domain/${domainId}/tag/${tagId}`);
-	commit("ADD_DOMAIN_TAGS", domainId, tagId);
+	commit("ADD_DOMAIN_TAGS", tagId);
 };
 
 export const removeDomainTag = async ({ commit }, domainId, tagId) => {

@@ -94,16 +94,12 @@
 									<ul
 										v-for="(tag, index) in child"
 										:key="index"
-										:style="editMode ? 'border: 1px dashed grey' : ''"
 										class="cards_tags_wrapper rounded-borders overflow-hidden"
 									>
 										<li
-											v-for="(item, index) in tag.Tags"
+											v-for="(item, index) in domainTags"
 											:key="index"
-											:draggable="false"
-											@dragstart="onDragStart"
 											:class="item.class"
-											:id="`box ${item.ID}`"
 										>
 											{{ item.Name }}
 											<q-btn
@@ -120,12 +116,16 @@
 											/>
 										</li>
 									</ul>
-									<div v-if="globalTagsTreeList">
+									<div
+										v-if="globalTagsTreeList"
+										v-show="editMode"
+										class="globalTagTree_container"
+									>
 										<q-input
 											ref="filterTagRef"
-											filled
 											v-model="filterTag"
-											label="Filter"
+											label="Search"
+											dense
 										>
 											<template v-slot:append>
 												<q-icon
@@ -147,21 +147,6 @@
 										</div>
 									</div>
 								</q-card-section>
-
-								<div class="q-gutter-sm float-right" v-if="showButtons">
-									<q-btn
-										color="white"
-										text-color="primary"
-										label="Edit"
-										@click.prevent="OnEdit"
-									/>
-									<q-btn
-										color="white"
-										text-color="primary"
-										label="Save"
-										@click.prevent="OnSave"
-									/>
-								</div>
 							</q-card>
 						</div>
 					</div>
@@ -188,7 +173,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -199,6 +184,7 @@ import GlobalSearch from "../components/UI/Form/GlobalSearch.vue";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../common/index";
+import API from "../services";
 export default defineComponent({
 	name: "PageDomainChild",
 	components: {
@@ -217,6 +203,7 @@ export default defineComponent({
 		const progress = ref(null);
 		const actionsLinks = ref(["Edit"]);
 		const child = ref([]);
+		const domainTags = ref([]);
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
@@ -235,13 +222,30 @@ export default defineComponent({
 			console.log("props.id: ", props.id);
 		};
 
-		const addTagtoDomain = async (node) => {
-			console.log("node:", node);
-			console.log("node id:", node.id);
+		const addTagtoDomain = async (tag) => {
+			console.log("tag:", tag);
+			console.log("tag id:", tag.id);
 			console.log("props.id: ", props.id);
-			store.dispatch("appDomain/addDomainTag", props.id, node.id);
+			// store.dispatch("appDomain/addDomainTag", props.id, `${tag.id}`);
+			//TODO: Modify Axios action
+			await API.post(`/domain/${props.id}/tag/${tag.id}`)
+				.then((response) => console.log(response))
+				.catch((err) => console.log(err));
 		};
-		addTagtoDomain();
+
+		// const refreshTags = async () => {
+		// 	const dataTags = await store.dispatch(
+		// 		"appDonain/fetchDomainTags",
+		// 		props.id
+		// 	);
+		// 	console.log("dataTags: ", dataTags);
+		// 	const tagsTree = computed(() => {
+		// 		return store.getters["appDomain/allDomainTag"];
+		// 	});
+		// 	console.log("tagsTree: ", tagsTree.value);
+		// };
+
+		// refreshTags();
 		const menu = ref(null);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
@@ -308,7 +312,6 @@ export default defineComponent({
 		};
 		getTagsTree();
 		const editMode = ref(false);
-		const showButtons = ref(false);
 		const showDraggable = ref(false);
 		const isNew = ref(false);
 
@@ -321,8 +324,13 @@ export default defineComponent({
 			editMode.value = !editMode.value;
 			showDraggable.value = !showDraggable.value;
 		};
-		const OnDelete = (id) => {
+		const OnDelete = async (id) => {
 			console.log("deleted ID:", id);
+			//TODO: Add Axios Action
+			await API.delete(`/domain/${props.id}/tag/${id}`)
+				.then((response) => console.log(response))
+				.catch((error) => console.log(error));
+			API.get(`/domain/${props.id}/tag`);
 		};
 		const OnSave = () => {
 			console.log("OnSave Function");
@@ -332,14 +340,25 @@ export default defineComponent({
 			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			progress.value = child.value.length;
+			domainTags.value = await data.value[0].Tags;
+			console.log("domainTags.value : ", domainTags.value);
 			return (child.value = await data.value);
 		};
 		getData();
+		watch(
+			() => domainTags.value,
+			(prev, next) => {
+				console.log("prev:", prev.length);
+				console.log("next:", next.length);
+				API.get(`/domain/${props.id}/tag`);
+			}
+		);
 		// console.log("child data: ", child);
 		return {
 			drawer,
 			oepnDialog,
 			child,
+			domainTags,
 			actionsLinks,
 			Drawer,
 			menu,
@@ -350,7 +369,6 @@ export default defineComponent({
 			filterTag,
 			filterTagRef,
 			isSelected,
-
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();
@@ -361,9 +379,6 @@ export default defineComponent({
 			},
 			pageSizeTweak,
 			editMode,
-			showButtons,
-			showDraggable,
-
 			isNew,
 			OnNew,
 			OnEdit,
@@ -389,4 +404,8 @@ export default defineComponent({
   flex-direction: row
 .q-manu
   display: none !important
+
+.globalTagTree_container
+  border: 1px solid $white
+  padding: 8px
 </style>
