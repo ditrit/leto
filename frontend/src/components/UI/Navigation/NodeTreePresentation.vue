@@ -229,11 +229,22 @@ export default {
 			await store.dispatch("appTags/fetchAllTags");
 			const tagsList = computed(() => store.getters["appTags/allTags"]);
 			console.log("tagsList: ", tagsList.value);
-			optionsSelections.value = tagsList.value.map((item) => item.Name);
+			let data = tagsList.value.map((item) => {
+				return {
+					id: item.ID,
+					label: item.Name,
+					value: item.Name,
+					parentId: item.ParentID,
+					logo: item.Logo,
+				};
+			});
+			optionsSelections.value = [...new Set(data)].filter(
+				(item) => item != null
+			);
 		};
 		const onSubmitAdd = async () => {
 			const tagData = {
-				pid: selectedParentData.value.ID,
+				pid: selectedParentData.value.id,
 				name: tagName.value,
 				shortDescription: tagShortDescription.value,
 				description: tagDescription.value,
