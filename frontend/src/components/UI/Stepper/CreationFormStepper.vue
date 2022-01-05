@@ -203,8 +203,6 @@ export default {
 				};
 			});
 			console.log("dataReturned from stepper: ", [...dataReturned]);
-			// optionsSelections.value = dataReturned;
-			// console.log("selectedParentData: ", optionsSelections.value);
 			optionsSelections.value = [...new Set(dataReturned)].filter(
 				(item) => item != null
 			);

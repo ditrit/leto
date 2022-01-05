@@ -56,124 +56,83 @@
 						<p>{{ tagData.shortDescription }}</p>
 						<span class="text-subtitle2 text-grey-8">Description:</span>
 						<p>{{ tagData.description }}</p>
-					</q-tab-panel>
-					<!-- <div v-for="tag in tagsTree.children" :key="tag.id">
-						<q-tab-panel :name="tag.label">
-							<div class="btn_actions">
-								<q-btn color="grey-7" round flat icon="more_vert">
-									<q-menu cover auto-close>
-										<q-list>
-											<q-item clickable @click.prevent="AddTag">
-												<q-item-section class="btn_actions__item">
-													<q-icon name="add" size="1.5em" class="q-mr-md" />
-													Add</q-item-section
-												>
-											</q-item>
-											<q-item clickable @click.prevent="EditTag">
-												<q-item-section class="btn_actions__item">
-													<q-icon name="edit" size="1.5em" class="q-mr-md" />
-													Edit</q-item-section
-												>
-											</q-item>
-											<q-item clickable @click.prevent="DeleteTag">
-												<q-item-section class="btn_actions__item">
-													<q-icon name="delete" size="1.5em" class="q-mr-sm" />
-													Delete</q-item-section
-												>
-											</q-item>
-										</q-list>
-									</q-menu>
-								</q-btn>
-							</div>
-							<span class="text-subtitle2 text-grey-8">Name:</span>
-							<div class="text-h5 q-mb-md">{{ tag.label }}</div>
-							<span class="text-subtitle2 text-grey-8">Short description:</span>
-							<p>{{ tag.shortDescription }}</p>
-							<span class="text-subtitle2 text-grey-8">Description:</span>
-							<p>
-								{{ tag.description }}
-							</p>
-						</q-tab-panel>
-					</div> -->
-					<!-- <q-tab-panel name="TagTwo">
-						<div class="btn_actions">
-							<q-btn color="grey-7" round flat icon="more_vert">
-								<q-menu cover auto-close>
-									<q-list>
-										<q-item clickable @click.prevent="AddTag">
-											<q-item-section class="btn_actions__item">
-												<q-icon name="add" size="1.5em" class="q-mr-md" />
-												Add</q-item-section
-											>
-										</q-item>
-										<q-item clickable @click.prevent="EditTag">
-											<q-item-section class="btn_actions__item">
-												<q-icon name="edit" size="1.5em" class="q-mr-md" />
-												Edit</q-item-section
-											>
-										</q-item>
-										<q-item clickable @click.prevent="DeleteTag">
-											<q-item-section class="btn_actions__item">
-												<q-icon name="delete" size="1.5em" class="q-mr-sm" />
-												Delete</q-item-section
-											>
-										</q-item>
-									</q-list>
-								</q-menu>
-							</q-btn>
-						</div>
-						<span class="text-subtitle2 text-grey-8">Name:</span>
-						<div class="text-h5 q-mb-md">TagTwo</div>
-						<span class="text-subtitle2 text-grey-8">Short description:</span>
-						<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
-						<span class="text-subtitle2 text-grey-8">Description:</span>
-						<p>
-							Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis
-							praesentium cumque magnam odio iure quidem, quod illum numquam
-							possimus obcaecati commodi minima assumenda consectetur culpa fuga
-							nulla ullam. In, libero.
-						</p>
-					</q-tab-panel>
 
-					<q-tab-panel name="TagThree">
-						<div class="btn_actions">
-							<q-btn color="grey-7" round flat icon="more_vert">
-								<q-menu cover auto-close>
-									<q-list>
-										<q-item clickable @click.prevent="AddTag">
-											<q-item-section class="btn_actions__item">
-												<q-icon name="add" size="1.5em" class="q-mr-md" />
-												Add</q-item-section
-											>
-										</q-item>
-										<q-item clickable @click.prevent="EditTag">
-											<q-item-section class="btn_actions__item">
-												<q-icon name="edit" size="1.5em" class="q-mr-md" />
-												Edit</q-item-section
-											>
-										</q-item>
-										<q-item clickable @click.prevent="DeleteTag">
-											<q-item-section class="btn_actions__item">
-												<q-icon name="delete" size="1.5em" class="q-mr-sm" />
-												Delete</q-item-section
-											>
-										</q-item>
-									</q-list>
-								</q-menu>
-							</q-btn>
-						</div>
-						<span class="text-subtitle2 text-grey-8">Name:</span>
-						<div class="text-h5 q-mb-md">TagThree</div>
-						<span class="text-subtitle2 text-grey-8">Short description:</span>
-						<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
-						<span class="text-subtitle2 text-grey-8">Description:</span>
-						<p>
-							Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis
-							praesentium cumque magnam odio iure quidem, quod illum numquam
-							possimus obcaecati commodi minima assumenda consectetur culpa fuga
-							nulla ullam. In, libero.
-						</p>
-					</q-tab-panel> -->
+						<!-- Create Dialog -->
+						<q-dialog v-model="openAddTagDialog" persistent>
+							<q-card style="width: 750px; max-width: 80vw">
+								<q-card-section>
+									<div class="text-h6 q-pa-md">{{ $t("create_role") }}</div>
+								</q-card-section>
+
+								<q-card-section class="q-pt-none">
+									<q-form
+										@submit.prevent="onSubmitAdd"
+										@reset="onResetAdd"
+										class="q-gutter-md q-pa-md"
+									>
+										<div class="row col-md-12 q-gutter-sm">
+											<div class="col">
+												<q-input
+													filled
+													label="Name *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+													v-model="tagName"
+												/>
+											</div>
+											<div class="col">
+												<q-select
+													filled
+													:options="optionsSelections"
+													label="Tag Parent"
+													v-model="selectedParentData"
+												/>
+											</div>
+										</div>
+
+										<q-input
+											filled
+											label="Short Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+											v-model="tagShortDescription"
+										/>
+										<q-input
+											filled
+											type="textarea"
+											label="Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+											v-model="tagDescription"
+										/>
+
+										<q-card-actions
+											align="right"
+											class="text-primary flex justify-center"
+										>
+											<q-btn type="reset" label="Cancel" v-close-popup />
+											<q-btn
+												label="Create"
+												type="submit"
+												color="primary"
+												v-close-popup
+											/>
+										</q-card-actions>
+									</q-form>
+								</q-card-section>
+							</q-card>
+						</q-dialog>
+					</q-tab-panel>
 				</q-tab-panels>
 			</template>
 		</q-splitter>
@@ -182,16 +141,23 @@
 <script>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
 export default {
 	setup() {
 		const store = useStore();
+		const $q = useQuasar();
+		const selected = ref("Tag One");
 		const tagData = ref(null);
 		const tagDatalabel = ref(null);
 		const tagsTree = ref([]);
-		const AddTag = () => {
-			console.log("Add tag");
-		};
+		const tagName = ref("");
+		const optionsSelections = ref([]);
+		const selectedParentData = ref();
+		const tagShortDescription = ref("");
+		const tagDescription = ref("");
+		const openAddTagDialog = ref(false);
+
 		const EditTag = () => {
 			console.log("Edit tag");
 		};
@@ -258,15 +224,55 @@ export default {
 		};
 		getTagsTreeData();
 
+		const AddTag = async () => {
+			openAddTagDialog.value = true;
+			await store.dispatch("appTags/fetchAllTags");
+			const tagsList = computed(() => store.getters["appTags/allTags"]);
+			console.log("tagsList: ", tagsList.value);
+			optionsSelections.value = tagsList.value.map((item) => item.Name);
+		};
+		const onSubmitAdd = async () => {
+			const tagData = {
+				pid: selectedParentData.value.ID,
+				name: tagName.value,
+				shortDescription: tagShortDescription.value,
+				description: tagDescription.value,
+			};
+			console.log("tagData", tagData);
+
+			try {
+				await store.dispatch("appTags/addTag", tagData);
+				(tagName.value = ""),
+					(tagShortDescription.value = ""),
+					(tagDescription.value = ""),
+					$q.notify({
+						type: "positive",
+						message: "Tag has been successfully created",
+					});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: "Sorry, tag has not been created",
+				});
+			}
+		};
+
 		return {
 			splitterModel: ref(35),
-			selected: ref("root"),
+			selected,
 			AddTag,
 			EditTag,
 			DeleteTag,
 			tagsTree,
 			tagData,
 			tagDatalabel,
+			openAddTagDialog,
+			tagName,
+			tagShortDescription,
+			tagDescription,
+			onSubmitAdd,
+			optionsSelections,
+			selectedParentData,
 		};
 	},
 };
