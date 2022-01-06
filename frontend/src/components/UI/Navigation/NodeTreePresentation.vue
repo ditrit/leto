@@ -32,7 +32,7 @@
 												Add</q-item-section
 											>
 										</q-item>
-										<q-item clickable @click.prevent="EditTag">
+										<q-item clickable @click.prevent="EditTag(tagData)">
 											<q-item-section class="btn_actions__item">
 												<q-icon name="edit" size="1.5em" class="q-mr-md" />
 												Edit</q-item-section
@@ -132,6 +132,67 @@
 								</q-card-section>
 							</q-card>
 						</q-dialog>
+
+						<!-- Modification Dialog -->
+						<q-dialog v-model="openEditDialog" persistent>
+							<q-card style="width: 750px; max-width: 80vw">
+								<q-card-section>
+									<div class="text-h6 q-pa-md">{{ $t("edit_user") }}</div>
+								</q-card-section>
+
+								<q-card-section class="q-pt-none">
+									<q-form
+										@submit.prevent="onSubmitUpdate"
+										@reset="onResetUpdate"
+										class="q-gutter-md q-pa-md"
+									>
+										<q-input
+											filled
+											v-model="tagData.label"
+											label="Your First Name *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+										<q-input
+											filled
+											v-model="tagData.shortDescription"
+											label="Short description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+										<q-input
+											filled
+											type="textarea"
+											v-model="tagData.description"
+											label="Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+										<q-card-actions
+											align="right"
+											class="text-primary flex justify-center"
+										>
+											<q-btn type="reset" label="Cancel" v-close-popup />
+											<q-btn
+												label="Update"
+												type="submit"
+												color="primary"
+												v-close-popup
+											/>
+										</q-card-actions>
+									</q-form>
+								</q-card-section>
+							</q-card>
+						</q-dialog>
 					</q-tab-panel>
 				</q-tab-panels>
 			</template>
@@ -157,9 +218,12 @@ export default {
 		const tagShortDescription = ref("");
 		const tagDescription = ref("");
 		const openAddTagDialog = ref(false);
+		const openEditDialog = ref(false);
 
-		const EditTag = () => {
+		const EditTag = (tag) => {
 			console.log("Edit tag");
+			openEditDialog.value = true;
+			console.log("tag: ", tag);
 		};
 		const DeleteTag = () => {
 			console.log("Delete tag");
@@ -176,7 +240,7 @@ export default {
 			let tagsArr = Object.values(tagsArray.value);
 			console.log("tagsArr: ", tagsArr);
 			console.log("tagsArray: ", tagsArray.value);
-			console.log("tagsTree 1: ", tagsTree.value);
+
 			return (tagsTree.value = [
 				{
 					id: tagsArray?.value?.ID,
@@ -243,19 +307,45 @@ export default {
 			);
 		};
 		const onSubmitAdd = async () => {
-			const tagData = {
+			const tagToAdd = {
 				pid: selectedParentData.value.id,
 				name: tagName.value,
 				shortDescription: tagShortDescription.value,
 				description: tagDescription.value,
 			};
-			console.log("tagData", tagData);
+			console.log("tagToAdd", tagToAdd);
 
 			try {
-				await store.dispatch("appTags/addTag", tagData);
+				await store.dispatch("appTags/addTag", tagToAdd);
 				(tagName.value = ""),
 					(tagShortDescription.value = ""),
 					(tagDescription.value = ""),
+					$q.notify({
+						type: "positive",
+						message: "Tag has been successfully created",
+					});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: "Sorry, tag has not been created",
+				});
+			}
+		};
+		const onSubmitUpdate = async () => {
+			const updateTag = {
+				id: tagData.value.id,
+				name: tagData.value.label,
+				shortDescription: tagData.value.shortDescription,
+				description: tagData.value.description,
+				parentID: tagData.value.parentID,
+			};
+			console.log("updateTag", updateTag);
+
+			try {
+				await store.dispatch("appTags/updateTag", updateTag);
+				(tagData.value.label = ""),
+					(tagData.value.shortDescription = ""),
+					(tagData.value.description = ""),
 					$q.notify({
 						type: "positive",
 						message: "Tag has been successfully created",
@@ -278,10 +368,12 @@ export default {
 			tagData,
 			tagDatalabel,
 			openAddTagDialog,
+			openEditDialog,
 			tagName,
 			tagShortDescription,
 			tagDescription,
 			onSubmitAdd,
+			onSubmitUpdate,
 			optionsSelections,
 			selectedParentData,
 		};
@@ -290,10 +382,10 @@ export default {
 </script>
 <style lang="sass" scoped>
 .btn_actions
-	display: flex
-	flex-direction: row
-	justify-content: flex-end
-	&__item
-		display: flex
-		flex-direction: row
+  display: flex
+  flex-direction: row
+  justify-content: flex-end
+  &__item
+    display: flex
+    flex-direction: row
 </style>
