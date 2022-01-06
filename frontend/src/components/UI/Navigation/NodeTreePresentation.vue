@@ -3,12 +3,29 @@
 		<q-splitter v-model="splitterModel" style="height: 320px">
 			<template v-slot:before>
 				<div class="q-pa-md">
+					<q-input
+						ref="filterTagRef"
+						v-model="filterTag"
+						label="Search"
+						dense
+						class="q-mb-md"
+					>
+						<template v-slot:append>
+							<q-icon
+								v-if="filterTag !== ''"
+								name="clear"
+								class="cursor-pointer"
+								@click="resetFilterTag"
+							/>
+						</template>
+					</q-input>
 					<q-tree
 						:nodes="tagsTree"
 						node-key="label"
 						selected-color="primary"
 						v-model:selected="selected"
 						default-expand-all
+						:filter="filterTag"
 					/>
 				</div>
 			</template>
@@ -213,6 +230,10 @@ export default {
 		const tagDatalabel = ref(null);
 		const tagsTree = ref([]);
 		const tagName = ref("");
+		const filter = ref("");
+		const filterRef = ref(null);
+		const filterTag = ref("");
+		const filterTagRef = ref(null);
 		const optionsSelections = ref([]);
 		const selectedParentData = ref();
 		const tagShortDescription = ref("");
@@ -404,6 +425,18 @@ export default {
 			optionsSelections,
 			selectedParentData,
 			confirm,
+			filter,
+			filterRef,
+			filterTag,
+			filterTagRef,
+			resetFilter() {
+				filter.value = "";
+				filterRef.value.focus();
+			},
+			resetFilterTag() {
+				filterTag.value = "";
+				filterTagRef.value.focus();
+			},
 		};
 	},
 };
