@@ -287,11 +287,29 @@ export default defineComponent({
 					id: tag?.ID,
 					label: tag?.Name,
 					handler: (tag) => addTagtoDomain(tag),
+					icon: "sell",
 					children: tag.Childs?.map((child) => {
 						return {
 							id: child.ID,
 							label: child.Name,
 							handler: (child) => addTagtoDomain(child),
+							icon: "sell",
+							children: child.Childs?.map((subChild) => {
+								return {
+									id: subChild.ID,
+									label: subChild.Name,
+									handler: (subChild) => addTagtoDomain(subChild),
+									icon: "sell",
+									children: subChild.Childs?.map((lastChild) => {
+										return {
+											id: lastChild.ID,
+											label: lastChild.Name,
+											handler: (lastChild) => addTagtoDomain(lastChild),
+											icon: "sell",
+										};
+									}),
+								};
+							}),
 						};
 					}),
 				};

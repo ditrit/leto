@@ -269,7 +269,7 @@ const columns = [
 		align: "left",
 		field: "firstName",
 		sortable: true,
-		classes: "tr_width__name",
+		classes: "tr_width__name ellipsis",
 	},
 	{
 		name: "lastName",
@@ -277,7 +277,7 @@ const columns = [
 		align: "left",
 		field: "lastName",
 		sortable: true,
-		classes: "tr_width__name",
+		classes: "tr_width__name ellipsis",
 	},
 	{
 		name: "email",
@@ -285,7 +285,7 @@ const columns = [
 		align: "left",
 		field: "email",
 		sortable: true,
-		classes: "tr_width__email",
+		classes: "tr_width__email ellipsis",
 	},
 	{
 		name: "password",
