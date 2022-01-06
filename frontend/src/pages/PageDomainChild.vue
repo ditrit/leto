@@ -111,7 +111,7 @@
 												color="red"
 												text-color="white"
 												icon="delete"
-												@click.prevent="OnDelete(item.ID)"
+												@click.prevent="confirm(item.ID)"
 												class="q-ml-sm"
 											/>
 										</li>
@@ -176,7 +176,7 @@
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-
+import { useQuasar } from "quasar";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import ContentCard from "../components/UI/Cards/ContentCard";
 import Tabs from "../components/UI/TabPanels/Tabs";
@@ -198,6 +198,7 @@ export default defineComponent({
 	props: ["id"],
 	setup(props) {
 		const store = useStore();
+		const $q = useQuasar();
 		const drawer = ref(false);
 		const router = useRouter();
 		const progress = ref(null);
@@ -317,6 +318,21 @@ export default defineComponent({
 			console.log("globalTagsTreeList: ", globalTagsTreeList.value);
 		};
 		getTagsTree();
+
+		const confirm = (id) => {
+			$q.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
+				.onOk(() => {
+					OnDelete(id);
+				})
+				.onCancel(() => {
+					console.log("Cancel");
+				});
+		};
 		const editMode = ref(false);
 		const showDraggable = ref(false);
 		const isNew = ref(false);
@@ -360,6 +376,7 @@ export default defineComponent({
 		};
 
 		return {
+			confirm,
 			drawer,
 			oepnDialog,
 			child,
