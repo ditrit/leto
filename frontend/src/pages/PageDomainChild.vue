@@ -92,8 +92,6 @@
 								</q-card-section>
 								<q-card-section>
 									<ul
-										v-for="(tag, index) in child"
-										:key="index"
 										class="cards_tags_wrapper rounded-borders overflow-hidden"
 									>
 										<li
@@ -359,7 +357,7 @@ export default defineComponent({
 		};
 
 		const getData = async () => {
-			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
+			await store.dispatch("appDomain/fetchDomainById", props.id);
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			progress.value = child.value.length;
 			domainTags.value = await data.value[0].Tags;
@@ -369,7 +367,7 @@ export default defineComponent({
 		getData();
 
 		const refreshTags = async () => {
-			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
+			await store.dispatch("appDomain/fetchDomainById", props.id);
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			domainTags.value = await data.value[0].Tags;
 			console.log("	Refresh domainTags.value: ", domainTags.value);
