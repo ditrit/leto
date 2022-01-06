@@ -260,6 +260,7 @@ const columns = [
 		field: (row) => row.name,
 		format: (val) => `${val}`,
 		sortable: true,
+		classes: "tr_width__avatar",
 	},
 
 	{
@@ -268,6 +269,7 @@ const columns = [
 		align: "left",
 		field: "firstName",
 		sortable: true,
+		classes: "tr_width__name",
 	},
 	{
 		name: "lastName",
@@ -275,6 +277,7 @@ const columns = [
 		align: "left",
 		field: "lastName",
 		sortable: true,
+		classes: "tr_width__name",
 	},
 	{
 		name: "email",
@@ -282,6 +285,7 @@ const columns = [
 		align: "left",
 		field: "email",
 		sortable: true,
+		classes: "tr_width__email",
 	},
 	{
 		name: "password",
@@ -306,6 +310,7 @@ const columns = [
 		align: "left",
 		field: "actionsButtons",
 		sortable: false,
+		classes: "tr_width__actions",
 	},
 ];
 

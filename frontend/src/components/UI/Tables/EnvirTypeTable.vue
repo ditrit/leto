@@ -181,6 +181,7 @@ const columns = [
 		field: (row) => row.name,
 		format: (val) => `${val}`,
 		sortable: true,
+		classes: "tr_width__avatar",
 	},
 
 	{
@@ -189,6 +190,7 @@ const columns = [
 		align: "left",
 		field: "name",
 		sortable: true,
+		classes: "tr_width__name ellipsis",
 	},
 
 	{
@@ -197,6 +199,7 @@ const columns = [
 		align: "left",
 		field: "shortDescription",
 		sortable: true,
+		classes: "tr_width__shortdesc ellipsis",
 	},
 	{
 		name: "description",
@@ -204,6 +207,7 @@ const columns = [
 		align: "left",
 		field: "description",
 		sortable: true,
+		classes: "tr_width__descr ellipsis",
 	},
 	{
 		name: "actionsButtons",
@@ -211,6 +215,7 @@ const columns = [
 		align: "left",
 		field: "actionsButtons",
 		sortable: false,
+		classes: "tr_width__actions",
 	},
 ];
 
