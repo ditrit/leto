@@ -297,14 +297,9 @@ const columns = [
 		align: "left",
 		field: "description",
 		sortable: false,
+		classes: "tr_width__descr ellipsis",
 	},
-	// {
-	// 	name: "password",
-	// 	label: "Password",
-	// 	align: "left",
-	// 	field: "password",
-	// 	sortable: false,
-	// },
+
 	{
 		name: "actionsButtons",
 		label: "",
@@ -461,7 +456,4 @@ export default {
 .table_header
   background-color: $secondary !important
   color: $primary !important
-
-.tr_width
-  width: 80px !important
 </style>

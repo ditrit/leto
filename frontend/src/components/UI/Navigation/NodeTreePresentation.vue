@@ -38,7 +38,7 @@
 												Edit</q-item-section
 											>
 										</q-item>
-										<q-item clickable @click.prevent="DeleteTag">
+										<q-item clickable @click.prevent="confirm(tagData)">
 											<q-item-section class="btn_actions__item">
 												<q-icon name="delete" size="1.5em" class="q-mr-sm" />
 												Delete</q-item-section
@@ -49,7 +49,7 @@
 							</q-btn>
 						</div>
 						<span class="text-subtitle2 text-grey-8">Name:</span>
-						<div class="text-h4 q-mb-md">
+						<div class="text-h4 q-mb-md" v-if="tagData">
 							<p>{{ tagData.label }}</p>
 						</div>
 						<span class="text-subtitle2 text-grey-8">Short description:</span>
@@ -225,14 +225,33 @@ export default {
 			openEditDialog.value = true;
 			console.log("tag: ", tag);
 		};
-		const DeleteTag = () => {
-			console.log("Delete tag");
+
+		const confirm = (props) => {
+			$q.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
+				.onOk(() => {
+					DeleteTag(props);
+				})
+				.onCancel(() => {
+					console.log("Cancel");
+				});
+		};
+
+		const DeleteTag = async (item) => {
+			await store.dispatch("appTags/removeTag", item.id);
+			getTagsTreeData();
+			tagDatalabel.value = "";
 		};
 		const showTagData = async (tag) => {
 			tagData.value = tag;
 			tagDatalabel.value = tag.label;
 			console.log("showtagData: ", tag);
 		};
+
 		// Get Data
 		const getTagsTreeData = async () => {
 			await store.dispatch("appTags/fetchAllTagsTree");
@@ -250,6 +269,7 @@ export default {
 					shortDescription: tagsArray?.value?.ShortDescription,
 					description: tagsArray?.value?.Description,
 					handler: (tagsArray) => showTagData(tagsArray),
+					icon: "sell",
 					children: tagsArray?.value?.Childs?.map((item) => {
 						return {
 							id: item?.ID,
@@ -259,6 +279,7 @@ export default {
 							shortDescription: item?.ShortDescription,
 							description: item?.Description,
 							handler: (item) => showTagData(item),
+							icon: "sell",
 							children: item?.Childs?.map((subItem) => {
 								return {
 									id: subItem?.ID,
@@ -268,6 +289,7 @@ export default {
 									shortDescription: subItem?.ShortDescription,
 									description: subItem?.Description,
 									handler: (subItem) => showTagData(subItem),
+									icon: "sell",
 									children: subItem?.Childs?.map((subLastItem) => {
 										return {
 											id: subLastItem?.ID,
@@ -277,6 +299,7 @@ export default {
 											shortDescription: subLastItem?.ShortDescription,
 											description: subLastItem?.Description,
 											handler: (subLastItem) => showTagData(subLastItem),
+											icon: "sell",
 										};
 									}),
 								};
@@ -324,6 +347,8 @@ export default {
 						type: "positive",
 						message: "Tag has been successfully created",
 					});
+				getTagsTreeData();
+				showTagData();
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -350,6 +375,8 @@ export default {
 						type: "positive",
 						message: "Tag has been successfully created",
 					});
+				getTagsTreeData();
+				showTagData();
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -376,6 +403,7 @@ export default {
 			onSubmitUpdate,
 			optionsSelections,
 			selectedParentData,
+			confirm,
 		};
 	},
 };
