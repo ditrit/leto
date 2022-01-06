@@ -99,7 +99,7 @@
 						round
 						flat
 						color="grey"
-						@click="deleteRow(props.row)"
+						@click="confirm(props.row)"
 						icon="delete"
 					></q-btn>
 				</q-td>
@@ -231,6 +231,22 @@ export default {
 		const roleShortDescription = ref("");
 		const roleDescription = ref("");
 
+		const confirm = (item) => {
+			console.log("item: ", item);
+			$q.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
+				.onOk(() => {
+					deleteRow(item);
+				})
+				.onCancel(() => {
+					console.log("Cancel");
+				});
+		};
+
 		const allRoles = async () => {
 			// fetch All Users
 			await store.dispatch("appRoles/fetchAllRoles");
@@ -330,6 +346,7 @@ export default {
 		};
 
 		return {
+			confirm,
 			editedIndex,
 			columns,
 			rowsData,
