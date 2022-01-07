@@ -63,35 +63,34 @@ export default {
 			password,
 			error,
 			isPwd,
-
 			login() {
-				try {
-					const newUser = {
-						email: email.value,
-						password: password.value,
-					};
-					console.log("newUser: ", newUser);
-					store.dispatch("auth/login", newUser).then(() => {
-						router.push("/dashboard");
-					});
-					store.dispatch("auth/currentUser");
+				const newUser = {
+					email: email.value,
+					password: password.value,
+				};
+				console.log("newUser: ", newUser);
+				store.dispatch("auth/login", newUser);
+				store
+					.dispatch("auth/login", newUser)
+					.then(() => {
+						$q.notify({
+							color: "green-4",
+							textColor: "white",
+							icon: "cloud_done",
+							message: "Login successfully",
+						});
 
-					$q.notify({
-						color: "green-4",
-						textColor: "white",
-						icon: "cloud_done",
-						message: "Submitted successfully",
+						store.dispatch("auth/currentUser");
+						router.push("/dashboard");
+					})
+					.catch(() => {
+						$q.notify({
+							color: "negative",
+							textColor: "white",
+							icon: "error",
+							message: "Sorry,you can not login",
+						});
 					});
-				} catch (error) {
-					// error.value = err.response.data.error;
-					console.log("	error.value : ", response.error);
-					$q.notify({
-						color: "negative",
-						textColor: "white",
-						icon: "danger",
-						message: "Sorry,you can not login",
-					});
-				}
 			},
 		};
 	},

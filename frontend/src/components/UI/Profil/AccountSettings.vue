@@ -4,7 +4,6 @@
 			<q-item-section>
 				<q-avatar round size="40px" v-if="user">
 					<img :src="user.Logo" />
-					<!-- <q-badge floating rounded color="orange">4</q-badge> -->
 				</q-avatar>
 			</q-item-section>
 		</q-item>
@@ -22,7 +21,6 @@
 							<q-item-label>
 								<router-link to="/settings">Settings</router-link>
 							</q-item-label>
-							<!-- <q-item-label caption></q-item-label> -->
 						</q-item-section>
 					</q-item>
 
