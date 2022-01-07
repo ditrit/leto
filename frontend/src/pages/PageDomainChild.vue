@@ -206,9 +206,13 @@ export default defineComponent({
 			choosenNodeID.value = await node.id;
 			router.push(`/teams/${node.id}`);
 			store.dispatch("appDomain/fetchDomainById", `${node.id}`);
-			store.getters["appDomain/allDomaines"];
+			const currentDomain = store.getters["appDomain/allDomaines"];
 			console.log("choosenNodeID: ", choosenNodeID.value);
 			console.log("props.id: ", props.id);
+			currentDomain;
+			domainTags.value = currentDomain[0].Tags;
+			console.log("currentDomain: ", currentDomain[0].Name);
+			console.log("	Current domainTags.value: ", domainTags.value);
 		};
 
 		const addTagtoDomain = async (tag) => {
@@ -350,8 +354,8 @@ export default defineComponent({
 			await store.dispatch("appDomain/fetchDomainById", props.id);
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			progress.value = child.value.length;
-			domainTags.value = await data.value[0].Tags;
-			console.log("domainTags.value : ", domainTags.value);
+			// domainTags.value = await data.value[0].Tags;
+			// console.log("domainTags.value : ", domainTags.value);
 			return (child.value = await data.value);
 		};
 		getData();

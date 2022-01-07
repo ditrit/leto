@@ -118,6 +118,7 @@
 									]"
 								/>
 								<q-input
+									class="profile_textarea"
 									filled
 									type="textarea"
 									:disable="disabled"
@@ -368,6 +369,6 @@ export default {
   top: 3px
   left: 3px
 
-.page_profile textarea
-  min-height: 300px
+.profile_textarea textarea
+  min-height: 300px !important
 </style>

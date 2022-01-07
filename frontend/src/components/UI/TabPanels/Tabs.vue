@@ -11,7 +11,7 @@
 			>
 				<q-tab v-if="tags" dense name="tags" label="Tags" icon="sell" />
 				<q-tab dense name="products" label="Products" icon="apps" />
-				<q-tab dense name="team_members" label="Team members" icon="group" />
+				<q-tab dense name="team_members" label="Authorizations" icon="group" />
 				<q-tab dense name="libraries" label="Libraries" icon="library_books" />
 				<q-tab dense name="environnements" label="Environnements" icon="code" />
 			</q-tabs>
