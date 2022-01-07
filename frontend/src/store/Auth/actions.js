@@ -11,8 +11,7 @@ export const register = ({ commit }, credentials) => {
 export const login = ({ commit }, credentials) => {
 	return API.post("/user/login", credentials).then(({ data }) => {
 		commit("SET_USER_DATA", data);
-	});
-	// .catch((err) => console.log(err));
+	}).catch((err) => throw err);
 };
 
 export const currentUser = ({ commit }, user) => {
