@@ -58,7 +58,7 @@
 						<ActionCard
 							v-if="member.User.LastName"
 							:id="member.ID"
-							:name="member.User.LastName"
+							:name="member.User.FirstName + ' ' + member.User.LastName"
 							:role="member.Role.Name"
 							:shortDescription="member.ShortDescription"
 							:description="member.Description"
@@ -71,9 +71,52 @@
 							text-color="primary"
 							icon="add"
 							label="New Authorization"
-							@click.prevent="openCreationModal(teamMembers)"
+							@click.prevent="openAuthorizsationCreationModal(teamMembers)"
 						/>
 					</div>
+
+					<!-- Creation dialog -->
+					<q-dialog v-model="isAuthorCreationOpened" persistent>
+						<q-card style="width: 750px; max-width: 80vw">
+							<q-card-section>
+								<div class="text-h6 q-pa-md">{{ $t("add_authorization") }}</div>
+							</q-card-section>
+
+							<q-card-section class="q-pt-none">
+								<q-form
+									@submit.prevent="addNewAuthorization"
+									@reset="onResetAuthorization"
+									class="q-gutter-sm q-pa-md"
+								>
+									<q-select
+										filled
+										v-model="pickedUsers"
+										:options="usersList"
+										label="Choose a user"
+									/>
+									<q-select
+										filled
+										v-model="pickedRole"
+										:options="roleList"
+										label="Choose a role"
+									/>
+
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center q-mt-lg q-pt-md"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Update"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</q-card-section>
+						</q-card>
+					</q-dialog>
 				</q-tab-panel>
 
 				<q-tab-panel name="libraries" class="flex q-gutter-md">
@@ -358,15 +401,59 @@ export default {
 		const environmentShortDescription = ref("");
 		const environmentDescription = ref("");
 		const isCreationOpened = ref(false);
+		const isAuthorCreationOpened = ref(false);
 		const environmentTeam = ref(props.teamEnvironnements);
+
+		const usersList = ref([]);
+		const roleList = ref([]);
+		const pickedUsers = ref("");
+		const pickedRole = ref("");
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
-			// console.table({
-			// 	ID: item[0].ID,
-			// 	DomainID: item[0].DomainID,
-			// 	EnvironmentTypeID: item[0].EnvironmentTypeID,
-			// });
 		};
+
+		const addNewAuthorization = async () => {};
+		addNewAuthorization();
+
+		const getUsersList = async () => {
+			await store.dispatch("appUsers/fetchUsers");
+			const list = computed(() => store.getters["appUsers/allUsers"]);
+			console.log("Users list: ", list.value);
+			usersList.value = list.value.map((user) => {
+				return {
+					id: user.ID,
+					firstName: user.FirstName,
+					lastName: user.LastName,
+					email: user.Email,
+					label: user.FirstName + " " + user.LastName,
+					value: user.FirstName + " " + user.LastName,
+					logo: user.Logo,
+					description: user.Description,
+				};
+			});
+			// pickedUsers.value = usersList.value.id;
+			// console.log("pickedUsers.value: ", pickedUsers.value);
+		};
+		getUsersList();
+		console.log("usersList.value: ", usersList.value);
+
+		const getRolesList = async () => {
+			await store.dispatch("appRoles/fetchAllRoles");
+			const roles = computed(() => store.getters["appRoles/allRoles"]);
+			console.log("Roles list: ", roles.value);
+			roleList.value = roles.value.map((role) => {
+				return {
+					id: role.ID,
+					name: role.Name,
+					label: role.Name,
+					value: role.Name,
+					logo: role.Logo,
+					shortDescription: role.ShortDescription,
+					description: role.Description,
+				};
+			});
+		};
+		getRolesList();
 
 		const confirmDeleteEnvironment = (props) => {
 			$q.dialog({
@@ -386,7 +473,11 @@ export default {
 		const openCreationModal = (props) => {
 			isCreationOpened.value = true;
 			emit("openNewItemModal", props);
-
+			console.log("openCreationModal props: ", props);
+		};
+		const openAuthorizsationCreationModal = (props) => {
+			isAuthorCreationOpened.value = true;
+			emit("openNewItemModal", props);
 			console.log("openCreationModal props: ", props);
 		};
 
@@ -490,8 +581,10 @@ export default {
 			environmentDescription,
 			openModal,
 			isCreationOpened,
+			isAuthorCreationOpened,
 			addNewEnvironment,
 			openCreationModal,
+			openAuthorizsationCreationModal,
 			updateEnvironement,
 			deleteEnvironement,
 			optionsSelections,
@@ -500,6 +593,12 @@ export default {
 			onFileUpload,
 			onRejected,
 			confirmDeleteEnvironment,
+			usersList,
+			roleList,
+			pickedUsers,
+			pickedRole,
+			model: ref(null),
+			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};
 	},
 };

@@ -65,7 +65,17 @@ export default {
 		const router = useRouter();
 
 		const user = ref(null);
+
 		user.value = store.getters["auth/user"];
+
+		const getToken = async () => {
+			const token = await localStorage.getItem("user");
+			if (token) {
+				return token;
+			}
+			return null;
+		};
+		getToken();
 
 		const logout = () => {
 			store.dispatch("auth/logout");

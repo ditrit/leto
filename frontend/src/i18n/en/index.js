@@ -17,6 +17,8 @@ export default {
 	edit_tag: "Edit tag",
 	add_users_success: "User has been successfully created",
 	add_users_failed: "Sorry, the user has not been created",
+	add_authorization: "Add authorization",
+	edit_authorization: "Edit authorization",
 	dashboard: "Dashboard",
 	settings: "Settings",
 	manage_settings: "Manage Settings",

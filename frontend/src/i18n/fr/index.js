@@ -17,6 +17,9 @@ export default {
 	edit_tag: "Editer le tag",
 	add_users_success: "L'utilisateur a été créé avec succès",
 	add_users_failed: "Désolé, l'utilisateur n'a pas été créé",
+
+	add_authorization: "Créer un nouvelle authorization",
+	edit_authorization: "Editer l'authorization",
 	dashboard: "Tableau de bord",
 	settings: "Paramètres",
 
