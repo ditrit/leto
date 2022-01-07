@@ -74,16 +74,6 @@
 																Edit</q-item-section
 															>
 														</q-item>
-														<q-item clickable @click.prevent="OnSave">
-															<q-item-section class="action_card__item">
-																<q-icon
-																	name="save"
-																	size="1.5em"
-																	class="q-mr-sm"
-																/>
-																Save</q-item-section
-															>
-														</q-item>
 													</q-list>
 												</q-menu>
 											</q-btn>
@@ -227,7 +217,7 @@ export default defineComponent({
 			console.log("props.id: ", props.id);
 			// store.dispatch("appDomain/addDomainTag", props.id, `${tag.id}`);
 			//TODO: Modify Axios action
-			await API.post(`/domain/${props.id}/tag/${tag.id}`)
+			await API.post(`/domain/${choosenNodeID.value}/tag/${tag.id}`)
 				.then((response) => console.log(response))
 				.then(() => refreshTags())
 				.catch((err) => console.log(err));

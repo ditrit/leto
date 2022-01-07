@@ -42,7 +42,7 @@
 		</Drawer>
 
 		<q-page-container>
-			<q-page :style-fn="pageSizeTweak" class="">
+			<q-page :style-fn="pageSizeTweak" class="page_profile">
 				<PageContent
 					icon="person"
 					:headline="$t('profile')"
@@ -367,4 +367,7 @@ export default {
   position: absolute
   top: 3px
   left: 3px
+
+.page_profile textarea
+  min-height: 300px
 </style>
