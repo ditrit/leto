@@ -47,7 +47,7 @@
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
 				<div class="row">
 					<div class="col-8">
-						<ContentCard :data="child" />
+						<ContentCard :data="currentDomainData" />
 					</div>
 					<div class="col-4">
 						<div class="tags_wrapper">
@@ -142,7 +142,7 @@
 				<div class="row q-mt-lg q-mr-lg">
 					<div
 						class="col panel_wrapper"
-						v-for="(item, index) in child"
+						v-for="(item, index) in currentDomainData"
 						:key="index"
 					>
 						<GlobalSearch class="global_Search__right" />
@@ -191,7 +191,8 @@ export default defineComponent({
 		const router = useRouter();
 		const progress = ref(null);
 		const actionsLinks = ref(["Edit"]);
-		const child = ref([]);
+		const currentDomainData = ref([]);
+
 		const domainTags = ref([]);
 		const oepnDialog = ref(false);
 		const filter = ref("");
@@ -199,19 +200,28 @@ export default defineComponent({
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
 		const globalTagsTreeList = ref([]);
+		const domainEnvirnments = ref([]);
 		const choosenNodeID = ref("");
 		const isSelected = ref(null);
 
 		const goToID = async (node) => {
 			choosenNodeID.value = await node.id;
 			router.push(`/teams/${node.id}`);
-			store.dispatch("appDomain/fetchDomainById", `${node.id}`);
-			const currentDomain = store.getters["appDomain/allDomaines"];
+			await store.dispatch(
+				"appDomain/fetchDomainById",
+				`${choosenNodeID.value}`
+			);
+			currentDomainData.value = await store.getters["appDomain/allDomaines"];
+			progress.value = currentDomainData.value.length;
 			console.log("choosenNodeID: ", choosenNodeID.value);
-			console.log("props.id: ", props.id);
-			currentDomain;
-			domainTags.value = currentDomain[0].Tags;
-			console.log("currentDomain: ", currentDomain[0].Name);
+			console.log("	currentDomainData: ", currentDomainData.value[0]);
+			domainTags.value = currentDomainData.value[0].Tags;
+			domainEnvirnments.value = currentDomainData.value[0].Environments;
+			console.log("currentDomainData: ", currentDomainData.value[0]);
+			console.log(
+				"currentDomainData Environments: ",
+				currentDomainData.value[0].Environments
+			);
 			console.log("	Current domainTags.value: ", domainTags.value);
 		};
 
@@ -350,16 +360,6 @@ export default defineComponent({
 			console.log("OnSave Function");
 		};
 
-		const getData = async () => {
-			await store.dispatch("appDomain/fetchDomainById", props.id);
-			let data = computed(() => store.getters["appDomain/allDomaines"]);
-			progress.value = child.value.length;
-			// domainTags.value = await data.value[0].Tags;
-			// console.log("domainTags.value : ", domainTags.value);
-			return (child.value = await data.value);
-		};
-		getData();
-
 		const refreshTags = async () => {
 			await store.dispatch("appDomain/fetchDomainById", props.id);
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
@@ -371,13 +371,14 @@ export default defineComponent({
 			confirm,
 			drawer,
 			oepnDialog,
-			child,
+			goToID,
+			choosenNodeID,
+			currentDomainData,
 			domainTags,
+			domainEnvirnments,
 			actionsLinks,
 			Drawer,
 			menu,
-			choosenNodeID,
-			goToID,
 			filter,
 			filterRef,
 			filterTag,

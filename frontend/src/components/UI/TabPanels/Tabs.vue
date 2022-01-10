@@ -74,7 +74,6 @@
 							@click.prevent="openAuthorizsationCreationModal(teamMembers)"
 						/>
 					</div>
-
 					<!-- Creation dialog -->
 					<q-dialog v-model="isAuthorCreationOpened" persistent>
 						<q-card style="width: 750px; max-width: 80vw">
@@ -163,6 +162,104 @@
 							@updateAction="updateEnvironement(env)"
 							@deleteAction="confirmDeleteEnvironment"
 						/>
+						<!-- Creation dialog -->
+						<q-dialog v-model="isCreationOpened" persistent>
+							<q-card style="width: 750px; max-width: 80vw">
+								<q-card-section>
+									<div class="text-h6 q-pa-md">{{ $t("add_environment") }}</div>
+								</q-card-section>
+
+								<q-card-section class="q-pt-none">
+									<q-form
+										@submit.prevent="addNewEnvironment(env.DomainID)"
+										@reset="onResetEnvironment"
+										class="q-gutter-sm q-pa-md"
+									>
+										<div class="row col-md-12 q-gutter-md">
+											<div class="col">
+												<q-input
+													filled
+													label="Name *"
+													hint=""
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+													v-model="environmentName"
+												/>
+											</div>
+											<div class="col">
+												<q-select
+													filled
+													:options="optionsSelections"
+													label="Environment Type"
+													v-model="selectedParentData"
+												/>
+											</div>
+										</div>
+										<q-input
+											class="q-gutter-md"
+											filled
+											label="Short Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+											v-model="environmentShortDescription"
+										/>
+
+										<div class="row q-gutter-md">
+											<div class="col col-md-8">
+												<q-input
+													class="q-gutter-md"
+													filled
+													type="textarea"
+													label="Description *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+													v-model="environmentDescription"
+												/>
+											</div>
+											<div class="col">
+												<q-uploader
+													style="max-width: 100%"
+													url="http://localhost:3000/upload"
+													label="Your Logo"
+													multiple
+													accept=".jpg, svg, image/*"
+													@rejected="onRejected"
+													color="primary"
+													factory
+													files
+													hide-upload-btn="true"
+													auto-upload
+													@uploaded="onFileUpload"
+												/>
+											</div>
+										</div>
+										<q-card-actions
+											align="right"
+											class="text-primary flex justify-center"
+										>
+											<q-btn type="reset" label="Cancel" v-close-popup />
+											<q-btn
+												label="Update"
+												type="submit"
+												color="primary"
+												v-close-popup
+											/>
+										</q-card-actions>
+									</q-form>
+								</q-card-section>
+							</q-card>
+						</q-dialog>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
@@ -170,105 +267,9 @@
 							text-color="primary"
 							icon="add"
 							label="New Environnement"
-							@click.prevent="openCreationModal"
+							@click.prevent="openCreationModal(environmentTeam)"
 						/>
 					</div>
-					<!-- Creation dialog -->
-					<q-dialog v-model="isCreationOpened" persistent>
-						<q-card style="width: 750px; max-width: 80vw">
-							<q-card-section>
-								<div class="text-h6 q-pa-md">{{ $t("add_environment") }}</div>
-							</q-card-section>
-
-							<q-card-section class="q-pt-none">
-								<q-form
-									@submit.prevent="addNewEnvironment"
-									@reset="onResetEnvironment"
-									class="q-gutter-sm q-pa-md"
-								>
-									<div class="row col-md-12 q-gutter-md">
-										<div class="col">
-											<q-input
-												filled
-												label="Name *"
-												hint=""
-												lazy-rules
-												:rules="[
-													(val) =>
-														(val && val.length > 0) || 'Please type something',
-												]"
-												v-model="environmentName"
-											/>
-										</div>
-										<div class="col">
-											<q-select
-												filled
-												:options="optionsSelections"
-												label="Environment Type"
-												v-model="selectedParentData"
-											/>
-										</div>
-									</div>
-									<q-input
-										class="q-gutter-md"
-										filled
-										label="Short Description *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-										v-model="environmentShortDescription"
-									/>
-
-									<div class="row q-gutter-md">
-										<div class="col col-md-8">
-											<q-input
-												class="q-gutter-md"
-												filled
-												type="textarea"
-												label="Description *"
-												lazy-rules
-												:rules="[
-													(val) =>
-														(val && val.length > 0) || 'Please type something',
-												]"
-												v-model="environmentDescription"
-											/>
-										</div>
-										<div class="col">
-											<q-uploader
-												style="max-width: 100%"
-												url="http://localhost:3000/upload"
-												label="Your Logo"
-												multiple
-												accept=".jpg, svg, image/*"
-												@rejected="onRejected"
-												color="primary"
-												factory
-												files
-												hide-upload-btn="true"
-												auto-upload
-												@uploaded="onFileUpload"
-											/>
-										</div>
-									</div>
-									<q-card-actions
-										align="right"
-										class="text-primary flex justify-center"
-									>
-										<q-btn type="reset" label="Cancel" v-close-popup />
-										<q-btn
-											label="Update"
-											type="submit"
-											color="primary"
-											v-close-popup
-										/>
-									</q-card-actions>
-								</q-form>
-							</q-card-section>
-						</q-card>
-					</q-dialog>
 				</q-tab-panel>
 			</q-tab-panels>
 		</q-card>
@@ -403,16 +404,26 @@ export default {
 		const isCreationOpened = ref(false);
 		const isAuthorCreationOpened = ref(false);
 		const environmentTeam = ref(props.teamEnvironnements);
-
 		const usersList = ref([]);
 		const roleList = ref([]);
 		const pickedUsers = ref("");
 		const pickedRole = ref("");
+
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
 		};
 
-		const addNewAuthorization = async () => {};
+		const addNewAuthorization = async () => {
+			const newAuthorization = {
+				// userID: pickedUsers.value.User.ID,
+				// roleID: pickedRole.value.Role.ID,
+			};
+			// await store.dispatch("appAuthorization/addAuthorization", newAuthorization )
+
+			console.log("newAuthorization: ", newAuthorization);
+			console.log("pickedUsers: ", pickedUsers.value);
+			console.log("pickedRole: ", pickedRole.value);
+		};
 		addNewAuthorization();
 
 		const getUsersList = async () => {
@@ -431,8 +442,7 @@ export default {
 					description: user.Description,
 				};
 			});
-			// pickedUsers.value = usersList.value.id;
-			// console.log("pickedUsers.value: ", pickedUsers.value);
+			pickedUsers.value = usersList.value.id;
 		};
 		getUsersList();
 		console.log("usersList.value: ", usersList.value);
@@ -477,14 +487,13 @@ export default {
 		};
 		const openAuthorizsationCreationModal = (props) => {
 			isAuthorCreationOpened.value = true;
-			emit("openNewItemModal", props);
 			console.log("openCreationModal props: ", props);
 		};
 
-		const addNewEnvironment = async () => {
+		const addNewEnvironment = async (domainId) => {
 			console.log("selectedParentData", selectedParentData.value);
 			let newEnvironment = {
-				domainID: route.currentRoute.value.params.id,
+				domainID: domainId,
 				environmentTypeID: selectedParentData.value.id,
 				environmentTypeName: selectedParentData.value.name,
 				name: environmentName.value,

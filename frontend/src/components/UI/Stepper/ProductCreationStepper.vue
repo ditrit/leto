@@ -233,8 +233,8 @@ export default {
 	border-bottom: none !important
 .q-uploader__list
 	display: none
-.q-card__actions
-	display: none
+// .q-card__actions
+// 	display: none
 .q-stepper__dot
 	width: 40px
 	height: 40px

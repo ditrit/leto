@@ -225,7 +225,7 @@ export default {
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
-		const selected = ref("Tag One");
+		const selected = ref("root");
 		const tagData = ref(null);
 		const tagDatalabel = ref(null);
 		const tagsTree = ref([]);

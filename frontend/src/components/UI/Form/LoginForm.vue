@@ -70,6 +70,7 @@ export default {
 				};
 				console.log("newUser: ", newUser);
 				store.dispatch("auth/login", newUser);
+				store.dispatch("auth/login", newUser);
 				store
 					.dispatch("auth/login", newUser)
 					.then(() => {
