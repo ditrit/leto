@@ -13,7 +13,13 @@
 				<q-tab dense name="products" label="Products" icon="apps" />
 				<q-tab dense name="team_members" label="Authorizations" icon="group" />
 				<q-tab dense name="libraries" label="Libraries" icon="library_books" />
-				<q-tab dense name="environnements" label="Environnements" icon="code" />
+				<q-tab
+					v-if="environmentTeam"
+					dense
+					name="environnements"
+					label="Environnements"
+					icon="code"
+				/>
 			</q-tabs>
 			<q-separator />
 
@@ -149,15 +155,15 @@
 						v-for="env in environmentTeam"
 						:key="env.ID"
 					>
+						<pre>{{ env }}</pre>
 						<ActionCard
-							v-show="env.ID"
 							:id="env.ID"
 							:name="env.Name"
 							:shortDescription="env.ShortDescription"
 							:description="env.Description"
 							:logo="env.Logo"
-							:environmentTypeID="env.EnvironmentTypeID"
-							:environmentTypeName="env.EnvironmentType"
+							:environmentTypeID="env.EnvironmentType.ID"
+							:environmentTypeName="env.EnvironmentType.Name"
 							:domainID="env.DomainID"
 							@updateAction="updateEnvironement(env)"
 							@deleteAction="confirmDeleteEnvironment"
@@ -277,7 +283,7 @@
 	</div>
 </template>
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -533,7 +539,7 @@ export default {
 		const updateEnvironement = async (evironment) => {
 			console.log("props is: ", props, evironment.id);
 			await store.dispatch("appEnvironment/updateEnvironment", evironment);
-			refreshEnvironments();
+			await refreshEnvironments();
 		};
 
 		// Refrech tabs items data
@@ -589,6 +595,13 @@ export default {
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
 		};
+
+		watchEffect(
+			() => props.environmentTeam,
+			() => {
+				refreshEnvironments();
+			}
+		);
 
 		return {
 			domainID,

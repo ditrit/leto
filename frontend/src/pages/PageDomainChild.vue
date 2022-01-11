@@ -89,7 +89,7 @@
 											:key="index"
 											:class="item.class"
 										>
-											<pre>{{ item.Name }}</pre>
+											{{ item.Name }}
 											<q-btn
 												v-if="editMode"
 												round
@@ -161,7 +161,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -191,73 +191,59 @@ export default defineComponent({
 		const router = useRouter();
 		const progress = ref(null);
 		const actionsLinks = ref(["Edit"]);
-		const currentDomainData = ref(null);
+
 		const currentDomainDataContent = ref({});
 
 		const domainTags = ref([]);
+		const domainEnvironments = ref([]);
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
 		const globalTagsTreeList = ref([]);
-		const domainEnvirnments = ref({});
+
 		const choosenNodeID = ref("");
 		const isSelected = ref(null);
 
 		const goToID = async (node) => {
 			choosenNodeID.value = await node.id;
-			router.push(`/teams/${node.id}`);
-			await store.dispatch(
-				"appDomain/fetchDomainById",
-				`${choosenNodeID.value}`
-			);
-			let data = await store.getters["appDomain/allDomaines"];
-			console.log("data: ", Object.values(data));
-			progress.value = Object.values(data).length;
-			currentDomainDataContent.value = Object.values(data).map((item) => {
+
+			const rigthData = async () => {
+				await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
+				let data = await store.getters["appDomain/allDomaines"];
+				console.log("data: ", Object.values(data));
+				progress.value = Object.values(data).length;
+				currentDomainDataContent.value = await Object.values(data).map(
+					(item) => {
+						return {
+							id: item.ID,
+							name: item.Name,
+							shortDescription: item.ShortDescription,
+							description: item.Description,
+							logo: item.Logo,
+							tags: item.Tags,
+							products: item.Products,
+							envirnments: item.Environments,
+							authorizations: item.Authorizations,
+							libraries: item.Libraries,
+							gitURL: item.GitURL,
+							parentID: item.ParentID,
+						};
+					}
+				);
 				console.log(
 					"currentDomainDataContent.value: ",
 					currentDomainDataContent.value
 				);
-				return {
-					name: item.Name,
-					shortDescription: item.ShortDescription,
-					description: item.Description,
-					logo: item.Logo,
-					tags: item.Tags.map((tag) => tag),
-					gitURL: item.GitURL,
-					parentID: item.ParentID,
-				};
-			});
-			domainTags.value = currentDomainDataContent.value[0].tags;
-			currentDomainData.value = Object.values(data).map((item) => {
-				return {
-					name: item.Name,
-					shortDescription: item.ShortDescription,
-					description: item.Description,
-					logo: item.Logo,
-					tags: item.Tags,
-					products: item.Products,
-					envirnments: item.Environments,
-					authorizations: item.Authorizations,
-					libraries: item.Libraries,
-					gitURL: item.GitURL,
-					parentID: item.ParentID,
-				};
-			});
-			console.log("currentDomainData: ", currentDomainData.value);
-
-			// console.log("choosenNodeID: ", choosenNodeID.value);
-			// console.log("	currentDomainData: ", currentDomainData.value[0]);
-			// domainTags.value = currentDomainData.value[0].Tags;
-			// domainEnvirnments.value = currentDomainData.value[0].Environments;
-			// console.log("currentDomainData: ", currentDomainData.value[0]);
-			// console.log(
-			// 	"currentDomainData Environments: ",
-			// 	currentDomainData.value[0].Environments
-			// );
-			// console.log("	Current domainTags.value: ", domainTags.value);
+				domainTags.value = await currentDomainDataContent.value[0].tags;
+				domainEnvironments.value = await currentDomainDataContent.value[0]
+					.envirnments;
+				await refreshDomain();
+				console.log("domainEnvironments.value: ", domainEnvironments.value);
+			};
+			rigthData();
+			router.push(`/teams/${node.id}`);
 		};
 
 		const addTagtoDomain = async (tag) => {
@@ -268,7 +254,7 @@ export default defineComponent({
 			//TODO: Modify Axios action
 			await API.post(`/domain/${choosenNodeID.value}/tag/${tag.id}`)
 				.then((response) => console.log(response))
-				.then(() => refreshTags())
+				.then(() => refreshDomain())
 				.catch((err) => console.log(err));
 		};
 
@@ -388,19 +374,25 @@ export default defineComponent({
 			//TODO: Add Axios Action
 			await API.delete(`/domain/${props.id}/tag/${id}`)
 				.then((response) => console.log(response))
-				.then(() => refreshTags())
+				.then(() => refreshDomain())
 				.catch((error) => console.log(error));
 		};
 		const OnSave = () => {
 			console.log("OnSave Function");
 		};
 
-		const refreshTags = async () => {
+		const refreshDomain = async () => {
 			await store.dispatch("appDomain/fetchDomainById", props.id);
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			domainTags.value = await data.value[0].Tags;
+			domainEnvironments.value = await data.value[0].Environments;
+			console.log(
+				"Refreshed domainEnvironments.value: ",
+				domainEnvironments.value
+			);
 			console.log("	Refresh domainTags.value: ", domainTags.value);
 		};
+		watchEffect(() => currentDomainDataContent.value);
 
 		return {
 			confirm,
@@ -408,10 +400,10 @@ export default defineComponent({
 			oepnDialog,
 			goToID,
 			choosenNodeID,
-			currentDomainData,
 			currentDomainDataContent,
 			domainTags,
-			domainEnvirnments,
+			domainEnvironments,
+
 			actionsLinks,
 			Drawer,
 			menu,
