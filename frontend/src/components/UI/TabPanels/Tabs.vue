@@ -162,6 +162,16 @@
 							@updateAction="updateEnvironement(env)"
 							@deleteAction="confirmDeleteEnvironment"
 						/>
+					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							label="New Environnement"
+							@click.prevent="openCreationModal(environmentTeam)"
+						/>
+
 						<!-- Creation dialog -->
 						<q-dialog v-model="isCreationOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
@@ -171,7 +181,7 @@
 
 								<q-card-section class="q-pt-none">
 									<q-form
-										@submit.prevent="addNewEnvironment(env.DomainID)"
+										@submit.prevent="addNewEnvironment"
 										@reset="onResetEnvironment"
 										class="q-gutter-sm q-pa-md"
 									>
@@ -260,15 +270,6 @@
 								</q-card-section>
 							</q-card>
 						</q-dialog>
-					</div>
-					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
-						<q-btn
-							color="white"
-							text-color="primary"
-							icon="add"
-							label="New Environnement"
-							@click.prevent="openCreationModal(environmentTeam)"
-						/>
 					</div>
 				</q-tab-panel>
 			</q-tab-panels>
@@ -402,6 +403,7 @@ export default {
 		const environmentShortDescription = ref("");
 		const environmentDescription = ref("");
 		const isCreationOpened = ref(false);
+		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
 		const environmentTeam = ref(props.teamEnvironnements);
 		const usersList = ref([]);
@@ -476,7 +478,7 @@ export default {
 					deleteEnvironement(props);
 				})
 				.onCancel(() => {
-					console.log(">>>> Cancel");
+					console.log("Cancel");
 				});
 		};
 
@@ -484,16 +486,18 @@ export default {
 			isCreationOpened.value = true;
 			emit("openNewItemModal", props);
 			console.log("openCreationModal props: ", props);
+
+			console.log("route.query: ");
 		};
 		const openAuthorizsationCreationModal = (props) => {
 			isAuthorCreationOpened.value = true;
 			console.log("openCreationModal props: ", props);
 		};
 
-		const addNewEnvironment = async (domainId) => {
+		const addNewEnvironment = async () => {
 			console.log("selectedParentData", selectedParentData.value);
 			let newEnvironment = {
-				domainID: domainId,
+				domainID: route.currentRoute.value.params.id,
 				environmentTypeID: selectedParentData.value.id,
 				environmentTypeName: selectedParentData.value.name,
 				name: environmentName.value,
@@ -534,9 +538,13 @@ export default {
 
 		// Refrech tabs items data
 		const refreshEnvironments = async () => {
-			await store.dispatch("appEnvironment/fetchAllEnvironments");
-			let data = store.getters["appEnvironment/allEnvironments"];
-			environmentTeam.value = data;
+			await store.dispatch(
+				"appDomain/fetchDomainById",
+				route.currentRoute.value.params.id
+			);
+			let data = store.getters["appDomain/allDomaines"];
+			environmentTeam.value = data[0].Environments;
+			console.log("	environmentTeam.value: ", environmentTeam.value);
 		};
 
 		const getAllEnviTypes = async () => {
@@ -583,6 +591,7 @@ export default {
 		};
 
 		return {
+			domainID,
 			environmentTeam,
 			tab: ref("environnements"),
 			environmentName,

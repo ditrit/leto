@@ -151,7 +151,7 @@
 							:teamProducts="item.Products"
 							:teamMembers="item.Authorizations"
 							:teamLibraries="item.Libraries"
-							:teamEnvironnements="item.Environments"
+							:teamEnvironnements="domainEnvirnments"
 						/>
 					</div>
 				</div>
@@ -200,7 +200,7 @@ export default defineComponent({
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
 		const globalTagsTreeList = ref([]);
-		const domainEnvirnments = ref([]);
+		const domainEnvirnments = ref({});
 		const choosenNodeID = ref("");
 		const isSelected = ref(null);
 
