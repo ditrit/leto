@@ -47,7 +47,7 @@
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
 				<div class="row">
 					<div class="col-8">
-						<ContentCard :data="currentDomainData" />
+						<ContentCard :data="currentDomainDataContent" />
 					</div>
 					<div class="col-4">
 						<div class="tags_wrapper">
@@ -89,7 +89,7 @@
 											:key="index"
 											:class="item.class"
 										>
-											{{ item.Name }}
+											<pre>{{ item.Name }}</pre>
 											<q-btn
 												v-if="editMode"
 												round
@@ -142,16 +142,16 @@
 				<div class="row q-mt-lg q-mr-lg">
 					<div
 						class="col panel_wrapper"
-						v-for="(item, index) in currentDomainData"
+						v-for="(item, index) in currentDomainDataContent"
 						:key="index"
 					>
 						<GlobalSearch class="global_Search__right" />
 						<Tabs
 							:allTags="null"
-							:teamProducts="item.Products"
-							:teamMembers="item.Authorizations"
-							:teamLibraries="item.Libraries"
-							:teamEnvironnements="domainEnvirnments"
+							:teamProducts="item.products"
+							:teamMembers="item.authorizations"
+							:teamLibraries="item.libraries"
+							:teamEnvironnements="item.envirnments"
 						/>
 					</div>
 				</div>
@@ -191,7 +191,8 @@ export default defineComponent({
 		const router = useRouter();
 		const progress = ref(null);
 		const actionsLinks = ref(["Edit"]);
-		const currentDomainData = ref([]);
+		const currentDomainData = ref(null);
+		const currentDomainDataContent = ref({});
 
 		const domainTags = ref([]);
 		const oepnDialog = ref(false);
@@ -211,18 +212,52 @@ export default defineComponent({
 				"appDomain/fetchDomainById",
 				`${choosenNodeID.value}`
 			);
-			currentDomainData.value = await store.getters["appDomain/allDomaines"];
-			progress.value = currentDomainData.value.length;
-			console.log("choosenNodeID: ", choosenNodeID.value);
-			console.log("	currentDomainData: ", currentDomainData.value[0]);
-			domainTags.value = currentDomainData.value[0].Tags;
-			domainEnvirnments.value = currentDomainData.value[0].Environments;
-			console.log("currentDomainData: ", currentDomainData.value[0]);
-			console.log(
-				"currentDomainData Environments: ",
-				currentDomainData.value[0].Environments
-			);
-			console.log("	Current domainTags.value: ", domainTags.value);
+			let data = await store.getters["appDomain/allDomaines"];
+			console.log("data: ", Object.values(data));
+			progress.value = Object.values(data).length;
+			currentDomainDataContent.value = Object.values(data).map((item) => {
+				console.log(
+					"currentDomainDataContent.value: ",
+					currentDomainDataContent.value
+				);
+				return {
+					name: item.Name,
+					shortDescription: item.ShortDescription,
+					description: item.Description,
+					logo: item.Logo,
+					tags: item.Tags.map((tag) => tag),
+					gitURL: item.GitURL,
+					parentID: item.ParentID,
+				};
+			});
+			domainTags.value = currentDomainDataContent.value[0].tags;
+			currentDomainData.value = Object.values(data).map((item) => {
+				return {
+					name: item.Name,
+					shortDescription: item.ShortDescription,
+					description: item.Description,
+					logo: item.Logo,
+					tags: item.Tags,
+					products: item.Products,
+					envirnments: item.Environments,
+					authorizations: item.Authorizations,
+					libraries: item.Libraries,
+					gitURL: item.GitURL,
+					parentID: item.ParentID,
+				};
+			});
+			console.log("currentDomainData: ", currentDomainData.value);
+
+			// console.log("choosenNodeID: ", choosenNodeID.value);
+			// console.log("	currentDomainData: ", currentDomainData.value[0]);
+			// domainTags.value = currentDomainData.value[0].Tags;
+			// domainEnvirnments.value = currentDomainData.value[0].Environments;
+			// console.log("currentDomainData: ", currentDomainData.value[0]);
+			// console.log(
+			// 	"currentDomainData Environments: ",
+			// 	currentDomainData.value[0].Environments
+			// );
+			// console.log("	Current domainTags.value: ", domainTags.value);
 		};
 
 		const addTagtoDomain = async (tag) => {
@@ -374,6 +409,7 @@ export default defineComponent({
 			goToID,
 			choosenNodeID,
 			currentDomainData,
+			currentDomainDataContent,
 			domainTags,
 			domainEnvirnments,
 			actionsLinks,

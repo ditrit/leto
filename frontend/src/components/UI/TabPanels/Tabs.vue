@@ -157,7 +157,7 @@
 							:description="env.Description"
 							:logo="env.Logo"
 							:environmentTypeID="env.EnvironmentTypeID"
-							:environmentTypeName="env.EnvironmentType.Name"
+							:environmentTypeName="env.EnvironmentType"
 							:domainID="env.DomainID"
 							@updateAction="updateEnvironement(env)"
 							@deleteAction="confirmDeleteEnvironment"

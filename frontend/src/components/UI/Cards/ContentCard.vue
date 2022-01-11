@@ -12,19 +12,19 @@
 					<div class="col">
 						<div class="flex text-h6 items-start">
 							<q-icon name="group" size="30px" class="q-mr-sm" />
-							<span class="text-uppercase">{{ item.Name }} </span>
+							<span class="text-uppercase">{{ item.name }} </span>
 						</div>
 						<div class="text-subtitle3 text-grey-8">
-							{{ item.ShortDescription }}
+							{{ item.shortDescription }}
 						</div>
 						<div class="flex items-center text-subtitle3 q-py-sm">
 							<q-icon name="link" size="30px" class="q-mr-sm" /> Repository:
-							<a :href="item.GitURL" class="q-pl-sm"> {{ item.GitURL }}</a>
+							<a :href="item.gitURL" class="q-pl-sm"> {{ item.gitURL }}</a>
 						</div>
 						<div class="content_wrapper q-mt-sm">
-							<img :src="item.Logo" alt="domain logo" />
+							<img :src="item.logo" alt="domain logo" />
 							<p class="q-ml-md">
-								{{ item.Description }}
+								{{ item.description }}
 							</p>
 						</div>
 					</div>
@@ -76,7 +76,7 @@
 																(val && val.length > 0) ||
 																'Please type something',
 														]"
-														v-model="item.Name"
+														v-model="item.name"
 													/>
 												</div>
 											</div>
@@ -91,7 +91,7 @@
 																(val && val.length > 0) ||
 																'Please type something',
 														]"
-														v-model="item.ShortDescription"
+														v-model="item.shortDescription"
 													/>
 												</div>
 											</div>
@@ -106,7 +106,7 @@
 																(val && val.length > 0) ||
 																'Please type something',
 														]"
-														v-model="item.GitURL"
+														v-model="item.gitURL"
 													/>
 												</div>
 											</div>
@@ -116,7 +116,7 @@
 														filled
 														type="textarea"
 														label="Description"
-														v-model="item.Description"
+														v-model="item.description"
 													/>
 												</div>
 												<div class="col">
@@ -207,23 +207,33 @@ export default {
 			getDomainstree();
 		};
 		const onSubmitUpdate = async (props) => {
+			console.log("props: ", props);
 			emit("emitUpdateDomain", props);
 			console.log("Domain to edit:", Object.values(props));
-			let domain = await Object.values(props);
+			let domain = Object.values(props);
 			console.log("domain: ", domain);
+
 			let updatedDomain = {
-				id: domain[0],
-				ParentID: domain[5],
-				name: domain[4],
-				shortDescription: domain[12],
-				gitUrl: domain[15],
-				description: domain[13],
+				id: route.currentRoute.value.params.id,
+				name: domain[0],
+				shortDescription: domain[1],
+				description: domain[2],
+				gitUrl: domain[5],
+				parentID: domain[6],
 			};
 
-			console.log("updatedDomain: ", updatedDomain);
-
-			store.dispatch("appDomain/updateDomain", updatedDomain);
-			getDomainstree();
+			try {
+				store
+					.dispatch("appDomain/updateDomain", updatedDomain)
+					.then(() => {
+						getDomainstree();
+					})
+					.then(() => {
+						route.go(`teams/${route.currentRoute.value.params.id}`);
+					});
+			} catch (error) {
+				console.log(error);
+			}
 		};
 		const onResetUpdate = async (props) => {
 			emit("emitResetDomain", props);
@@ -244,7 +254,6 @@ export default {
 		const getDomainstree = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
 			await store.getters["appDomain/allDomainesTree"];
-			await route.push("/teams");
 		};
 
 		return {
