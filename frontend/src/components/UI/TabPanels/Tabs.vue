@@ -492,12 +492,14 @@ export default {
 			isCreationOpened.value = true;
 			emit("openNewItemModal", props);
 			console.log("openCreationModal props: ", props);
+			console.log("selectedParentData : ", selectedParentData.value);
 
-			console.log("route.query: ");
+			console.log("route.query: ", route.query);
 		};
 		const openAuthorizsationCreationModal = (props) => {
 			isAuthorCreationOpened.value = true;
 			console.log("openCreationModal props: ", props);
+			console.log("selectedParentData : ", selectedParentData.value);
 		};
 
 		const addNewEnvironment = async () => {
@@ -596,12 +598,10 @@ export default {
 			});
 		};
 
-		watchEffect(
-			() => props.environmentTeam,
-			() => {
-				refreshEnvironments();
-			}
-		);
+		watchEffect(() => {
+			console.log("Watching domainID", domainID.value);
+			console.log("Watching domainID", environmentTeam.value);
+		});
 
 		return {
 			domainID,

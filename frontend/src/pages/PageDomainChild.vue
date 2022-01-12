@@ -39,7 +39,12 @@
 			</template>
 			<template v-slot:drawerMenu>
 				<div class="q-pa-md q-gutter-sm" v-if="menu">
-					<q-tree :nodes="menu" node-key="label" default-expand-all />
+					<q-tree
+						:nodes="menu"
+						node-key="label"
+						default-expand-all
+						v-model:selected="selected"
+					/>
 				</div>
 			</template>
 		</Drawer>
@@ -184,7 +189,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, watch } from "vue";
+import { defineComponent, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -224,7 +229,7 @@ export default defineComponent({
 		const filterTagRef = ref(null);
 		const globalTagsTreeList = ref([]);
 		const choosenNodeID = ref("");
-		const isSelected = ref(null);
+		const selected = ref(null);
 
 		const refreshDomain = async () => {
 			await store.dispatch("appDomain/fetchDomainById", props.id);
@@ -239,12 +244,11 @@ export default defineComponent({
 		};
 
 		const goToID = async (node) => {
+			await router.push(`/teams/${node.id}`);
 			editMode.value = false;
 			choosenNodeID.value = await node.id;
 
-			await rigthData();
-			router.push(`/teams/${node.id}`);
-			await refreshDomain();
+			rigthData();
 		};
 		const rigthData = async () => {
 			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
@@ -386,7 +390,7 @@ export default defineComponent({
 				});
 		};
 		const editMode = ref(false);
-		const showDraggable = ref(false);
+
 		const isNew = ref(false);
 
 		const OnNew = () => {
@@ -405,7 +409,16 @@ export default defineComponent({
 				.catch((error) => console.log(error));
 		};
 
-		watch(() => domainEnvironments.value);
+		watchEffect(() => {
+			console.log("Watching domainID", props.id);
+			console.log("Watching domainID", choosenNodeID.value);
+			console.log("Watching domainTags", domainTags.value);
+			console.log(
+				"Watching currentDomainDataContent",
+				currentDomainDataContent.value
+			);
+			console.log("Watching domainEnvironments", domainEnvironments.value);
+		});
 
 		return {
 			confirm,
@@ -423,7 +436,7 @@ export default defineComponent({
 			filterRef,
 			filterTag,
 			filterTagRef,
-			isSelected,
+			selected,
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();
