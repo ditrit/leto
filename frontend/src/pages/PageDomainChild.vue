@@ -39,12 +39,35 @@
 			</template>
 			<template v-slot:drawerMenu>
 				<div class="q-pa-md q-gutter-sm" v-if="menu">
-					<q-tree :nodes="menu" node-key="label" />
+					<q-tree :nodes="menu" node-key="label" default-expand-all />
 				</div>
 			</template>
 		</Drawer>
 		<q-page-container class="q-pa-lg">
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
+				<div class="q-pa-md q-gutter-sm">
+					<q-breadcrumbs v-for="link in menu" :key="link.id">
+						<q-breadcrumbs-el label="Teams " icon="home" to="/teams" />
+						<q-breadcrumbs-el
+							:label="link.label + ' '"
+							:to="`/teams/${link.id}`"
+						/>
+						<q-breadcrumbs-el
+							v-for="childLink in link.children"
+							:key="childLink.id"
+							:label="childLink.label + ' '"
+							:to="`/teams/${childLink.id}`"
+						/>
+						<q-breadcrumbs-el
+							v-for="subChildLink in childLink"
+							:key="subChildLink.id"
+							:label="subChildLink.label + ' '"
+							:to="`/teams/${subChildLink.id}`"
+						/>
+					</q-breadcrumbs>
+					<!-- <pre>{{ menu }}</pre> -->
+				</div>
+
 				<div class="row">
 					<div class="col-8">
 						<ContentCard :data="currentDomainDataContent" />
@@ -151,7 +174,7 @@
 							:teamProducts="item.products"
 							:teamMembers="item.authorizations"
 							:teamLibraries="item.libraries"
-							:teamEnvironnements="item.envirnments"
+							:teamEnvironnements="domainEnvironments"
 						/>
 					</div>
 				</div>
@@ -161,7 +184,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, watchEffect } from "vue";
+import { defineComponent, ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -191,9 +214,7 @@ export default defineComponent({
 		const router = useRouter();
 		const progress = ref(null);
 		const actionsLinks = ref(["Edit"]);
-
 		const currentDomainDataContent = ref({});
-
 		const domainTags = ref([]);
 		const domainEnvironments = ref([]);
 		const oepnDialog = ref(false);
@@ -202,50 +223,57 @@ export default defineComponent({
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
 		const globalTagsTreeList = ref([]);
-
 		const choosenNodeID = ref("");
 		const isSelected = ref(null);
+
+		const refreshDomain = async () => {
+			await store.dispatch("appDomain/fetchDomainById", props.id);
+			let data = computed(() => store.getters["appDomain/allDomaines"]);
+			domainTags.value = await data.value[0].Tags;
+			domainEnvironments.value = await data.value[0].Environments;
+			console.log(
+				"Refreshed domainEnvironments.value: ",
+				domainEnvironments.value
+			);
+			console.log("	Refresh domainTags.value: ", domainTags.value);
+		};
 
 		const goToID = async (node) => {
 			choosenNodeID.value = await node.id;
 
-			const rigthData = async () => {
-				await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
-				let data = await store.getters["appDomain/allDomaines"];
-				console.log("data: ", Object.values(data));
-				progress.value = Object.values(data).length;
-				currentDomainDataContent.value = await Object.values(data).map(
-					(item) => {
-						return {
-							id: item.ID,
-							name: item.Name,
-							shortDescription: item.ShortDescription,
-							description: item.Description,
-							logo: item.Logo,
-							tags: item.Tags,
-							products: item.Products,
-							envirnments: item.Environments,
-							authorizations: item.Authorizations,
-							libraries: item.Libraries,
-							gitURL: item.GitURL,
-							parentID: item.ParentID,
-						};
-					}
-				);
-				console.log(
-					"currentDomainDataContent.value: ",
-					currentDomainDataContent.value
-				);
-				domainTags.value = await currentDomainDataContent.value[0].tags;
-				domainEnvironments.value = await currentDomainDataContent.value[0]
-					.envirnments;
-				await refreshDomain();
-				console.log("domainEnvironments.value: ", domainEnvironments.value);
-			};
-			rigthData();
+			await rigthData();
 			router.push(`/teams/${node.id}`);
+			await refreshDomain();
 		};
-
+		const rigthData = async () => {
+			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
+			let data = await store.getters["appDomain/allDomaines"];
+			console.log("data: ", Object.values(data));
+			progress.value = Object.values(data).length;
+			currentDomainDataContent.value = Object.values(data).map((item) => {
+				return {
+					id: item.ID,
+					name: item.Name,
+					shortDescription: item.ShortDescription,
+					description: item.Description,
+					logo: item.Logo,
+					tags: item.Tags,
+					products: item.Products,
+					envirnments: item.Environments,
+					authorizations: item.Authorizations,
+					libraries: item.Libraries,
+					gitURL: item.GitURL,
+					parentID: item.ParentID,
+				};
+			});
+			console.log(
+				"currentDomainDataContent.value: ",
+				currentDomainDataContent.value
+			);
+			domainTags.value = currentDomainDataContent.value[0].tags;
+			domainEnvironments.value = currentDomainDataContent.value[0].envirnments;
+			console.log("domainEnvironments.value: ", domainEnvironments.value);
+		};
 		const addTagtoDomain = async (tag) => {
 			console.log("tag:", tag);
 			console.log("tag id:", tag.id);
@@ -381,18 +409,7 @@ export default defineComponent({
 			console.log("OnSave Function");
 		};
 
-		const refreshDomain = async () => {
-			await store.dispatch("appDomain/fetchDomainById", props.id);
-			let data = computed(() => store.getters["appDomain/allDomaines"]);
-			domainTags.value = await data.value[0].Tags;
-			domainEnvironments.value = await data.value[0].Environments;
-			console.log(
-				"Refreshed domainEnvironments.value: ",
-				domainEnvironments.value
-			);
-			console.log("	Refresh domainTags.value: ", domainTags.value);
-		};
-		watchEffect(() => currentDomainDataContent.value);
+		watch(() => domainEnvironments.value);
 
 		return {
 			confirm,
@@ -403,7 +420,6 @@ export default defineComponent({
 			currentDomainDataContent,
 			domainTags,
 			domainEnvironments,
-
 			actionsLinks,
 			Drawer,
 			menu,

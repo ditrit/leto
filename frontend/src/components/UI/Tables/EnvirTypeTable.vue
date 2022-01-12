@@ -32,34 +32,57 @@
 								@reset="onResetUpdate"
 								class="q-gutter-md q-pa-md"
 							>
-								<q-input
-									filled
-									v-model="enviTypeObj[2]"
-									label="Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-								<q-input
-									filled
-									v-model="enviTypeObj[3]"
-									label="Short Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-								<q-input
-									filled
-									type="textarea"
-									v-model="enviTypeObj[4]"
-									label="Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
+								<div class="col">
+									<q-input
+										filled
+										v-model="enviTypeObj[2]"
+										label="Name *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+									/>
+								</div>
+								<div class="col">
+									<q-input
+										filled
+										v-model="enviTypeObj[3]"
+										label="Short Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+									/>
+								</div>
+								<div class="row">
+									<div class="col">
+										<q-input
+											filled
+											type="textarea"
+											v-model="enviTypeObj[4]"
+											label="Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+										/>
+									</div>
+									<div class="col-4 q-ml-md">
+										<q-uploader
+											style="max-width: 100%"
+											label="Your Logo"
+											multiple
+											accept=".jpg, svg, image/*"
+											@rejected="onRejected"
+											color="primary"
+											:factory="uploadFile"
+											@uploaded="onFileUpload"
+										/>
+									</div>
+								</div>
 
 								<q-card-actions
 									align="right"
@@ -110,7 +133,7 @@
 		<q-dialog v-model="openAddEnviTypeDialog" persistent>
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("create_tag") }}</div>
+					<div class="text-h6 q-pa-md">{{ $t("add_environment") }}</div>
 				</q-card-section>
 
 				<q-card-section class="q-pt-none">
@@ -137,16 +160,32 @@
 							]"
 							v-model="enviTypeShortDescription"
 						/>
-						<q-input
-							filled
-							type="textarea"
-							label="Description *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="enviTypeDescription"
-						/>
+						<div class="row">
+							<div class="col">
+								<q-input
+									filled
+									type="textarea"
+									label="Description *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="enviTypeDescription"
+								/>
+							</div>
+							<div class="col-4 q-ml-md">
+								<q-uploader
+									style="max-width: 100%"
+									label="Your Logo"
+									multiple
+									accept=".jpg, svg, image/*"
+									@rejected="onRejected"
+									color="primary"
+									:factory="uploadFile"
+									@uploaded="onFileUpload"
+								/>
+							</div>
+						</div>
 
 						<q-card-actions
 							align="right"

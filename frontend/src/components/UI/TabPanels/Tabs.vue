@@ -152,10 +152,10 @@
 				<q-tab-panel name="environnements" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="env in environmentTeam"
-						:key="env.ID"
+						v-for="(env, index) in environmentTeam"
+						:key="index"
 					>
-						<pre>{{ env }}</pre>
+						<!-- <pre>{{ env.Name }}</pre> -->
 						<ActionCard
 							:id="env.ID"
 							:name="env.Name"
