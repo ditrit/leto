@@ -38,12 +38,12 @@
 					transition-prev="jump-up"
 					transition-next="jump-up"
 				>
-					<q-tab-panel :name="tagDatalabel">
+					<q-tab-panel :name="tagDatalabel" v-if="tagData">
 						<div class="btn_actions">
 							<q-btn color="grey-7" round flat icon="more_vert">
 								<q-menu cover auto-close>
 									<q-list>
-										<q-item clickable @click.prevent="AddTag">
+										<q-item clickable @click.prevent="AddTag(tagData)">
 											<q-item-section class="btn_actions__item">
 												<q-icon name="add" size="1.5em" class="q-mr-md" />
 												Add</q-item-section
@@ -67,7 +67,7 @@
 						</div>
 						<span class="text-subtitle2 text-grey-8">Name:</span>
 						<div class="text-h4 q-mb-md" v-if="tagData">
-							<p>{{ tagData.label }}</p>
+							<p v-if="tagData.label">{{ tagData.label }}</p>
 						</div>
 						<span class="text-subtitle2 text-grey-8">Short description:</span>
 						<p>{{ tagData.shortDescription }}</p>
@@ -78,7 +78,7 @@
 						<q-dialog v-model="openAddTagDialog" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
-									<div class="text-h6 q-pa-md">{{ $t("create_role") }}</div>
+									<div class="text-h6 q-pa-md">{{ $t("create_tag") }}</div>
 								</q-card-section>
 
 								<q-card-section class="q-pt-none">
@@ -87,7 +87,7 @@
 										@reset="onResetAdd"
 										class="q-gutter-md q-pa-md"
 									>
-										<div class="row col-md-12 q-gutter-sm">
+										<div class="row col-md-12">
 											<div class="col">
 												<q-input
 													filled
@@ -101,7 +101,7 @@
 													v-model="tagName"
 												/>
 											</div>
-											<div class="col">
+											<div class="col-4 q-ml-md">
 												<q-select
 													filled
 													:options="optionsSelections"
@@ -228,6 +228,7 @@ export default {
 		const selected = ref("root");
 		const tagData = ref(null);
 		const tagDatalabel = ref(null);
+		const parentTag = ref(null);
 		const tagsTree = ref([]);
 		const tagName = ref("");
 		const filter = ref("");
@@ -321,6 +322,18 @@ export default {
 											description: subLastItem?.Description,
 											handler: (subLastItem) => showTagData(subLastItem),
 											icon: "sell",
+											children: subLastItem?.Childs?.map((subMoreItem) => {
+												return {
+													id: subMoreItem?.ID,
+													parentID: subMoreItem?.ParentID,
+													label: subMoreItem?.Name,
+													avatar: subMoreItem?.Logo,
+													shortDescription: subMoreItem?.ShortDescription,
+													description: subMoreItem?.Description,
+													handler: (subMoreItem) => showTagData(subMoreItem),
+													icon: "sell",
+												};
+											}),
 										};
 									}),
 								};
@@ -332,11 +345,11 @@ export default {
 		};
 		getTagsTreeData();
 
-		const AddTag = async () => {
+		const AddTag = async (tag) => {
+			selectedParentData.value = await tag;
 			openAddTagDialog.value = true;
 			await store.dispatch("appTags/fetchAllTags");
 			const tagsList = computed(() => store.getters["appTags/allTags"]);
-			console.log("tagsList: ", tagsList.value);
 			let data = tagsList.value.map((item) => {
 				return {
 					id: item.ID,
@@ -354,6 +367,7 @@ export default {
 			const tagToAdd = {
 				pid: selectedParentData.value.id,
 				name: tagName.value,
+				label: tagName.value,
 				shortDescription: tagShortDescription.value,
 				description: tagDescription.value,
 			};
@@ -410,6 +424,7 @@ export default {
 			splitterModel: ref(35),
 			selected,
 			AddTag,
+			parentTag,
 			EditTag,
 			DeleteTag,
 			tagsTree,
