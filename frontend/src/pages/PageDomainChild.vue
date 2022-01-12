@@ -239,6 +239,7 @@ export default defineComponent({
 		};
 
 		const goToID = async (node) => {
+			editMode.value = false;
 			choosenNodeID.value = await node.id;
 
 			await rigthData();
@@ -393,9 +394,7 @@ export default defineComponent({
 			isNew.value = !isNew.value;
 		};
 		const OnEdit = () => {
-			console.log("OnEdit Function");
 			editMode.value = !editMode.value;
-			showDraggable.value = !showDraggable.value;
 		};
 		const OnDelete = async (id) => {
 			console.log("deleted ID:", id);
@@ -404,9 +403,6 @@ export default defineComponent({
 				.then((response) => console.log(response))
 				.then(() => refreshDomain())
 				.catch((error) => console.log(error));
-		};
-		const OnSave = () => {
-			console.log("OnSave Function");
 		};
 
 		watch(() => domainEnvironments.value);
@@ -441,7 +437,6 @@ export default defineComponent({
 			isNew,
 			OnNew,
 			OnEdit,
-			OnSave,
 			OnDelete,
 			globalTagsTreeList,
 		};
