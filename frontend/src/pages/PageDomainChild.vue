@@ -167,7 +167,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="row q-mt-lg q-mr-lg">
+				<!-- <div class="row q-mt-lg q-mr-lg">
 					<div
 						class="col panel_wrapper"
 						v-for="(item, index) in currentDomainDataContent"
@@ -182,7 +182,7 @@
 							:teamEnvironnements="domainEnvironments"
 						/>
 					</div>
-				</div>
+				</div> -->
 			</q-page>
 		</q-page-container>
 	</q-layout>
@@ -195,8 +195,8 @@ import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import ContentCard from "../components/UI/Cards/ContentCard";
-import Tabs from "../components/UI/TabPanels/Tabs";
-import GlobalSearch from "../components/UI/Form/GlobalSearch.vue";
+// import Tabs from "../components/UI/TabPanels/Tabs";
+// import GlobalSearch from "../components/UI/Form/GlobalSearch.vue";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../common/index";
@@ -205,9 +205,9 @@ export default defineComponent({
 	name: "PageDomainChild",
 	components: {
 		AjaxBar,
-		Tabs,
+		// Tabs,
+		// GlobalSearch,
 		ContentCard,
-		GlobalSearch,
 		Drawer,
 		AccountSettings,
 	},

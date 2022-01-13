@@ -1,12 +1,6 @@
 <template>
-	<div class="">
-		<q-card
-			class="card_default"
-			flat
-			bordered
-			v-for="item in data"
-			:key="item.id"
-		>
+	<div class="" v-for="item in data" :key="item.id">
+		<q-card class="card_default" flat bordered>
 			<q-card-section>
 				<div class="row no-wrap">
 					<div class="col">
@@ -158,6 +152,17 @@
 				</div>
 			</q-card-section>
 		</q-card>
+
+		<div class="col panel_wrapper">
+			<GlobalSearch class="global_Search__right" />
+			<Tabs
+				:allTags="null"
+				:teamProducts="item.products"
+				:teamMembers="item.authorizations"
+				:teamLibraries="item.libraries"
+				:teamEnvironnements="item.envirnments"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -166,10 +171,12 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import Tabs from "../../UI/TabPanels/Tabs.vue";
+import GlobalSearch from "../../UI/Form/GlobalSearch.vue";
 
 export default {
 	name: "ContentCard",
-	components: {},
+	components: { GlobalSearch, Tabs },
 	props: {
 		data: {
 			type: Array,
@@ -186,6 +193,10 @@ export default {
 			isOpend.value = true;
 		};
 
+		const getDomainstree = async () => {
+			await store.dispatch("appDomain/fetchDomainesTree");
+			return store.getters["appDomain/allDomainesTree"];
+		};
 		const confirm = (props) => {
 			$q.dialog({
 				title: "Confirm",
@@ -203,8 +214,19 @@ export default {
 		const DeleteDomain = async (props) => {
 			emit("emitRemoveDomain", props);
 			console.log(props);
-			await store.dispatch("appDomain/removeDomain", props.ID);
-			getDomainstree();
+
+			try {
+				store
+					.dispatch("appDomain/removeDomain", props.id)
+					.then(() => {
+						route.push(`/teams/${props.parentID}`);
+					})
+					.then(() => {
+						getDomainstree();
+					});
+			} catch (error) {
+				console.log(error);
+			}
 		};
 		const onSubmitUpdate = async (props) => {
 			console.log("props: ", props);
@@ -214,23 +236,18 @@ export default {
 			console.log("domain: ", domain);
 
 			let updatedDomain = {
-				id: route.currentRoute.value.params.id,
-				name: domain[0],
-				shortDescription: domain[1],
-				description: domain[2],
-				gitUrl: domain[5],
-				parentID: domain[6],
+				id: props.id,
+				name: props.name,
+				shortDescription: props.shortDescription,
+				description: props.description,
+				gitUrl: props.gitURL,
+				parentID: props.parentID,
 			};
 
 			try {
-				store
-					.dispatch("appDomain/updateDomain", updatedDomain)
-					.then(() => {
-						getDomainstree();
-					})
-					.then(() => {
-						route.go(`teams/${route.currentRoute.value.params.id}`);
-					});
+				store.dispatch("appDomain/updateDomain", updatedDomain).then(() => {
+					getDomainstree();
+				});
 			} catch (error) {
 				console.log(error);
 			}
@@ -250,10 +267,6 @@ export default {
 				type: "negative",
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
-		};
-		const getDomainstree = async () => {
-			await store.dispatch("appDomain/fetchDomainesTree");
-			await store.getters["appDomain/allDomainesTree"];
 		};
 
 		return {

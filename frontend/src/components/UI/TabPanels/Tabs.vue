@@ -152,7 +152,7 @@
 				<q-tab-panel name="environnements" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="(env, index) in environmentTeam"
+						v-for="(env, index) in teamEnvironnements"
 						:key="index"
 					>
 						<!-- <pre>{{ env.Name }}</pre> -->
@@ -162,8 +162,6 @@
 							:shortDescription="env.ShortDescription"
 							:description="env.Description"
 							:logo="env.Logo"
-							:environmentTypeID="env.EnvironmentType.ID"
-							:environmentTypeName="env.EnvironmentType.Name"
 							:domainID="env.DomainID"
 							@updateAction="updateEnvironement(env)"
 							@deleteAction="confirmDeleteEnvironment"
@@ -378,7 +376,10 @@ export default {
 					id: 0,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Env 1",
-					environmentTypeName: "EnvType",
+					environmentTypeName: "EnvTypeName",
+					environmentTypeID: "EnvTypeID",
+					shortDescription:
+						"Ceci est une description: molestiae quas vel sint commodi",
 					description:
 						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
