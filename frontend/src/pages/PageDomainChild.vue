@@ -42,6 +42,7 @@
 					<q-tree
 						:nodes="menu"
 						node-key="label"
+						:filter="filter"
 						default-expand-all
 						v-model:selected="selected"
 					/>
@@ -167,22 +168,6 @@
 						</div>
 					</div>
 				</div>
-				<!-- <div class="row q-mt-lg q-mr-lg">
-					<div
-						class="col panel_wrapper"
-						v-for="(item, index) in currentDomainDataContent"
-						:key="index"
-					>
-						<GlobalSearch class="global_Search__right" />
-						<Tabs
-							:allTags="null"
-							:teamProducts="item.products"
-							:teamMembers="item.authorizations"
-							:teamLibraries="item.libraries"
-							:teamEnvironnements="domainEnvironments"
-						/>
-					</div>
-				</div> -->
 			</q-page>
 		</q-page-container>
 	</q-layout>
@@ -195,8 +180,6 @@ import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import ContentCard from "../components/UI/Cards/ContentCard";
-// import Tabs from "../components/UI/TabPanels/Tabs";
-// import GlobalSearch from "../components/UI/Form/GlobalSearch.vue";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../common/index";
@@ -205,8 +188,6 @@ export default defineComponent({
 	name: "PageDomainChild",
 	components: {
 		AjaxBar,
-		// Tabs,
-		// GlobalSearch,
 		ContentCard,
 		Drawer,
 		AccountSettings,
@@ -221,7 +202,6 @@ export default defineComponent({
 		const actionsLinks = ref(["Edit"]);
 		const currentDomainDataContent = ref({});
 		const domainTags = ref([]);
-		const domainEnvironments = ref([]);
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
@@ -235,11 +215,6 @@ export default defineComponent({
 			await store.dispatch("appDomain/fetchDomainById", props.id);
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			domainTags.value = await data.value[0].Tags;
-			domainEnvironments.value = await data.value[0].Environments;
-			console.log(
-				"Refreshed domainEnvironments.value: ",
-				domainEnvironments.value
-			);
 			console.log("	Refresh domainTags.value: ", domainTags.value);
 		};
 
@@ -276,8 +251,6 @@ export default defineComponent({
 				currentDomainDataContent.value
 			);
 			domainTags.value = currentDomainDataContent.value[0].tags;
-			domainEnvironments.value = currentDomainDataContent.value[0].envirnments;
-			console.log("domainEnvironments.value: ", domainEnvironments.value);
 		};
 		const addTagtoDomain = async (tag) => {
 			console.log("tag:", tag);
@@ -417,7 +390,6 @@ export default defineComponent({
 				"Watching currentDomainDataContent",
 				currentDomainDataContent.value
 			);
-			console.log("Watching domainEnvironments", domainEnvironments.value);
 		});
 
 		return {
@@ -428,7 +400,6 @@ export default defineComponent({
 			choosenNodeID,
 			currentDomainDataContent,
 			domainTags,
-			domainEnvironments,
 			actionsLinks,
 			Drawer,
 			menu,
