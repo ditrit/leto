@@ -174,16 +174,14 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, watchEffect } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import { useQuasar } from "quasar";
+import { defineComponent, ref, watchEffect } from "vue";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import ContentCard from "../components/UI/Cards/ContentCard";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../common/index";
-import API from "../services";
+import useDomainData from "../composables/useDomain";
+
 export default defineComponent({
 	name: "PageDomainChild",
 	components: {
@@ -194,193 +192,39 @@ export default defineComponent({
 	},
 	props: ["id"],
 	setup(props) {
-		const store = useStore();
-		const $q = useQuasar();
 		const drawer = ref(false);
-		const router = useRouter();
-		const progress = ref(null);
 		const actionsLinks = ref(["Edit"]);
-		const currentDomainDataContent = ref({});
-		const domainTags = ref([]);
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
-		const globalTagsTreeList = ref([]);
-		const choosenNodeID = ref("");
 		const selected = ref(null);
 
-		const refreshDomain = async () => {
-			await store.dispatch("appDomain/fetchDomainById", props.id);
-			let data = computed(() => store.getters["appDomain/allDomaines"]);
-			domainTags.value = await data.value[0].Tags;
-			console.log("	Refresh domainTags.value: ", domainTags.value);
-		};
+		let {
+			menu,
+			store,
+			getMenuData,
+			goToID,
+			router,
+			rigthData,
+			choosenNodeID,
+			currentDomainDataContent,
+			progress,
+			domainTags,
+			globalTagsTreeList,
+			getTagsTree,
+			refreshDomain,
+			OnDelete,
+			editMode,
+			$q,
+			confirm,
+			OnEdit,
+		} = useDomainData();
 
-		const goToID = async (node) => {
-			await router.push(`/teams/${node.id}`);
-			editMode.value = false;
-			choosenNodeID.value = await node.id;
-
-			rigthData();
-		};
-		const rigthData = async () => {
-			await store.dispatch("appDomain/fetchDomainById", `${props.id}`);
-			let data = await store.getters["appDomain/allDomaines"];
-			console.log("data: ", Object.values(data));
-			progress.value = Object.values(data).length;
-			currentDomainDataContent.value = Object.values(data).map((item) => {
-				return {
-					id: item.ID,
-					name: item.Name,
-					shortDescription: item.ShortDescription,
-					description: item.Description,
-					logo: item.Logo,
-					tags: item.Tags,
-					products: item.Products,
-					envirnments: item.Environments,
-					authorizations: item.Authorizations,
-					libraries: item.Libraries,
-					gitURL: item.GitURL,
-					parentID: item.ParentID,
-				};
-			});
-			console.log(
-				"currentDomainDataContent.value: ",
-				currentDomainDataContent.value
-			);
-			domainTags.value = currentDomainDataContent.value[0].tags;
-		};
-		const addTagtoDomain = async (tag) => {
-			console.log("tag:", tag);
-			console.log("tag id:", tag.id);
-			console.log("props.id: ", props.id);
-			// store.dispatch("appDomain/addDomainTag", props.id, `${tag.id}`);
-			//TODO: Modify Axios action
-			await API.post(`/domain/${choosenNodeID.value}/tag/${tag.id}`)
-				.then((response) => console.log(response))
-				.then(() => refreshDomain())
-				.catch((err) => console.log(err));
-		};
-
-		const menu = ref(null);
-		const getMenuData = async () => {
-			await store.dispatch("appDomain/fetchDomainesTree");
-			const allDomainTree = computed(
-				() => store.getters["appDomain/allDomainesTree"]
-			);
-			return (menu.value = [
-				{
-					id: allDomainTree?.value?.ID,
-					parentID: allDomainTree?.value?.ParentID,
-					label: allDomainTree?.value?.Name,
-					avatar: allDomainTree?.value?.Logo,
-					handler: (node) => goToID(node),
-					children: allDomainTree?.value?.Childs?.map((item) => {
-						return {
-							id: item?.ID,
-							parentID: item?.ParentID,
-							label: item?.Name,
-							avatar: item?.Logo,
-							handler: (item) => goToID(item),
-							children: item?.Childs?.map((subItem) => {
-								return {
-									id: subItem?.ID,
-									parentID: subItem?.ParentID,
-									label: subItem?.Name,
-									avatar: subItem?.Logo,
-									handler: (subItem) => goToID(subItem),
-									children: subItem?.Childs?.map((subLastItem) => {
-										return {
-											id: subLastItem?.ID,
-											parentID: subLastItem?.ParentID,
-											label: subLastItem?.Name,
-											avatar: subLastItem?.Logo,
-											handler: (subLastItem) => goToID(subLastItem),
-										};
-									}),
-								};
-							}),
-						};
-					}),
-				},
-			]);
-		};
+		goToID();
 		getMenuData();
-		// console.log("details page menu.value: ", menu);
-		const getTagsTree = async () => {
-			await store.dispatch("appTags/fetchAllTagsTree");
-			let data = computed(() => store.getters["appTags/allTagsTree"]);
-			globalTagsTreeList.value = [data.value].map((tag) => {
-				return {
-					id: tag?.ID,
-					label: tag?.Name,
-					handler: (tag) => addTagtoDomain(tag),
-					icon: "sell",
-					children: tag.Childs?.map((child) => {
-						return {
-							id: child.ID,
-							label: child.Name,
-							handler: (child) => addTagtoDomain(child),
-							icon: "sell",
-							children: child.Childs?.map((subChild) => {
-								return {
-									id: subChild.ID,
-									label: subChild.Name,
-									handler: (subChild) => addTagtoDomain(subChild),
-									icon: "sell",
-									children: subChild.Childs?.map((lastChild) => {
-										return {
-											id: lastChild.ID,
-											label: lastChild.Name,
-											handler: (lastChild) => addTagtoDomain(lastChild),
-											icon: "sell",
-										};
-									}),
-								};
-							}),
-						};
-					}),
-				};
-			});
-			console.log("globalTagsTreeList: ", globalTagsTreeList.value);
-		};
 		getTagsTree();
-
-		const confirm = (id) => {
-			$q.dialog({
-				title: "Confirm",
-				message: "Are you sure to delete this item?",
-				cancel: true,
-				persistent: true,
-			})
-				.onOk(() => {
-					OnDelete(id);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
-		};
-		const editMode = ref(false);
-
-		const isNew = ref(false);
-
-		const OnNew = () => {
-			console.log("OnNew Function");
-			isNew.value = !isNew.value;
-		};
-		const OnEdit = () => {
-			editMode.value = !editMode.value;
-		};
-		const OnDelete = async (id) => {
-			console.log("deleted ID:", id);
-			//TODO: Add Axios Action
-			await API.delete(`/domain/${props.id}/tag/${id}`)
-				.then((response) => console.log(response))
-				.then(() => refreshDomain())
-				.catch((error) => console.log(error));
-		};
 
 		watchEffect(() => {
 			console.log("Watching domainID", props.id);
@@ -394,15 +238,22 @@ export default defineComponent({
 
 		return {
 			confirm,
+			progress,
+			store,
+			router,
 			drawer,
 			oepnDialog,
 			goToID,
+			refreshDomain,
+			rigthData,
 			choosenNodeID,
 			currentDomainDataContent,
 			domainTags,
+			getTagsTree,
 			actionsLinks,
 			Drawer,
 			menu,
+			getMenuData,
 			filter,
 			filterRef,
 			filterTag,
@@ -418,8 +269,6 @@ export default defineComponent({
 			},
 			pageSizeTweak,
 			editMode,
-			isNew,
-			OnNew,
 			OnEdit,
 			OnDelete,
 			globalTagsTreeList,

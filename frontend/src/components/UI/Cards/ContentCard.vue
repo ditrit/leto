@@ -1,5 +1,5 @@
 <template>
-	<div class="" v-for="item in data" :key="item.id">
+	<div v-for="item in data" :key="item.id">
 		<q-card class="card_default" flat bordered>
 			<q-card-section>
 				<div class="row no-wrap">
@@ -154,7 +154,20 @@
 		</q-card>
 
 		<div class="col panel_wrapper">
-			<GlobalSearch class="global_Search__right" />
+			<div class="q-mt-md" style="max-width: 350px">
+				<div class="q-gutter-md">
+					<q-input
+						v-model="search"
+						debounce="500"
+						placeholder="Search"
+						class="search_input q-mb-lg q-pa-md"
+					>
+						<template v-slot:append>
+							<q-icon name="search" />
+						</template>
+					</q-input>
+				</div>
+			</div>
 			<Tabs
 				:allTags="null"
 				:teamProducts="item.products"
@@ -167,16 +180,15 @@
 </template>
 
 <script>
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Tabs from "../../UI/TabPanels/Tabs.vue";
-import GlobalSearch from "../../UI/Form/GlobalSearch.vue";
 
 export default {
 	name: "ContentCard",
-	components: { GlobalSearch, Tabs },
+	components: { Tabs },
 	props: {
 		data: {
 			type: Array,
@@ -187,11 +199,18 @@ export default {
 		const store = useStore();
 		const route = useRouter();
 		const $q = useQuasar();
+		const search = ref("");
 		const parentID = ref("");
 		const isOpend = ref(false);
 		const editModal = () => {
 			isOpend.value = true;
 		};
+
+		const filterdItem = computed(() => {
+			return props.data.filter((item) =>
+				item.toLowerCase().match(search.value.toLowerCase())
+			);
+		});
 
 		const getDomainstree = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
@@ -270,6 +289,8 @@ export default {
 		};
 
 		return {
+			search,
+			filterdItem,
 			editModal,
 			parentID,
 			onSubmitUpdate,
