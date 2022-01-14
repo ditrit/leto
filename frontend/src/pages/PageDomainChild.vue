@@ -74,97 +74,97 @@
 					<!-- <pre>{{ menu }}</pre> -->
 				</div>
 
-				<div class="row">
-					<div class="col-8">
+				<div class="">
+					<div class="col">
 						<ContentCard :data="currentDomainDataContent" />
-					</div>
-					<div class="col-4">
-						<div class="tags_wrapper">
-							<q-card flat bordered class="card_tags_default">
-								<q-card-section>
-									<div class="row items-center no-wrap">
-										<div class="col">
-											<div class="row">
-												<q-icon name="sell" size="30px" class="q-mr-sm" />
-												<div class="text-h6">Tags</div>
+						<div class="col-4">
+							<div class="tags_wrapper">
+								<q-card flat bordered class="card_tags_default">
+									<q-card-section>
+										<div class="row items-center no-wrap">
+											<div class="col">
+												<div class="row">
+													<q-icon name="sell" size="30px" class="q-mr-sm" />
+													<div class="text-h6">Tags</div>
+												</div>
+											</div>
+											<div class="button_actions__container col-auto">
+												<q-btn color="grey-7" round flat icon="more_vert">
+													<q-menu cover auto-close>
+														<q-list>
+															<q-item clickable @click.prevent="OnEdit">
+																<q-item-section class="action_card__item">
+																	<q-icon
+																		name="edit"
+																		size="1.5em"
+																		class="q-mr-sm"
+																	/>
+																	Edit</q-item-section
+																>
+															</q-item>
+														</q-list>
+													</q-menu>
+												</q-btn>
 											</div>
 										</div>
-										<div class="button_actions__container col-auto">
-											<q-btn color="grey-7" round flat icon="more_vert">
-												<q-menu cover auto-close>
-													<q-list>
-														<q-item clickable @click.prevent="OnEdit">
-															<q-item-section class="action_card__item">
-																<q-icon
-																	name="edit"
-																	size="1.5em"
-																	class="q-mr-sm"
-																/>
-																Edit</q-item-section
-															>
-														</q-item>
-													</q-list>
-												</q-menu>
-											</q-btn>
-										</div>
-									</div>
-								</q-card-section>
-								<q-card-section>
-									<ul
-										class="cards_tags_wrapper rounded-borders overflow-hidden"
-									>
-										<li
-											v-for="(item, index) in domainTags"
-											:key="index"
-											:class="item.class"
+									</q-card-section>
+									<q-card-section>
+										<ul
+											class="cards_tags_wrapper rounded-borders overflow-hidden"
 										>
-											{{ item.Name }}
-											<q-btn
-												v-if="editMode"
-												round
-												dense
-												unelevated
-												size="xs"
-												color="red"
-												text-color="white"
-												icon="delete"
-												@click.prevent="confirm(item.ID)"
-												class="q-ml-sm"
-											/>
-										</li>
-									</ul>
-									<div
-										v-if="globalTagsTreeList"
-										v-show="editMode"
-										class="globalTagTree_container"
-									>
-										<q-input
-											ref="filterTagRef"
-											v-model="filterTag"
-											label="Search"
-											dense
-										>
-											<template v-slot:append>
-												<q-icon
-													v-if="filterTag !== ''"
-													name="clear"
-													class="cursor-pointer"
-													@click="resetFilterTag"
+											<li
+												v-for="(item, index) in domainTags"
+												:key="index"
+												:class="item.class"
+											>
+												{{ item.Name }}
+												<q-btn
+													v-if="editMode"
+													round
+													dense
+													unelevated
+													size="xs"
+													color="red"
+													text-color="white"
+													icon="delete"
+													@click.prevent="confirm(item.ID)"
+													class="q-ml-sm"
 												/>
-											</template>
-										</q-input>
-										<div class="q-pa-md q-gutter-sm">
-											<q-tree
+											</li>
+										</ul>
+										<div
+											v-if="globalTagsTreeList"
+											v-show="editMode"
+											class="globalTagTree_container"
+										>
+											<q-input
+												ref="filterTagRef"
+												v-model="filterTag"
+												label="Search"
 												dense
-												:nodes="globalTagsTreeList"
-												node-key="label"
-												:filter="filterTag"
-												default-expand-all
-											/>
+											>
+												<template v-slot:append>
+													<q-icon
+														v-if="filterTag !== ''"
+														name="clear"
+														class="cursor-pointer"
+														@click="resetFilterTag"
+													/>
+												</template>
+											</q-input>
+											<div class="q-pa-md q-gutter-sm">
+												<q-tree
+													dense
+													:nodes="globalTagsTreeList"
+													node-key="label"
+													:filter="filterTag"
+													default-expand-all
+												/>
+											</div>
 										</div>
-									</div>
-								</q-card-section>
-							</q-card>
+									</q-card-section>
+								</q-card>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -230,6 +230,7 @@ export default defineComponent({
 				"Watching currentDomainDataContent",
 				currentDomainDataContent.value
 			);
+			console.log("Watching menu", menu.value);
 		});
 
 		return {
@@ -255,6 +256,7 @@ export default defineComponent({
 			filterTag,
 			filterTagRef,
 			selected,
+			$q,
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();

@@ -100,6 +100,7 @@ export default function useDomainData() {
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
 		domainTags.value = await data.value[0].Tags;
 		console.log("	Refresh domainTags.value: ", domainTags.value);
+		await getMenuData();
 	};
 
 	const addTagtoDomain = async (tag) => {

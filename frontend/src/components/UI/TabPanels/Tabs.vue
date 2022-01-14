@@ -1,5 +1,5 @@
 <template>
-	<div class="col col-md-12">
+	<div class="col-12">
 		<q-card>
 			<q-tabs
 				v-model="tab"

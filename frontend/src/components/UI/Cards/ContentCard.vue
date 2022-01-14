@@ -1,5 +1,5 @@
 <template>
-	<div v-for="item in data" :key="item.id">
+	<div class="col" v-for="item in data" :key="item.id">
 		<q-card class="card_default" flat bordered>
 			<q-card-section>
 				<div class="row no-wrap">
@@ -182,6 +182,7 @@
 <script>
 import { ref, computed } from "vue";
 import useContentCardData from "../../../composables/useContentCard";
+import useDomainData from "../../../composables/useContentCard";
 import Tabs from "../../UI/TabPanels/Tabs.vue";
 
 export default {
@@ -194,7 +195,8 @@ export default {
 	},
 	emit: ["emitRemoveDomain", "emitSubmitDomain", "emitResetDomain"],
 	setup(props, { emit }) {
-		let { store, route, $q, getDomainstree } = useContentCardData();
+		let { store, route, $q, refreshDomain } = useContentCardData();
+		let { getMenuData } = useDomainData();
 		const search = ref("");
 		const parentID = ref("");
 		const isOpend = ref(false);
@@ -219,7 +221,7 @@ export default {
 						route.push(`/teams/${props.parentID}`);
 					})
 					.then(() => {
-						getDomainstree();
+						refreshDomain(props.parentID, props.data);
 					});
 			} catch (error) {
 				console.log(error);
@@ -258,7 +260,7 @@ export default {
 
 			try {
 				store.dispatch("appDomain/updateDomain", updatedDomain).then(() => {
-					getDomainstree();
+					refreshDomain(props.id, props.data);
 				});
 			} catch (error) {
 				console.log(error);
@@ -283,6 +285,8 @@ export default {
 
 		return {
 			store,
+			refreshDomain,
+			getMenuData,
 			route,
 			$q,
 			search,
