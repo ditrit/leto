@@ -222,10 +222,6 @@ export default defineComponent({
 			OnEdit,
 		} = useDomainData();
 
-		goToID();
-		getMenuData();
-		getTagsTree();
-
 		watchEffect(() => {
 			console.log("Watching domainID", props.id);
 			console.log("Watching domainID", choosenNodeID.value);

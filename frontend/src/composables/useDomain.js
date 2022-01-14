@@ -59,6 +59,7 @@ export default function useDomainData() {
 			},
 		]);
 	};
+	getMenuData();
 	const rigthData = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", `${id}`);
 		let data = await store.getters["appDomain/allDomaines"];
@@ -92,6 +93,7 @@ export default function useDomainData() {
 		editMode.value = false;
 		rigthData(node.id);
 	};
+	goToID();
 
 	const refreshDomain = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
@@ -148,6 +150,7 @@ export default function useDomainData() {
 		});
 		console.log("globalTagsTreeList: ", globalTagsTreeList.value);
 	};
+	getTagsTree();
 
 	const OnDelete = async (id) => {
 		console.log("deleted ID:", id);
