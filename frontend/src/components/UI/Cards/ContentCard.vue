@@ -181,9 +181,7 @@
 
 <script>
 import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import { useQuasar } from "quasar";
+import useContentCardData from "../../../composables/useContentCard";
 import Tabs from "../../UI/TabPanels/Tabs.vue";
 
 export default {
@@ -196,9 +194,7 @@ export default {
 	},
 	emit: ["emitRemoveDomain", "emitSubmitDomain", "emitResetDomain"],
 	setup(props, { emit }) {
-		const store = useStore();
-		const route = useRouter();
-		const $q = useQuasar();
+		let { store, route, $q, getDomainstree } = useContentCardData();
 		const search = ref("");
 		const parentID = ref("");
 		const isOpend = ref(false);
@@ -212,24 +208,6 @@ export default {
 			);
 		});
 
-		const getDomainstree = async () => {
-			await store.dispatch("appDomain/fetchDomainesTree");
-			return store.getters["appDomain/allDomainesTree"];
-		};
-		const confirm = (props) => {
-			$q.dialog({
-				title: "Confirm",
-				message: "Are you sure to delete this item?",
-				cancel: true,
-				persistent: true,
-			})
-				.onOk(() => {
-					DeleteDomain(props);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
-		};
 		const DeleteDomain = async (props) => {
 			emit("emitRemoveDomain", props);
 			console.log(props);
@@ -247,6 +225,21 @@ export default {
 				console.log(error);
 			}
 		};
+		const confirm = (props) => {
+			$q.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
+				.onOk(() => {
+					DeleteDomain(props);
+				})
+				.onCancel(() => {
+					console.log("Cancel");
+				});
+		};
+
 		const onSubmitUpdate = async (props) => {
 			console.log("props: ", props);
 			emit("emitUpdateDomain", props);
@@ -289,12 +282,14 @@ export default {
 		};
 
 		return {
+			store,
+			route,
+			$q,
 			search,
 			filterdItem,
 			editModal,
 			parentID,
 			onSubmitUpdate,
-			DeleteDomain,
 			isOpend,
 			onFileUpload,
 			onRejected,
