@@ -1,5 +1,5 @@
 <template>
-	<div class="col" v-for="item in data" :key="item.id">
+	<div class="col-8" v-for="item in data" :key="item.id">
 		<q-card class="card_default" flat bordered>
 			<q-card-section>
 				<div class="row no-wrap">
@@ -149,6 +149,7 @@
 							</q-card>
 						</q-dialog>
 					</div>
+					<div class="col-4"><slot name="tagsCard"></slot></div>
 				</div>
 			</q-card-section>
 		</q-card>
