@@ -22,7 +22,7 @@
 							</p>
 						</div>
 					</div>
-					<div class="col-auto">
+					<div class="col-auto vertical_spatator">
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>

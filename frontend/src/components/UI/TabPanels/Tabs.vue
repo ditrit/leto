@@ -163,6 +163,7 @@
 							:description="env.Description"
 							:logo="env.Logo"
 							:domainID="env.DomainID"
+							:environmentTypeName="env.EnvironmentType.Name"
 							@updateAction="updateEnvironement(env)"
 							@deleteAction="confirmDeleteEnvironment"
 						/>

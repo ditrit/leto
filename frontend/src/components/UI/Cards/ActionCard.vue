@@ -17,7 +17,9 @@
 					</div>
 					<div class="col">
 						<div class="text-subtitle2 ellipsis">{{ name }}</div>
-						<div class="text-h8">{{ role }}</div>
+						<div class="text-small ellipsis-2-lines text-grey-8">
+							{{ role }}
+						</div>
 						<div class="text-h8 text-grey-8">{{ environmentTypeName }}</div>
 						<div class="text-h8 text-grey-8 ellipsis">{{ repo }}</div>
 					</div>
