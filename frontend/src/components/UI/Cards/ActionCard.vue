@@ -218,8 +218,11 @@ export default {
 			};
 			console.log("updates: ", updates);
 			try {
-				await store.dispatch("appEnvironment/updateEnvironment", updates);
-				refreshEnvironments();
+				await store
+					.dispatch("appEnvironment/updateEnvironment", updates)
+					.then(() => {
+						refreshData();
+					});
 				(itemName.value = ""),
 					(itemShortDescription.value = ""),
 					(itemDescription.value = ""),
@@ -252,12 +255,6 @@ export default {
 				type: "negative",
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
-		};
-
-		// Refrech tabs items data
-		const refreshEnvironments = async () => {
-			await store.dispatch("appEnvironment/fetchAllEnvironments");
-			await store.getters["appEnvironment/allEnvironments"];
 		};
 		return {
 			isOpened,

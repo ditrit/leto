@@ -54,22 +54,21 @@ export default function useTabsData() {
 	};
 	getRolesList();
 
-	const refreshEnvironments = async () => {
+	const refreshData = async (data) => {
+		console.log("data from refreshData: ");
 		await store.dispatch(
 			"appDomain/fetchDomainById",
 			route.currentRoute.value.params.id
 		);
-		let data = store.getters["appDomain/allDomaines"];
-		environmentTeam.value = data[0].Environments;
-		console.log("	environmentTeam.value: ", environmentTeam.value);
+		return (data = store.getters["appDomain/appDomain"]);
 	};
 
 	const deleteEnvironement = async (evironment) => {
-		await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
-		// await store.dispatch("appDomain/fetchDomainesTree");
-		// let getDomainTree = await store.getters["appDomain/allDomainesTree"];
-		// console.log("getDomainTree: ", getDomainTree);
-		refreshEnvironments();
+		await store
+			.dispatch("appEnvironment/removeEnvironment", evironment.id)
+			.then(() => {
+				refreshData();
+			});
 	};
 
 	const confirmDeleteEnvironment = (props) => {
@@ -99,8 +98,11 @@ export default function useTabsData() {
 		};
 		console.log("newEnvironment: ", newEnvironment);
 		try {
-			await store.dispatch("appEnvironment/addEnvironment", newEnvironment);
-			refreshEnvironments();
+			await store
+				.dispatch("appEnvironment/addEnvironment", newEnvironment)
+				.then(() => {
+					refreshData();
+				});
 			$q.notify({
 				type: "positive",
 				message: `${environmentName.value} environment was succefuly created`,
@@ -118,8 +120,11 @@ export default function useTabsData() {
 	};
 
 	const updateEnvironement = async (evironment) => {
-		await store.dispatch("appEnvironment/updateEnvironment", evironment);
-		await refreshEnvironments();
+		await store
+			.dispatch("appEnvironment/updateEnvironment", evironment)
+			.then(() => {
+				refreshData();
+			});
 	};
 
 	const getAllEnviTypes = async () => {
@@ -162,6 +167,7 @@ export default function useTabsData() {
 	addNewAuthorization();
 
 	return {
+		refreshData,
 		store,
 		route,
 		$q,
@@ -175,7 +181,6 @@ export default function useTabsData() {
 		environmentShortDescription,
 		environmentDescription,
 		optionsSelections,
-		refreshEnvironments,
 		deleteEnvironement,
 		confirmDeleteEnvironment,
 		addNewEnvironment,

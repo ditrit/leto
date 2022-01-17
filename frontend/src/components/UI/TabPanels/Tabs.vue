@@ -401,6 +401,7 @@ export default {
 	},
 	setup(props, { emit }) {
 		let {
+			refreshData,
 			store,
 			route,
 			$q,
@@ -411,7 +412,6 @@ export default {
 			environmentTeam,
 			environmentName,
 			addNewEnvironment,
-			refreshEnvironments,
 			selectedParentData,
 			deleteEnvironement,
 			environmentShortDescription,
@@ -426,7 +426,7 @@ export default {
 		const isCreationOpened = ref(false);
 		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
-
+		refreshData();
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
 		};
@@ -461,6 +461,7 @@ export default {
 		});
 
 		return {
+			refreshData,
 			addNewAuthorization,
 			getAllEnviTypes,
 			getUsersList,
@@ -479,7 +480,6 @@ export default {
 			openAuthorizsationCreationModal,
 			updateEnvironement,
 			deleteEnvironement,
-			refreshEnvironments,
 			optionsSelections,
 			selectedParentData,
 			route,
