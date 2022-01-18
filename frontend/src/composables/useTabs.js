@@ -54,21 +54,8 @@ export default function useTabsData() {
 	};
 	getRolesList();
 
-	const refreshData = async (data) => {
-		console.log("data from refreshData: ");
-		await store.dispatch(
-			"appDomain/fetchDomainById",
-			route.currentRoute.value.params.id
-		);
-		return (data = store.getters["appDomain/appDomain"]);
-	};
-
 	const deleteEnvironement = async (evironment) => {
-		await store
-			.dispatch("appEnvironment/removeEnvironment", evironment.id)
-			.then(() => {
-				refreshData();
-			});
+		await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
 	};
 
 	const confirmDeleteEnvironment = (props) => {
@@ -98,11 +85,7 @@ export default function useTabsData() {
 		};
 		console.log("newEnvironment: ", newEnvironment);
 		try {
-			await store
-				.dispatch("appEnvironment/addEnvironment", newEnvironment)
-				.then(() => {
-					refreshData();
-				});
+			await store.dispatch("appEnvironment/addEnvironment", newEnvironment);
 			$q.notify({
 				type: "positive",
 				message: `${environmentName.value} environment was succefuly created`,
@@ -120,11 +103,7 @@ export default function useTabsData() {
 	};
 
 	const updateEnvironement = async (evironment) => {
-		await store
-			.dispatch("appEnvironment/updateEnvironment", evironment)
-			.then(() => {
-				refreshData();
-			});
+		await store.dispatch("appEnvironment/updateEnvironment", evironment);
 	};
 
 	const getAllEnviTypes = async () => {
@@ -167,7 +146,6 @@ export default function useTabsData() {
 	addNewAuthorization();
 
 	return {
-		refreshData,
 		store,
 		route,
 		$q,
