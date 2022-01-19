@@ -88,10 +88,10 @@ export default function useDomainData() {
 		domainTags.value = currentDomainDataContent.value[0].tags;
 	};
 	const goToID = async (node) => {
-		choosenNodeID.value = await node.id;
-		await router.push(`/teams/${node.id}`);
+		choosenNodeID.value = node.id;
 		editMode.value = false;
-		rigthData(node.id);
+		await rigthData(choosenNodeID.value);
+		router.push(`/teams/${choosenNodeID.value}`);
 	};
 	goToID();
 

@@ -47,7 +47,7 @@
 											]"
 										/>
 									</div>
-									<div class="col">
+									<div class="col q-pl-md">
 										<q-input
 											filled
 											v-model="userObj[3]"
@@ -73,7 +73,7 @@
 											]"
 										/>
 									</div>
-									<div class="col">
+									<div class="col q-pl-md">
 										<q-input
 											filled
 											v-model="userObj[5]"
@@ -177,7 +177,7 @@
 								/>
 							</div>
 
-							<div class="col">
+							<div class="col q-pl-md">
 								<q-input
 									filled
 									label="Your Last Name *"
@@ -201,7 +201,7 @@
 									v-model="userEmail"
 								/>
 							</div>
-							<div class="col">
+							<div class="col q-pl-md">
 								<q-input
 									filled
 									label="Your password *"
@@ -370,7 +370,7 @@ export default {
 			userLastName.value = "";
 			userEmail.value = "";
 			userPassword.value = "";
-			deuserDescription.value = "";
+			userDescription.value = "";
 		};
 		const onSubmitAdd = async () => {
 			console.log("onSubmitAdd");
