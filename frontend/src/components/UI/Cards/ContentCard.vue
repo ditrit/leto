@@ -16,7 +16,7 @@
 							<a :href="item.gitURL" class="q-pl-sm"> {{ item.gitURL }}</a>
 						</div>
 						<div class="content_wrapper q-mt-sm">
-							<img :src="item.logo" alt="domain logo" />
+							<img :src="item.logo ? item.logo : logo" alt="domain logo" />
 							<p class="q-ml-md">
 								{{ item.description }}
 							</p>
@@ -192,6 +192,10 @@ export default {
 	props: {
 		data: {
 			type: Array,
+		},
+		logo: {
+			type: String,
+			default: "https://cdn.quasar.dev/img/parallax2.jpg",
 		},
 	},
 	emit: ["emitRemoveDomain", "emitSubmitDomain", "emitResetDomain"],

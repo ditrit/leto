@@ -54,13 +54,16 @@ export default function useTabsData() {
 	};
 	getRolesList();
 
-	const refreshData = async (data) => {
-		console.log("data from refreshData: ");
+	const refreshData = async () => {
 		await store.dispatch(
 			"appDomain/fetchDomainById",
 			route.currentRoute.value.params.id
 		);
-		return (data = store.getters["appDomain/appDomain"]);
+		let data = computed(() => {
+			return store.getters["appDomain/allDomaines"];
+		});
+		console.log('"data from refreshData: ": ', data.value);
+		return data.value[0].Environments;
 	};
 
 	const deleteEnvironement = async (evironment) => {

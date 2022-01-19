@@ -36,13 +36,24 @@
 						v-for="product in teamProducts"
 						:key="product.ID"
 					>
-						<ActionCard
-							v-if="product.Name"
-							:id="product.ID"
-							:name="product.Name"
-							:description="product.ShortDescription"
-							:logo="product.Logo"
-						/>
+						<div v-if="product.Logo">
+							<ActionCard
+								v-if="product.Name"
+								:id="product.ID"
+								:name="product.Name"
+								:shortDescription="product.ShortDescription"
+								:logo="product.Logo"
+							/>
+						</div>
+						<div v-else>
+							<ActionCard
+								v-if="product.Name"
+								:id="product.ID"
+								:name="product.Name"
+								:shortDescription="product.ShortDescription"
+								:logo="logo"
+							/>
+						</div>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
@@ -61,15 +72,28 @@
 						v-for="member in teamMembers"
 						:key="member.ID"
 					>
-						<ActionCard
-							v-if="member.User.LastName"
-							:id="member.ID"
-							:name="member.User.FirstName + ' ' + member.User.LastName"
-							:role="member.Role.Name"
-							:shortDescription="member.ShortDescription"
-							:description="member.Description"
-							:logo="member.Logo"
-						/>
+						<div v-if="member.Logo">
+							<ActionCard
+								v-if="member.User.LastName"
+								:id="member.ID"
+								:name="member.User.FirstName + ' ' + member.User.LastName"
+								:role="member.Role.Name"
+								:shortDescription="member.User.Description"
+								:description="member.User.Description"
+								:logo="member.Logo"
+							/>
+						</div>
+						<div v-else>
+							<ActionCard
+								v-if="member.User.LastName"
+								:id="member.ID"
+								:name="member.User.FirstName + ' ' + member.User.LastName"
+								:role="member.Role.Name"
+								:shortDescription="member.User.Description"
+								:description="member.User.Description"
+								:logo="logo"
+							/>
+						</div>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
@@ -130,13 +154,24 @@
 						v-for="library in teamLibraries"
 						:key="library.ID"
 					>
-						<ActionCard
-							v-if="library.Name"
-							:id="library.ID"
-							:name="library.Name"
-							:description="library.ShortDescription"
-							:logo="library.Logo"
-						/>
+						<div v-if="library.Logo">
+							<ActionCard
+								v-if="library.Name"
+								:id="library.ID"
+								:name="library.Name"
+								:shortDescription="library.ShortDescription"
+								:logo="library.Logo"
+							/>
+						</div>
+						<div v-else>
+							<ActionCard
+								v-if="library.Name"
+								:id="library.ID"
+								:name="library.Name"
+								:shortDescription="library.ShortDescription"
+								:logo="logo"
+							/>
+						</div>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
@@ -155,18 +190,32 @@
 						v-for="(env, index) in teamEnvironnements"
 						:key="index"
 					>
-						<!-- <pre>{{ env.Name }}</pre> -->
-						<ActionCard
-							:id="env.ID"
-							:name="env.Name"
-							:shortDescription="env.ShortDescription"
-							:description="env.Description"
-							:logo="env.Logo"
-							:domainID="env.DomainID"
-							:environmentTypeName="env.EnvironmentType.Name"
-							@updateAction="updateEnvironement(env)"
-							@deleteAction="confirmDeleteEnvironment"
-						/>
+						<div v-if="env.Logo">
+							<ActionCard
+								:id="env.ID"
+								:name="env.Name"
+								:shortDescription="env.ShortDescription"
+								:description="env.Description"
+								:logo="env.Logo"
+								:domainID="env.DomainID"
+								:environmentTypeName="env.EnvironmentType.Name"
+								@updateAction="updateEnvironement(env)"
+								@deleteAction="confirmDeleteEnvironment"
+							/>
+						</div>
+						<div v-else>
+							<ActionCard
+								:id="env.ID"
+								:name="env.Name"
+								:shortDescription="env.ShortDescription"
+								:description="env.Description"
+								:logo="env.logo"
+								:domainID="env.DomainID"
+								:environmentTypeName="env.EnvironmentType.Name"
+								@updateAction="updateEnvironement(env)"
+								@deleteAction="confirmDeleteEnvironment"
+							/>
+						</div>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
@@ -282,7 +331,7 @@
 	</div>
 </template>
 <script>
-import { ref, computed, watchEffect } from "vue";
+import { ref, watch } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
 import useTabsData from "../../../composables/useTabs";
 
@@ -426,7 +475,7 @@ export default {
 		const isCreationOpened = ref(false);
 		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
-		refreshData();
+
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
 		};
@@ -455,9 +504,9 @@ export default {
 			});
 		};
 
-		watchEffect(() => {
-			console.log("Watching domainID", domainID.value);
-			console.log("Watching domainID", environmentTeam.value);
+		watch(domainID.value, (nextVal, prevVal) => {
+			console.log("domainID nextVal", nextVal);
+			console.log("domainID prevVal", prevVal);
 		});
 
 		return {
