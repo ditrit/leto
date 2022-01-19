@@ -226,14 +226,10 @@ export default defineComponent({
 		} = useDomainData();
 
 		watchEffect(() => {
-			console.log("Watching domainID", props.id);
-			console.log("Watching domainID", choosenNodeID.value);
-			console.log("Watching domainTags", domainTags.value);
-			console.log(
-				"Watching currentDomainDataContent",
-				currentDomainDataContent.value
-			);
-			console.log("Watching menu", menu.value);
+			currentDomainDataContent.value,
+				() => {
+					refreshDomain(choosenNodeID.value);
+				};
 		});
 
 		return {

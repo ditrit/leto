@@ -67,11 +67,7 @@ export default function useTabsData() {
 	};
 
 	const deleteEnvironement = async (evironment) => {
-		await store
-			.dispatch("appEnvironment/removeEnvironment", evironment.id)
-			.then(() => {
-				refreshData();
-			});
+		await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
 	};
 
 	const confirmDeleteEnvironment = (props) => {
@@ -101,11 +97,7 @@ export default function useTabsData() {
 		};
 		console.log("newEnvironment: ", newEnvironment);
 		try {
-			await store
-				.dispatch("appEnvironment/addEnvironment", newEnvironment)
-				.then(() => {
-					refreshData();
-				});
+			await store.dispatch("appEnvironment/addEnvironment", newEnvironment);
 			$q.notify({
 				type: "positive",
 				message: `${environmentName.value} environment was succefuly created`,
@@ -123,11 +115,7 @@ export default function useTabsData() {
 	};
 
 	const updateEnvironement = async (evironment) => {
-		await store
-			.dispatch("appEnvironment/updateEnvironment", evironment)
-			.then(() => {
-				refreshData();
-			});
+		await store.dispatch("appEnvironment/updateEnvironment", evironment);
 	};
 
 	const getAllEnviTypes = async () => {
@@ -170,7 +158,6 @@ export default function useTabsData() {
 	addNewAuthorization();
 
 	return {
-		refreshData,
 		store,
 		route,
 		$q,

@@ -8,10 +8,10 @@ export default function useContentCardData() {
 	const route = useRouter();
 	const $q = useQuasar();
 
-	const refreshDomain = async (id, domainNewData) => {
+	const refreshDomain = async (id, domainEnvironments) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
-		domainNewData = await data.value;
+		domainEnvironments = await data.value[0].Environments;
 		console.log("	Refresh domainNewData.value: ", domainNewData);
 	};
 	return { store, route, $q, refreshDomain };

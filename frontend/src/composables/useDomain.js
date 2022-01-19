@@ -98,6 +98,7 @@ export default function useDomainData() {
 	const refreshDomain = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
+		currentDomainDataContent.value = await data.value[0];
 		domainTags.value = await data.value[0].Tags;
 		console.log("	Refresh domainTags.value: ", domainTags.value);
 		await getMenuData();

@@ -187,7 +187,7 @@
 				<q-tab-panel name="environnements" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="(env, index) in teamEnvironnements"
+						v-for="(env, index) in domainEnvironments"
 						:key="index"
 					>
 						<div v-if="env.Logo">
@@ -334,6 +334,7 @@
 import { ref, watch } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
 import useTabsData from "../../../composables/useTabs";
+import useContentCardData from "../../../composables/useContentCard";
 
 export default {
 	components: { ActionCard },
@@ -450,7 +451,6 @@ export default {
 	},
 	setup(props, { emit }) {
 		let {
-			refreshData,
 			store,
 			route,
 			$q,
@@ -472,9 +472,11 @@ export default {
 			addNewAuthorization,
 		} = useTabsData();
 
+		let { refreshDomain } = useContentCardData();
 		const isCreationOpened = ref(false);
 		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
+		const domainEnvironments = ref(props.teamEnvironnements);
 
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
@@ -503,6 +505,7 @@ export default {
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
 		};
+		refreshDomain(domainEnvironments.value, domainID.value);
 
 		watch(domainID.value, (nextVal, prevVal) => {
 			console.log("domainID nextVal", nextVal);
@@ -510,7 +513,7 @@ export default {
 		});
 
 		return {
-			refreshData,
+			domainEnvironments,
 			addNewAuthorization,
 			getAllEnviTypes,
 			getUsersList,

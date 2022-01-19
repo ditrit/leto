@@ -199,11 +199,18 @@ export default {
 
 		const updateItem = () => {
 			emit("updateAction", props);
-			console.table({ id: props.id, domainID: props.id });
+			console.table({
+				id: props.id,
+				domainID: props.domainID,
+			});
 		};
 		const delteItem = () => {
 			emit("deleteAction", props);
-			console.table({ id: props.id, domainID: props.id });
+			console.log("props: ", props);
+			console.table({
+				id: props.id,
+				domainID: props.domainID,
+			});
 		};
 		const onSubmitUpdate = async () => {
 			console.log("updates to submit: ", props);
