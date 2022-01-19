@@ -89,7 +89,7 @@ export default function useDomainData() {
 	};
 	const goToID = async (node) => {
 		choosenNodeID.value = await node.id;
-		await router.push(`/teams/${choosenNodeID.value}`);
+		await router.push(`/teams/${node.id}`);
 		editMode.value = false;
 		rigthData(node.id);
 	};
