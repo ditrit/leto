@@ -200,8 +200,9 @@ export default {
 	},
 	emit: ["emitRemoveDomain", "emitSubmitDomain", "emitResetDomain"],
 	setup(props, { emit }) {
-		let { store, route, $q, refreshDomain } = useContentCardData();
+		let { store, route, $q, refreshDomainEnvironments } = useContentCardData();
 		let { getMenuData } = useDomainData();
+
 		const search = ref("");
 		const parentID = ref("");
 		const isOpend = ref(false);
@@ -226,7 +227,7 @@ export default {
 						route.push(`/teams/${props.parentID}`);
 					})
 					.then(() => {
-						refreshDomain(props.parentID, props.data);
+						refreshDomainEnvironments(props.parentID, props.data);
 					});
 			} catch (error) {
 				console.log(error);
@@ -265,7 +266,7 @@ export default {
 
 			try {
 				store.dispatch("appDomain/updateDomain", updatedDomain).then(() => {
-					refreshDomain(props.id, props.data);
+					refreshDomainEnvironments(props.id, props.data);
 				});
 			} catch (error) {
 				console.log(error);
@@ -290,7 +291,7 @@ export default {
 
 		return {
 			store,
-			refreshDomain,
+			refreshDomainEnvironments,
 			getMenuData,
 			route,
 			$q,

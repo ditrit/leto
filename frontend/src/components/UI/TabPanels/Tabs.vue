@@ -472,7 +472,7 @@ export default {
 			addNewAuthorization,
 		} = useTabsData();
 
-		let { refreshDomain } = useContentCardData();
+		let { refreshDomainEnvironments } = useContentCardData();
 		const isCreationOpened = ref(false);
 		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
@@ -505,14 +505,15 @@ export default {
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
 		};
-		refreshDomain(domainEnvironments.value, domainID.value);
 
+		refreshDomainEnvironments(domainID.value, domainEnvironments.value);
 		watch(domainID.value, (nextVal, prevVal) => {
 			console.log("domainID nextVal", nextVal);
 			console.log("domainID prevVal", prevVal);
 		});
 
 		return {
+			refreshDomainEnvironments,
 			domainEnvironments,
 			addNewAuthorization,
 			getAllEnviTypes,
