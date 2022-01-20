@@ -1,5 +1,4 @@
 <template>
-
 	<q-drawer
 		v-model="drawer"
 		@hide="makeMenuVisible"
@@ -18,26 +17,24 @@
 </template>
 <script>
 import { ref, computed } from "vue";
-import { useStore } from "vuex";
-// import MenuAccordion from "../Accordion/MenuAccordion";
 
 export default {
 	components: {},
 	props: {
 		modelValue: {
-			type: Boolean
+			type: Boolean,
 		},
 		drawerManuData: {
 			type: Array,
 		},
 	},
-	setup(props, {emit}) {
+	setup(props, { emit }) {
 		const filter = ref("");
 		const filterRef = ref(null);
 		return {
 			drawer: computed({
-				get:() => props.modelValue,
-				set: (value) => emit('update:modelValue', value)
+				get: () => props.modelValue,
+				set: (value) => emit("update:modelValue", value),
 			}),
 			filter,
 			filterRef,

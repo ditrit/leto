@@ -1,15 +1,15 @@
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 
-export default function useTabsData() {
+export default function useTabsData(props) {
 	const store = useStore();
 	const route = useRouter();
 	const $q = useQuasar();
 	const usersList = ref([]);
 	const roleList = ref([]);
-	const environmentTeam = ref([]);
+	const environmentTeam = ref(props.teamEnvironnements);
 	const environmentName = ref("");
 	const selectedParentData = ref(null);
 	const environmentShortDescription = ref("");
@@ -63,11 +63,17 @@ export default function useTabsData() {
 			return store.getters["appDomain/allDomaines"];
 		});
 		console.log('"data from refreshData: ": ', data.value);
-		return data.value[0].Environments;
+		console.log("data.value[0].Environments: ", data.value[0].Environments);
+		console.log(
+			"	route.currentRoute.value.params.id: ",
+			route.currentRoute.value.params.id
+		);
+		environmentTeam.value = data.value[0].Environments;
 	};
 
 	const deleteEnvironement = async (evironment) => {
 		await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
+		refreshData();
 	};
 
 	const confirmDeleteEnvironment = (props) => {
@@ -97,11 +103,19 @@ export default function useTabsData() {
 		};
 		console.log("newEnvironment: ", newEnvironment);
 		try {
-			await store.dispatch("appEnvironment/addEnvironment", newEnvironment);
-			$q.notify({
-				type: "positive",
-				message: `${environmentName.value} environment was succefuly created`,
-			});
+			await store
+				.dispatch("appEnvironment/addEnvironment", newEnvironment)
+				.then(() => {
+					refreshData();
+				})
+				.then(() => {
+					$q.notify({
+						type: "positive",
+						message: `${environmentName.value} environment was succefuly created`,
+					});
+				});
+
+			console.log("environmentTeam from useTabs:", environmentTeam.value);
 		} catch (error) {
 			$q.notify({
 				type: "negative",
@@ -115,7 +129,17 @@ export default function useTabsData() {
 	};
 
 	const updateEnvironement = async (evironment) => {
-		await store.dispatch("appEnvironment/updateEnvironment", evironment);
+		await store
+			.dispatch("appEnvironment/updateEnvironment", evironment)
+			.then(() => {
+				refreshData();
+			})
+			.then(() => {
+				$q.notify({
+					type: "positive",
+					message: `${environmentName.value} environment was succefuly updated`,
+				});
+			});
 	};
 
 	const getAllEnviTypes = async () => {

@@ -8,11 +8,26 @@ export default function useContentCardData() {
 	const route = useRouter();
 	const $q = useQuasar();
 
-	const refreshDomainEnvironments = async (id, domainEnvironments) => {
+	const refreshDomainData = async (id, domainData) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
-		domainEnvironments = await data.value[0].Environments;
-		console.log("	Refresh domainEnvironments: ", domainEnvironments);
+		domainData = Object.values(data.value).map((item) => {
+			return {
+				id: item.ID,
+				name: item.Name,
+				shortDescription: item.ShortDescription,
+				description: item.Description,
+				logo: item.Logo,
+				tags: item.Tags,
+				products: item.Products,
+				envirnments: item.Environments,
+				authorizations: item.Authorizations,
+				libraries: item.Libraries,
+				gitURL: item.GitURL,
+				parentID: item.ParentID,
+			};
+		});
+		console.log("	Refresh domainData: ", domainData);
 	};
-	return { store, route, $q, refreshDomainEnvironments };
+	return { store, route, $q, refreshDomainData };
 }

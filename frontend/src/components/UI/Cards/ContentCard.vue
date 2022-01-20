@@ -181,7 +181,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import useContentCardData from "../../../composables/useContentCard";
 import useDomainData from "../../../composables/useContentCard";
 import Tabs from "../../UI/TabPanels/Tabs.vue";
@@ -200,7 +200,7 @@ export default {
 	},
 	emit: ["emitRemoveDomain", "emitSubmitDomain", "emitResetDomain"],
 	setup(props, { emit }) {
-		let { store, route, $q, refreshDomainEnvironments } = useContentCardData();
+		let { store, route, $q, refreshDomainData } = useContentCardData();
 		let { getMenuData } = useDomainData();
 
 		const search = ref("");
@@ -227,7 +227,7 @@ export default {
 						route.push(`/teams/${props.parentID}`);
 					})
 					.then(() => {
-						refreshDomainEnvironments(props.parentID, props.data);
+						refreshDomainData(props.parentID, props.data);
 					});
 			} catch (error) {
 				console.log(error);
@@ -266,7 +266,7 @@ export default {
 
 			try {
 				store.dispatch("appDomain/updateDomain", updatedDomain).then(() => {
-					refreshDomainEnvironments(props.id, props.data);
+					refreshDomainData(props.id, props.data);
 				});
 			} catch (error) {
 				console.log(error);
@@ -291,7 +291,7 @@ export default {
 
 		return {
 			store,
-			refreshDomainEnvironments,
+			refreshDomainData,
 			getMenuData,
 			route,
 			$q,

@@ -91,7 +91,7 @@ export default function useDomainData() {
 		choosenNodeID.value = node.id;
 		editMode.value = false;
 		await rigthData(choosenNodeID.value);
-		router.push(`/teams/${choosenNodeID.value}`);
+		await router.push(`/teams/${choosenNodeID.value}`);
 	};
 	goToID();
 

@@ -187,7 +187,7 @@
 				<q-tab-panel name="environnements" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="(env, index) in domainEnvironments"
+						v-for="(env, index) in environmentTeam"
 						:key="index"
 					>
 						<div v-if="env.Logo">
@@ -458,7 +458,6 @@ export default {
 			getUsersList,
 			roleList,
 			getRolesList,
-			environmentTeam,
 			environmentName,
 			addNewEnvironment,
 			selectedParentData,
@@ -470,13 +469,13 @@ export default {
 			getAllEnviTypes,
 			optionsSelections,
 			addNewAuthorization,
-		} = useTabsData();
+			environmentTeam,
+		} = useTabsData(props);
 
-		let { refreshDomainEnvironments } = useContentCardData();
+		let { refreshDomainData } = useContentCardData();
 		const isCreationOpened = ref(false);
 		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
-		const domainEnvironments = ref(props.teamEnvironnements);
 
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
@@ -506,21 +505,19 @@ export default {
 			});
 		};
 
-		refreshDomainEnvironments(domainID.value, domainEnvironments.value);
-		watch(domainID.value, (nextVal, prevVal) => {
+		watch(environmentTeam, (nextVal, prevVal) => {
 			console.log("domainID nextVal", nextVal);
 			console.log("domainID prevVal", prevVal);
 		});
 
 		return {
-			refreshDomainEnvironments,
-			domainEnvironments,
+			refreshDomainData,
+			environmentTeam,
 			addNewAuthorization,
 			getAllEnviTypes,
 			getUsersList,
 			getRolesList,
 			domainID,
-			environmentTeam,
 			tab: ref("environnements"),
 			environmentName,
 			environmentShortDescription,
@@ -542,7 +539,6 @@ export default {
 			confirmDeleteEnvironment,
 			usersList,
 			roleList,
-
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};

@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watchEffect } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import ContentCard from "../components/UI/Cards/ContentCard";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
@@ -225,12 +225,11 @@ export default defineComponent({
 			OnEdit,
 		} = useDomainData();
 
-		watchEffect(() => {
-			currentDomainDataContent.value,
-				() => {
-					refreshDomain(choosenNodeID.value);
-				};
-		});
+		// watch(currentDomainDataContent, (newVal, preVal) => {
+		// 	console.log("currentDomainDataContent: ", currentDomainDataContent.value);
+		// 	console.log("currentDomainDataContent preVal: ", preVal);
+		// 	console.log("currentDomainDataContent newVal: ", newVal);
+		// });
 
 		return {
 			confirm,
