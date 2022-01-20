@@ -163,7 +163,8 @@
 import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
-import API from "../../../services/index";
+import useTabsData from "../../../composables/useTabs";
+
 export default {
 	emits: ["openEditModal", "deleteAction", "updateAction", "openNewItemModal"],
 	props: {
@@ -189,6 +190,7 @@ export default {
 		const itemEnvironmentTypeID = ref(props.environmentTypeID);
 		const itemEnvironmentTypeName = ref(props.environmentTypeName);
 		const itemDomainID = ref(props.domainID);
+		let { refreshData } = useTabsData(props);
 
 		const isOpened = ref(false);
 		const openEditionModal = (props) => {
@@ -213,22 +215,27 @@ export default {
 			});
 		};
 		const onSubmitUpdate = async () => {
-			console.log("updates to submit: ", props);
 			let updates = {
 				id: props.id,
 				name: itemName.value,
 				shortDescription: itemShortDescription.value,
 				description: itemDescription.value,
-				environmentTypeID: itemEnvironmentTypeID.value,
-				environmentTypeName: itemEnvironmentTypeName.value,
+				environmentTypeID: itemEnvironmentTypeID?.value,
+				environmentTypeName: itemEnvironmentTypeName?.value,
 				domainID: itemDomainID.value,
 			};
-			console.log("updates: ", updates);
+			console.log("updates to submit: ", updates);
 			try {
 				await store
 					.dispatch("appEnvironment/updateEnvironment", updates)
 					.then(() => {
 						refreshData();
+					})
+					.then(() => {
+						$q.notify({
+							type: "positive",
+							message: `${environmentName.value} environment was succefuly created`,
+						});
 					});
 				(itemName.value = ""),
 					(itemShortDescription.value = ""),
@@ -281,7 +288,7 @@ export default {
 			onResetUpdate,
 			onFileUpload,
 			onRejected,
-
+			refreshData,
 			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		};
 	},

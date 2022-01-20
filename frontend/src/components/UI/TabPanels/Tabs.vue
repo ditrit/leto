@@ -225,7 +225,6 @@
 							label="New Environnement"
 							@click.prevent="openCreationModal(environmentTeam)"
 						/>
-
 						<!-- Creation dialog -->
 						<q-dialog v-model="isCreationOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">

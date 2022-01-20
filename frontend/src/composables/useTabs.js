@@ -140,6 +140,7 @@ export default function useTabsData(props) {
 					message: `${environmentName.value} environment was succefuly updated`,
 				});
 			});
+		console.log("Update evironment from useTabs: ", evironment);
 	};
 
 	const getAllEnviTypes = async () => {
