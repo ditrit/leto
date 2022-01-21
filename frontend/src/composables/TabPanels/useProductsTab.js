@@ -3,7 +3,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 
-export default function useEnvironmentsTabsData(props) {
+export default function useProductsTabData(props) {
 	const store = useStore();
 	const route = useRouter();
 	const $q = useQuasar();
@@ -30,7 +30,7 @@ export default function useEnvironmentsTabsData(props) {
 	};
 
 	const deleteProduct = async (product) => {
-		await store.dispatch("appEnvironment/removeEnvironment", product.id);
+		await store.dispatch("appProducts/removeProduct", product.id);
 		refreshData();
 	};
 
@@ -59,14 +59,14 @@ export default function useEnvironmentsTabsData(props) {
 		console.log("newProduct: ", newProduct);
 		try {
 			await store
-				.dispatch("appEnvironment/addEnvironment", newProduct)
+				.dispatch("appProducts/addProduct", newProduct)
 				.then(() => {
 					refreshData();
 				})
 				.then(() => {
 					$q.notify({
 						type: "positive",
-						message: `${productName.value} environment was succefuly created`,
+						message: `${productName.value} product was succefuly created`,
 					});
 				});
 
@@ -74,7 +74,7 @@ export default function useEnvironmentsTabsData(props) {
 		} catch (error) {
 			$q.notify({
 				type: "negative",
-				message: `${productName.value} environment was not created`,
+				message: `${productName.value} product was not created`,
 			});
 		}
 
@@ -85,14 +85,14 @@ export default function useEnvironmentsTabsData(props) {
 
 	const updateProduct = async (product) => {
 		await store
-			.dispatch("appEnvironment/updateEnvironment", product)
+			.dispatch("appProducts/updateProduct", product)
 			.then(() => {
 				refreshData();
 			})
 			.then(() => {
 				$q.notify({
 					type: "positive",
-					message: `${productName.value} environment was succefuly updated`,
+					message: `${productName.value} product was succefuly updated`,
 				});
 			});
 		console.log("Update product from useTabs: ", product);

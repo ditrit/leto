@@ -33,7 +33,7 @@
 				<q-tab-panel name="products" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="product in teamProducts"
+						v-for="product in productTeam"
 						:key="product.ID"
 					>
 						<div v-if="product.Logo">
@@ -43,6 +43,8 @@
 								:name="product.Name"
 								:shortDescription="product.ShortDescription"
 								:logo="product.Logo"
+								@updateAction="updateEProduct(env)"
+								@deleteAction="confirmDeleteProduct"
 							/>
 						</div>
 						<div v-else>
@@ -52,6 +54,8 @@
 								:name="product.Name"
 								:shortDescription="product.ShortDescription"
 								:logo="logo"
+								@updateAction="updateEProduct(env)"
+								@deleteAction="confirmDeleteProduct"
 							/>
 						</div>
 					</div>
@@ -62,14 +66,14 @@
 							icon="add"
 							class="text-primary"
 							label="New product"
-							@click.prevent="openCreationModal(teamProducts)"
+							@click.prevent="openCreationProductModal(productTeam)"
 						/>
 					</div>
 					<!-- Products Creation dialog -->
 					<q-dialog v-model="isCreationProductsOpened" persistent>
 						<q-card style="width: 750px; max-width: 80vw">
 							<q-card-section>
-								<div class="text-h6 q-pa-md">{{ $t("add_environment") }}</div>
+								<div class="text-h6 q-pa-md">{{ $t("add_product") }}</div>
 							</q-card-section>
 
 							<q-card-section class="q-pt-none">
@@ -430,6 +434,7 @@
 import { ref, watch } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
 import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentsTabs";
+import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
 import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 
 export default {
@@ -568,10 +573,22 @@ export default {
 			environmentTeam,
 		} = useEnvironmentsTabsData(props);
 
+		let {
+			productTeam,
+			productName,
+			productShortDescription,
+			productDescription,
+			deleteProduct,
+			confirmDeleteProduct,
+			addNewProduct,
+			updateProduct,
+		} = useProductsTabData(props);
+
 		let { refreshDomainData } = useContentCardData();
 		const isCreationOpened = ref(false);
 		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
+		const isCreationProductsOpened = ref(false);
 
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
@@ -580,6 +597,11 @@ export default {
 			isCreationOpened.value = true;
 			emit("openNewItemModal", props);
 			console.log("openCreationModal props: ", props);
+		};
+		const openCreationProductModal = (props) => {
+			isCreationProductsOpened.value = true;
+			emit("openNewItemModal", props);
+			console.log("isCreationProductsOpened props: ", props);
 		};
 		const openAuthorizsationCreationModal = (props) => {
 			isAuthorCreationOpened.value = true;
@@ -606,6 +628,17 @@ export default {
 		});
 
 		return {
+			store,
+			route,
+			$q,
+			productTeam,
+			productName,
+			productShortDescription,
+			productDescription,
+			deleteProduct,
+			confirmDeleteProduct,
+			addNewProduct,
+			updateProduct,
 			refreshDomainData,
 			environmentTeam,
 			addNewAuthorization,
@@ -613,13 +646,15 @@ export default {
 			getUsersList,
 			getRolesList,
 			domainID,
-			tab: ref("environnements"),
+			tab: ref("products"),
 			environmentName,
 			environmentShortDescription,
 			environmentDescription,
 			openModal,
 			isCreationOpened,
 			isAuthorCreationOpened,
+			isCreationProductsOpened,
+			openCreationProductModal,
 			addNewEnvironment,
 			openCreationModal,
 			openAuthorizsationCreationModal,
@@ -627,8 +662,6 @@ export default {
 			deleteEnvironement,
 			optionsSelections,
 			selectedParentData,
-			route,
-			store,
 			onFileUpload,
 			onRejected,
 			confirmDeleteEnvironment,
