@@ -166,7 +166,13 @@ import { useStore } from "vuex";
 import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 
 export default {
-	emits: ["openEditModal", "deleteAction", "updateAction", "openNewItemModal"],
+	emits: [
+		"openEditModal",
+		"deleteAction",
+		"updateAction",
+		"submitUpdateAction",
+		"openNewItemModal",
+	],
 	props: {
 		id: { type: String },
 		logo: { type: String, default: "https://cdn.quasar.dev/img/parallax2.jpg" },
@@ -215,6 +221,8 @@ export default {
 			});
 		};
 		const onSubmitUpdate = async () => {
+			emit("submitUpdateAction", props);
+			console.log("submitUpdateAction: ", props);
 			let updates = {
 				id: props.id,
 				name: itemName.value,

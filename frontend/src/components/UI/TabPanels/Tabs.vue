@@ -45,7 +45,8 @@
 								:shortDescription="product.ShortDescription"
 								:description="product.Description"
 								:logo="product.Logo"
-								@updateAction="openModificationProductModal(env)"
+								@updateAction="openModificationProductModal(product)"
+								@submitUpdateAction="updateProduct(product)"
 								@deleteAction="confirmDeleteProduct"
 							/>
 						</div>
@@ -58,7 +59,8 @@
 								:shortDescription="product.ShortDescription"
 								:description="product.Description"
 								:logo="logo"
-								@updateAction="openModificationProductModal(env)"
+								@updateAction="openModificationProductModal(product)"
+								@submitUpdateAction="updateProduct(product.ID)"
 								@deleteAction="confirmDeleteProduct"
 							/>
 						</div>
@@ -163,7 +165,7 @@
 					</q-dialog>
 
 					<!-- Products Modification dialog -->
-					<q-dialog v-model="isModificationProductsOpened" persistent>
+					<!-- <q-dialog v-model="isModificationProductsOpened" persistent>
 						<q-card style="width: 750px; max-width: 80vw">
 							<q-card-section>
 								<div class="text-h6 q-pa-md">{{ $t("add_product") }}</div>
@@ -249,7 +251,7 @@
 								</q-form>
 							</q-card-section>
 						</q-card>
-					</q-dialog>
+					</q-dialog> -->
 				</q-tab-panel>
 
 				<q-tab-panel name="team_members" class="flex q-gutter-md">

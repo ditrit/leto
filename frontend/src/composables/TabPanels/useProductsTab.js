@@ -83,7 +83,15 @@ export default function useProductsTabData(props) {
 		productDescription.value = "";
 	};
 
-	const updateProduct = async (product) => {
+	const updateProduct = async (id) => {
+		let product = {
+			id: id,
+			name: productName.value,
+			shortDescription: productShortDescription.value,
+			description: productDescription.value,
+			domainID: route.currentRoute.value.params.id,
+		};
+
 		await store
 			.dispatch("appProducts/updateProduct", product)
 			.then(() => {
