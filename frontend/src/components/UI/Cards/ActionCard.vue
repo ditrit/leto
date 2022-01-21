@@ -163,7 +163,7 @@
 import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
-import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentsTabs";
+import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 
 export default {
 	emits: ["openEditModal", "deleteAction", "updateAction", "openNewItemModal"],
@@ -234,7 +234,7 @@ export default {
 					.then(() => {
 						$q.notify({
 							type: "positive",
-							message: `${environmentName.value} environment was succefuly created`,
+							message: `${environmentName.value}  was succefuly created`,
 						});
 					});
 				(itemName.value = ""),
@@ -245,12 +245,12 @@ export default {
 					(itemDomainID.value = ""),
 					$q.notify({
 						type: "positive",
-						message: `${itemName.value} environment was succefuly updated`,
+						message: `${itemName.value}  was succefuly updated`,
 					});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: `${itemName.value} environment was not updated`,
+					message: `${itemName.value}  was not updated`,
 				});
 			}
 		};

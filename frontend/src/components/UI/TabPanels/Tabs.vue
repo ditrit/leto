@@ -40,10 +40,12 @@
 							<ActionCard
 								v-if="product.Name"
 								:id="product.ID"
+								:domainID="product.DomainID"
 								:name="product.Name"
 								:shortDescription="product.ShortDescription"
+								:description="product.Description"
 								:logo="product.Logo"
-								@updateAction="updateEProduct(env)"
+								@updateAction="openModificationProductModal(env)"
 								@deleteAction="confirmDeleteProduct"
 							/>
 						</div>
@@ -51,10 +53,12 @@
 							<ActionCard
 								v-if="product.Name"
 								:id="product.ID"
+								:domainID="product.DomainID"
 								:name="product.Name"
 								:shortDescription="product.ShortDescription"
+								:description="product.Description"
 								:logo="logo"
-								@updateAction="updateEProduct(env)"
+								@updateAction="openModificationProductModal(env)"
 								@deleteAction="confirmDeleteProduct"
 							/>
 						</div>
@@ -79,6 +83,95 @@
 							<q-card-section class="q-pt-none">
 								<q-form
 									@submit.prevent="addNewProduct"
+									@reset="onResetProduct"
+									class="q-gutter-sm q-pa-md"
+								>
+									<div class="row col-md-12 q-gutter-md">
+										<div class="col">
+											<q-input
+												filled
+												label="Name *"
+												hint=""
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="productName"
+											/>
+										</div>
+									</div>
+									<q-input
+										class="q-gutter-md"
+										filled
+										label="Short Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+										v-model="productShortDescription"
+									/>
+
+									<div class="row q-gutter-md">
+										<div class="col col-md-8">
+											<q-input
+												class="q-gutter-md"
+												filled
+												type="textarea"
+												label="Description *"
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="productDescription"
+											/>
+										</div>
+										<div class="col">
+											<q-uploader
+												style="max-width: 100%"
+												url="http://localhost:3000/upload"
+												label="Your Logo"
+												multiple
+												accept=".jpg, svg, image/*"
+												@rejected="onRejected"
+												color="primary"
+												factory
+												files
+												hide-upload-btn="true"
+												auto-upload
+												@uploaded="onFileUpload"
+											/>
+										</div>
+									</div>
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Create"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</q-card-section>
+						</q-card>
+					</q-dialog>
+
+					<!-- Products Modification dialog -->
+					<q-dialog v-model="isModificationProductsOpened" persistent>
+						<q-card style="width: 750px; max-width: 80vw">
+							<q-card-section>
+								<div class="text-h6 q-pa-md">{{ $t("add_product") }}</div>
+							</q-card-section>
+
+							<q-card-section class="q-pt-none">
+								<q-form
+									@submit.prevent="updateProduct"
 									@reset="onResetProduct"
 									class="q-gutter-sm q-pa-md"
 								>
@@ -425,7 +518,7 @@
 <script>
 import { ref, watch } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
-import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentsTabs";
+import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
 import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 
@@ -581,6 +674,7 @@ export default {
 		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
 		const isCreationProductsOpened = ref(false);
+		const isModificationProductsOpened = ref(false);
 
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
@@ -601,6 +695,12 @@ export default {
 			console.log("selectedParentData : ", selectedParentData.value);
 		};
 
+		// Modifications
+		const openModificationProductModal = (props) => {
+			isModificationProductsOpened.value = true;
+			emit("openNewItemModal", props);
+			console.log("isCreationProductsOpened props: ", props);
+		};
 		const onFileUpload = (event) => {
 			console.log("file name", event.files[0].name);
 			console.log("file upload number", event.files[0].__uploaded);
@@ -646,6 +746,8 @@ export default {
 			isCreationOpened,
 			isAuthorCreationOpened,
 			isCreationProductsOpened,
+			isModificationProductsOpened,
+			openModificationProductModal,
 			openCreationProductModal,
 			addNewEnvironment,
 			openCreationModal,
