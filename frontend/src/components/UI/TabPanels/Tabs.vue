@@ -96,14 +96,6 @@
 												v-model="productName"
 											/>
 										</div>
-										<div class="col">
-											<q-select
-												filled
-												:options="optionsSelections"
-												label="Environment Type"
-												v-model="selectedParentData"
-											/>
-										</div>
 									</div>
 									<q-input
 										class="q-gutter-md"
