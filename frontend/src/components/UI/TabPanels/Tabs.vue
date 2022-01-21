@@ -65,7 +65,104 @@
 							@click.prevent="openCreationModal(teamProducts)"
 						/>
 					</div>
+					<!-- Products Creation dialog -->
+					<q-dialog v-model="isCreationProductsOpened" persistent>
+						<q-card style="width: 750px; max-width: 80vw">
+							<q-card-section>
+								<div class="text-h6 q-pa-md">{{ $t("add_environment") }}</div>
+							</q-card-section>
+
+							<q-card-section class="q-pt-none">
+								<q-form
+									@submit.prevent="addNewProduct"
+									@reset="onResetProduct"
+									class="q-gutter-sm q-pa-md"
+								>
+									<div class="row col-md-12 q-gutter-md">
+										<div class="col">
+											<q-input
+												filled
+												label="Name *"
+												hint=""
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="productName"
+											/>
+										</div>
+										<div class="col">
+											<q-select
+												filled
+												:options="optionsSelections"
+												label="Environment Type"
+												v-model="selectedParentData"
+											/>
+										</div>
+									</div>
+									<q-input
+										class="q-gutter-md"
+										filled
+										label="Short Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+										v-model="productShortDescription"
+									/>
+
+									<div class="row q-gutter-md">
+										<div class="col col-md-8">
+											<q-input
+												class="q-gutter-md"
+												filled
+												type="textarea"
+												label="Description *"
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="productDescription"
+											/>
+										</div>
+										<div class="col">
+											<q-uploader
+												style="max-width: 100%"
+												url="http://localhost:3000/upload"
+												label="Your Logo"
+												multiple
+												accept=".jpg, svg, image/*"
+												@rejected="onRejected"
+												color="primary"
+												factory
+												files
+												hide-upload-btn="true"
+												auto-upload
+												@uploaded="onFileUpload"
+											/>
+										</div>
+									</div>
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Update"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</q-card-section>
+						</q-card>
+					</q-dialog>
 				</q-tab-panel>
+
 				<q-tab-panel name="team_members" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
@@ -104,7 +201,7 @@
 							@click.prevent="openAuthorizsationCreationModal(teamMembers)"
 						/>
 					</div>
-					<!-- Creation dialog -->
+					<!-- Authorizations Creation dialog -->
 					<q-dialog v-model="isAuthorCreationOpened" persistent>
 						<q-card style="width: 750px; max-width: 80vw">
 							<q-card-section>
@@ -225,7 +322,7 @@
 							label="New Environnement"
 							@click.prevent="openCreationModal(environmentTeam)"
 						/>
-						<!-- Creation dialog -->
+						<!-- Environments Creation dialog -->
 						<q-dialog v-model="isCreationOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
@@ -332,8 +429,8 @@
 <script>
 import { ref, watch } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
-import useTabsData from "../../../composables/useTabs";
-import useContentCardData from "../../../composables/useContentCard";
+import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentsTabs";
+import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 
 export default {
 	components: { ActionCard },
@@ -469,7 +566,7 @@ export default {
 			optionsSelections,
 			addNewAuthorization,
 			environmentTeam,
-		} = useTabsData(props);
+		} = useEnvironmentsTabsData(props);
 
 		let { refreshDomainData } = useContentCardData();
 		const isCreationOpened = ref(false);
@@ -483,7 +580,6 @@ export default {
 			isCreationOpened.value = true;
 			emit("openNewItemModal", props);
 			console.log("openCreationModal props: ", props);
-			console.log("selectedParentData : ", selectedParentData.value);
 		};
 		const openAuthorizsationCreationModal = (props) => {
 			isAuthorCreationOpened.value = true;

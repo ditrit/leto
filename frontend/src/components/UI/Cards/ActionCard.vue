@@ -163,7 +163,7 @@
 import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
-import useTabsData from "../../../composables/useTabs";
+import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentsTabs";
 
 export default {
 	emits: ["openEditModal", "deleteAction", "updateAction", "openNewItemModal"],
@@ -190,7 +190,7 @@ export default {
 		const itemEnvironmentTypeID = ref(props.environmentTypeID);
 		const itemEnvironmentTypeName = ref(props.environmentTypeName);
 		const itemDomainID = ref(props.domainID);
-		let { refreshData } = useTabsData(props);
+		let { refreshData } = useEnvironmentsTabsData(props);
 
 		const isOpened = ref(false);
 		const openEditionModal = (props) => {

@@ -182,8 +182,8 @@
 
 <script>
 import { ref, computed, watch } from "vue";
-import useContentCardData from "../../../composables/useContentCard";
-import useDomainData from "../../../composables/useContentCard";
+import useContentCardData from "../../../composables/WorkSpace/useContentCard";
+import useDomainData from "../../../composables/WorkSpace/useContentCard";
 import Tabs from "../../UI/TabPanels/Tabs.vue";
 
 export default {

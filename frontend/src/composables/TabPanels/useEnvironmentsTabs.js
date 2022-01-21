@@ -3,7 +3,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 
-export default function useTabsData(props) {
+export default function useEnvironmentsTabsData(props) {
 	const store = useStore();
 	const route = useRouter();
 	const $q = useQuasar();

@@ -2,7 +2,7 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
-import API from "../services/index";
+import API from "../../services/index";
 
 export default function useDomainData() {
 	const store = useStore();
