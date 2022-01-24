@@ -11,6 +11,7 @@ export default function useProductsTabData(props) {
 	const productName = ref("");
 	const productShortDescription = ref("");
 	const productDescription = ref("");
+	const productRepositoryURL = ref("");
 
 	const refreshData = async () => {
 		await store.dispatch(
@@ -89,6 +90,7 @@ export default function useProductsTabData(props) {
 			name: productName.value,
 			shortDescription: productShortDescription.value,
 			description: productDescription.value,
+			repositoryURL: productRepositoryURL.value,
 			domainID: route.currentRoute.value.params.id,
 		};
 
@@ -114,6 +116,7 @@ export default function useProductsTabData(props) {
 		productName,
 		productShortDescription,
 		productDescription,
+		productRepositoryURL,
 		deleteProduct,
 		confirmDeleteProduct,
 		addNewProduct,

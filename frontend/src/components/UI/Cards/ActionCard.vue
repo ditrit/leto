@@ -20,8 +20,15 @@
 						<div class="text-small tr_width__role ellipsis-2-lines text-grey-8">
 							{{ role }}
 						</div>
-						<div class="text-h8 text-grey-8">{{ environmentTypeName }}</div>
-						<div class="text-h8 text-grey-8 ellipsis">{{ repo }}</div>
+						<div class="text-h8 text-grey-8">
+							{{ environmentTypeName }}
+						</div>
+						<div class="text-h8 text-grey-8 ellipsis">
+							{{ repo }}
+						</div>
+						<div class="text-h8 text-grey-8 ellipsis">
+							{{ productRepositoryURL }}
+						</div>
 					</div>
 					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
@@ -32,6 +39,7 @@
 										@click.prevent="
 											openEditionModal([
 												{
+													id,
 													name,
 													role,
 													environmentTypeName,
@@ -39,6 +47,7 @@
 													shortDescription,
 													description,
 													environmentTypeID,
+													productRepositoryURL,
 													domainID,
 												},
 											])
@@ -58,7 +67,7 @@
 							</q-menu>
 						</q-btn>
 						<!-- Modification dialog -->
-						<q-dialog v-model="isOpened" persistent>
+						<!-- <q-dialog v-model="isOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">{{ `Edit ${name}` }}</div>
@@ -99,6 +108,22 @@
 													v-model="itemShortDescription"
 												/>
 											</div>
+										</div>
+										<div class="row col-md-12 q-gutter-md">
+											<div class="col" v-if="itemProductRepositoryURL">
+												<q-input
+													filled
+													label="Repository URL *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+													v-model="itemProductRepositoryURL"
+												/>
+											</div>
+											<div class="col" v-else></div>
 										</div>
 										<div class="row q-gutter-md">
 											<div class="col col-md-8">
@@ -149,7 +174,7 @@
 									</q-form>
 								</q-card-section>
 							</q-card>
-						</q-dialog>
+						</q-dialog> -->
 					</div>
 				</div>
 			</q-card-section>
@@ -162,8 +187,6 @@
 <script>
 import { ref } from "vue";
 import { useQuasar } from "quasar";
-import { useStore } from "vuex";
-import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 
 export default {
 	emits: [
@@ -179,30 +202,32 @@ export default {
 		name: { type: String },
 		role: { type: String },
 		shortDescription: { type: String },
+		productRepositoryURL: { type: String },
 		description: { type: String },
 		environmentTypeID: { type: String },
 		environmentTypeName: { type: String },
 		domainID: { type: String },
 	},
 	setup(props, { emit }) {
-		const store = useStore();
 		const $q = useQuasar();
+		const itemId = ref(props.id);
 		const itemName = ref(props.name);
 		const itemRepo = ref(props.repo);
 		const itemLogo = ref(props.logo);
 		const itemRole = ref(props.role);
 		const itemShortDescription = ref(props.shortDescription);
 		const itemDescription = ref(props.description);
+		const itemProductRepositoryURL = ref(props.productRepositoryURL);
 		const itemEnvironmentTypeID = ref(props.environmentTypeID);
 		const itemEnvironmentTypeName = ref(props.environmentTypeName);
 		const itemDomainID = ref(props.domainID);
-		let { refreshData } = useEnvironmentsTabsData(props);
-
 		const isOpened = ref(false);
+
 		const openEditionModal = (props) => {
 			isOpened.value = true;
 			emit("openEditModal", props);
 			console.log("props: ", props);
+			updateItem();
 		};
 
 		const updateItem = () => {
@@ -218,50 +243,14 @@ export default {
 			console.table({
 				id: props.id,
 				domainID: props.domainID,
+				environmentName: environmentName.value,
 			});
 		};
 		const onSubmitUpdate = async () => {
 			emit("submitUpdateAction", props);
 			console.log("submitUpdateAction: ", props);
-			let updates = {
-				id: props.id,
-				name: itemName.value,
-				shortDescription: itemShortDescription.value,
-				description: itemDescription.value,
-				environmentTypeID: itemEnvironmentTypeID?.value,
-				environmentTypeName: itemEnvironmentTypeName?.value,
-				domainID: itemDomainID.value,
-			};
-			console.log("updates to submit: ", updates);
-			try {
-				await store
-					.dispatch("appEnvironment/updateEnvironment", updates)
-					.then(() => {
-						refreshData();
-					})
-					.then(() => {
-						$q.notify({
-							type: "positive",
-							message: `${environmentName.value}  was succefuly created`,
-						});
-					});
-				(itemName.value = ""),
-					(itemShortDescription.value = ""),
-					(itemDescription.value = ""),
-					(itemEnvironmentTypeID.value = ""),
-					(itemEnvironmentTypeName.value = ""),
-					(itemDomainID.value = ""),
-					$q.notify({
-						type: "positive",
-						message: `${itemName.value}  was succefuly updated`,
-					});
-			} catch (error) {
-				$q.notify({
-					type: "negative",
-					message: `${itemName.value}  was not updated`,
-				});
-			}
 		};
+
 		const onResetUpdate = () => {
 			console.log("event: ", props.id);
 		};
@@ -280,12 +269,14 @@ export default {
 		};
 		return {
 			isOpened,
+			itemId,
 			itemName,
 			itemLogo,
 			itemRepo,
 			itemRole,
 			itemShortDescription,
 			itemDescription,
+			itemProductRepositoryURL,
 			itemEnvironmentTypeID,
 			itemEnvironmentTypeName,
 			itemDomainID,
@@ -296,7 +287,6 @@ export default {
 			onResetUpdate,
 			onFileUpload,
 			onRejected,
-			refreshData,
 			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		};
 	},

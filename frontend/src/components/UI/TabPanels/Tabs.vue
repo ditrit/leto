@@ -45,8 +45,9 @@
 								:shortDescription="product.ShortDescription"
 								:description="product.Description"
 								:logo="product.Logo"
+								:repositoryURL="product.RepositoryURL"
 								@updateAction="openModificationProductModal(product)"
-								@submitUpdateAction="updateProduct(product)"
+								@submitUpdateAction="updateProduct(product.ID)"
 								@deleteAction="confirmDeleteProduct"
 							/>
 						</div>
@@ -59,6 +60,7 @@
 								:shortDescription="product.ShortDescription"
 								:description="product.Description"
 								:logo="logo"
+								:repositoryURL="product.RepositoryURL"
 								@updateAction="openModificationProductModal(product)"
 								@submitUpdateAction="updateProduct(product.ID)"
 								@deleteAction="confirmDeleteProduct"
@@ -165,7 +167,7 @@
 					</q-dialog>
 
 					<!-- Products Modification dialog -->
-					<!-- <q-dialog v-model="isModificationProductsOpened" persistent>
+					<q-dialog v-model="isModificationProductsOpened" persistent>
 						<q-card style="width: 750px; max-width: 80vw">
 							<q-card-section>
 								<div class="text-h6 q-pa-md">{{ $t("add_product") }}</div>
@@ -251,7 +253,7 @@
 								</q-form>
 							</q-card-section>
 						</q-card>
-					</q-dialog> -->
+					</q-dialog>
 				</q-tab-panel>
 
 				<q-tab-panel name="team_members" class="flex q-gutter-md">
@@ -375,19 +377,19 @@
 				<q-tab-panel name="environnements" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="(env, index) in environmentTeam"
-						:key="index"
+						v-for="env in environmentTeam"
+						:key="env.ID"
 					>
 						<div v-if="env.Logo">
 							<ActionCard
 								:id="env.ID"
+								:domainID="env.DomainID"
 								:name="env.Name"
 								:shortDescription="env.ShortDescription"
 								:description="env.Description"
 								:logo="env.Logo"
-								:domainID="env.DomainID"
 								:environmentTypeName="env.EnvironmentType.Name"
-								@updateAction="updateEnvironement(env)"
+								@openEditModal="openModificationEnvironmentModal(env)"
 								@deleteAction="confirmDeleteEnvironment"
 							/>
 						</div>
@@ -400,21 +402,12 @@
 								:logo="env.logo"
 								:domainID="env.DomainID"
 								:environmentTypeName="env.EnvironmentType.Name"
-								@updateAction="updateEnvironement(env)"
+								@openEditModal="openModificationEnvironmentModal(env)"
 								@deleteAction="confirmDeleteEnvironment"
 							/>
 						</div>
-					</div>
-					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
-						<q-btn
-							color="white"
-							text-color="primary"
-							icon="add"
-							label="New Environnement"
-							@click.prevent="openCreationModal(environmentTeam)"
-						/>
 						<!-- Environments Creation dialog -->
-						<q-dialog v-model="isCreationOpened" persistent>
+						<q-dialog v-model="isEnvironmentsCreationOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">{{ $t("add_environment") }}</div>
@@ -511,6 +504,116 @@
 								</q-card-section>
 							</q-card>
 						</q-dialog>
+
+						<!-- Environments Modification dialog -->
+						<q-dialog v-model="isEnvironmentsModificationOpened" persistent>
+							<q-card style="width: 750px; max-width: 80vw">
+								<q-card-section>
+									<div class="text-h6 q-pa-md">
+										{{ $t("edit_environment") }}
+									</div>
+								</q-card-section>
+
+								<q-card-section class="q-pt-none">
+									<q-form
+										@submit.prevent="updateEnvironement(env)"
+										@reset="onResetEnvironment"
+										class="q-gutter-sm q-pa-md"
+									>
+										<div class="row col-md-12 q-gutter-md">
+											<div class="col">
+												<q-input
+													filled
+													label="Name *"
+													hint=""
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+													v-model="env.Name"
+												/>
+											</div>
+											<div class="col">
+												<q-select
+													filled
+													:options="optionsSelections"
+													label="Environment Type"
+													v-model="selectedParentData"
+												/>
+											</div>
+										</div>
+										<q-input
+											class="q-gutter-md"
+											filled
+											label="Short Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+											v-model="env.ShortDescription"
+										/>
+
+										<div class="row q-gutter-md">
+											<div class="col col-md-8">
+												<q-input
+													class="q-gutter-md"
+													filled
+													type="textarea"
+													label="Description *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+													v-model="env.Description"
+												/>
+											</div>
+											<div class="col">
+												<q-uploader
+													style="max-width: 100%"
+													url="http://localhost:3000/upload"
+													label="Your Logo"
+													multiple
+													accept=".jpg, svg, image/*"
+													@rejected="onRejected"
+													color="primary"
+													factory
+													files
+													hide-upload-btn="true"
+													auto-upload
+													@uploaded="onFileUpload"
+												/>
+											</div>
+										</div>
+										<q-card-actions
+											align="right"
+											class="text-primary flex justify-center"
+										>
+											<q-btn type="reset" label="Cancel" v-close-popup />
+											<q-btn
+												label="Update"
+												type="submit"
+												color="primary"
+												v-close-popup
+											/>
+										</q-card-actions>
+									</q-form>
+								</q-card-section>
+							</q-card>
+						</q-dialog>
+					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							label="New Environnement"
+							@click.prevent="openCreationModal(environmentTeam)"
+						/>
 					</div>
 				</q-tab-panel>
 			</q-tab-panels>
@@ -665,6 +768,7 @@ export default {
 			productName,
 			productShortDescription,
 			productDescription,
+			productRepositoryURL,
 			deleteProduct,
 			confirmDeleteProduct,
 			addNewProduct,
@@ -672,19 +776,20 @@ export default {
 		} = useProductsTabData(props);
 
 		let { refreshDomainData } = useContentCardData();
-		const isCreationOpened = ref(false);
+		const isEnvironmentsCreationOpened = ref(false);
 		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
 		const isCreationProductsOpened = ref(false);
 		const isModificationProductsOpened = ref(false);
+		const isEnvironmentsModificationOpened = ref(false);
 
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
 		};
 		const openCreationModal = (props) => {
-			isCreationOpened.value = true;
+			isEnvironmentsCreationOpened.value = true;
 			emit("openNewItemModal", props);
-			console.log("openCreationModal props: ", props);
+			console.log("isEnvironmentsCreationOpened props: ", props);
 		};
 		const openCreationProductModal = (props) => {
 			isCreationProductsOpened.value = true;
@@ -702,6 +807,11 @@ export default {
 			isModificationProductsOpened.value = true;
 			emit("openNewItemModal", props);
 			console.log("isCreationProductsOpened props: ", props);
+		};
+		const openModificationEnvironmentModal = (props) => {
+			isEnvironmentsModificationOpened.value = true;
+			emit("updateAction", props);
+			console.log("isEnvironmentsModificationOpened props: ", props);
 		};
 		const onFileUpload = (event) => {
 			console.log("file name", event.files[0].name);
@@ -729,6 +839,7 @@ export default {
 			productName,
 			productShortDescription,
 			productDescription,
+			productRepositoryURL,
 			deleteProduct,
 			confirmDeleteProduct,
 			addNewProduct,
@@ -740,12 +851,14 @@ export default {
 			getUsersList,
 			getRolesList,
 			domainID,
-			tab: ref("products"),
+			tab: ref("environnements"),
 			environmentName,
 			environmentShortDescription,
 			environmentDescription,
 			openModal,
-			isCreationOpened,
+			isEnvironmentsCreationOpened,
+			openModificationEnvironmentModal,
+			isEnvironmentsModificationOpened,
 			isAuthorCreationOpened,
 			isCreationProductsOpened,
 			isModificationProductsOpened,
