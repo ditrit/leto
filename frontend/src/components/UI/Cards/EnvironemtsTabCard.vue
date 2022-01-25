@@ -254,7 +254,7 @@ export default {
 			environmentShortDescription.value = updatesData.shortDescription;
 			environmentDescription.value = updatesData.description;
 			environmentTypeIDRef.value = updatesData.environmentTypeID;
-			environmentTypeName.value = updatesData.environmentType.Name;
+			// environmentTypeName.value = updatesData.environmentType.Name;
 			environmentDomainID.value = updatesData.domainID;
 		};
 		const onSubmitUpdate = async () => {
