@@ -30,9 +30,9 @@ export default function useProductsTabData(props) {
 		productTeam.value = data.value[0].Products;
 	};
 
-	const deleteProduct = async (product) => {
+	const deleteProduct = async (id) => {
 		await store
-			.dispatch("appProducts/removeProduct", product)
+			.dispatch("appProducts/removeProduct", `${id}`)
 			.then(() => refreshData());
 	};
 

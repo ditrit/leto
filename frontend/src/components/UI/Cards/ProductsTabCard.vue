@@ -45,7 +45,7 @@
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
 									</q-item>
-									<q-item clickable @click.prevent="delteItem()">
+									<q-item clickable @click.prevent="delteItem(item)">
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
 											Remove
