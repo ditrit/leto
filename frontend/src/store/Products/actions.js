@@ -5,8 +5,8 @@ export const fetchAllProducts = async ({ commit }) => {
 	commit("GET_PRODUCT", response.data);
 };
 
-export const fetchProductyId = async ({ commit }, product) => {
-	let response = await API.get(`/product/${product.id}`, product);
+export const fetchProductyId = async ({ commit }, id) => {
+	let response = await API.get(`/product/${id}`);
 	commit("GET_PRODUCT_BY_ID", response.data);
 };
 

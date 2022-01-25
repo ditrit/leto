@@ -37,7 +37,7 @@
 						:key="product.ID"
 					>
 						<div v-if="product.Logo">
-							<ActionCard
+							<ProductsTabCard
 								v-if="product.Name"
 								:id="product.ID"
 								:domainID="product.DomainID"
@@ -46,13 +46,11 @@
 								:description="product.Description"
 								:logo="product.Logo"
 								:repositoryURL="product.RepositoryURL"
-								@updateAction="openModificationProductModal(product)"
-								@submitUpdateAction="updateProduct(product.ID)"
-								@deleteAction="confirmDeleteProduct"
+								@deleteProductAction="confirmDeleteProduct(product.ID)"
 							/>
 						</div>
 						<div v-else>
-							<ActionCard
+							<ProductsTabCard
 								v-if="product.Name"
 								:id="product.ID"
 								:domainID="product.DomainID"
@@ -61,9 +59,7 @@
 								:description="product.Description"
 								:logo="logo"
 								:repositoryURL="product.RepositoryURL"
-								@updateAction="openModificationProductModal(product)"
-								@submitUpdateAction="updateProduct(product.ID)"
-								@deleteAction="confirmDeleteProduct"
+								@deleteProductAction="confirmDeleteProduct(product.ID)"
 							/>
 						</div>
 					</div>
@@ -116,94 +112,16 @@
 										]"
 										v-model="productShortDescription"
 									/>
-
-									<div class="row q-gutter-md">
-										<div class="col col-md-8">
-											<q-input
-												class="q-gutter-md"
-												filled
-												type="textarea"
-												label="Description *"
-												lazy-rules
-												:rules="[
-													(val) =>
-														(val && val.length > 0) || 'Please type something',
-												]"
-												v-model="productDescription"
-											/>
-										</div>
-										<div class="col">
-											<q-uploader
-												style="max-width: 100%"
-												url="http://localhost:3000/upload"
-												label="Your Logo"
-												multiple
-												accept=".jpg, svg, image/*"
-												@rejected="onRejected"
-												color="primary"
-												factory
-												files
-												hide-upload-btn="true"
-												auto-upload
-												@uploaded="onFileUpload"
-											/>
-										</div>
-									</div>
-									<q-card-actions
-										align="right"
-										class="text-primary flex justify-center"
-									>
-										<q-btn type="reset" label="Cancel" v-close-popup />
-										<q-btn
-											label="Create"
-											type="submit"
-											color="primary"
-											v-close-popup
-										/>
-									</q-card-actions>
-								</q-form>
-							</q-card-section>
-						</q-card>
-					</q-dialog>
-
-					<!-- Products Modification dialog -->
-					<q-dialog v-model="isModificationProductsOpened" persistent>
-						<q-card style="width: 750px; max-width: 80vw">
-							<q-card-section>
-								<div class="text-h6 q-pa-md">{{ $t("add_product") }}</div>
-							</q-card-section>
-
-							<q-card-section class="q-pt-none">
-								<q-form
-									@submit.prevent="updateProduct"
-									@reset="onResetProduct"
-									class="q-gutter-sm q-pa-md"
-								>
-									<div class="row col-md-12 q-gutter-md">
-										<div class="col">
-											<q-input
-												filled
-												label="Name *"
-												hint=""
-												lazy-rules
-												:rules="[
-													(val) =>
-														(val && val.length > 0) || 'Please type something',
-												]"
-												v-model="productName"
-											/>
-										</div>
-									</div>
 									<q-input
 										class="q-gutter-md"
 										filled
-										label="Short Description *"
+										label="Repo *"
 										lazy-rules
 										:rules="[
 											(val) =>
 												(val && val.length > 0) || 'Please type something',
 										]"
-										v-model="productShortDescription"
+										v-model="productRepositoryURL"
 									/>
 
 									<div class="row q-gutter-md">
@@ -244,7 +162,7 @@
 									>
 										<q-btn type="reset" label="Cancel" v-close-popup />
 										<q-btn
-											label="Update"
+											label="Create"
 											type="submit"
 											color="primary"
 											v-close-popup
@@ -521,12 +439,13 @@
 import { ref, watch } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
 import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
+import ProductsTabCard from "../Cards/ProductsTabCard.vue";
 import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
 import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 
 export default {
-	components: { ActionCard, EnvironemtsTabCard },
+	components: { ActionCard, EnvironemtsTabCard, ProductsTabCard },
 	emits: ["openModalToAddItem"],
 	props: {
 		allTags: {
@@ -749,7 +668,7 @@ export default {
 			getUsersList,
 			getRolesList,
 			domainID,
-			tab: ref("environnements"),
+			tab: ref("products"),
 			environmentName,
 			environmentShortDescription,
 			environmentDescription,

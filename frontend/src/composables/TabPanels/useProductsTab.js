@@ -31,11 +31,12 @@ export default function useProductsTabData(props) {
 	};
 
 	const deleteProduct = async (product) => {
-		await store.dispatch("appProducts/removeProduct", product.id);
-		refreshData();
+		await store
+			.dispatch("appProducts/removeProduct", product)
+			.then(() => refreshData());
 	};
 
-	const confirmDeleteProduct = (props) => {
+	const confirmDeleteProduct = (id) => {
 		$q.dialog({
 			title: "Confirm",
 			message: "Are you sure to delete this item?",
@@ -43,7 +44,7 @@ export default function useProductsTabData(props) {
 			persistent: true,
 		})
 			.onOk(() => {
-				deleteProduct(props);
+				deleteProduct(id);
 			})
 			.onCancel(() => {
 				console.log("Cancel");

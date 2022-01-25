@@ -16,9 +16,9 @@
 						/>
 					</div>
 					<div class="col">
-						<div class="text-subtitle2 ellipsis">{{ environmentName }}</div>
-						<div class="text-h8 text-grey-8">
-							{{ environmentTypeName }}
+						<div class="text-subtitle2 ellipsis">{{ productName }}</div>
+						<div class="text-h8 text-grey-8 ellipsis">
+							{{ productProductRepositoryURL }}
 						</div>
 					</div>
 					<div class="button_actions__container col-auto">
@@ -30,14 +30,13 @@
 										@click.prevent="
 											openEditionModal([
 												{
-													environmentId,
-													environmentName,
-													environmentLogo,
-													environmentShortDescription,
-													environmentDescription,
-													environmentTypeIDRef,
-													environmentTypeNameRef,
-													environmentDomainID,
+													productId,
+													productName,
+													productLogo,
+													productShortDescription,
+													productDescription,
+													productProductRepositoryURL,
+													productDomainID,
 												},
 											])
 										"
@@ -79,7 +78,7 @@
 															(val && val.length > 0) ||
 															'Please type something',
 													]"
-													v-model="environmentName"
+													v-model="productName"
 												/>
 											</div>
 										</div>
@@ -94,12 +93,12 @@
 															(val && val.length > 0) ||
 															'Please type something',
 													]"
-													v-model="environmentShortDescription"
+													v-model="productShortDescription"
 												/>
 											</div>
 										</div>
 										<div class="row col-md-12 q-gutter-md">
-											<div class="col" v-if="environmentroductRepositoryURL">
+											<div class="col">
 												<q-input
 													filled
 													label="Repository URL *"
@@ -109,10 +108,9 @@
 															(val && val.length > 0) ||
 															'Please type something',
 													]"
-													v-model="environmentProductRepositoryURL"
+													v-model="productProductRepositoryURL"
 												/>
 											</div>
-											<div class="col" v-else></div>
 										</div>
 										<div class="row q-gutter-md">
 											<div class="col col-md-8">
@@ -127,7 +125,7 @@
 															(val && val.length > 0) ||
 															'Please type something',
 													]"
-													v-model="environmentDescription"
+													v-model="productDescription"
 												/>
 											</div>
 											<div class="col">
@@ -168,7 +166,7 @@
 				</div>
 			</q-card-section>
 			<q-card-section class="ellipsis-2-lines">
-				{{ environmentShortDescription }}
+				{{ productShortDescription }}
 			</q-card-section>
 		</q-card>
 	</div>
@@ -180,10 +178,10 @@ import { useStore } from "vuex";
 
 export default {
 	emits: [
-		"openEditModal",
-		"deleteAction",
-		"updateAction",
-		"submitUpdateAction",
+		"openProductEditModal",
+		"deleteProductAction",
+		"updateProductAction",
+		"submitProductUpdateAction",
 		"openNewItemModal",
 	],
 	props: {
@@ -201,73 +199,68 @@ export default {
 	setup(props, { emit }) {
 		const store = useStore();
 		const $q = useQuasar();
-		const environmentId = ref(props.id);
-		const environmentName = ref(props.name);
-		const environmentRepo = ref(props.repo);
-		const environmentLogo = ref(props.logo);
-		const environmentRole = ref(props.role);
-		const environmentShortDescription = ref(props.shortDescription);
-		const environmentDescription = ref(props.description);
-		const environmentProductRepositoryURL = ref(props.productRepositoryURL);
-		const environmentTypeIDRef = ref(props.environmentTypeID);
-		const environmentTypeNameRef = ref(props.environmentTypeName);
-		const environmentDomainID = ref(props.domainID);
+		const productId = ref(props.id);
+		const productName = ref(props.name);
+		const productLogo = ref(props.logo);
+		const productShortDescription = ref(props.shortDescription);
+		const productDescription = ref(props.description);
+		const productProductRepositoryURL = ref(props.productRepositoryURL);
+		const productDomainID = ref(props.domainID);
 		const isOpened = ref(false);
 
 		const openEditionModal = (props) => {
 			isOpened.value = true;
-			emit("openEditModal", props);
+			emit("openProductEditModal", props);
 		};
 
 		const updateItem = () => {
-			emit("updateAction", props);
+			emit("updateProductAction", props);
 		};
 		const delteItem = () => {
-			emit("deleteAction", props);
+			emit("deleteProductAction", props);
 			console.log("props: ", props);
 			console.table({
 				id: props.id,
 				domainID: props.domainID,
-				environmentName: environmentName.value,
+				productName: productName.value,
 			});
 		};
 
-		const refreshEnvironment = async (id, updatesData) => {
-			await store.dispatch("appEnvironment/fetchEnvironmentyId", id);
-			let data = computed(() => {
-				return store.getters["appEnvironment/allEnvironments"];
+		const refreshProduct = async (id, updatesData) => {
+			await store.dispatch("appProducts/fetchProductyId", id);
+			computed(() => {
+				return store.getters["appProducts/fetchAllProducts"];
 			});
-			console.log("data: ", data.value);
-			environmentName.value = updatesData.name;
-			environmentLogo.value = updatesData.logo;
-			environmentShortDescription.value = updatesData.shortDescription;
-			environmentDescription.value = updatesData.description;
-			environmentTypeIDRef.value = updatesData.environmentTypeID;
-			// environmentTypeNameRef.value = updatesData.environmentType.Name;
-			environmentDomainID.value = updatesData.domainID;
+			productName.value = updatesData.name;
+			productLogo.value = updatesData.logo;
+			productShortDescription.value = updatesData.shortDescription;
+			productProductRepositoryURL.value = updatesData.repositoryURL;
+			productDescription.value = updatesData.description;
+			productDomainID.value = updatesData.domainID;
 		};
+
 		const onSubmitUpdate = async () => {
 			let updates = {
 				id: props.id,
 				domainID: props.domainID,
-				name: environmentName.value,
-				environmentName: environmentName.value,
-				shortDescription: environmentShortDescription.value,
-				description: environmentDescription.value,
-				environmentTypeID: props.id,
+				name: productName.value,
+				productName: productName.value,
+				shortDescription: productShortDescription.value,
+				repositoryURL: productProductRepositoryURL.value,
+				description: productDescription.value,
 			};
 			console.log("updates: ", updates);
-			console.log("submitUpdateAction: ", updates);
+			console.log("submitProductUpdateAction: ", updates);
 			emit("updateAction", updates);
 			await store
-				.dispatch("appEnvironment/updateEnvironment", updates)
+				.dispatch("appProducts/updateProduct", updates)
 				.then(() => {
-					refreshEnvironment(updates.id, updates);
+					refreshProduct(updates.id, updates);
 				})
 				.then(() => {
 					$q.notify({
 						type: "positive",
-						message: `${updates.name} environment was succefuly updated`,
+						message: `${updates.name} product was succefuly updated`,
 					});
 				});
 		};
@@ -297,15 +290,11 @@ export default {
 			onResetUpdate,
 			onFileUpload,
 			onRejected,
-			environmentTypeIDRef,
-			environmentName,
-			environmentShortDescription,
-			environmentDescription,
-			environmentTypeNameRef,
-			environmentId,
-			environmentRepo,
-			environmentRole,
-			environmentProductRepositoryURL,
+			productId,
+			productName,
+			productShortDescription,
+			productDescription,
+			productProductRepositoryURL,
 			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		};
 	},
