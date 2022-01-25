@@ -130,18 +130,17 @@ export default function useEnvironmentsTabsData(props) {
 
 	const updateEnvironement = async (props) => {
 		console.log("updateEnvironement props: ", props);
-		// let environment = {
-		// 	id: props.ID,
-		// 	domainID: props.DomainID,
-		// 	environmentTypeID: props.EnvironmentTypeID,
-		// 	environmentTypeName: props.EnvironmentType.Name,
-		// 	name: props.EnvironmentType.Name,
-		// 	shortDescription: props.ShortDescription,
-		// 	description: props.Description,
-		// };
-		console.log("updateEnvironement environment: ", props);
+		let updatedEnvironment = {
+			id: props.id,
+			domainID: props.domainID,
+			name: environmentName.value,
+			shortDescription: environmentShortDescription.value,
+			description: environmentDescription.value,
+			environmentTypeID: props.id,
+		};
+
 		await store
-			.dispatch("appEnvironment/updateEnvironment", props)
+			.dispatch("appEnvironment/updateEnvironment", updatedEnvironment)
 			.then(() => {
 				refreshData();
 			})
@@ -151,7 +150,6 @@ export default function useEnvironmentsTabsData(props) {
 					message: `${environmentName.value} environment was succefuly updated`,
 				});
 			});
-		console.log("Update evironment from useTabs: ", props);
 	};
 
 	const getAllEnviTypes = async () => {

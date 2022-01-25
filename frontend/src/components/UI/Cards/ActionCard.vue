@@ -67,7 +67,7 @@
 							</q-menu>
 						</q-btn>
 						<!-- Modification dialog -->
-						<!-- <q-dialog v-model="isOpened" persistent>
+						<q-dialog v-model="isOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">{{ `Edit ${name}` }}</div>
@@ -174,7 +174,7 @@
 									</q-form>
 								</q-card-section>
 							</q-card>
-						</q-dialog> -->
+						</q-dialog>
 					</div>
 				</div>
 			</q-card-section>
@@ -187,6 +187,8 @@
 <script>
 import { ref } from "vue";
 import { useQuasar } from "quasar";
+import { useStore } from "vuex";
+import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 
 export default {
 	emits: [
@@ -209,6 +211,7 @@ export default {
 		domainID: { type: String },
 	},
 	setup(props, { emit }) {
+		const store = useStore();
 		const $q = useQuasar();
 		const itemId = ref(props.id);
 		const itemName = ref(props.name);
@@ -223,11 +226,13 @@ export default {
 		const itemDomainID = ref(props.domainID);
 		const isOpened = ref(false);
 
+		let { refreshData } = useEnvironmentsTabsData(props);
+
 		const openEditionModal = (props) => {
 			isOpened.value = true;
 			emit("openEditModal", props);
 			console.log("props: ", props);
-			updateItem();
+			console.log("itemName: ", itemName.value);
 		};
 
 		const updateItem = () => {
@@ -235,6 +240,7 @@ export default {
 			console.table({
 				id: props.id,
 				domainID: props.domainID,
+				itemName: itemName.value,
 			});
 		};
 		const delteItem = () => {
@@ -247,8 +253,58 @@ export default {
 			});
 		};
 		const onSubmitUpdate = async () => {
-			emit("submitUpdateAction", props);
+			let updates = {
+				id: props.id,
+				domainID: props.domainID,
+				name: itemName.value,
+				shortDescription: itemShortDescription.value,
+				description: itemDescription.value,
+				environmentTypeID: itemEnvironmentTypeID.value,
+			};
+			console.log("updates: ", updates);
 			console.log("submitUpdateAction: ", props);
+			emit("updateAction", {
+				id: props.id,
+				domainID: props.domainID,
+				name: itemName.value,
+				shortDescription: itemShortDescription.value,
+				description: itemDescription.value,
+				environmentTypeID: props.id,
+			});
+			// emit("submitUpdateAction", {
+			// 	id: props.id,
+			// 	domainID: props.domainID,
+			// 	name: itemName.value,
+			// 	shortDescription: itemShortDescription.value,
+			// 	description: itemDescription.value,
+			// 	environmentTypeID: props.id,
+			// });
+			// console.table({
+			// 	id: props.id,
+			// 	domainID: props.domainID,
+			// 	name: itemName.value,
+			// 	shortDescription: itemShortDescription.value,
+			// 	description: itemDescription.value,
+			// 	environmentTypeID: props.id,
+			// });
+			await store
+				.dispatch("appEnvironment/updateEnvironment", {
+					id: props.id,
+					domainID: props.domainID,
+					name: itemName.value,
+					shortDescription: itemShortDescription.value,
+					description: itemDescription.value,
+					environmentTypeID: props.id,
+				})
+				.then(() => {
+					refreshData();
+				})
+				.then(() => {
+					$q.notify({
+						type: "positive",
+						message: `${environmentName.value} environment was succefuly updated`,
+					});
+				});
 		};
 
 		const onResetUpdate = () => {
@@ -287,6 +343,7 @@ export default {
 			onResetUpdate,
 			onFileUpload,
 			onRejected,
+			refreshData,
 			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		};
 	},

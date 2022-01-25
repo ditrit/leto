@@ -15,7 +15,7 @@ export const addEnvironment = async ({ commit }, environment) => {
 	commit("NEW_ENVIRONMENT", response.data);
 };
 export const updateEnvironment = async ({ commit }, environment) => {
-	let response = await API.put(`/environment/${environment.ID}`, environment);
+	let response = await API.put(`/environment/${environment.id}`, environment);
 	commit("UPDATE_ENVIRONMENT", response.data);
 };
 

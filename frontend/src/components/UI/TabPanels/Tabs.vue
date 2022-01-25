@@ -389,7 +389,6 @@
 								:description="env.Description"
 								:logo="env.Logo"
 								:environmentTypeName="env.EnvironmentType.Name"
-								@openEditModal="openModificationEnvironmentModal(env)"
 								@deleteAction="confirmDeleteEnvironment"
 							/>
 						</div>
@@ -402,7 +401,6 @@
 								:logo="env.logo"
 								:domainID="env.DomainID"
 								:environmentTypeName="env.EnvironmentType.Name"
-								@openEditModal="openModificationEnvironmentModal(env)"
 								@deleteAction="confirmDeleteEnvironment"
 							/>
 						</div>
@@ -506,7 +504,7 @@
 						</q-dialog>
 
 						<!-- Environments Modification dialog -->
-						<q-dialog v-model="isEnvironmentsModificationOpened" persistent>
+						<!-- <q-dialog v-model="isEnvironmentsModificationOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">
@@ -516,7 +514,7 @@
 
 								<q-card-section class="q-pt-none">
 									<q-form
-										@submit.prevent="updateEnvironement(env)"
+										@submitUpdateAction="updateEnvironement(env)"
 										@reset="onResetEnvironment"
 										class="q-gutter-sm q-pa-md"
 									>
@@ -604,7 +602,7 @@
 									</q-form>
 								</q-card-section>
 							</q-card>
-						</q-dialog>
+						</q-dialog> -->
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
