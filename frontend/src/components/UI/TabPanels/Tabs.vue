@@ -181,7 +181,7 @@
 						:key="member.ID"
 					>
 						<div v-if="member.Logo">
-							<ActionCard
+							<AuthorizationsTabCard
 								v-if="member.User.LastName"
 								:id="member.ID"
 								:name="member.User.FirstName + ' ' + member.User.LastName"
@@ -192,7 +192,7 @@
 							/>
 						</div>
 						<div v-else>
-							<ActionCard
+							<AuthorizationsTabCard
 								v-if="member.User.LastName"
 								:id="member.ID"
 								:name="member.User.FirstName + ' ' + member.User.LastName"
@@ -439,13 +439,19 @@
 import { ref, watch } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
 import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
+import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
 import ProductsTabCard from "../Cards/ProductsTabCard.vue";
 import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
 import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 
 export default {
-	components: { ActionCard, EnvironemtsTabCard, ProductsTabCard },
+	components: {
+		ActionCard,
+		EnvironemtsTabCard,
+		ProductsTabCard,
+		AuthorizationsTabCard,
+	},
 	emits: ["openModalToAddItem"],
 	props: {
 		allTags: {
