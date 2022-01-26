@@ -82,6 +82,14 @@
 													v-model="environmentName"
 												/>
 											</div>
+											<div class="col">
+												<q-select
+													filled
+													:options="optionsSelections"
+													label="Environment Type"
+													v-model="environmentTypeNameRef"
+												/>
+											</div>
 										</div>
 										<div class="row col-md-12 q-gutter-md">
 											<div class="col">
@@ -177,6 +185,7 @@
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
+import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 
 export default {
 	emits: [
@@ -210,9 +219,16 @@ export default {
 		const environmentDescription = ref(props.description);
 		const environmentProductRepositoryURL = ref(props.productRepositoryURL);
 		const environmentTypeIDRef = ref(props.environmentTypeID);
-		const environmentTypeNameRef = ref(props.environmentTypeName);
 		const environmentDomainID = ref(props.domainID);
 		const isOpened = ref(false);
+
+		let {
+			selectedParentData,
+			optionsSelections,
+			getAllEnviTypes,
+			updateEnvironement,
+			environmentTypeNameRef,
+		} = useEnvironmentsTabsData(props);
 
 		const openEditionModal = (props) => {
 			isOpened.value = true;
@@ -243,7 +259,6 @@ export default {
 			environmentShortDescription.value = updatesData.shortDescription;
 			environmentDescription.value = updatesData.description;
 			environmentTypeIDRef.value = updatesData.environmentTypeID;
-			// environmentTypeNameRef.value = updatesData.environmentType.Name;
 			environmentDomainID.value = updatesData.domainID;
 		};
 		const onSubmitUpdate = async () => {
@@ -255,6 +270,7 @@ export default {
 				shortDescription: environmentShortDescription.value,
 				description: environmentDescription.value,
 				environmentTypeID: props.id,
+				environmentTypeName: environmentTypeNameRef.value,
 			};
 			console.log("updates: ", updates);
 			console.log("submitUpdateAction: ", updates);
@@ -301,12 +317,15 @@ export default {
 			environmentName,
 			environmentShortDescription,
 			environmentDescription,
-			environmentTypeNameRef,
 			environmentId,
 			environmentRepo,
 			environmentRole,
 			environmentProductRepositoryURL,
-			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+			selectedParentData,
+			optionsSelections,
+			getAllEnviTypes,
+			updateEnvironement,
+			environmentTypeNameRef: ref(props.environmentTypeName),
 		};
 	},
 };

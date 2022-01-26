@@ -11,10 +11,11 @@ export default function useEnvironmentsTabsData(props) {
 	const roleList = ref([]);
 	const environmentTeam = ref(props.teamEnvironnements);
 	const environmentName = ref("");
-	const selectedParentData = ref(null);
 	const environmentShortDescription = ref("");
 	const environmentDescription = ref("");
 	const optionsSelections = ref(null);
+	const selectedParentData = ref(null);
+	const environmentTypeNameRef = ref(null);
 
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
@@ -137,6 +138,8 @@ export default function useEnvironmentsTabsData(props) {
 			shortDescription: environmentShortDescription.value,
 			description: environmentDescription.value,
 			environmentTypeID: props.id,
+			environmentTypeID: selectedParentData.value.id,
+			environmentTypeName: environmentTypeNameRef.value.name,
 		};
 
 		await store
@@ -205,6 +208,7 @@ export default function useEnvironmentsTabsData(props) {
 		environmentShortDescription,
 		environmentDescription,
 		optionsSelections,
+		environmentTypeNameRef,
 		deleteEnvironement,
 		confirmDeleteEnvironment,
 		addNewEnvironment,

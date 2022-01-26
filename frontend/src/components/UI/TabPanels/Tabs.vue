@@ -619,11 +619,13 @@ export default {
 			emit("openNewItemModal", props);
 			console.log("isEnvironmentsCreationOpened props: ", props);
 		};
+
 		const openCreationProductModal = (props) => {
 			isCreationProductsOpened.value = true;
 			emit("openNewItemModal", props);
 			console.log("isCreationProductsOpened props: ", props);
 		};
+
 		const openAuthorizsationCreationModal = (props) => {
 			isAuthorCreationOpened.value = true;
 			console.log("openCreationModal props: ", props);
@@ -636,11 +638,13 @@ export default {
 			emit("openNewItemModal", props);
 			console.log("isCreationProductsOpened props: ", props);
 		};
+
 		const openModificationEnvironmentModal = (props) => {
 			isEnvironmentsModificationOpened.value = true;
-			emit("updateProductAction", props);
+			emit("updateAction", props);
 			console.log("isEnvironmentsModificationOpened props: ", props);
 		};
+
 		const onFileUpload = (event) => {
 			console.log("file name", event.files[0].name);
 			console.log("file upload number", event.files[0].__uploaded);
