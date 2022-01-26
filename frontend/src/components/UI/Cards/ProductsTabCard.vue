@@ -51,6 +51,12 @@
 											Remove
 										</q-item-section>
 									</q-item>
+									<q-item clickable @click.prevent="favoriteItem(item)">
+										<q-item-section class="action_card__item">
+											<q-icon name="star" size="1.5em" class="q-mr-sm" />
+											Favorite
+										</q-item-section>
+									</q-item>
 								</q-list>
 							</q-menu>
 						</q-btn>
@@ -182,6 +188,7 @@ export default {
 		"deleteProductAction",
 		"updateProductAction",
 		"submitProductUpdateAction",
+		"favoriteProductAction",
 		"openNewItemModal",
 	],
 	props: {
@@ -215,6 +222,10 @@ export default {
 
 		const updateItem = () => {
 			emit("updateProductAction", props);
+		};
+
+		const favoriteItem = () => {
+			emit("favoriteProductAction", props);
 		};
 		const delteItem = () => {
 			emit("deleteProductAction", props);
@@ -286,6 +297,7 @@ export default {
 			openEditionModal,
 			updateItem,
 			delteItem,
+			favoriteItem,
 			onSubmitUpdate,
 			onResetUpdate,
 			onFileUpload,
