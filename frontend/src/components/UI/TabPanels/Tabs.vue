@@ -121,7 +121,7 @@
 											(val) =>
 												(val && val.length > 0) || 'Please type something',
 										]"
-										v-model="productRepositoryURL"
+										v-model="productProductRepositoryURL"
 									/>
 
 									<div class="row q-gutter-md">
@@ -499,6 +499,17 @@ export default {
 		},
 		teamProducts: {
 			type: [],
+			default: [
+				{
+					id: 0,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Product 1",
+					shortDescription: "Ceci est une courte description ",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+					repositoryURL: "https://github.com/ditrit/leto/projects/1",
+				},
+			],
 		},
 		teamLibraries: {
 			type: [],
@@ -585,7 +596,7 @@ export default {
 			productName,
 			productShortDescription,
 			productDescription,
-			productRepositoryURL,
+			productProductRepositoryURL,
 			deleteProduct,
 			confirmDeleteProduct,
 			addNewProduct,
@@ -627,7 +638,7 @@ export default {
 		};
 		const openModificationEnvironmentModal = (props) => {
 			isEnvironmentsModificationOpened.value = true;
-			emit("updateAction", props);
+			emit("updateProductAction", props);
 			console.log("isEnvironmentsModificationOpened props: ", props);
 		};
 		const onFileUpload = (event) => {
@@ -656,7 +667,7 @@ export default {
 			productName,
 			productShortDescription,
 			productDescription,
-			productRepositoryURL,
+			productProductRepositoryURL,
 			deleteProduct,
 			confirmDeleteProduct,
 			addNewProduct,

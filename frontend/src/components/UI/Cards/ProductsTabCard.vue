@@ -197,10 +197,8 @@ export default {
 		name: { type: String },
 		role: { type: String },
 		shortDescription: { type: String },
-		productRepositoryURL: { type: String },
+		repositoryURL: { type: String },
 		description: { type: String },
-		environmentTypeID: { type: String },
-		environmentTypeName: { type: String },
 		domainID: { type: String },
 	},
 	setup(props, { emit }) {
@@ -211,7 +209,7 @@ export default {
 		const productLogo = ref(props.logo);
 		const productShortDescription = ref(props.shortDescription);
 		const productDescription = ref(props.description);
-		const productProductRepositoryURL = ref(props.productRepositoryURL);
+		const productProductRepositoryURL = ref(props.repositoryURL);
 		const productDomainID = ref(props.domainID);
 		const isOpened = ref(false);
 
@@ -262,7 +260,7 @@ export default {
 			};
 			console.log("updates: ", updates);
 			console.log("submitProductUpdateAction: ", updates);
-			emit("updateAction", updates);
+			emit("updateProductAction", updates);
 			await store
 				.dispatch("appProducts/updateProduct", updates)
 				.then(() => {
