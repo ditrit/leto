@@ -49,7 +49,7 @@
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
 									</q-item>
-									<q-item clickable @click.prevent="delteItem()">
+									<q-item clickable @click.prevent="delteItem">
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
 											Remove
@@ -63,7 +63,7 @@
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">
-										{{ `Edit ${authorizationNameRef} Authorisation` }}
+										{{ $t("edit_authorization") }}
 									</div>
 								</q-card-section>
 
@@ -75,15 +75,10 @@
 									>
 										<div class="row col-md-12 q-gutter-md">
 											<div class="col">
-												<q-input
+												<q-select
 													filled
-													label="Name *"
-													lazy-rules
-													:rules="[
-														(val) =>
-															(val && val.length > 0) ||
-															'Please type something',
-													]"
+													:options="usersList"
+													label="User"
 													v-model="authorizationNameRef"
 												/>
 											</div>
@@ -91,42 +86,8 @@
 												<q-select
 													filled
 													:options="roleList"
-													label="Role Type"
+													label="Role"
 													v-model="authorizationRoleNameRef"
-												/>
-											</div>
-										</div>
-
-										<div class="row q-gutter-md">
-											<div class="col col-md-8">
-												<q-input
-													class="q-gutter-md"
-													filled
-													type="textarea"
-													label="Description *"
-													lazy-rules
-													:rules="[
-														(val) =>
-															(val && val.length > 0) ||
-															'Please type something',
-													]"
-													v-model="authorizationDescriptionRef"
-												/>
-											</div>
-											<div class="col">
-												<q-uploader
-													style="max-width: 100%"
-													url="http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/50"
-													label="Your Logo"
-													multiple
-													accept=".jpg, svg, image/*"
-													@rejected="onRejected"
-													color="primary"
-													factory
-													files
-													hide-upload-btn="true"
-													auto-upload
-													@uploaded="onFileUpload"
 												/>
 											</div>
 										</div>
@@ -204,6 +165,7 @@ export default {
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
 			getRolesList,
+			getUsersList,
 		} = useAuthorizationsTabsData(props);
 
 		const openEditionModal = (props) => {
@@ -218,8 +180,8 @@ export default {
 			emit("deleteAuthorizationAction", props);
 			console.log("props: ", props);
 			console.table({
-				id: props.id,
-				domainID: props.domainID,
+				id: props.authorizationId,
+				domainID: props.authorizationDomainID,
 			});
 		};
 
@@ -229,26 +191,19 @@ export default {
 				return store.getters["appAuthorization/allAuthorization"];
 			});
 			console.log("data: ", data.value);
-			authorizationRoleIDRef.value = updatesData.id;
-			authorizationNameRef.value = updatesData.name;
-			authorizationLogoRef.value = updatesData.logo;
-			authorizationShortDescriptionRef.value = updatesData.shortDescription;
-			authorizationDescriptionRef.value = updatesData.description;
-			authorizationRoleIDRef.value = updatesData.roleID;
+			authorizationIdRef.value = updatesData.id;
 			authorizationDomainIDRef.value = updatesData.domainID;
-			authorizationRoleNameRef.value = updatesData.roleName;
+			authorizationRoleIDRef.value = updatesData.roleID;
+			authorizationUserIDRef.value = updatesData.authorizationUserID;
+			authorizationRoleNameRef.value = updatesData.authorizationRoleName;
 		};
 		const onSubmitUpdate = async () => {
 			let updates = {
-				id: authorizationRoleIDRef.value,
-				logo: authorizationLogoRef.value,
-				name: authorizationNameRef.value,
-				shortDescription: authorizationShortDescriptionRef.value,
-				description: authorizationDescriptionRef.value,
+				id: authorizationIdRef.value,
 				domainID: authorizationDomainIDRef.value,
 				roleID: authorizationRoleIDRef.value,
 				userID: authorizationUserIDRef.value,
-				roleName: authorizationRoleNameRef.value,
+				roleName: authorizationRoleNameRef.value.name,
 			};
 			console.log("updates: ", updates);
 			emit("updateAuthorizationAction", updates);
@@ -261,7 +216,7 @@ export default {
 				.then(() => {
 					$q.notify({
 						type: "positive",
-						message: `${updates.name} environment was succefuly updated`,
+						message: `${authorizationNameRef} environment was succefuly updated`,
 					});
 				});
 		};
@@ -306,6 +261,7 @@ export default {
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
 			getRolesList,
+			getUsersList,
 		};
 	},
 };
