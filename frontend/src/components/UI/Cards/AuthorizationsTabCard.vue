@@ -89,7 +89,7 @@
 												<q-select
 													filled
 													:options="optionsSelections"
-													label="authorization Type"
+													label="Role Type"
 													v-model="selectedParentData"
 												/>
 											</div>

@@ -11,7 +11,12 @@
 			>
 				<q-tab v-if="tags" dense name="tags" label="Tags" icon="sell" />
 				<q-tab dense name="products" label="Products" icon="apps" />
-				<q-tab dense name="team_members" label="Authorizations" icon="group" />
+				<q-tab
+					dense
+					name="authorizations"
+					label="Authorizations"
+					icon="group"
+				/>
 				<q-tab dense name="libraries" label="Libraries" icon="library_books" />
 				<q-tab
 					v-if="environmentTeam"
@@ -174,7 +179,7 @@
 					</q-dialog>
 				</q-tab-panel>
 
-				<q-tab-panel name="team_members" class="flex q-gutter-md">
+				<q-tab-panel name="authorizations" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
 						v-for="member in teamMembers"
@@ -183,23 +188,27 @@
 						<div v-if="member.Logo">
 							<AuthorizationsTabCard
 								v-if="member.User.LastName"
-								:id="member.ID"
-								:name="member.User.FirstName + ' ' + member.User.LastName"
+								:authorizationId="member.ID"
+								:authorizationName="
+									member.User.FirstName + ' ' + member.User.LastName
+								"
 								:role="member.Role.Name"
-								:shortDescription="member.User.Description"
-								:description="member.User.Description"
-								:logo="member.Logo"
+								:authorizationShortDescription="member.User.Description"
+								:authorizationDescription="member.User.Description"
+								:authorizationLogo="member.Logo"
 							/>
 						</div>
 						<div v-else>
 							<AuthorizationsTabCard
 								v-if="member.User.LastName"
-								:id="member.ID"
-								:name="member.User.FirstName + ' ' + member.User.LastName"
+								:authorizationId="member.ID"
+								:authorizationName="
+									member.User.FirstName + ' ' + member.User.LastName
+								"
 								:role="member.Role.Name"
-								:shortDescription="member.User.Description"
-								:description="member.User.Description"
-								:logo="logo"
+								:authorizationShortDescription="member.User.Description"
+								:authorizationDescription="member.User.Description"
+								:authorizationLogo="logo"
 							/>
 						</div>
 					</div>
@@ -689,7 +698,7 @@ export default {
 			getUsersList,
 			getRolesList,
 			domainID,
-			tab: ref("products"),
+			tab: ref("authorization"),
 			environmentName,
 			environmentShortDescription,
 			environmentDescription,
