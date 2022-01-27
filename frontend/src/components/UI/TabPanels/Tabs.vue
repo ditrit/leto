@@ -192,10 +192,13 @@
 								:authorizationName="
 									member.User.FirstName + ' ' + member.User.LastName
 								"
-								:role="member.Role.Name"
+								:authorizationRoleName="member.Role.Name"
 								:authorizationShortDescription="member.User.Description"
 								:authorizationDescription="member.User.Description"
 								:authorizationLogo="member.Logo"
+								:authorizationRoleID="member.Role.ID"
+								:authorizationDomainID="member.DomainID"
+								:authorizationUserID="member.User.ID"
 							/>
 						</div>
 						<div v-else>
@@ -205,10 +208,13 @@
 								:authorizationName="
 									member.User.FirstName + ' ' + member.User.LastName
 								"
-								:role="member.Role.Name"
+								:authorizationRoleName="member.Role.Name"
 								:authorizationShortDescription="member.User.Description"
 								:authorizationDescription="member.User.Description"
 								:authorizationLogo="logo"
+								:authorizationRoleID="member.Role.ID"
+								:authorizationDomainID="member.DomainID"
+								:authorizationUserID="member.User.ID"
 							/>
 						</div>
 					</div>
@@ -698,7 +704,7 @@ export default {
 			getUsersList,
 			getRolesList,
 			domainID,
-			tab: ref("authorization"),
+			tab: ref("authorizations"),
 			environmentName,
 			environmentShortDescription,
 			environmentDescription,

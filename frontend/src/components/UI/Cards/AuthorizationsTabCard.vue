@@ -19,8 +19,8 @@
 						<div class="text-subtitle2 ellipsis">
 							{{ authorizationNameRef }}
 						</div>
-						<div class="text-h8 text-grey-8">
-							{{ authorizationRoleRef }}
+						<div class="text-h8 text-grey-8 ellipsis">
+							{{ authorizationRoleNameRef }}
 						</div>
 					</div>
 					<div class="button_actions__container col-auto">
@@ -34,11 +34,13 @@
 												{
 													authorizationNameRef,
 													authorizationRoleRef,
+													authorizationRoleNameRef,
 													authorizationIdRef,
 													authorizationLogoRef,
 													authorizationShortDescriptionRef,
 													authorizationDescriptionRef,
 													authorizationDomainIDRef,
+													authorizationUserIDRef,
 												},
 											])
 										"
@@ -61,7 +63,7 @@
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">
-										{{ `Edit ${authorizationNameRef}` }}
+										{{ `Edit ${authorizationNameRef} Authorisation` }}
 									</div>
 								</q-card-section>
 
@@ -88,27 +90,13 @@
 											<div class="col">
 												<q-select
 													filled
-													:options="optionsSelections"
+													:options="roleList"
 													label="Role Type"
-													v-model="selectedParentData"
+													v-model="authorizationRoleNameRef"
 												/>
 											</div>
 										</div>
-										<div class="row col-md-12 q-gutter-md">
-											<div class="col">
-												<q-input
-													filled
-													label="Short Description *"
-													lazy-rules
-													:rules="[
-														(val) =>
-															(val && val.length > 0) ||
-															'Please type something',
-													]"
-													v-model="authorizationShortDescriptionRef"
-												/>
-											</div>
-										</div>
+
 										<div class="row q-gutter-md">
 											<div class="col col-md-8">
 												<q-input
@@ -182,6 +170,7 @@ export default {
 	],
 	props: {
 		authorizationRole: { type: String },
+		authorizationRoleName: { type: String },
 		authorizationId: { type: String },
 		authorizationName: { type: String },
 		authorizationLogo: {
@@ -191,6 +180,8 @@ export default {
 		authorizationShortDescription: { type: String },
 		authorizationDescription: { type: String },
 		authorizationDomainID: { type: String },
+		authorizationRoleID: { type: String },
+		authorizationUserID: { type: String },
 	},
 	setup(props, { emit }) {
 		const isOpened = ref(false);
@@ -209,57 +200,63 @@ export default {
 			authorizationDescriptionRef,
 			authorizationDomainIDRef,
 			authorizationRoleRef,
+			authorizationRoleNameRef,
+			authorizationRoleIDRef,
+			authorizationUserIDRef,
+			getRolesList,
 		} = useAuthorizationsTabsData(props);
 
 		const openEditionModal = (props) => {
 			isOpened.value = true;
-			emit("openEditModal", props);
+			emit("openAuthorizationEditModal", props);
 		};
 
 		const updateItem = () => {
-			emit("updateAction", props);
+			emit("updateAuthorizationAction", props);
 		};
 		const delteItem = () => {
-			emit("deleteAction", props);
+			emit("deleteAuthorizationAction", props);
 			console.log("props: ", props);
 			console.table({
 				id: props.id,
 				domainID: props.domainID,
-				environmentName: environmentName.value,
 			});
 		};
 
-		const refreshEnvironment = async (id, updatesData) => {
-			await store.dispatch("appEnvironment/fetchEnvironmentyId", id);
+		const refreshAuthorization = async (id, updatesData) => {
+			await store.dispatch("appAuthorization/fetchAuthorizationById", id);
 			let data = computed(() => {
-				return store.getters["appEnvironment/allEnvironments"];
+				return store.getters["appAuthorization/allAuthorization"];
 			});
 			console.log("data: ", data.value);
-			environmentNameRef.value = updatesData.name;
-			environmentLogoRef.value = updatesData.logo;
-			environmentShortDescriptionRef.value = updatesData.shortDescription;
-			environmentDescriptionRef.value = updatesData.description;
-			environmentTypeIDRef.value = updatesData.environmentTypeID;
-			environmentDomainIDRef.value = updatesData.domainID;
+			authorizationRoleIDRef.value = updatesData.id;
+			authorizationNameRef.value = updatesData.name;
+			authorizationLogoRef.value = updatesData.logo;
+			authorizationShortDescriptionRef.value = updatesData.shortDescription;
+			authorizationDescriptionRef.value = updatesData.description;
+			authorizationRoleIDRef.value = updatesData.roleID;
+			authorizationDomainIDRef.value = updatesData.domainID;
+			authorizationRoleNameRef.value = updatesData.roleName;
 		};
 		const onSubmitUpdate = async () => {
 			let updates = {
-				id: props.id,
-				domainID: props.domainID,
-				name: environmentName.value,
-				environmentName: environmentName.value,
-				shortDescription: environmentShortDescription.value,
-				description: environmentDescription.value,
-				environmentTypeID: props.id,
-				environmentTypeName: environmentTypeNameRef.value,
+				id: authorizationRoleIDRef.value,
+				logo: authorizationLogoRef.value,
+				name: authorizationNameRef.value,
+				shortDescription: authorizationShortDescriptionRef.value,
+				description: authorizationDescriptionRef.value,
+				domainID: authorizationDomainIDRef.value,
+				roleID: authorizationRoleIDRef.value,
+				userID: authorizationUserIDRef.value,
+				roleName: authorizationRoleNameRef.value,
 			};
 			console.log("updates: ", updates);
-			console.log("submitUpdateAction: ", updates);
-			emit("updateAction", updates);
+			emit("updateAuthorizationAction", updates);
+			console.log("submitUpdateAuthorizationAction: ", updates);
 			await store
-				.dispatch("appEnvironment/updateEnvironment", updates)
+				.dispatch("appAuthorization/updateAuthorization", updates)
 				.then(() => {
-					refreshEnvironment(updates.id, updates);
+					refreshAuthorization(updates.id, updates);
 				})
 				.then(() => {
 					$q.notify({
@@ -305,6 +302,10 @@ export default {
 			authorizationDescriptionRef,
 			authorizationDomainIDRef,
 			authorizationRoleRef,
+			authorizationRoleNameRef,
+			authorizationRoleIDRef,
+			authorizationUserIDRef,
+			getRolesList,
 		};
 	},
 };

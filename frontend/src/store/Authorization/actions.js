@@ -5,8 +5,8 @@ export const fetchAllAuthorization = async ({ commit }) => {
 	commit("GET_AUTHORIZATION", response.data);
 };
 
-export const fetchAuthorizationById = async ({ commit }, teamMember) => {
-	let response = await API.put(`/authorization/${teamMember.id}`, teamMember);
+export const fetchAuthorizationById = async ({ commit }, id) => {
+	let response = await API.put(`/authorization/${id}`);
 	commit("GET_AUTHORIZATION_BY_ID", response.data);
 };
 

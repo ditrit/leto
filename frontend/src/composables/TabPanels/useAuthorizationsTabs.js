@@ -13,6 +13,9 @@ export default function useAuthorizationsTabsData(props) {
 	const selectedParentData = ref([]);
 	const authorizationIdRef = ref(props.authorizationId);
 	const authorizationRoleRef = ref(props.authorizationRole);
+	const authorizationRoleIDRef = ref(props.authorizationRoleID);
+	const authorizationUserIDRef = ref(props.authorizationUserID);
+	const authorizationRoleNameRef = ref(props.authorizationRoleName);
 	const authorizationNameRef = ref(props.authorizationName);
 	const authorizationLogoRef = ref(props.authorizationLogo);
 	const authorizationShortDescriptionRef = ref(
@@ -126,5 +129,8 @@ export default function useAuthorizationsTabsData(props) {
 		authorizationDescriptionRef,
 		authorizationDomainIDRef,
 		authorizationRoleRef,
+		authorizationRoleNameRef,
+		authorizationRoleIDRef,
+		authorizationUserIDRef,
 	};
 }

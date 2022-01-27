@@ -1,1 +1,1 @@
-export const allAuthorization = (state) => state.authorization;
+export const allAuthorization = (state) => state.authorizations;
