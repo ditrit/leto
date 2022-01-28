@@ -154,7 +154,7 @@
 						<q-dialog v-model="openEditDialog" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
-									<div class="text-h6 q-pa-md">{{ $t("edit_user") }}</div>
+									<div class="text-h6 q-pa-md">{{ $t("edit_tag") }}</div>
 								</q-card-section>
 
 								<q-card-section class="q-pt-none">
@@ -163,16 +163,29 @@
 										@reset="onResetUpdate"
 										class="q-gutter-md q-pa-md"
 									>
-										<q-input
-											filled
-											v-model="tagData.label"
-											label="Your First Name *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
+										<div class="row col-md-12">
+											<div class="col">
+												<q-input
+													filled
+													v-model="tagData.label"
+													label="Name *"
+													lazy-rules
+													:rules="[
+														(val) =>
+															(val && val.length > 0) ||
+															'Please type something',
+													]"
+												/>
+											</div>
+											<div class="col-4 q-ml-md">
+												<q-select
+													filled
+													:options="optionsSelections"
+													label="Tag Parent"
+													v-model="selectedParentData"
+												/>
+											</div>
+										</div>
 										<q-input
 											filled
 											v-model="tagData.shortDescription"
