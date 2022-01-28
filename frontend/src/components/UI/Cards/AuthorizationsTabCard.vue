@@ -49,7 +49,10 @@
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
 									</q-item>
-									<q-item clickable @click.prevent="delteItem">
+									<q-item
+										clickable
+										@click.prevent="delteItem(authorizationIdRef)"
+									>
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
 											Remove
@@ -187,13 +190,18 @@ export default {
 		const updateItem = () => {
 			emit("updateAuthorizationAction", props);
 		};
-		const delteItem = () => {
+		const delteItem = async (id) => {
 			emit("deleteAuthorizationAction", props);
 			console.log("props: ", props);
 			console.table({
 				id: props.authorizationId,
 				domainID: props.authorizationDomainID,
 			});
+			await store
+				.dispatch("appAuthorization/removeAuthorization", id)
+				.then(() => {
+					refreshAuthorization(id);
+				});
 		};
 
 		const refreshAuthorization = async (id, updatesData) => {
