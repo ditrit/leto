@@ -22,6 +22,11 @@ export default {
 			{ label: "Profile", link: "/settings/profile", icon: "user" },
 			{ label: "Users", link: "/settings/users", icon: "group" },
 			{ label: "Roles", link: "/settings/roles", icon: "group" },
+			{
+				label: "Authorizations",
+				link: "/settings/authorizations",
+				icon: "group",
+			},
 			{ label: "Tags", link: "/settings/tags", icon: "tag" },
 			{
 				label: "Environments Type",
