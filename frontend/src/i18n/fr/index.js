@@ -30,7 +30,7 @@ export default {
 	manage_tags: "Gérer les tags",
 
 	manage_environments: "Gérer les environnements",
-	add_environment: "Créer un nouvel environement",
+	create_environment: "Créer un nouvel environement",
 	edit_environment: "Modifier l'environement",
 
 	products: "Produits",

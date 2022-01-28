@@ -242,13 +242,13 @@
 								>
 									<q-select
 										filled
-										v-model="pickedUsers"
+										v-model="authorizationNameRef"
 										:options="usersList"
 										label="Choose a user"
 									/>
 									<q-select
 										filled
-										v-model="pickedRole"
+										v-model="authorizationRoleRef"
 										:options="roleList"
 										label="Choose a role"
 									/>
@@ -341,7 +341,9 @@
 						<q-dialog v-model="isEnvironmentsCreationOpened" persistent>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
-									<div class="text-h6 q-pa-md">{{ $t("add_environment") }}</div>
+									<div class="text-h6 q-pa-md">
+										{{ $t("create_environment") }}
+									</div>
 								</q-card-section>
 
 								<q-card-section class="q-pt-none">
@@ -425,7 +427,7 @@
 										>
 											<q-btn type="reset" label="Cancel" v-close-popup />
 											<q-btn
-												label="Update"
+												label="Create"
 												type="submit"
 												color="primary"
 												v-close-popup
@@ -442,7 +444,7 @@
 							text-color="primary"
 							icon="add"
 							label="New Environnement"
-							@click.prevent="openCreationModal(environmentTeam)"
+							@click.prevent="openEnvironmentCreationModal()"
 						/>
 					</div>
 				</q-tab-panel>
@@ -457,6 +459,7 @@ import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
 import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
 import ProductsTabCard from "../Cards/ProductsTabCard.vue";
 import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
+import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
 import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
 import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 
@@ -624,6 +627,9 @@ export default {
 			updateProduct,
 		} = useProductsTabData(props);
 
+		let { authorizationNameRef, authorizationRoleRef } =
+			useAuthorizationsTabsData(props);
+
 		let { refreshDomainData } = useContentCardData();
 		const isEnvironmentsCreationOpened = ref(false);
 		const domainID = ref(route.currentRoute.value.params.id);
@@ -635,7 +641,7 @@ export default {
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
 		};
-		const openCreationModal = (props) => {
+		const openEnvironmentCreationModal = () => {
 			isEnvironmentsCreationOpened.value = true;
 			emit("openNewItemModal", props);
 			console.log("isEnvironmentsCreationOpened props: ", props);
@@ -649,7 +655,7 @@ export default {
 
 		const openAuthorizsationCreationModal = (props) => {
 			isAuthorCreationOpened.value = true;
-			console.log("openCreationModal props: ", props);
+			console.log("openEnvironmentCreationModal props: ", props);
 			console.log("selectedParentData : ", selectedParentData.value);
 		};
 
@@ -718,7 +724,7 @@ export default {
 			openModificationProductModal,
 			openCreationProductModal,
 			addNewEnvironment,
-			openCreationModal,
+			openEnvironmentCreationModal,
 			openAuthorizsationCreationModal,
 			updateEnvironement,
 			deleteEnvironement,
@@ -729,6 +735,8 @@ export default {
 			confirmDeleteEnvironment,
 			usersList,
 			roleList,
+			authorizationNameRef,
+			authorizationRoleRef,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};

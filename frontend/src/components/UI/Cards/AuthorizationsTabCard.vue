@@ -87,7 +87,16 @@
 													filled
 													:options="roleList"
 													label="Role"
-													v-model="authorizationRoleNameRef"
+													v-model="authorizationRoleRef"
+												/>
+											</div>
+											<div class="col">
+												<q-select
+													disabled
+													filled
+													:options="domainList"
+													label="Domain"
+													v-model="authorizationDomainName"
 												/>
 											</div>
 										</div>
@@ -149,6 +158,7 @@ export default {
 
 		let {
 			store,
+			route,
 			$q,
 			usersList,
 			roleList,
@@ -166,6 +176,7 @@ export default {
 			authorizationUserIDRef,
 			getRolesList,
 			getUsersList,
+			authorizationDomainName,
 		} = useAuthorizationsTabsData(props);
 
 		const openEditionModal = (props) => {
@@ -238,6 +249,7 @@ export default {
 			});
 		};
 		return {
+			route,
 			usersList,
 			roleList,
 			isOpened,
@@ -262,6 +274,7 @@ export default {
 			authorizationUserIDRef,
 			getRolesList,
 			getUsersList,
+			authorizationDomainName,
 		};
 	},
 };
