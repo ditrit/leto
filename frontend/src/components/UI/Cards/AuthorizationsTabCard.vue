@@ -73,7 +73,7 @@
 										@reset="onResetUpdate"
 										class="q-gutter-sm q-pa-md"
 									>
-										<div class="row col-md-12 q-gutter-md">
+										<div class="col-md-12 q-gutter-md">
 											<div class="col">
 												<q-select
 													filled
