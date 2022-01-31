@@ -25,6 +25,7 @@ export default function useAuthorizationsTabsData(props) {
 	const authorizationDescriptionRef = ref(props.authorizationDescription);
 	const authorizationDomainIDRef = ref(props.authorizationDomainID);
 	const authorizationDomainName = ref("");
+	const domainListNames = ref([]);
 
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
@@ -68,10 +69,13 @@ export default function useAuthorizationsTabsData(props) {
 		await store.dispatch("appDomain/fetchAllDomaines");
 		let domains = store.getters["appDomain/allDomaines"];
 		domainList.value = domains;
+		domainListNames.value = domains.map((domain) => domain.Name);
 		console.log("domains: ", domains);
 		let index = domains.find(
 			(domain) => domain.ID === authorizationDomainIDRef.value
 		);
+		console.log("index: ", index);
+		console.log("authorizationDomainName.value", authorizationDomainName.value);
 		return (authorizationDomainName.value = index.Name);
 	};
 	getDomainName();
@@ -148,5 +152,6 @@ export default function useAuthorizationsTabsData(props) {
 		authorizationRoleIDRef,
 		authorizationUserIDRef,
 		authorizationDomainName,
+		domainListNames,
 	};
 }

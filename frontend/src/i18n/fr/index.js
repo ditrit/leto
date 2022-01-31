@@ -4,6 +4,7 @@ export default {
 	edit_team: "Modifier l'équipe",
 	profile: "Profil",
 	users: "Utilisateurs",
+	authorization: "Autorisation",
 	roles: "Rôles",
 	enviType: "Type d'environnements",
 	tags: "Mots clés",
@@ -18,6 +19,7 @@ export default {
 	add_users_success: "L'utilisateur a été créé avec succès",
 	add_users_failed: "Désolé, l'utilisateur n'a pas été créé",
 
+	create_authorization: "Créer un nouvelle authorization",
 	add_authorization: "Créer un nouvelle authorization",
 	edit_authorization: "Editer l'authorization",
 	dashboard: "Tableau de bord",
@@ -28,6 +30,7 @@ export default {
 	manage_users: "Gérer les utilisateurs",
 	manage_roles: "Gérer les rôles",
 	manage_tags: "Gérer les tags",
+	manage_autorization: "Gérer les Autorisations",
 
 	manage_environments: "Gérer les environnements",
 	create_environment: "Créer un nouvel environement",

@@ -4,6 +4,7 @@ export default {
 	edit_team: "Edit Team",
 	profile: "Profile",
 	users: "Users",
+	authorization: "Authorization",
 	enviType: "Environments Type",
 	roles: "Roles",
 	tags: "Tags",
@@ -27,8 +28,10 @@ export default {
 	manage_users: "Manage Users",
 	manage_roles: "Manage Roles",
 	manage_tags: "Manage Tags",
+	manage_autorization: "Manage Autorizations",
 	manage_environment: "Manage Environments",
 	create_environment: "Create environment",
+	create_authorization: "Create authorization",
 	edit_environment: "Edit environment",
 
 	products: "Products",

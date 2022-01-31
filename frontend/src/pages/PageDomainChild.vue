@@ -71,10 +71,9 @@
 							:to="`/teams/${subChildLink.id}`"
 						/>
 					</q-breadcrumbs>
-					<!-- <pre>{{ menu }}</pre> -->
 				</div>
 
-				<div class="">
+				<div class="domainWrapper">
 					<div class="col">
 						<ContentCard :data="currentDomainDataContent">
 							<template v-slot:tagsCard>
@@ -177,7 +176,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, ref } from "vue";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import ContentCard from "../components/UI/Cards/ContentCard";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
@@ -224,12 +223,6 @@ export default defineComponent({
 			confirm,
 			OnEdit,
 		} = useDomainData();
-
-		// watch(currentDomainDataContent, (newVal, preVal) => {
-		// 	console.log("currentDomainDataContent: ", currentDomainDataContent.value);
-		// 	console.log("currentDomainDataContent preVal: ", preVal);
-		// 	console.log("currentDomainDataContent newVal: ", newVal);
-		// });
 
 		return {
 			confirm,

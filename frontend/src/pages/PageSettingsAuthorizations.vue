@@ -46,7 +46,7 @@
 				<PageContent
 					icon="person"
 					:headline="$t('authorization')"
-					:subTitle="$t('manage_authorization')"
+					:subTitle="$t('manage_autorization')"
 					textContent=""
 				/>
 				<div class="q-px-lg"><AuthorizationTable /></div>

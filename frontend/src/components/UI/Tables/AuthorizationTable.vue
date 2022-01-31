@@ -14,7 +14,7 @@
 			title=""
 			:rows="rowsData"
 			:columns="columns"
-			row-key="name"
+			row-key="domain"
 			field
 			table-header-class="table_header"
 		>
@@ -23,7 +23,8 @@
 				<q-dialog v-model="opendDialog" persistent>
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
-							<div class="text-h6 q-pa-md">{{ $t("edit_authorisation") }}</div>
+							<div class="text-h6 q-pa-md">{{ $t("edit_authorization") }}</div>
+							<pre>{{ authorizationObj }}</pre>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
@@ -32,34 +33,32 @@
 								@reset="onResetUpdate"
 								class="q-gutter-md q-pa-md"
 							>
-								<q-input
-									filled
-									v-model="roleObj[2]"
-									label="Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-								<q-input
-									filled
-									v-model="roleObj[3]"
-									label="Short Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-								<q-input
-									filled
-									type="textarea"
-									v-model="roleObj[4]"
-									label="Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
+								<div class="col-md-12 q-gutter-md">
+									<div class="col">
+										<q-select
+											filled
+											:options="usersList"
+											label="User"
+											v-model="authorizationObj[7]"
+										/>
+									</div>
+									<div class="col">
+										<q-select
+											filled
+											:options="roleList"
+											label="Role"
+											v-model="authorizationObj[5]"
+										/>
+									</div>
+									<div class="col">
+										<q-select
+											filled
+											:options="domainListNames"
+											label="Domain"
+											v-model="authorizationObj[3]"
+										/>
+									</div>
+								</div>
 
 								<q-card-actions
 									align="right"
@@ -126,7 +125,7 @@
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
 							]"
-							v-model="roleName"
+							v-model="authorizsationDomain"
 						/>
 						<q-input
 							filled
@@ -135,7 +134,7 @@
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
 							]"
-							v-model="roleShortDescription"
+							v-model="authorisationUser"
 						/>
 						<q-input
 							filled
@@ -145,7 +144,7 @@
 							:rules="[
 								(val) => (val && val.length > 0) || 'Please type something',
 							]"
-							v-model="roleDescription"
+							v-model="authorizationRole"
 						/>
 
 						<q-card-actions
@@ -171,6 +170,7 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
 
 const columns = [
 	{
@@ -185,28 +185,28 @@ const columns = [
 	},
 
 	{
-		name: "name",
-		label: "Name",
+		name: "user",
+		label: "User",
 		align: "left",
-		field: "name",
+		field: "user",
 		sortable: true,
-		classes: "tr_width__name ellipsis",
+		classes: "tr_width ellipsis",
 	},
 	{
-		name: "shortDescription",
-		label: "Short Description",
+		name: "role",
+		label: "Role",
 		align: "left",
-		field: "shortDescription",
+		field: "role",
 		sortable: true,
-		classes: "tr_width__shortdesc ellipsis",
+		classes: "tr_width ellipsis",
 	},
 	{
-		name: "description",
-		label: "Description",
+		name: "domain",
+		label: "Domain",
 		align: "left",
-		field: "description",
+		field: "domain",
 		sortable: true,
-		classes: "tr_width__descr ellipsis",
+		classes: "tr_width ellipsis",
 	},
 	{
 		name: "actionsButtons",
@@ -219,18 +219,37 @@ const columns = [
 ];
 
 export default {
-	setup() {
+	setup(props) {
 		const store = useStore();
 		const $q = useQuasar();
 		const opendDialog = ref(false);
 		const openAddRoleDialog = ref(false);
-		const roleObj = ref(null);
+		const authorizationObj = ref(null);
 		const rowsData = ref([]);
 		const editedIndex = ref(null);
-		const roleName = ref("");
-		const roleShortDescription = ref("");
-		const roleDescription = ref("");
+		const authorizsationDomain = ref("");
+		const authorisationUser = ref("");
+		const authorizationRole = ref("");
 
+		let {
+			usersList,
+			roleList,
+			domainListNames,
+			getUsersList,
+			getRolesList,
+			authorizationIdRef,
+			authorizationNameRef,
+			authorizationDomainIDRef,
+			authorizationRoleRef,
+			authorizationRoleNameRef,
+			authorizationRoleIDRef,
+			authorizationUserIDRef,
+			domainList,
+		} = useAuthorizationsTabsData(props);
+
+		console.log("rowsData.value:", rowsData.value);
+
+		console.log("domainListNames: ", domainListNames.value);
 		const confirm = (item) => {
 			console.log("item: ", item);
 			$q.dialog({
@@ -247,74 +266,95 @@ export default {
 				});
 		};
 
-		const allRoles = async () => {
+		const allAuthorizations = async () => {
 			// fetch All Users
-			await store.dispatch("appRoles/fetchAllRoles");
-			const getRoles = computed(() => store.getters["appRoles/allRoles"]);
+			await store.dispatch("appAuthorization/fetchAllAuthorization");
+			const getAuth = computed(
+				() => store.getters["appAuthorization/allAuthorizations"]
+			);
+			console.log("rowsData.value", rowsData.value);
 			return (rowsData.value = Object.values(
-				getRoles.value.map((item) => {
+				getAuth.value.map((item) => {
 					return {
 						id: item.ID,
 						avatar:
 							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-						name: item.Name,
-						shortDescription: item.ShortDescription,
-						description: item.Description,
+						domainID: item.DomainID,
+						domain: item.Domain.Name,
+						roleID: item.RoleID,
+						role: item.Role.Name,
+						userID: item.UserID,
+						user: item.User.FirstName + " " + item.User.LastName,
 					};
 				})
 			));
 		};
-		allRoles();
+		allAuthorizations();
 
 		const AddRole = () => {
 			openAddRoleDialog.value = true;
 		};
 		const onSubmitAdd = async () => {
-			const roleData = {
-				name: roleName.value,
-				shortDescription: roleShortDescription.value,
-				description: roleDescription.value,
+			const authorizationData = {
+				domain: authorizsationDomain.value,
+				role: authorisationUser.value,
+				user: authorizationRole.value,
 			};
-			console.log("roleData", roleData);
+			console.log("authorizationData", authorizationData);
 
 			try {
-				await store.dispatch("appRoles/addRole", roleData);
+				await store.dispatch("appRoles/addRole", authorizationData);
 				await allRoles();
-				(roleName.value = ""),
-					(roleShortDescription.value = ""),
-					(roleDescription.value = ""),
+				(authorizsationDomain.value = ""),
+					(authorisationUser.value = ""),
+					(authorizationRole.value = ""),
 					$q.notify({
 						type: "positive",
-						message: "Role has been successfully created",
+						message: "Authorizsation has been successfully created",
 					});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, role has not been created",
+					message: "Sorry, authorizsation has not been created",
 				});
 			}
 		};
 
+		const getSelectedDomainId = async () => {
+			const domains = domainList.value;
+			console.log("domains: ", domains);
+			const selectedDomain = await domains.find(
+				(domain) => domain.Name === authorizsationDomain.value
+			);
+			console.log("selectedDomain: ", selectedDomain);
+			return selectedDomain;
+		};
+
 		const onSubmitUpdate = async () => {
-			const roleData = {
-				id: roleObj.value[0],
-				name: roleObj.value[2],
-				shortDescription: roleObj.value[3],
-				description: roleObj.value[4],
+			const authorizationData = {
+				id: authorizationObj.value[0],
+				domainID: "a2894cd5-da5a-414a-b76a-03f2e77f77cf",
+				roleID: authorizationObj.value[4],
+				userID: authorizationObj.value[6],
 			};
-			console.log("roleObj: ", roleObj.value);
+			console.log("authorizationObj.value: ", authorizationObj.value);
+			console.log("authorizationData: ", authorizationData);
+			console.log("authorizsationDomain.value: ", authorizsationDomain.value);
 
 			try {
-				await store.dispatch("appRoles/updateRole", roleData);
-				await allRoles();
+				await store.dispatch(
+					"appAuthorization/updateAuthorization",
+					authorizationData
+				);
+				// await allRoles();
 				$q.notify({
 					type: "positive",
-					message: "Role has been successfully updated",
+					message: "Authorizsation has been successfully updated",
 				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, role has not been updated",
+					message: "Sorry, authorizsation has not been updated",
 				});
 			}
 		};
@@ -326,7 +366,7 @@ export default {
 		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
-			roleObj.value = Object.values(currentTarget);
+			authorizationObj.value = Object.values(currentTarget);
 		};
 		const deleteRow = async (currentTarget) => {
 			try {
@@ -350,11 +390,11 @@ export default {
 			editedIndex,
 			columns,
 			rowsData,
-			roleObj,
+			authorizationObj,
 			AddRole,
-			roleName,
-			roleShortDescription,
-			roleDescription,
+			authorizsationDomain,
+			authorisationUser,
+			authorizationRole,
 			editRow,
 			deleteRow,
 			onSubmitAdd,
@@ -365,6 +405,19 @@ export default {
 			openAddRoleDialog,
 			password: ref(""),
 			isPwd: ref(true),
+			usersList,
+			roleList,
+			domainList,
+			domainListNames,
+			getUsersList,
+			getRolesList,
+			authorizationIdRef,
+			authorizationNameRef,
+			authorizationDomainIDRef,
+			authorizationRoleRef,
+			authorizationRoleNameRef,
+			authorizationRoleIDRef,
+			authorizationUserIDRef,
 		};
 	},
 };
