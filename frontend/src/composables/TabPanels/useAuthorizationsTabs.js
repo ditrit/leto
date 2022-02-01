@@ -68,15 +68,22 @@ export default function useAuthorizationsTabsData(props) {
 	const getDomainName = async () => {
 		await store.dispatch("appDomain/fetchAllDomaines");
 		let domains = store.getters["appDomain/allDomaines"];
-		domainList.value = domains;
-		domainListNames.value = domains.map((domain) => domain.Name);
+
+		domainList.value = domains.map((domain) => {
+			return {
+				domainId: domain.ID,
+				label: domain.Name,
+				name: domain.Name,
+				value: domain.Name,
+			};
+		});
 		console.log("domains: ", domains);
-		let index = domains.find(
-			(domain) => domain.ID === authorizationDomainIDRef.value
-		);
-		console.log("index: ", index);
-		console.log("authorizationDomainName.value", authorizationDomainName.value);
-		return (authorizationDomainName.value = index.Name);
+		// let index = domains.find(
+		// 	(domain) => domain.ID === authorizationDomainIDRef.value
+		// );
+		// console.log("index: ", index);
+		// console.log("authorizationDomainName.value", authorizationDomainName.value);
+		// return (authorizationDomainName.value = index.Name);
 	};
 	getDomainName();
 

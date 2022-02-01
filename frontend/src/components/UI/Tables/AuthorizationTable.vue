@@ -53,7 +53,7 @@
 									<div class="col">
 										<q-select
 											filled
-											:options="domainListNames"
+											:options="domainList"
 											label="Domain"
 											v-model="authorizationObj[3]"
 										/>
@@ -110,42 +110,44 @@
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
 					<div class="text-h6 q-pa-md">{{ $t("create_authorization") }}</div>
+					<pre>{{ authorisationUser }}</pre>
+					<pre>{{ authorizationRole }}</pre>
+					<pre>{{ authorizsationDomain }}</pre>
+					<pre>{{ item }}</pre>
 				</q-card-section>
 
 				<q-card-section class="q-pt-none">
 					<q-form
-						@submit.prevent="onSubmitAdd"
+						@submit.prevent="onSubmitAdd(item)"
 						@reset="onResetAdd"
 						class="q-gutter-md q-pa-md"
 					>
-						<q-input
-							filled
-							label="Name *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="authorizsationDomain"
-						/>
-						<q-input
-							filled
-							label="Short Description *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="authorisationUser"
-						/>
-						<q-input
-							filled
-							type="textarea"
-							label="Description *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="authorizationRole"
-						/>
+						<div class="col-md-12 q-gutter-md">
+							<div class="col">
+								<q-select
+									filled
+									:options="usersList"
+									label="User"
+									v-model="authorisationUser"
+								/>
+							</div>
+							<div class="col">
+								<q-select
+									filled
+									:options="roleList"
+									label="Role"
+									v-model="authorizationRole"
+								/>
+							</div>
+							<div class="col">
+								<q-select
+									filled
+									:options="domainListNames"
+									label="Domain"
+									v-model="authorizsationDomain"
+								/>
+							</div>
+						</div>
 
 						<q-card-actions
 							align="right"
@@ -279,7 +281,7 @@ export default {
 						id: item.ID,
 						avatar:
 							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-						domainID: item.DomainID,
+						domainID: item.Domain.ID,
 						domain: item.Domain.Name,
 						roleID: item.RoleID,
 						role: item.Role.Name,
@@ -294,17 +296,21 @@ export default {
 		const AddRole = () => {
 			openAddRoleDialog.value = true;
 		};
-		const onSubmitAdd = async () => {
+		const onSubmitAdd = async (data) => {
+			console.log("data: ", data);
 			const authorizationData = {
-				domain: authorizsationDomain.value,
-				role: authorisationUser.value,
-				user: authorizationRole.value,
+				domainID: authorizationObj.value.domainId,
+				userID: authorisationUser.value.id,
+				roleID: authorizationRole.value.id,
 			};
 			console.log("authorizationData", authorizationData);
 
 			try {
-				await store.dispatch("appRoles/addRole", authorizationData);
-				await allRoles();
+				await store.dispatch(
+					"appAuthorization/addAuthorization",
+					authorizationData
+				);
+				await allAuthorizations();
 				(authorizsationDomain.value = ""),
 					(authorisationUser.value = ""),
 					(authorizationRole.value = ""),
@@ -333,13 +339,12 @@ export default {
 		const onSubmitUpdate = async () => {
 			const authorizationData = {
 				id: authorizationObj.value[0],
-				domainID: "a2894cd5-da5a-414a-b76a-03f2e77f77cf",
-				roleID: authorizationObj.value[4],
-				userID: authorizationObj.value[6],
+				domainID: authorizationObj.value[3].domainId,
+				roleID: authorizationObj.value[5].id,
+				userID: authorizationObj.value[7].id,
 			};
-			console.log("authorizationObj.value: ", authorizationObj.value);
+
 			console.log("authorizationData: ", authorizationData);
-			console.log("authorizsationDomain.value: ", authorizsationDomain.value);
 
 			try {
 				await store.dispatch(
