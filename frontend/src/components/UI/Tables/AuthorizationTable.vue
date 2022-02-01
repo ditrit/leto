@@ -38,7 +38,7 @@
 										<q-select
 											filled
 											:options="usersList"
-											label="User"
+											label="User*"
 											v-model="authorizationObj[7]"
 										/>
 									</div>
@@ -46,7 +46,7 @@
 										<q-select
 											filled
 											:options="roleList"
-											label="Role"
+											label="Role*"
 											v-model="authorizationObj[5]"
 										/>
 									</div>
@@ -54,7 +54,7 @@
 										<q-select
 											filled
 											:options="domainList"
-											label="Domain"
+											label="Domain*"
 											v-model="authorizationObj[3]"
 										/>
 									</div>
@@ -261,7 +261,7 @@ export default {
 				persistent: true,
 			})
 				.onOk(() => {
-					deleteRow(item);
+					deleteRow(item.id);
 				})
 				.onCancel(() => {
 					console.log("Cancel");
@@ -295,15 +295,16 @@ export default {
 
 		const AddRole = () => {
 			openAddRoleDialog.value = true;
+			console.log("authorizationObj.value: ", authorizationObj.value);
 		};
 		const onSubmitAdd = async (data) => {
-			console.log("data: ", data);
 			const authorizationData = {
 				domainID: authorizationObj.value.domainId,
 				userID: authorisationUser.value.id,
 				roleID: authorizationRole.value.id,
 			};
 			console.log("authorizationData", authorizationData);
+			console.log("data: ", data);
 
 			try {
 				await store.dispatch(
@@ -373,19 +374,19 @@ export default {
 			opendDialog.value = true;
 			authorizationObj.value = Object.values(currentTarget);
 		};
-		const deleteRow = async (currentTarget) => {
+		const deleteRow = async (id) => {
 			try {
-				const roleID = Object.values(currentTarget)[0];
-				await store.dispatch("appRoles/removeRole", roleID);
-				await allRoles();
+				console.log("authorizationID: ", id);
+				await store.dispatch("appAuthorization/removeAuthorization", id);
+				await allAuthorizations();
 				$q.notify({
 					type: "positive",
-					message: "Role has been successfully deleted",
+					message: "Authorization has been successfully deleted",
 				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, role has not been deleted",
+					message: "Sorry, authorization has not been deleted",
 				});
 			}
 		};
