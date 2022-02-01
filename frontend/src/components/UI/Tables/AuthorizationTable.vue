@@ -24,7 +24,6 @@
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
 							<div class="text-h6 q-pa-md">{{ $t("edit_authorization") }}</div>
-							<pre>{{ props.row }}</pre>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
@@ -110,15 +109,11 @@
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
 					<div class="text-h6 q-pa-md">{{ $t("create_authorization") }}</div>
-					<pre>{{ authorisationUser }}</pre>
-					<pre>{{ authorizationRole }}</pre>
-					<pre>{{ authorizsationDomain }}</pre>
-					<pre>{{ item }}</pre>
 				</q-card-section>
 
 				<q-card-section class="q-pt-none">
 					<q-form
-						@submit.prevent="onSubmitAdd(item)"
+						@submit.prevent="onSubmitAdd"
 						@reset="onResetAdd"
 						class="q-gutter-md q-pa-md"
 					>
@@ -142,7 +137,7 @@
 							<div class="col">
 								<q-select
 									filled
-									:options="domainListNames"
+									:options="domainList"
 									label="Domain"
 									v-model="authorizsationDomain"
 								/>
@@ -297,15 +292,12 @@ export default {
 			openAddRoleDialog.value = true;
 			console.log("authorizationObj.value: ", authorizationObj.value);
 		};
-		const onSubmitAdd = async (data) => {
+		const onSubmitAdd = async () => {
 			const authorizationData = {
-				domainID: authorizationObj.value.domainId,
+				domainID: authorizsationDomain.value.domainId,
 				userID: authorisationUser.value.id,
 				roleID: authorizationRole.value.id,
 			};
-			console.log("authorizationData", authorizationData);
-			console.log("data: ", data);
-
 			try {
 				await store.dispatch(
 					"appAuthorization/addAuthorization",
@@ -342,10 +334,6 @@ export default {
 				roleID: props.role.id,
 				userID: props.user.id,
 			};
-
-			console.log("authorizationData: ", authorizationData);
-			console.log("props: ", props);
-
 			try {
 				await store.dispatch(
 					"appAuthorization/updateAuthorization",
