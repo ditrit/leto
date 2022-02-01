@@ -24,12 +24,12 @@
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
 							<div class="text-h6 q-pa-md">{{ $t("edit_authorization") }}</div>
-							<pre>{{ authorizationObj }}</pre>
+							<pre>{{ props.row }}</pre>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
 							<q-form
-								@submit.prevent="onSubmitUpdate"
+								@submit.prevent="onSubmitUpdate(props.row)"
 								@reset="onResetUpdate"
 								class="q-gutter-md q-pa-md"
 							>
@@ -39,7 +39,7 @@
 											filled
 											:options="usersList"
 											label="User*"
-											v-model="authorizationObj[7]"
+											v-model="props.row.user"
 										/>
 									</div>
 									<div class="col">
@@ -47,7 +47,7 @@
 											filled
 											:options="roleList"
 											label="Role*"
-											v-model="authorizationObj[5]"
+											v-model="props.row.role"
 										/>
 									</div>
 									<div class="col">
@@ -55,7 +55,7 @@
 											filled
 											:options="domainList"
 											label="Domain*"
-											v-model="authorizationObj[3]"
+											v-model="props.row.domain"
 										/>
 									</div>
 								</div>
@@ -312,13 +312,11 @@ export default {
 					authorizationData
 				);
 				await allAuthorizations();
-				(authorizsationDomain.value = ""),
-					(authorisationUser.value = ""),
-					(authorizationRole.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "Authorizsation has been successfully created",
-					});
+
+				$q.notify({
+					type: "positive",
+					message: "Authorizsation has been successfully created",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -337,26 +335,30 @@ export default {
 			return selectedDomain;
 		};
 
-		const onSubmitUpdate = async () => {
+		const onSubmitUpdate = async (props) => {
 			const authorizationData = {
-				id: authorizationObj.value[0],
-				domainID: authorizationObj.value[3].domainId,
-				roleID: authorizationObj.value[5].id,
-				userID: authorizationObj.value[7].id,
+				id: props.id,
+				domainID: props.domain.domainId,
+				roleID: props.role.id,
+				userID: props.user.id,
 			};
 
 			console.log("authorizationData: ", authorizationData);
+			console.log("props: ", props);
 
 			try {
 				await store.dispatch(
 					"appAuthorization/updateAuthorization",
 					authorizationData
 				);
-				// await allRoles();
-				$q.notify({
-					type: "positive",
-					message: "Authorizsation has been successfully updated",
-				});
+				await allAuthorizations();
+				(authorizsationDomain.value = ""),
+					(authorisationUser.value = ""),
+					(authorizationRole.value = ""),
+					$q.notify({
+						type: "positive",
+						message: "Authorizsation has been successfully updated",
+					});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -372,11 +374,23 @@ export default {
 		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
-			authorizationObj.value = Object.values(currentTarget);
+			console.log("currentTarget", Object.values(currentTarget));
+			const data = Object.values(currentTarget);
+			authorizationObj.value = [data].map((item) => {
+				return {
+					id: item[0],
+					logo: item[1],
+					domainID: item[2],
+					domain: item[3],
+					roleID: item[4],
+					role: item[5],
+					userID: item[6],
+					user: item[7],
+				};
+			});
 		};
 		const deleteRow = async (id) => {
 			try {
-				console.log("authorizationID: ", id);
 				await store.dispatch("appAuthorization/removeAuthorization", id);
 				await allAuthorizations();
 				$q.notify({
