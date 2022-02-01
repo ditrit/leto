@@ -30,7 +30,7 @@ export default function useAuthorizationsTabsData(props) {
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
 		const list = computed(() => store.getters["appUsers/allUsers"]);
-		console.log("Users list: ", list.value);
+
 		usersList.value = list.value.map((user) => {
 			return {
 				id: user.ID,
@@ -45,12 +45,11 @@ export default function useAuthorizationsTabsData(props) {
 		});
 	};
 	getUsersList();
-	console.log("usersList.value: ", usersList.value);
 
 	const getRolesList = async () => {
 		await store.dispatch("appRoles/fetchAllRoles");
 		const roles = computed(() => store.getters["appRoles/allRoles"]);
-		console.log("Roles list: ", roles.value);
+
 		roleList.value = roles.value.map((role) => {
 			return {
 				id: role.ID,
@@ -77,12 +76,12 @@ export default function useAuthorizationsTabsData(props) {
 				value: domain.Name,
 			};
 		});
-		console.log("domains: ", domains);
+
 		// let index = domains.find(
 		// 	(domain) => domain.ID === authorizationDomainIDRef.value
 		// );
-		// console.log("index: ", index);
-		// console.log("authorizationDomainName.value", authorizationDomainName.value);
+		//
+		//
 		// return (authorizationDomainName.value = index.Name);
 	};
 	getDomainName();
@@ -95,8 +94,8 @@ export default function useAuthorizationsTabsData(props) {
 	// 	let data = computed(() => {
 	// 		return store.getters["appDomain/allDomaines"];
 	// 	});
-	// 	console.log('"data from refreshData: ": ', data.value);
-	// 	console.log("data.value[0].Environments: ", data.value[0].Environments);
+	//
+	//
 	// 	console.log(
 	// 		"	route.currentRoute.value.params.id: ",
 	// 		route.currentRoute.value.params.id
@@ -119,9 +118,7 @@ export default function useAuthorizationsTabsData(props) {
 			.onOk(() => {
 				deleteAuthorization(props);
 			})
-			.onCancel(() => {
-				console.log("Cancel");
-			});
+			.onCancel(() => {});
 	};
 
 	const addNewAuthorization = async () => {
@@ -130,8 +127,6 @@ export default function useAuthorizationsTabsData(props) {
 			// roleID: pickedRole.value.Role.ID,
 		};
 		// await store.dispatch("appAuthorization/addAuthorization", newAuthorization )
-
-		console.log("newAuthorization: ", newAuthorization);
 	};
 	addNewAuthorization();
 

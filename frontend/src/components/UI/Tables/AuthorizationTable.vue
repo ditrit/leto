@@ -20,7 +20,7 @@
 		>
 			<template v-slot:body-cell-avatar="props">
 				<!-- Modification Dialog -->
-				<q-dialog v-model="opendDialog" persistent>
+				<q-dialog v-model="opendEditAuthorizationDialog" persistent>
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
 							<div class="text-h6 q-pa-md">{{ $t("edit_authorization") }}</div>
@@ -89,7 +89,7 @@
 						round
 						flat
 						color="grey"
-						@click="editRow(props.row)"
+						@click="editRow"
 						icon="edit"
 					></q-btn>
 					<q-btn
@@ -105,7 +105,7 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddRoleDialog" persistent>
+		<q-dialog v-model="openAddAuthorizationDialog" persistent>
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
 					<div class="text-h6 q-pa-md">{{ $t("create_authorization") }}</div>
@@ -219,8 +219,8 @@ export default {
 	setup(props) {
 		const store = useStore();
 		const $q = useQuasar();
-		const opendDialog = ref(false);
-		const openAddRoleDialog = ref(false);
+		const opendEditAuthorizationDialog = ref(false);
+		const openAddAuthorizationDialog = ref(false);
 		const authorizationObj = ref(null);
 		const rowsData = ref([]);
 		const editedIndex = ref(null);
@@ -244,11 +244,7 @@ export default {
 			domainList,
 		} = useAuthorizationsTabsData(props);
 
-		console.log("rowsData.value:", rowsData.value);
-
-		console.log("domainListNames: ", domainListNames.value);
 		const confirm = (item) => {
-			console.log("item: ", item);
 			$q.dialog({
 				title: "Confirm",
 				message: "Are you sure to delete this item?",
@@ -258,9 +254,7 @@ export default {
 				.onOk(() => {
 					deleteRow(item.id);
 				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+				.onCancel(() => {});
 		};
 
 		const allAuthorizations = async () => {
@@ -269,7 +263,7 @@ export default {
 			const getAuth = computed(
 				() => store.getters["appAuthorization/allAuthorizations"]
 			);
-			console.log("rowsData.value", rowsData.value);
+
 			return (rowsData.value = Object.values(
 				getAuth.value.map((item) => {
 					return {
@@ -289,8 +283,7 @@ export default {
 		allAuthorizations();
 
 		const AddRole = () => {
-			openAddRoleDialog.value = true;
-			console.log("authorizationObj.value: ", authorizationObj.value);
+			openAddAuthorizationDialog.value = true;
 		};
 		const onSubmitAdd = async () => {
 			const authorizationData = {
@@ -304,27 +297,19 @@ export default {
 					authorizationData
 				);
 				await allAuthorizations();
-
-				$q.notify({
-					type: "positive",
-					message: "Authorizsation has been successfully created",
-				});
+				(authorizsationDomain.value = ""),
+					(authorisationUser.value = ""),
+					(authorizationRole.value = ""),
+					$q.notify({
+						type: "positive",
+						message: "Authorizsation has been successfully created",
+					});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
 					message: "Sorry, authorizsation has not been created",
 				});
 			}
-		};
-
-		const getSelectedDomainId = async () => {
-			const domains = domainList.value;
-			console.log("domains: ", domains);
-			const selectedDomain = await domains.find(
-				(domain) => domain.Name === authorizsationDomain.value
-			);
-			console.log("selectedDomain: ", selectedDomain);
-			return selectedDomain;
 		};
 
 		const onSubmitUpdate = async (props) => {
@@ -355,14 +340,13 @@ export default {
 			}
 		};
 		const onResetUpdate = () => {
-			return (openAddRoleDialog.value = false);
+			return (openAddAuthorizationDialog.value = false);
 		};
 		const onResetAdd = () => {
-			return (openAddRoleDialog.value = false);
+			return (openAddAuthorizationDialog.value = false);
 		};
 		const editRow = (currentTarget) => {
-			opendDialog.value = true;
-			console.log("currentTarget", Object.values(currentTarget));
+			opendEditAuthorizationDialog.value = true;
 			const data = Object.values(currentTarget);
 			authorizationObj.value = [data].map((item) => {
 				return {
@@ -381,10 +365,13 @@ export default {
 			try {
 				await store.dispatch("appAuthorization/removeAuthorization", id);
 				await allAuthorizations();
-				$q.notify({
-					type: "positive",
-					message: "Authorization has been successfully deleted",
-				});
+				(authorizsationDomain.value = ""),
+					(authorisationUser.value = ""),
+					(authorizationRole.value = ""),
+					$q.notify({
+						type: "positive",
+						message: "Authorization has been successfully deleted",
+					});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -409,8 +396,8 @@ export default {
 			onSubmitUpdate,
 			onResetUpdate,
 			onResetAdd,
-			opendDialog,
-			openAddRoleDialog,
+			opendEditAuthorizationDialog,
+			openAddAuthorizationDialog,
 			password: ref(""),
 			isPwd: ref(true),
 			usersList,
