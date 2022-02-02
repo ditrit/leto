@@ -226,7 +226,7 @@ export default {
 				store
 					.dispatch("appDomain/removeDomain", props.id)
 					.then(() => {
-						route.push(`/teams/${props.parentID}`);
+						route.push(`/workspaces/${props.parentID}`);
 					})
 					.then(() => {
 						refreshDomainData(props.parentID, props.data);

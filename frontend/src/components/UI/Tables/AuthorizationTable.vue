@@ -13,7 +13,7 @@
 			title=""
 			:rows="rowsData"
 			:columns="columns"
-			row-key="name"
+			row-key="user"
 			field
 			table-header-class="table_header"
 		>
@@ -27,7 +27,7 @@
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
 							<div class="text-h6 q-pa-md">{{ $t("edit_authorization") }}</div>
-							<pre>{{ rowsData }}</pre>
+							<pre>{{ props.row }}</pre>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
