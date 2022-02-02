@@ -213,7 +213,7 @@ export default {
 		const getDomainstree = async (id) => {
 			await store.dispatch("appDomain/fetchDomainesTree");
 			await store.getters["appDomain/allDomainesTree"];
-			await route.push(`/teams/${id}`);
+			await route.push(`/workspaces/${id}`);
 		};
 
 		return {

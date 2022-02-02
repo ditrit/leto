@@ -6,13 +6,13 @@ const routes = [
 		children: [
 			{ path: "", redirect: "/login" },
 			{
-				path: "teams",
+				path: "workspaces",
 				component: () => import("pages/PageTeams.vue"),
 				meta: { requiresAuth: true },
 			},
 
 			{
-				path: "teams/:id",
+				path: "workspaces/:id",
 				component: () => import("pages/PageDomainChild.vue"),
 				props: true,
 				meta: { requiresAuth: true },

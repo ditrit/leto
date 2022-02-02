@@ -53,22 +53,22 @@
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
 				<div class="q-pa-md q-gutter-sm">
 					<q-breadcrumbs v-for="link in menu" :key="link.id">
-						<q-breadcrumbs-el label="Teams " icon="home" to="/teams" />
+						<q-breadcrumbs-el label="Teams " icon="home" to="/workspaces" />
 						<q-breadcrumbs-el
 							:label="link.label + ' '"
-							:to="`/teams/${link.id}`"
+							:to="`/workspaces/${link.id}`"
 						/>
 						<q-breadcrumbs-el
 							v-for="childLink in link.children"
 							:key="childLink.id"
 							:label="childLink.label + ' '"
-							:to="`/teams/${childLink.id}`"
+							:to="`/workspaces/${childLink.id}`"
 						/>
 						<q-breadcrumbs-el
 							v-for="subChildLink in childLink"
 							:key="subChildLink.id"
 							:label="subChildLink.label + ' '"
-							:to="`/teams/${subChildLink.id}`"
+							:to="`/workspaces/${subChildLink.id}`"
 						/>
 					</q-breadcrumbs>
 				</div>

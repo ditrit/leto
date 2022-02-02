@@ -33,9 +33,9 @@ import EssentialTools from "components/EssentialTools";
 const linksToolsList = [
 	{
 		title: "",
-		caption: "Teams ",
+		caption: "Workspaces ",
 		icon: "group",
-		link: "#/teams",
+		link: "#/workspaces",
 	},
 	{
 		title: "",

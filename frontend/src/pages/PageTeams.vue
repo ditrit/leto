@@ -105,7 +105,7 @@ export default defineComponent({
 		const chosenNodeID = ref("");
 		const goToID = (node) => {
 			chosenNodeID.value = node.id;
-			router.push(`/teams/${node.id}`);
+			router.push(`/workspaces/${node.id}`);
 			console.log("chosenNodeID: ", chosenNodeID.value);
 		};
 
