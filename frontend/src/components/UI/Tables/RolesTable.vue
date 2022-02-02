@@ -20,7 +20,7 @@
 		>
 			<template v-slot:body-cell-avatar="props">
 				<!-- Modification Dialog -->
-				<q-dialog v-model="opendDialog" persistent>
+				<q-dialog v-model="opendDialog" persistent position="bottom">
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
 							<div class="text-h6 q-pa-md">{{ $t("edit_role") }}</div>
@@ -107,7 +107,7 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddRoleDialog" persistent>
+		<q-dialog v-model="openAddRoleDialog" persistent position="bottom">
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
 					<div class="text-h6 q-pa-md">{{ $t("create_role") }}</div>

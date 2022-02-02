@@ -75,7 +75,7 @@
 						<p>{{ tagData.description }}</p>
 
 						<!-- Create Dialog -->
-						<q-dialog v-model="openAddTagDialog" persistent>
+						<q-dialog v-model="openAddTagDialog" persistent position="bottom">
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">{{ $t("create_tag") }}</div>
@@ -151,7 +151,7 @@
 						</q-dialog>
 
 						<!-- Modification Dialog -->
-						<q-dialog v-model="openEditDialog" persistent>
+						<q-dialog v-model="openEditDialog" persistent position="bottom">
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">{{ $t("edit_tag") }}</div>

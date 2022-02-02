@@ -26,6 +26,8 @@ export default function useAuthorizationsTabsData(props) {
 	const authorizationDomainIDRef = ref(props.authorizationDomainID);
 	const authorizationDomainName = ref("");
 	const domainListNames = ref([]);
+	const opendEditAuthorizationDialog = ref(false);
+	const openAddAuthorizationDialog = ref(false);
 
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
@@ -155,5 +157,7 @@ export default function useAuthorizationsTabsData(props) {
 		authorizationUserIDRef,
 		authorizationDomainName,
 		domainListNames,
+		opendEditAuthorizationDialog,
+		openAddAuthorizationDialog,
 	};
 }

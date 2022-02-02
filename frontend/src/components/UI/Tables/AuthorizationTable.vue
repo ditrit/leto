@@ -6,29 +6,33 @@
 				text-color="primary"
 				label="Add new Authorization"
 				class="q-my-md"
-				@click.prevent="AddRole"
+				@click.prevent="addNewAuthorization"
 			/>
 		</div>
 		<q-table
-			:key="updateKey"
 			title=""
 			:rows="rowsData"
 			:columns="columns"
-			row-key="domain"
+			row-key="name"
 			field
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
 				<!-- Modification Dialog -->
-				<q-dialog v-model="opendEditAuthorizationDialog" persistent>
+				<q-dialog
+					v-model="opendEditAuthorizationDialog"
+					persistent
+					position="bottom"
+				>
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
 							<div class="text-h6 q-pa-md">{{ $t("edit_authorization") }}</div>
+							<pre>{{ rowsData }}</pre>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
 							<q-form
-								@submit.prevent="onSubmitUpdate(props.row)"
+								@submit.prevent="onSubmitUpdate"
 								@reset="onResetUpdate"
 								class="q-gutter-md q-pa-md"
 							>
@@ -89,7 +93,7 @@
 						round
 						flat
 						color="grey"
-						@click="editRow"
+						@click.prevent="editAuthorizationRow(props.row)"
 						icon="edit"
 					></q-btn>
 					<q-btn
@@ -105,7 +109,7 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddAuthorizationDialog" persistent>
+		<q-dialog v-model="openAddAuthorizationDialog" persistent position="bottom">
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
 					<div class="text-h6 q-pa-md">{{ $t("create_authorization") }}</div>
@@ -219,11 +223,8 @@ export default {
 	setup(props) {
 		const store = useStore();
 		const $q = useQuasar();
-		const opendEditAuthorizationDialog = ref(false);
-		const openAddAuthorizationDialog = ref(false);
 		const authorizationObj = ref(null);
 		const rowsData = ref([]);
-		const editedIndex = ref(null);
 		const authorizsationDomain = ref("");
 		const authorisationUser = ref("");
 		const authorizationRole = ref("");
@@ -242,6 +243,8 @@ export default {
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
 			domainList,
+			opendEditAuthorizationDialog,
+			openAddAuthorizationDialog,
 		} = useAuthorizationsTabsData(props);
 
 		const confirm = (item) => {
@@ -282,7 +285,7 @@ export default {
 		};
 		allAuthorizations();
 
-		const AddRole = () => {
+		const addNewAuthorization = () => {
 			openAddAuthorizationDialog.value = true;
 		};
 		const onSubmitAdd = async () => {
@@ -324,14 +327,14 @@ export default {
 					"appAuthorization/updateAuthorization",
 					authorizationData
 				);
-				await allAuthorizations();
 				(authorizsationDomain.value = ""),
 					(authorisationUser.value = ""),
 					(authorizationRole.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "Authorizsation has been successfully updated",
-					});
+					await allAuthorizations();
+				$q.notify({
+					type: "positive",
+					message: "Authorizsation has been successfully updated",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -345,21 +348,9 @@ export default {
 		const onResetAdd = () => {
 			return (openAddAuthorizationDialog.value = false);
 		};
-		const editRow = (currentTarget) => {
+		const editAuthorizationRow = (item) => {
 			opendEditAuthorizationDialog.value = true;
-			const data = Object.values(currentTarget);
-			authorizationObj.value = [data].map((item) => {
-				return {
-					id: item[0],
-					logo: item[1],
-					domainID: item[2],
-					domain: item[3],
-					roleID: item[4],
-					role: item[5],
-					userID: item[6],
-					user: item[7],
-				};
-			});
+			console.log("item: ", item);
 		};
 		const deleteRow = async (id) => {
 			try {
@@ -382,15 +373,14 @@ export default {
 
 		return {
 			confirm,
-			editedIndex,
 			columns,
 			rowsData,
 			authorizationObj,
-			AddRole,
+			addNewAuthorization,
 			authorizsationDomain,
 			authorisationUser,
 			authorizationRole,
-			editRow,
+			editAuthorizationRow,
 			deleteRow,
 			onSubmitAdd,
 			onSubmitUpdate,

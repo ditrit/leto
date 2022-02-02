@@ -5,6 +5,7 @@
   --gray: #424242
   --card-height : 140px
   --p-padding: 0 53px
+  --dialog-bg: #474262e8
 
 html, body
     width: 100%
@@ -79,6 +80,11 @@ html, body
   position: absolute
   top: 0
 
+.q-dialog__backdrop 
+  z-index: -1
+  pointer-events: all
+  outline: 0
+  background: var(--dialog-bg)
 
 .menuDrawer aside
   z-index: 1 !important
