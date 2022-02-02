@@ -1,7 +1,7 @@
 export default {
-	teams: "Equipe",
-	add_team: "Nouvelle équipe",
-	edit_team: "Modifier l'équipe",
+	teams: "Espaces de travail",
+	add_team: "Nouvelle espace de travail",
+	edit_team: "Modifier l'espace de travail",
 	profile: "Profil",
 	users: "Utilisateurs",
 	authorization: "Autorisation",
