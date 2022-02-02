@@ -34,7 +34,7 @@ const linksToolsList = [
 	{
 		title: "",
 		caption: "Workspaces ",
-		icon: "group",
+		icon: "workspaces",
 		link: "#/workspaces",
 	},
 	{

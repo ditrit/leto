@@ -1,7 +1,7 @@
 export default {
-	teams: "Teams",
-	add_team: "Add new Team",
-	edit_team: "Edit Team",
+	teams: "Workspaces",
+	add_team: "Add new workspace",
+	edit_team: "Edit workspace",
 	profile: "Profile",
 	users: "Users",
 	authorization: "Authorization",

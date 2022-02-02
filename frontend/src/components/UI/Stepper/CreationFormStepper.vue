@@ -29,7 +29,7 @@
 							<q-select
 								filled
 								:options="optionsSelections"
-								label="Team Parent"
+								label="Workspace parent"
 								v-model="selectedParentData"
 							/>
 						</div>

@@ -21,7 +21,7 @@
 								filled
 								v-model="model"
 								:options="options"
-								label="Team Parent"
+								label="Workspace parent"
 							/>
 						</div>
 						<div class="col col-md-3">
@@ -79,7 +79,7 @@
 								filled
 								v-model="model"
 								:options="options"
-								label="Team Parent"
+								label="Workspace parent"
 							/>
 						</div>
 						<div class="col col-md-3">
@@ -137,7 +137,7 @@
 								filled
 								v-model="model"
 								:options="options"
-								label="Team Parent"
+								label="Workspace parent"
 							/>
 						</div>
 						<div class="col col-md-3">
