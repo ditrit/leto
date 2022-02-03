@@ -47,7 +47,9 @@
 									</q-item>
 									<q-item
 										clickable
-										@click.prevent="delteItem(authorizationIdRef)"
+										@click.prevent="
+											confirmDeleteAuthorization(authorizationIdRef)
+										"
 									>
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
@@ -187,6 +189,7 @@ export default {
 			getRolesList,
 			getUsersList,
 			authorizationDomainNameRef,
+			confirmDeleteAuthorization,
 		} = useAuthorizationsTabsData(props);
 
 		const openEditionModal = (currentItem) => {
@@ -268,6 +271,7 @@ export default {
 			onResetUpdate,
 			onFileUpload,
 			onRejected,
+			confirmDeleteAuthorization,
 			selectedParentData,
 			optionsSelections,
 			authorizationIdRef,

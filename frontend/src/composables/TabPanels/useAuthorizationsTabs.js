@@ -87,25 +87,23 @@ export default function useAuthorizationsTabsData(props) {
 	};
 	getDomainName();
 
-	// const refreshData = async () => {
-	// 	await store.dispatch(
-	// 		"appDomain/fetchDomainById",
-	// 		route.currentRoute.value.params.id
-	// 	);
-	// 	let data = computed(() => {
-	// 		return store.getters["appDomain/allDomaines"];
-	// 	});
-	//
-	//
-	// 	console.log(
-	// 		"	route.currentRoute.value.params.id: ",
-	// 		route.currentRoute.value.params.id
-	// 	);
-	// 	environmentTeam.value = data.value[0].Environments;
-	// };
+	const refreshAuthorizationTab = async () => {
+		await store.dispatch(
+			"appDomain/fetchDomainById",
+			route.currentRoute.value.params.id
+		);
 
-	const deleteAuthorization = async (evironment) => {
-		await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
+		let domain = computed(() => store.getters["appDomain/allDomaines"]);
+		console.log("domain from refresh: ", domain.value);
+	};
+	refreshAuthorizationTab();
+
+	const deleteAuthorization = async (id) => {
+		await store
+			.dispatch("appAuthorization/removeAuthorization", id)
+			.then(() => {
+				refreshAuthorizationTab();
+			});
 		// refreshData();
 	};
 
