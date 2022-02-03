@@ -24,7 +24,7 @@ export default function useAuthorizationsTabsData(props) {
 	);
 	const authorizationDescriptionRef = ref(props.authorizationDescription);
 	const authorizationDomainIDRef = ref(props.authorizationDomainID);
-	const authorizationDomainName = ref("");
+	const authorizationDomainNameRef = ref(props.authorizationDomainName);
 	const domainListNames = ref([]);
 	const opendEditAuthorizationDialog = ref(false);
 	const openAddAuthorizationDialog = ref(false);
@@ -79,12 +79,11 @@ export default function useAuthorizationsTabsData(props) {
 			};
 		});
 
-		// let index = domains.find(
-		// 	(domain) => domain.ID === authorizationDomainIDRef.value
-		// );
-		//
-		//
-		// return (authorizationDomainName.value = index.Name);
+		let index = domains.find(
+			(domain) => domain.ID === authorizationDomainIDRef.value
+		);
+
+		return (authorizationDomainNameRef.value = index.Name);
 	};
 	getDomainName();
 
@@ -155,7 +154,7 @@ export default function useAuthorizationsTabsData(props) {
 		authorizationRoleNameRef,
 		authorizationRoleIDRef,
 		authorizationUserIDRef,
-		authorizationDomainName,
+		authorizationDomainNameRef,
 		domainListNames,
 		opendEditAuthorizationDialog,
 		openAddAuthorizationDialog,

@@ -31,17 +31,13 @@
 										clickable
 										@click.prevent="
 											openEditionModal([
-												{
-													authorizationNameRef,
-													authorizationRoleRef,
-													authorizationRoleNameRef,
-													authorizationIdRef,
-													authorizationLogoRef,
-													authorizationShortDescriptionRef,
-													authorizationDescriptionRef,
-													authorizationDomainIDRef,
-													authorizationUserIDRef,
-												},
+												authorizationIdRef,
+												authorizationRoleIDRef,
+												authorizationRoleNameRef,
+												authorizationUserIDRef,
+												authorizationNameRef,
+												authorizationDomainIDRef,
+												authorizationDomainNameRef,
 											])
 										"
 									>
@@ -62,7 +58,7 @@
 							</q-menu>
 						</q-btn>
 						<!-- Modification dialog -->
-						<q-dialog v-model="isOpened" persistent>
+						<q-dialog v-model="isOpened" persistent position="bottom">
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">
@@ -72,7 +68,7 @@
 
 								<q-card-section class="q-pt-none">
 									<q-form
-										@submit.prevent="onSubmitUpdate(item)"
+										@submit.prevent="onSubmitUpdate"
 										@reset="onResetUpdate"
 										class="q-gutter-sm q-pa-md"
 									>
@@ -90,16 +86,16 @@
 													filled
 													:options="roleList"
 													label="Role"
-													v-model="authorizationRoleRef"
+													v-model="authorizationRoleNameRef"
 												/>
 											</div>
-											<div class="col">
+											<div class="col" disabled>
 												<q-select
 													disabled
 													filled
 													:options="domainList"
 													label="Domain"
-													v-model="authorizationDomainName"
+													v-model="authorizationDomainNameRef"
 												/>
 											</div>
 										</div>
@@ -153,6 +149,7 @@ export default {
 		authorizationShortDescription: { type: String },
 		authorizationDescription: { type: String },
 		authorizationDomainID: { type: String },
+		authorizationDomainName: { type: String },
 		authorizationRoleID: { type: String },
 		authorizationUserID: { type: String },
 	},
@@ -179,15 +176,16 @@ export default {
 			authorizationUserIDRef,
 			getRolesList,
 			getUsersList,
-			authorizationDomainName,
+			authorizationDomainNameRef,
 		} = useAuthorizationsTabsData(props);
 
-		const openEditionModal = (props) => {
+		const openEditionModal = (currentItem) => {
+			console.log("currentItem: ", currentItem);
 			isOpened.value = true;
-			emit("openAuthorizationEditModal", props);
+			emit("openAuthorizationEditModal", currentItem);
 		};
 
-		const updateItem = () => {
+		const updateItem = (props) => {
 			emit("updateAuthorizationAction", props);
 		};
 		const delteItem = async (id) => {
@@ -220,9 +218,11 @@ export default {
 			let updates = {
 				id: authorizationIdRef.value,
 				domainID: authorizationDomainIDRef.value,
+				domain: authorizationDomainNameRef.value,
 				roleID: authorizationRoleIDRef.value,
+				role: authorizationRoleNameRef.value.name,
 				userID: authorizationUserIDRef.value,
-				roleName: authorizationRoleNameRef.value.name,
+				user: authorizationNameRef.value.label,
 			};
 			console.log("updates: ", updates);
 			emit("updateAuthorizationAction", updates);
@@ -282,7 +282,7 @@ export default {
 			authorizationUserIDRef,
 			getRolesList,
 			getUsersList,
-			authorizationDomainName,
+			authorizationDomainNameRef,
 		};
 	},
 };
