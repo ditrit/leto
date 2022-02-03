@@ -68,7 +68,17 @@
 
 								<q-card-section class="q-pt-none">
 									<q-form
-										@submit.prevent="onSubmitUpdate"
+										@submit.prevent="
+											onSubmitUpdate([
+												authorizationIdRef,
+												authorizationRoleIDRef,
+												authorizationRoleNameRef,
+												authorizationUserIDRef,
+												authorizationNameRef,
+												authorizationDomainIDRef,
+												authorizationDomainNameRef,
+											])
+										"
 										@reset="onResetUpdate"
 										class="q-gutter-sm q-pa-md"
 									>
@@ -186,6 +196,7 @@ export default {
 		};
 
 		const updateItem = (props) => {
+			console.log("props from update: ", props);
 			emit("updateAuthorizationAction", props);
 		};
 		const delteItem = async (id) => {
@@ -202,27 +213,20 @@ export default {
 				});
 		};
 
-		const refreshAuthorization = async (id, updatesData) => {
+		const refreshAuthorization = async (id) => {
 			await store.dispatch("appAuthorization/fetchAuthorizationById", id);
-			let data = computed(() => {
+			computed(() => {
 				return store.getters["appAuthorization/allAuthorization"];
 			});
-			console.log("data: ", data.value);
-			authorizationIdRef.value = updatesData.id;
-			authorizationDomainIDRef.value = updatesData.domainID;
-			authorizationRoleIDRef.value = updatesData.roleID;
-			authorizationUserIDRef.value = updatesData.authorizationUserID;
-			authorizationRoleNameRef.value = updatesData.authorizationRoleName;
 		};
-		const onSubmitUpdate = async () => {
+		const onSubmitUpdate = async (currentData) => {
+			updateItem(currentData);
+			console.log("currentData: ", currentData);
 			let updates = {
-				id: authorizationIdRef.value,
-				domainID: authorizationDomainIDRef.value,
-				domain: authorizationDomainNameRef.value,
-				roleID: authorizationRoleIDRef.value,
-				role: authorizationRoleNameRef.value.name,
-				userID: authorizationUserIDRef.value,
-				user: authorizationNameRef.value.label,
+				id: currentData[0],
+				domainID: currentData[5],
+				roleID: currentData[2].id,
+				userID: currentData[4].id,
 			};
 			console.log("updates: ", updates);
 			emit("updateAuthorizationAction", updates);
