@@ -193,18 +193,12 @@ export default {
 		} = useAuthorizationsTabsData(props);
 
 		const openEditionModal = (currentItem) => {
-			console.log("currentItem: ", currentItem);
 			isOpened.value = true;
 			emit("openAuthorizationEditModal", currentItem);
 		};
 
 		const delteItem = async (id) => {
 			emit("deleteAuthorizationAction", props);
-			console.log("props: ", props);
-			console.table({
-				id: props.authorizationId,
-				domainID: props.authorizationDomainID,
-			});
 			await store
 				.dispatch("appAuthorization/removeAuthorization", id)
 				.then(() => {
@@ -219,7 +213,6 @@ export default {
 			});
 		};
 		const onSubmitUpdate = async (currentData) => {
-			console.log("currentData: ", currentData);
 			let updates = {
 				id: currentData[0],
 				domainID: currentData[5],
@@ -230,7 +223,7 @@ export default {
 			(authorizationNameRef.value = currentData[4].label),
 				(authorizationRoleNameRef.value = currentData[2].name),
 				emit("updateAuthorizationAction", updates);
-			console.log("submitUpdateAuthorizationAction: ", updates);
+
 			await store
 				.dispatch("appAuthorization/updateAuthorization", updates)
 				.then(() => {
@@ -244,15 +237,9 @@ export default {
 				});
 		};
 
-		const onResetUpdate = () => {
-			console.log("event: ", props.id);
-		};
+		const onResetUpdate = () => {};
 
-		const onFileUpload = (event) => {
-			console.log("file name", event.files[0].name);
-			console.log("file upload number", event.files[0].__uploaded);
-			console.log("file Id", event.files[0].xhr.response);
-		};
+		const onFileUpload = (event) => {};
 
 		const onRejected = (rejectedEntries) => {
 			$q.notify({

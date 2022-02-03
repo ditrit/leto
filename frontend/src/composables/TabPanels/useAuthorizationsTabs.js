@@ -94,7 +94,7 @@ export default function useAuthorizationsTabsData(props) {
 		);
 
 		let domain = computed(() => store.getters["appDomain/allDomaines"]);
-		console.log("domain from refresh: ", domain.value);
+		return domain.value;
 	};
 	refreshAuthorizationTab();
 
@@ -104,7 +104,6 @@ export default function useAuthorizationsTabsData(props) {
 			.then(() => {
 				refreshAuthorizationTab();
 			});
-		// refreshData();
 	};
 
 	const confirmDeleteAuthorization = (props) => {

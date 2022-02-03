@@ -252,6 +252,15 @@
 										:options="roleList"
 										label="Choose a role"
 									/>
+									<div class="col" disabled>
+										<q-select
+											disabled
+											filled
+											:options="domainList"
+											label="Domain"
+											v-model="authorizationDomainNameRef"
+										/>
+									</div>
 
 									<q-card-actions
 										align="right"
@@ -627,8 +636,12 @@ export default {
 			updateProduct,
 		} = useProductsTabData(props);
 
-		let { authorizationNameRef, authorizationRoleRef } =
-			useAuthorizationsTabsData(props);
+		let {
+			authorizationNameRef,
+			authorizationRoleRef,
+			domainList,
+			authorizationDomainNameRef,
+		} = useAuthorizationsTabsData(props);
 
 		let { refreshDomainData } = useContentCardData();
 		const isEnvironmentsCreationOpened = ref(false);
@@ -737,6 +750,8 @@ export default {
 			roleList,
 			authorizationNameRef,
 			authorizationRoleRef,
+			domainList,
+			authorizationDomainNameRef,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};
