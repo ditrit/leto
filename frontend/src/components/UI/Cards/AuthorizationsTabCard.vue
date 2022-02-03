@@ -68,7 +68,7 @@
 
 								<q-card-section class="q-pt-none">
 									<q-form
-										@submit.prevent="
+										@submit.stop="
 											onSubmitUpdate([
 												authorizationIdRef,
 												authorizationRoleIDRef,
@@ -195,10 +195,6 @@ export default {
 			emit("openAuthorizationEditModal", currentItem);
 		};
 
-		const updateItem = (props) => {
-			console.log("props from update: ", props);
-			emit("updateAuthorizationAction", props);
-		};
 		const delteItem = async (id) => {
 			emit("deleteAuthorizationAction", props);
 			console.log("props: ", props);
@@ -220,7 +216,6 @@ export default {
 			});
 		};
 		const onSubmitUpdate = async (currentData) => {
-			updateItem(currentData);
 			console.log("currentData: ", currentData);
 			let updates = {
 				id: currentData[0],
@@ -228,18 +223,20 @@ export default {
 				roleID: currentData[2].id,
 				userID: currentData[4].id,
 			};
-			console.log("updates: ", updates);
-			emit("updateAuthorizationAction", updates);
+
+			(authorizationNameRef.value = currentData[4].label),
+				(authorizationRoleNameRef.value = currentData[2].name),
+				emit("updateAuthorizationAction", updates);
 			console.log("submitUpdateAuthorizationAction: ", updates);
 			await store
 				.dispatch("appAuthorization/updateAuthorization", updates)
 				.then(() => {
-					refreshAuthorization(updates.id, updates);
+					refreshAuthorization(updates.id);
 				})
 				.then(() => {
 					$q.notify({
 						type: "positive",
-						message: `${authorizationNameRef} environment was succefuly updated`,
+						message: `${authorizationNameRef.value} authorization was succefuly updated`,
 					});
 				});
 		};
@@ -266,7 +263,6 @@ export default {
 			roleList,
 			isOpened,
 			openEditionModal,
-			updateItem,
 			delteItem,
 			onSubmitUpdate,
 			onResetUpdate,
