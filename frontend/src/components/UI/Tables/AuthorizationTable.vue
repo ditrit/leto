@@ -13,7 +13,7 @@
 			title=""
 			:rows="rowsData"
 			:columns="columns"
-			row-key="user"
+			row-key="name"
 			field
 			table-header-class="table_header"
 		>
@@ -42,7 +42,7 @@
 											filled
 											:options="usersList"
 											label="User*"
-											v-model="props.row.user"
+											v-model="authorizationObj[7]"
 										/>
 									</div>
 									<div class="col">
@@ -50,7 +50,7 @@
 											filled
 											:options="roleList"
 											label="Role*"
-											v-model="props.row.role"
+											v-model="authorizationObj[5]"
 										/>
 									</div>
 									<div class="col">
@@ -58,7 +58,7 @@
 											filled
 											:options="domainList"
 											label="Domain*"
-											v-model="props.row.domain"
+											v-model="authorizationObj[3]"
 										/>
 									</div>
 								</div>
@@ -93,7 +93,7 @@
 						round
 						flat
 						color="grey"
-						@click.prevent="editAuthorizationRow(props.row)"
+						@click.stop="editAuthorizationRow(props.row)"
 						icon="edit"
 					></q-btn>
 					<q-btn
@@ -315,12 +315,12 @@ export default {
 			}
 		};
 
-		const onSubmitUpdate = async (props) => {
+		const onSubmitUpdate = async () => {
 			const authorizationData = {
-				id: props.id,
-				domainID: props.domain.domainId,
-				roleID: props.role.id,
-				userID: props.user.id,
+				id: authorizationObj.value[0],
+				domainID: authorizationObj.value[3].domainId,
+				roleID: authorizationObj.value[5].id,
+				userID: authorizationObj.value[7].id,
 			};
 			try {
 				await store.dispatch(
@@ -348,9 +348,10 @@ export default {
 		const onResetAdd = () => {
 			return (openAddAuthorizationDialog.value = false);
 		};
-		const editAuthorizationRow = (item) => {
+		const editAuthorizationRow = (currentTarget) => {
 			opendEditAuthorizationDialog.value = true;
-			console.log("item: ", item);
+			authorizationObj.value = Object.values(currentTarget);
+			console.log("authorizationObj.value: ", authorizationObj.value);
 		};
 		const deleteRow = async (id) => {
 			try {
