@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="col-8" v-for="item in data" :key="item.id">
+		<div class="col-8" v-for="(item, index) in data" :key="index">
 			<q-card class="card_default" flat bordered>
 				<q-card-section>
 					<div class="row no-wrap">

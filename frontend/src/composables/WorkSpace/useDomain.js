@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import API from "../../services/index";
 
-export default function useDomainData() {
+export default function useDomainData(props) {
 	const store = useStore();
 	const $q = useQuasar();
 	const router = useRouter();
@@ -15,6 +15,7 @@ export default function useDomainData() {
 	const progress = ref(null);
 	const domainTags = ref([]);
 	const globalTagsTreeList = ref([]);
+	const domainID = ref(props.id);
 
 	const getMenuData = async () => {
 		await store.dispatch("appDomain/fetchDomainesTree");
@@ -90,6 +91,7 @@ export default function useDomainData() {
 	const goToID = async (node) => {
 		choosenNodeID.value = node.id;
 		console.log("goToID choosenNodeID.value: ", choosenNodeID.value);
+		console.log("goToID choosenNodeID.value: ", domainID.value);
 		await router.push(`/workspaces/${choosenNodeID.value}`);
 		editMode.value = false;
 		await rigthData(choosenNodeID.value);
@@ -98,9 +100,18 @@ export default function useDomainData() {
 	const refreshDomain = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
-		currentDomainDataContent.value = await data.value[0];
+		currentDomainDataContent.value = await data.value;
+		console.log(" data.value: ", data.value);
 		domainTags.value = await data.value[0].Tags;
 		console.log("	Refresh domainTags.value: ", domainTags.value);
+		await getMenuData();
+	};
+	const refreshDomainTag = async (id) => {
+		await store.dispatch("appDomain/fetchDomainById", id);
+		let data = computed(() => store.getters["appDomain/allDomaines"]);
+		console.log(" data.value: ", data.value);
+		console.log("	Refresh domainTags.value: ", domainTags.value);
+		return (domainTags.value = await data.value.Tags);
 		// await getMenuData();
 	};
 
@@ -109,11 +120,14 @@ export default function useDomainData() {
 		console.log("tag id:", tag.id);
 		// store.dispatch("appDomain/addDomainTag", props.id, `${tag.id}`);
 		//TODO: Modify Axios action
-		await API.post(`/domain/${choosenNodeID.value}/tag/${tag.id}`)
-			.then((response) => console.log(response))
-			.then(() => refreshDomain(choosenNodeID.value))
-			.catch((err) => console.log(err));
+		try {
+			await API.post(`/domain/${choosenNodeID.value}/tag/${tag.id}`);
+			refreshDomainTag(choosenNodeID.value);
+		} catch (error) {
+			console.log(err);
+		}
 	};
+	addTagtoDomain();
 
 	const getTagsTree = async () => {
 		await store.dispatch("appTags/fetchAllTagsTree");
@@ -159,7 +173,7 @@ export default function useDomainData() {
 		//TODO: Add Axios Action
 		await API.delete(`/domain/${choosenNodeID.value}/tag/${id}`)
 			.then((response) => console.log(response))
-			.then(() => refreshDomain(choosenNodeID.value))
+			.then(() => refreshDomainTag(choosenNodeID.value))
 			.catch((error) => console.log(error));
 	};
 
@@ -196,9 +210,9 @@ export default function useDomainData() {
 		domainTags,
 		globalTagsTreeList,
 		getTagsTree,
-		refreshDomain,
 		OnDelete,
 		confirm,
 		OnEdit,
+		domainID,
 	};
 }

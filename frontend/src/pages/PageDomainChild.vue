@@ -197,7 +197,7 @@ export default defineComponent({
 		AccountSettings,
 	},
 	props: ["id"],
-	setup() {
+	setup(props) {
 		const drawer = ref(false);
 		const actionsLinks = ref(["Edit"]);
 		const oepnDialog = ref(false);
@@ -220,13 +220,13 @@ export default defineComponent({
 			domainTags,
 			globalTagsTreeList,
 			getTagsTree,
-			refreshDomain,
 			OnDelete,
 			editMode,
 			$q,
 			confirm,
 			OnEdit,
-		} = useDomainData();
+			domainID,
+		} = useDomainData(props);
 
 		return {
 			confirm,
@@ -236,7 +236,6 @@ export default defineComponent({
 			drawer,
 			oepnDialog,
 			goToID,
-			refreshDomain,
 			rigthData,
 			choosenNodeID,
 			currentDomainDataContent,
@@ -265,6 +264,7 @@ export default defineComponent({
 			OnEdit,
 			OnDelete,
 			globalTagsTreeList,
+			domainID,
 		};
 	},
 });
