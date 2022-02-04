@@ -89,11 +89,11 @@ export default function useDomainData() {
 	};
 	const goToID = async (node) => {
 		choosenNodeID.value = node.id;
+		console.log("goToID choosenNodeID.value: ", choosenNodeID.value);
+		await router.push(`/workspaces/${choosenNodeID.value}`);
 		editMode.value = false;
 		await rigthData(choosenNodeID.value);
-		await router.push(`/workspaces/${choosenNodeID.value}`);
 	};
-	goToID();
 
 	const refreshDomain = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
@@ -101,7 +101,7 @@ export default function useDomainData() {
 		currentDomainDataContent.value = await data.value[0];
 		domainTags.value = await data.value[0].Tags;
 		console.log("	Refresh domainTags.value: ", domainTags.value);
-		await getMenuData();
+		// await getMenuData();
 	};
 
 	const addTagtoDomain = async (tag) => {

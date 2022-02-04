@@ -53,7 +53,11 @@
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
 				<div class="q-pa-md q-gutter-sm">
 					<q-breadcrumbs v-for="link in menu" :key="link.id">
-						<q-breadcrumbs-el label="Teams " icon="home" to="/workspaces" />
+						<q-breadcrumbs-el
+							label="Workspaces "
+							icon="home"
+							to="/workspaces"
+						/>
 						<q-breadcrumbs-el
 							:label="link.label + ' '"
 							:to="`/workspaces/${link.id}`"
@@ -193,7 +197,7 @@ export default defineComponent({
 		AccountSettings,
 	},
 	props: ["id"],
-	setup(props) {
+	setup() {
 		const drawer = ref(false);
 		const actionsLinks = ref(["Edit"]);
 		const oepnDialog = ref(false);

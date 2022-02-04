@@ -79,7 +79,7 @@ export default function useAuthorizationsTabsData(props) {
 			};
 		});
 
-		let index = domains.find(
+		let index = await domains.find(
 			(domain) => domain.ID === authorizationDomainIDRef.value
 		);
 
