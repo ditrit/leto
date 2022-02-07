@@ -95,15 +95,15 @@ export default function useDomainData(props) {
 		await rigthData(choosenNodeID.value);
 	};
 
-	const refreshDomain = async (id) => {
-		await store.dispatch("appDomain/fetchDomainById", id);
-		let data = computed(() => store.getters["appDomain/allDomaines"]);
-		currentDomainDataContent.value = await data.value;
-		console.log(" data.value: ", data.value);
-		domainTags.value = await data.value[0].Tags;
-		console.log("	Refresh domainTags.value: ", domainTags.value);
-		await getMenuData();
-	};
+	// const refreshDomain = async (id) => {
+	// 	await store.dispatch("appDomain/fetchDomainById", id);
+	// 	let data = computed(() => store.getters["appDomain/allDomaines"]);
+	// 	currentDomainDataContent.value = await data.value;
+	// 	console.log(" data.value: ", data.value);
+	// 	domainTags.value = await data.value[0].Tags;
+	// 	console.log("	Refresh domainTags.value: ", domainTags.value);
+	// 	await getMenuData();
+	// };
 	const refreshDomainTag = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);

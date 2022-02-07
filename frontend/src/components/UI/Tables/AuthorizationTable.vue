@@ -55,7 +55,7 @@
 									<div class="col">
 										<q-select
 											filled
-											:options="domainList"
+											:options="domainListNames"
 											label="Domain*"
 											v-model="authorizationObj[3]"
 										/>
@@ -140,7 +140,7 @@
 							<div class="col">
 								<q-select
 									filled
-									:options="domainList"
+									:options="domainListNames"
 									label="Domain"
 									v-model="authorizsationDomain"
 								/>
@@ -242,6 +242,7 @@ export default {
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
 			domainList,
+			getDominList,
 			opendEditAuthorizationDialog,
 			openAddAuthorizationDialog,
 		} = useAuthorizationsTabsData(props);
@@ -372,6 +373,7 @@ export default {
 		};
 
 		return {
+			getDominList,
 			confirm,
 			columns,
 			rowsData,

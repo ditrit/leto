@@ -29,6 +29,14 @@ export default function useAuthorizationsTabsData(props) {
 	const opendEditAuthorizationDialog = ref(false);
 	const openAddAuthorizationDialog = ref(false);
 
+	const getDominList = async () => {
+		await store.dispatch("appDomain/fetchAllDomaines");
+		let data = computed(() => store.getters["appDomain/allDomaines"]);
+		domainListNames.value = data.value.map((domain) => domain.Name);
+		console.log("domainListNames.value: ", domainListNames.value);
+	};
+	getDominList();
+
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
 		const list = computed(() => store.getters["appUsers/allUsers"]);
@@ -114,6 +122,7 @@ export default function useAuthorizationsTabsData(props) {
 		usersList,
 		getUsersList,
 		roleList,
+		getDominList,
 		domainList,
 		getRolesList,
 		selectedParentData,
