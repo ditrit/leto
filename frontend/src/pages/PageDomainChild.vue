@@ -51,32 +51,6 @@
 		</Drawer>
 		<q-page-container class="q-pa-lg">
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
-				<div class="q-pa-md q-gutter-sm">
-					<q-breadcrumbs v-for="link in menu" :key="link.id">
-						<q-breadcrumbs-el
-							label="Workspaces "
-							icon="home"
-							to="/workspaces"
-						/>
-						<q-breadcrumbs-el
-							:label="link.label + ' '"
-							:to="`/workspaces/${link.id}`"
-						/>
-						<q-breadcrumbs-el
-							v-for="childLink in link.children"
-							:key="childLink.id"
-							:label="childLink.label + ' '"
-							:to="`/workspaces/${childLink.id}`"
-						/>
-						<q-breadcrumbs-el
-							v-for="subChildLink in childLink"
-							:key="subChildLink.id"
-							:label="subChildLink.label + ' '"
-							:to="`/workspaces/${subChildLink.id}`"
-						/>
-					</q-breadcrumbs>
-				</div>
-
 				<div class="domainWrapper">
 					<div class="col">
 						<ContentCard :data="currentDomainDataContent">
@@ -117,8 +91,8 @@
 													class="cards_tags_wrapper rounded-borders overflow-hidden"
 												>
 													<li
-														v-for="(item, index) in domainTags"
-														:key="index"
+														v-for="item in domainTags"
+														:key="item.ID"
 														:class="item.class"
 													>
 														{{ item.Name }}
@@ -211,9 +185,9 @@ export default defineComponent({
 			menu,
 			store,
 			getMenuData,
-			goToID,
+
 			router,
-			rigthData,
+
 			choosenNodeID,
 			currentDomainDataContent,
 			progress,
@@ -235,8 +209,7 @@ export default defineComponent({
 			router,
 			drawer,
 			oepnDialog,
-			goToID,
-			rigthData,
+
 			choosenNodeID,
 			currentDomainDataContent,
 			domainTags,

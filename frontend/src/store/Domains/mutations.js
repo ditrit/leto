@@ -3,7 +3,7 @@ export const GET_DOMAINS_TREE = (state, domains) =>
 	(state.domainsTree = domains);
 
 export const GET_DOMAIN_BY_ID = (state, id) => {
-	const index = state.domains.findIndex((domain) => domain.id === id);
+	const index = state.domains.findIndex((domain) => domain.ID === id);
 	state.domains.splice(index, 1, id);
 };
 export const NEW_DOMAIN = (state, domain) => state.domains.unshift(domain);
