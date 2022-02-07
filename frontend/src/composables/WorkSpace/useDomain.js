@@ -7,7 +7,7 @@ import API from "../../services/index";
 export default function useDomainData(props) {
 	const store = useStore();
 	const $q = useQuasar();
-	const route = useRouter();
+	const router = useRouter();
 	const menu = ref(null);
 	const choosenNodeID = ref("");
 	const editMode = ref(false);
@@ -16,51 +16,6 @@ export default function useDomainData(props) {
 	const domainTags = ref([]);
 	const globalTagsTreeList = ref([]);
 	const domainID = ref(props.id);
-
-	const goToID = async (node) => {
-		choosenNodeID.value = node.id;
-		console.log("goToID node.id: ", node.id);
-		console.log("goToID choosenNodeID.value: ", choosenNodeID.value);
-		editMode.value = false;
-		route.push(`/workspaces/${choosenNodeID.value}`);
-		const rigthData = async () => {
-			await store.dispatch(
-				"appDomain/fetchDomainById",
-				`${choosenNodeID.value}`
-			);
-			let data = await store.getters["appDomain/allDomaines"];
-			console.log(
-				"data from rigthData: ",
-				Object.values(data).filter(
-					(domain) => domain.ID === choosenNodeID.value
-				)
-			);
-			progress.value = data.length;
-
-			currentDomainDataContent.value = Object.values(data).map((item) => {
-				return {
-					id: item.ID,
-					name: item.Name,
-					shortDescription: item.ShortDescription,
-					description: item.Description,
-					logo: item.Logo,
-					tags: item.Tags,
-					products: item.Products,
-					envirnments: item.Environments,
-					authorizations: item.Authorizations,
-					libraries: item.Libraries,
-					gitURL: item.GitURL,
-					parentID: item.ParentID,
-				};
-			});
-			console.log(
-				"currentDomainDataContent from rigthData: ",
-				currentDomainDataContent.value
-			);
-			// domainTags.value = await currentDomainDataContent.value[0].tags;
-		};
-		rigthData();
-	};
 
 	const getMenuData = async () => {
 		await store.dispatch("appDomain/fetchDomainesTree");
@@ -106,6 +61,41 @@ export default function useDomainData(props) {
 		]);
 	};
 	getMenuData();
+	const rigthData = async (id) => {
+		await store.dispatch("appDomain/fetchDomainById", `${id}`);
+		let data = await store.getters["appDomain/allDomaines"];
+		console.log("data: ", Object.values(data));
+		progress.value = Object.values(data).length;
+		currentDomainDataContent.value = Object.values(data).map((item) => {
+			return {
+				id: item.ID,
+				name: item.Name,
+				shortDescription: item.ShortDescription,
+				description: item.Description,
+				logo: item.Logo,
+				tags: item.Tags,
+				products: item.Products,
+				envirnments: item.Environments,
+				authorizations: item.Authorizations,
+				libraries: item.Libraries,
+				gitURL: item.GitURL,
+				parentID: item.ParentID,
+			};
+		});
+		console.log(
+			"currentDomainDataContent.value: ",
+			currentDomainDataContent.value
+		);
+		domainTags.value = currentDomainDataContent.value[0].tags;
+	};
+	const goToID = async (node) => {
+		choosenNodeID.value = node.id;
+		console.log("goToID choosenNodeID.value: ", choosenNodeID.value);
+		console.log("goToID choosenNodeID.value: ", domainID.value);
+		await router.push(`/workspaces/${choosenNodeID.value}`);
+		editMode.value = false;
+		await rigthData(choosenNodeID.value);
+	};
 
 	const refreshDomain = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
@@ -119,7 +109,7 @@ export default function useDomainData(props) {
 	const refreshDomainTag = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
-		console.log(" data.value from refreshDomainTag: ", data.value);
+		console.log(" data.value: ", data.value);
 		console.log("	Refresh domainTags.value: ", domainTags.value);
 		return (domainTags.value = await data.value.Tags);
 		// await getMenuData();
@@ -183,7 +173,7 @@ export default function useDomainData(props) {
 		//TODO: Add Axios Action
 		await API.delete(`/domain/${choosenNodeID.value}/tag/${id}`)
 			.then((response) => console.log(response))
-			.then(() => refreshDomainTag(route.currentRoute.value.params.id))
+			.then(() => refreshDomainTag(choosenNodeID.value))
 			.catch((error) => console.log(error));
 	};
 
@@ -212,7 +202,8 @@ export default function useDomainData(props) {
 		store,
 		editMode,
 		getMenuData,
-
+		goToID,
+		rigthData,
 		choosenNodeID,
 		currentDomainDataContent,
 		progress,

@@ -66,27 +66,6 @@ export default function useAuthorizationsTabsData(props) {
 	};
 	getRolesList();
 
-	const getDomainName = async () => {
-		await store.dispatch("appDomain/fetchAllDomaines");
-		let domains = store.getters["appDomain/allDomaines"];
-
-		domainList.value = domains.map((domain) => {
-			return {
-				domainId: domain.ID,
-				label: domain.Name,
-				name: domain.Name,
-				value: domain.Name,
-			};
-		});
-
-		let index = await domains.find(
-			(domain) => domain.ID === authorizationDomainIDRef.value
-		);
-
-		return (authorizationDomainNameRef.value = index.Name);
-	};
-	getDomainName();
-
 	const refreshAuthorizationTab = async () => {
 		await store.dispatch(
 			"appDomain/fetchDomainById",
