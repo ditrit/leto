@@ -15,7 +15,6 @@ export default function useDomainData(props) {
 	const progress = ref(null);
 	const domainTags = ref([]);
 	const globalTagsTreeList = ref([]);
-	const domainID = ref(props.id);
 
 	const getMenuData = async () => {
 		await store.dispatch("appDomain/fetchDomainesTree");
@@ -91,7 +90,6 @@ export default function useDomainData(props) {
 	const goToID = async (node) => {
 		choosenNodeID.value = node.id;
 		console.log("goToID choosenNodeID.value: ", choosenNodeID.value);
-		console.log("goToID choosenNodeID.value: ", domainID.value);
 		await router.push(`/workspaces/${choosenNodeID.value}`);
 		editMode.value = false;
 		await rigthData(choosenNodeID.value);
@@ -111,7 +109,7 @@ export default function useDomainData(props) {
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
 		console.log(" data.value: ", data.value);
 		console.log("	Refresh domainTags.value: ", domainTags.value);
-		return (domainTags.value = await data.value.Tags);
+		return (domainTags.value = await data.value[0].Tags);
 		// await getMenuData();
 	};
 
@@ -127,7 +125,6 @@ export default function useDomainData(props) {
 			console.log(err);
 		}
 	};
-	addTagtoDomain();
 
 	const getTagsTree = async () => {
 		await store.dispatch("appTags/fetchAllTagsTree");
@@ -213,6 +210,5 @@ export default function useDomainData(props) {
 		OnDelete,
 		confirm,
 		OnEdit,
-		domainID,
 	};
 }

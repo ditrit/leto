@@ -46,7 +46,7 @@
 								</q-menu>
 							</q-btn>
 							<!-- Modification Dialog -->
-							<q-dialog v-model="isOpend" persistent>
+							<q-dialog v-model="isOpend" persistent position="bottom">
 								<q-card style="width: 750px; max-width: 80vw">
 									<q-card-section>
 										<div class="text-h6 q-pa-md">{{ $t("edit_team") }}</div>
@@ -251,11 +251,10 @@ export default {
 		};
 
 		const onSubmitUpdate = async (props) => {
-			console.log("props: ", props);
 			emit("emitUpdateDomain", props);
 			console.log("Domain to edit:", Object.values(props));
 			let domain = Object.values(props);
-			console.log("domain: ", domain);
+			console.log("domain from onSubmitUpdate: ", domain);
 
 			let updatedDomain = {
 				id: props.id,
@@ -265,10 +264,11 @@ export default {
 				gitUrl: props.gitURL,
 				parentID: props.parentID,
 			};
-
 			try {
+				console.log("updatedDomain from onSubmitUpdate: ", updatedDomain);
 				store.dispatch("appDomain/updateDomain", updatedDomain).then(() => {
 					refreshDomainData(props.id, props.data);
+					getMenuData();
 				});
 			} catch (error) {
 				console.log(error);

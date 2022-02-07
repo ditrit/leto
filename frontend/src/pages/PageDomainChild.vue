@@ -185,9 +185,7 @@ export default defineComponent({
 			menu,
 			store,
 			getMenuData,
-
 			router,
-
 			choosenNodeID,
 			currentDomainDataContent,
 			progress,
@@ -209,7 +207,6 @@ export default defineComponent({
 			router,
 			drawer,
 			oepnDialog,
-
 			choosenNodeID,
 			currentDomainDataContent,
 			domainTags,
