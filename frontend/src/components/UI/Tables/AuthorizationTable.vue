@@ -31,7 +31,7 @@
 
 						<q-card-section class="q-pt-none">
 							<q-form
-								@submit.prevent="onSubmitUpdate"
+								@submit.prevent="onSubmitUpdate(props)"
 								@reset="onResetUpdate"
 								class="q-gutter-md q-pa-md"
 							>
@@ -55,7 +55,7 @@
 									<div class="col">
 										<q-select
 											filled
-											:options="domainListNames"
+											:options="domainList"
 											label="Domain*"
 											v-model="authorizationObj[3]"
 										/>
@@ -112,11 +112,15 @@
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
 					<div class="text-h6 q-pa-md">{{ $t("create_authorization") }}</div>
+					<pre>{{ authorisationUser }}</pre>
+					<pre>{{ authorizationRole }}</pre>
+					<pre>{{ authorizsationDomain }}</pre>
+					<pre>{{ authorizationDomainIDRef }}</pre>
 				</q-card-section>
 
 				<q-card-section class="q-pt-none">
 					<q-form
-						@submit.prevent="onSubmitAdd"
+						@submit.prevent="onSubmitAdd(props)"
 						@reset="onResetAdd"
 						class="q-gutter-md q-pa-md"
 					>
@@ -140,7 +144,7 @@
 							<div class="col">
 								<q-select
 									filled
-									:options="domainListNames"
+									:options="domainList"
 									label="Domain"
 									v-model="authorizsationDomain"
 								/>
@@ -227,11 +231,11 @@ export default {
 		const authorizsationDomain = ref("");
 		const authorisationUser = ref("");
 		const authorizationRole = ref("");
+		const domainList = ref(null);
 
 		let {
 			usersList,
 			roleList,
-			domainListNames,
 			getUsersList,
 			getRolesList,
 			authorizationIdRef,
@@ -241,8 +245,6 @@ export default {
 			authorizationRoleNameRef,
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
-			domainList,
-			getDominList,
 			opendEditAuthorizationDialog,
 			openAddAuthorizationDialog,
 		} = useAuthorizationsTabsData(props);
@@ -290,10 +292,12 @@ export default {
 		};
 		const onSubmitAdd = async () => {
 			const authorizationData = {
-				domainID: authorizsationDomain.value.domainId,
+				domainID: authorizsationDomain.value.id,
 				userID: authorisationUser.value.id,
 				roleID: authorizationRole.value.id,
 			};
+
+			console.log("authorizationData from onSubmitAdd: ", authorizationData);
 			try {
 				await store.dispatch(
 					"appAuthorization/addAuthorization",
@@ -318,10 +322,11 @@ export default {
 		const onSubmitUpdate = async () => {
 			const authorizationData = {
 				id: authorizationObj.value[0],
-				domainID: authorizationObj.value[3].domainId,
+				domainID: authorizationObj.value[3].id,
 				roleID: authorizationObj.value[5].id,
 				userID: authorizationObj.value[7].id,
 			};
+			console.log("authorizationData: ", authorizationData);
 			try {
 				await store.dispatch(
 					"appAuthorization/updateAuthorization",
@@ -372,6 +377,28 @@ export default {
 			}
 		};
 
+		const getDominList = async () => {
+			await store.dispatch("appDomain/fetchAllDomaines");
+			let data = computed(() => store.getters["appDomain/allDomaines"]);
+			let choosenDomain = data.value.find(
+				(domain) => domain.ID === authorizationDomainIDRef.value
+			);
+			domainList.value = data.value.map((domain) => {
+				return {
+					id: domain.ID,
+					name: domain.Name,
+					value: domain.Name,
+					label: domain.Name,
+				};
+			});
+			console.log("domainList.value: ", domainList.value);
+
+			console.log("choosenDomain: ", choosenDomain);
+			return (authorizsationDomain.value = choosenDomain);
+		};
+
+		getDominList();
+
 		return {
 			getDominList,
 			confirm,
@@ -395,7 +422,6 @@ export default {
 			usersList,
 			roleList,
 			domainList,
-			domainListNames,
 			getUsersList,
 			getRolesList,
 			authorizationIdRef,

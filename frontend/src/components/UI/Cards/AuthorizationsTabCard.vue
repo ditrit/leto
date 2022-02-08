@@ -22,6 +22,9 @@
 						<div class="text-h8 text-grey-8 ellipsis">
 							{{ authorizationRoleNameRef }}
 						</div>
+						<div class="text-h8 text-grey-8 ellipsis">
+							{{ authorizationDomainIDRef }}
+						</div>
 					</div>
 					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
@@ -65,6 +68,7 @@
 								<q-card-section>
 									<div class="text-h6 q-pa-md">
 										{{ $t("edit_authorization") }}
+										<pre>{{ authorizationDomainIDRef }}</pre>
 									</div>
 								</q-card-section>
 
@@ -167,6 +171,8 @@ export default {
 	},
 	setup(props, { emit }) {
 		const isOpened = ref(false);
+		const domainList = ref(null);
+		const authorizationDomainNameRef = ref(props.authorizationDomainName);
 
 		let {
 			store,
@@ -188,7 +194,6 @@ export default {
 			authorizationUserIDRef,
 			getRolesList,
 			getUsersList,
-			authorizationDomainNameRef,
 			confirmDeleteAuthorization,
 		} = useAuthorizationsTabsData(props);
 
@@ -273,6 +278,7 @@ export default {
 			authorizationUserIDRef,
 			getRolesList,
 			getUsersList,
+			domainList,
 			authorizationDomainNameRef,
 		};
 	},

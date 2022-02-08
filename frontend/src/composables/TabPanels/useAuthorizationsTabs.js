@@ -9,7 +9,6 @@ export default function useAuthorizationsTabsData(props) {
 	const $q = useQuasar();
 	const usersList = ref([]);
 	const roleList = ref([]);
-	const domainList = ref([]);
 	const optionsSelections = ref([]);
 	const selectedParentData = ref([]);
 	const authorizationIdRef = ref(props.authorizationId);
@@ -24,18 +23,8 @@ export default function useAuthorizationsTabsData(props) {
 	);
 	const authorizationDescriptionRef = ref(props.authorizationDescription);
 	const authorizationDomainIDRef = ref(props.authorizationDomainID);
-	const authorizationDomainNameRef = ref(props.authorizationDomainName);
-	const domainListNames = ref([]);
 	const opendEditAuthorizationDialog = ref(false);
 	const openAddAuthorizationDialog = ref(false);
-
-	const getDominList = async () => {
-		await store.dispatch("appDomain/fetchAllDomaines");
-		let data = computed(() => store.getters["appDomain/allDomaines"]);
-		domainListNames.value = data.value.map((domain) => domain.Name);
-		console.log("domainListNames.value: ", domainListNames.value);
-	};
-	getDominList();
 
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
@@ -122,8 +111,6 @@ export default function useAuthorizationsTabsData(props) {
 		usersList,
 		getUsersList,
 		roleList,
-		getDominList,
-		domainList,
 		getRolesList,
 		selectedParentData,
 		optionsSelections,
@@ -139,8 +126,6 @@ export default function useAuthorizationsTabsData(props) {
 		authorizationRoleNameRef,
 		authorizationRoleIDRef,
 		authorizationUserIDRef,
-		authorizationDomainNameRef,
-		domainListNames,
 		opendEditAuthorizationDialog,
 		openAddAuthorizationDialog,
 	};
