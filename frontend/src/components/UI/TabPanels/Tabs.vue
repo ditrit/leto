@@ -236,7 +236,7 @@
 
 							<q-card-section class="q-pt-none">
 								<q-form
-									@submit.prevent="addNewAuthorization"
+									@submit.prevent="onSubmitAuthorization"
 									@reset="onResetAuthorization"
 									class="q-gutter-sm q-pa-md"
 								>
@@ -258,7 +258,7 @@
 											filled
 											:options="domainList"
 											label="Domain"
-											v-model="authorizationDomainNameRef"
+											v-model="authorizationDomainNameRef.Name"
 										/>
 									</div>
 
@@ -462,7 +462,7 @@
 	</div>
 </template>
 <script>
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
 import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
 import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
@@ -636,12 +636,8 @@ export default {
 			updateProduct,
 		} = useProductsTabData(props);
 
-		let {
-			authorizationNameRef,
-			authorizationRoleRef,
-			domainList,
-			authorizationDomainNameRef,
-		} = useAuthorizationsTabsData(props);
+		let { authorizationNameRef, authorizationRoleRef } =
+			useAuthorizationsTabsData(props);
 
 		let { refreshDomainData } = useContentCardData();
 		const isEnvironmentsCreationOpened = ref(false);
@@ -650,6 +646,9 @@ export default {
 		const isCreationProductsOpened = ref(false);
 		const isModificationProductsOpened = ref(false);
 		const isEnvironmentsModificationOpened = ref(false);
+
+		const authorizationDomainNameRef = ref(null);
+		const domainList = ref(null);
 
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
@@ -696,6 +695,54 @@ export default {
 				type: "negative",
 				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
 			});
+		};
+
+		const getDominListTab = async () => {
+			await store.dispatch("appDomain/fetchAllDomaines");
+			let data = computed(() => store.getters["appDomain/allDomaines"]);
+			let choosenDomain = data.value.find(
+				(domain) => domain.ID === domainID.value
+			);
+			domainList.value = data.value.map((domain) => {
+				return {
+					id: domain.ID,
+					name: domain.Name,
+					value: domain.Name,
+					label: domain.Name,
+				};
+			});
+
+			console.log("choosenDomain: ", choosenDomain);
+			return (authorizationDomainNameRef.value = choosenDomain);
+		};
+		getDominListTab();
+
+		const onSubmitAuthorization = async () => {
+			const authorizationData = {
+				domainID: domainID.value,
+				userID: authorizationNameRef.value.id,
+				roleID: authorizationRoleRef.value.id,
+			};
+
+			try {
+				await store.dispatch(
+					"appAuthorization/addAuthorization",
+					authorizationData
+				);
+				await allAuthorizations();
+				(authorizsationDomain.value = ""),
+					(authorisationUser.value = ""),
+					(authorizationRole.value = ""),
+					$q.notify({
+						type: "positive",
+						message: "Authorizsation has been successfully created",
+					});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: "Sorry, authorizsation has not been created",
+				});
+			}
 		};
 
 		watch(environmentTeam, (nextVal, prevVal) => {
@@ -750,8 +797,9 @@ export default {
 			roleList,
 			authorizationNameRef,
 			authorizationRoleRef,
-			domainList,
 			authorizationDomainNameRef,
+			onSubmitAuthorization,
+			domainList,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};

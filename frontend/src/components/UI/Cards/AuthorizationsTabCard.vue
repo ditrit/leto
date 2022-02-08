@@ -168,7 +168,7 @@ export default {
 		const isOpened = ref(false);
 		const domainList = ref(null);
 		const authorizationDomainNameRef = ref(props.authorizationDomainName);
-		const authorizationDomainIDRef = ref(null);
+		const authorizationDomainIDRef = ref(props.authorizationDomainID);
 
 		let {
 			store,
