@@ -225,7 +225,7 @@ export default {
 		const $q = useQuasar();
 		const authorizationObj = ref(null);
 		const rowsData = ref([]);
-		const authorizsationDomain = ref("");
+		const authorizsationDomain = ref(null);
 		const authorisationUser = ref("");
 		const authorizationRole = ref("");
 		const domainList = ref(null);
@@ -372,7 +372,7 @@ export default {
 			}
 		};
 
-		const getDominList = async () => {
+		const getDominListTable = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
 			let data = computed(() => store.getters["appDomain/allDomaines"]);
 			let choosenDomain = data.value.find(
@@ -390,10 +390,9 @@ export default {
 			return (authorizsationDomain.value = choosenDomain);
 		};
 
-		getDominList();
+		getDominListTable();
 
 		return {
-			getDominList,
 			confirm,
 			columns,
 			rowsData,

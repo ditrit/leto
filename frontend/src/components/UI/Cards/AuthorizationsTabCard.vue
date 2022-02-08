@@ -65,7 +65,6 @@
 								<q-card-section>
 									<div class="text-h6 q-pa-md">
 										{{ $t("edit_authorization") }}
-										<pre>{{ authorizationDomainIDRef }}</pre>
 									</div>
 								</q-card-section>
 
@@ -106,7 +105,6 @@
 												<q-select
 													disabled
 													filled
-													:options="domainList"
 													label="Domain"
 													v-model="authorizationDomainNameRef"
 												/>
@@ -170,6 +168,7 @@ export default {
 		const isOpened = ref(false);
 		const domainList = ref(null);
 		const authorizationDomainNameRef = ref(props.authorizationDomainName);
+		const authorizationDomainIDRef = ref(null);
 
 		let {
 			store,
@@ -184,7 +183,6 @@ export default {
 			authorizationLogoRef,
 			authorizationShortDescriptionRef,
 			authorizationDescriptionRef,
-			authorizationDomainIDRef,
 			authorizationRoleRef,
 			authorizationRoleNameRef,
 			authorizationRoleIDRef,
@@ -193,6 +191,26 @@ export default {
 			getUsersList,
 			confirmDeleteAuthorization,
 		} = useAuthorizationsTabsData(props);
+
+		const getDominListTable = async () => {
+			await store.dispatch("appDomain/fetchAllDomaines");
+			let data = computed(() => store.getters["appDomain/allDomaines"]);
+			let choosenDomain = data.value.find(
+				(domain) => domain.ID === authorizationDomainIDRef.value
+			);
+			domainList.value = data.value.map((domain) => {
+				return {
+					id: domain.ID,
+					name: domain.Name,
+					value: domain.Name,
+					label: domain.Name,
+				};
+			});
+
+			return (authorizationDomainNameRef.value = choosenDomain.Name);
+		};
+
+		getDominListTable();
 
 		const openEditionModal = (currentItem) => {
 			isOpened.value = true;
