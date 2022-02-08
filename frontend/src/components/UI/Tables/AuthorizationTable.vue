@@ -18,6 +18,13 @@
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
+				<q-td :props="props">
+					<q-avatar size="26px">
+						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+					</q-avatar>
+				</q-td>
+			</template>
+			<template v-slot:body-cell-actionsButtons="props">
 				<!-- Modification Dialog -->
 				<q-dialog
 					v-model="opendEditAuthorizationDialog"
@@ -26,7 +33,9 @@
 				>
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
-							<div class="text-h6 q-pa-md">{{ $t("edit_authorization") }}</div>
+							<div class="text-h6 q-pa-md">
+								{{ $t("edit_authorization") }}
+							</div>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
@@ -78,14 +87,6 @@
 						</q-card-section>
 					</q-card>
 				</q-dialog>
-
-				<q-td :props="props">
-					<q-avatar size="26px">
-						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-					</q-avatar>
-				</q-td>
-			</template>
-			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
 					<q-btn
 						dense
@@ -112,10 +113,6 @@
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
 					<div class="text-h6 q-pa-md">{{ $t("create_authorization") }}</div>
-					<pre>{{ authorisationUser }}</pre>
-					<pre>{{ authorizationRole }}</pre>
-					<pre>{{ authorizsationDomain }}</pre>
-					<pre>{{ authorizationDomainIDRef }}</pre>
 				</q-card-section>
 
 				<q-card-section class="q-pt-none">
@@ -297,7 +294,6 @@ export default {
 				roleID: authorizationRole.value.id,
 			};
 
-			console.log("authorizationData from onSubmitAdd: ", authorizationData);
 			try {
 				await store.dispatch(
 					"appAuthorization/addAuthorization",
@@ -326,7 +322,7 @@ export default {
 				roleID: authorizationObj.value[5].id,
 				userID: authorizationObj.value[7].id,
 			};
-			console.log("authorizationData: ", authorizationData);
+
 			try {
 				await store.dispatch(
 					"appAuthorization/updateAuthorization",
@@ -356,7 +352,6 @@ export default {
 		const editAuthorizationRow = (currentTarget) => {
 			opendEditAuthorizationDialog.value = true;
 			authorizationObj.value = Object.values(currentTarget);
-			console.log("authorizationObj.value: ", authorizationObj.value);
 		};
 		const deleteRow = async (id) => {
 			try {
@@ -391,9 +386,7 @@ export default {
 					label: domain.Name,
 				};
 			});
-			console.log("domainList.value: ", domainList.value);
 
-			console.log("choosenDomain: ", choosenDomain);
 			return (authorizsationDomain.value = choosenDomain);
 		};
 

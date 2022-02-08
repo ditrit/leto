@@ -22,9 +22,6 @@
 						<div class="text-h8 text-grey-8 ellipsis">
 							{{ authorizationRoleNameRef }}
 						</div>
-						<div class="text-h8 text-grey-8 ellipsis">
-							{{ authorizationDomainIDRef }}
-						</div>
 					</div>
 					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
