@@ -6,7 +6,6 @@ export const fetchDomainesTree = async ({ commit }) => {
 };
 export const fetchAllDomaines = async ({ commit }) => {
 	let response = await API.get("/domain");
-	console.log("response.data from action: ", response.data);
 	commit("GET_DOMAINS", response.data);
 };
 

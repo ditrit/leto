@@ -100,7 +100,7 @@ export default function useAuthorizationsTabsData(props) {
 			// userID: pickedUsers.value.User.ID,
 			// roleID: pickedRole.value.Role.ID,
 		};
-		console.log("newAuthorization", newAuthorization);
+
 		// await store.dispatch("appAuthorization/addAuthorization", newAuthorization )
 	};
 	addNewAuthorization();

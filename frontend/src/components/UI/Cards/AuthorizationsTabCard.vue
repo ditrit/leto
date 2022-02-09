@@ -219,12 +219,27 @@ export default {
 			emit("openAuthorizationEditModal", currentItem);
 		};
 
+		const refreshDomainAuthorizations = async (id) => {
+			await store.dispatch("appDomain/fetchDomainById", id);
+			let data = computed(() => {
+				return store.getters["appDomain/allDomaines"];
+			});
+			let choosenDomain = data.value.find(
+				(domain) => domain.ID === domainID.value
+			);
+			console.log(
+				"data from refreshDomainAuthorizations: ",
+				choosenDomain.Authorizations
+			);
+			authorizationDomainObj.value = choosenDomain.Authorizations;
+		};
+
 		const delteItem = async (id) => {
 			emit("deleteAuthorizationAction", props);
 			await store
 				.dispatch("appAuthorization/removeAuthorization", id)
 				.then(() => {
-					refreshAuthorization(id);
+					refreshDomainAuthorizations(id);
 				});
 		};
 

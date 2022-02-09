@@ -81,10 +81,7 @@ export default function useDomainData(props) {
 				parentID: item.ParentID,
 			};
 		});
-		console.log(
-			"currentDomainDataContent.value: ",
-			currentDomainDataContent.value
-		);
+
 		domainTags.value = currentDomainDataContent.value[0].tags;
 	};
 	const goToID = async (node) => {
@@ -99,23 +96,17 @@ export default function useDomainData(props) {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
 		currentDomainDataContent.value = await data.value;
-		console.log(" data.value: ", data.value);
 		domainTags.value = await data.value[0].Tags;
-		console.log("	Refresh domainTags.value: ", domainTags.value);
 		await getMenuData();
 	};
 	const refreshDomainTag = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
-		console.log(" data.value: ", data.value);
-		console.log("	Refresh domainTags.value: ", domainTags.value);
 		return (domainTags.value = await data.value[0].Tags);
 		// await getMenuData();
 	};
 
 	const addTagtoDomain = async (tag) => {
-		console.log("tag:", tag);
-		console.log("tag id:", tag.id);
 		// store.dispatch("appDomain/addDomainTag", props.id, `${tag.id}`);
 		//TODO: Modify Axios action
 		try {

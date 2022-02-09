@@ -182,7 +182,7 @@
 				<q-tab-panel name="authorizations" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="member in teamMembers"
+						v-for="member in authorizationDomainObj"
 						:key="member.ID"
 					>
 						<div v-if="member.Logo">
@@ -224,7 +224,9 @@
 							text-color="primary"
 							icon="add"
 							label="New Authorization"
-							@click.prevent="openAuthorizsationCreationModal(teamMembers)"
+							@click.prevent="
+								openAuthorizsationCreationModal(authorizationDomainObj)
+							"
 						/>
 					</div>
 					<!-- Authorizations Creation dialog -->
@@ -651,6 +653,7 @@ export default {
 		const isEnvironmentsModificationOpened = ref(false);
 
 		const authorizationDomainNameRef = ref(null);
+		const authorizationDomainObj = ref(props.teamMembers);
 		const domainList = ref(null);
 
 		const openModal = (item) => {
@@ -670,7 +673,7 @@ export default {
 
 		const openAuthorizsationCreationModal = (props) => {
 			isAuthorCreationOpened.value = true;
-			console.log("openEnvironmentCreationModal props: ", props);
+			console.log("openAuthorizsationCreationModal props: ", props);
 			console.log("selectedParentData : ", selectedParentData.value);
 		};
 
@@ -714,14 +717,27 @@ export default {
 					label: domain.Name,
 				};
 			});
-
-			console.log("choosenDomain: ", choosenDomain);
 			return (authorizationDomainNameRef.value = choosenDomain);
 		};
 		onMounted(() => {
 			getDominListTab();
 			console.log("mounted!");
 		});
+
+		const refreshDomainAuthorizations = async (id) => {
+			await store.dispatch("appDomain/fetchDomainById", id);
+			let data = computed(() => {
+				return store.getters["appDomain/allDomaines"];
+			});
+			let choosenDomain = data.value.find(
+				(domain) => domain.ID === domainID.value
+			);
+			console.log(
+				"data from refreshDomainAuthorizations: ",
+				choosenDomain.Authorizations
+			);
+			authorizationDomainObj.value = choosenDomain.Authorizations;
+		};
 
 		const onSubmitAuthorization = async () => {
 			const authorizationData = {
@@ -731,18 +747,16 @@ export default {
 			};
 
 			try {
-				await store.dispatch(
-					"appAuthorization/addAuthorization",
-					authorizationData
-				);
-				await allAuthorizations();
-				(authorizsationDomain.value = ""),
-					(authorisationUser.value = ""),
-					(authorizationRole.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "Authorizsation has been successfully created",
+				await store
+					.dispatch("appAuthorization/addAuthorization", authorizationData)
+					.then(() => {
+						refreshDomainAuthorizations(domainID.value);
 					});
+
+				$q.notify({
+					type: "positive",
+					message: "Authorizsation has been successfully created",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -776,6 +790,7 @@ export default {
 			getUsersList,
 			getRolesList,
 			domainID,
+			authorizationDomainObj,
 			tab: ref("authorizations"),
 			environmentName,
 			environmentShortDescription,
