@@ -9,9 +9,16 @@
 					icon="add"
 					@click="openedDailog"
 				/>
-				<q-dialog v-model="isOpened" v-show="oepnDialog">
+				<q-dialog v-model="isOpened" v-show="oepnDialog" position="bottom">
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
+							<q-card-actions
+								align="right"
+								position="top"
+								class="bg-white text-teal"
+							>
+								<q-btn round color="primary" icon="close" v-close-popup />
+							</q-card-actions>
 							<div class="text-h6 q-pa-md">
 								<slot name="ModalHeadline"> </slot>
 							</div>
@@ -19,9 +26,6 @@
 
 						<q-card-section class="q-pt-none"> </q-card-section>
 						<slot name="ModalBody">Hello Modal</slot>
-						<q-card-actions align="right" class="bg-white text-teal">
-							<q-btn flat label="OK" v-close-popup />
-						</q-card-actions>
 					</q-card>
 				</q-dialog>
 			</div>

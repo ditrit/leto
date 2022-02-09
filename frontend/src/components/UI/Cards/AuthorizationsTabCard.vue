@@ -106,7 +106,7 @@
 													disabled
 													filled
 													label="Domain"
-													v-model="authorizationDomainNameRef"
+													v-model="authorizationDomainNameRef.Name"
 												/>
 											</div>
 										</div>
@@ -137,7 +137,7 @@
 	</div>
 </template>
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
 
 export default {
@@ -207,10 +207,12 @@ export default {
 				};
 			});
 
-			return (authorizationDomainNameRef.value = choosenDomain.Name);
+			return (authorizationDomainNameRef.value = choosenDomain);
 		};
 
-		getDominListTable();
+		onMounted(() => {
+			getDominListTable();
+		});
 
 		const openEditionModal = (currentItem) => {
 			isOpened.value = true;

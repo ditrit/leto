@@ -228,7 +228,11 @@
 						/>
 					</div>
 					<!-- Authorizations Creation dialog -->
-					<q-dialog v-model="isAuthorCreationOpened" persistent>
+					<q-dialog
+						v-model="isAuthorCreationOpened"
+						persistent
+						position="bottom"
+					>
 						<q-card style="width: 750px; max-width: 80vw">
 							<q-card-section>
 								<div class="text-h6 q-pa-md">{{ $t("add_authorization") }}</div>
@@ -256,7 +260,6 @@
 										<q-select
 											disabled
 											filled
-											:options="domainList"
 											label="Domain"
 											v-model="authorizationDomainNameRef.Name"
 										/>
@@ -462,7 +465,7 @@
 	</div>
 </template>
 <script>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
 import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
 import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
@@ -715,7 +718,10 @@ export default {
 			console.log("choosenDomain: ", choosenDomain);
 			return (authorizationDomainNameRef.value = choosenDomain);
 		};
-		getDominListTab();
+		onMounted(() => {
+			getDominListTab();
+			console.log("mounted!");
+		});
 
 		const onSubmitAuthorization = async () => {
 			const authorizationData = {
@@ -800,6 +806,7 @@ export default {
 			authorizationDomainNameRef,
 			onSubmitAuthorization,
 			domainList,
+			getDominListTab,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};

@@ -168,7 +168,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
