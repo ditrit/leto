@@ -47,9 +47,7 @@
 									</q-item>
 									<q-item
 										clickable
-										@click.prevent="
-											confirmDeleteAuthorization(authorizationIdRef)
-										"
+										@click.prevent="delteItem(authorizationIdRef)"
 									>
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
@@ -219,28 +217,30 @@ export default {
 			emit("openAuthorizationEditModal", currentItem);
 		};
 
-		const refreshDomainAuthorizations = async (id) => {
-			await store.dispatch("appDomain/fetchDomainById", id);
-			let data = computed(() => {
-				return store.getters["appDomain/allDomaines"];
-			});
-			let choosenDomain = data.value.find(
-				(domain) => domain.ID === domainID.value
-			);
-			console.log(
-				"data from refreshDomainAuthorizations: ",
-				choosenDomain.Authorizations
-			);
-			authorizationDomainObj.value = choosenDomain.Authorizations;
-		};
+		// const refreshDomainAuthorizations = async (id) => {
+		// 	await store.dispatch("appDomain/fetchDomainById", id);
+		// 	let data = computed(() => {
+		// 		return store.getters["appDomain/allDomaines"];
+		// 	});
+		// 	let choosenDomain = data.value.find(
+		// 		(domain) => domain.ID === domainID.value
+		// 	);
+		// 	console.log(
+		// 		"data from refreshDomainAuthorizations: ",
+		// 		choosenDomain.Authorizations
+		// 	);
+		// 	authorizationDomainObj.value = choosenDomain.Authorizations;
+		// };
 
-		const delteItem = async (id) => {
+		const delteItem = async (props) => {
 			emit("deleteAuthorizationAction", props);
-			await store
-				.dispatch("appAuthorization/removeAuthorization", id)
-				.then(() => {
-					refreshDomainAuthorizations(id);
-				});
+			console.log("deleteAuthorizationAction props: ", props);
+
+			// await store
+			// 	.dispatch("appAuthorization/removeAuthorization", id)
+			// 	.then(() => {
+			// 		refreshDomainAuthorizations(id);
+			// 	});
 		};
 
 		const refreshAuthorization = async (id) => {

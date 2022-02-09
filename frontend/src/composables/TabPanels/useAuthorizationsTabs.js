@@ -25,6 +25,7 @@ export default function useAuthorizationsTabsData(props) {
 	const authorizationDomainIDRef = ref(props.authorizationDomainID);
 	const opendEditAuthorizationDialog = ref(false);
 	const openAddAuthorizationDialog = ref(false);
+	const authorizationDomainObj = ref(props.teamMembers);
 
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
@@ -70,7 +71,7 @@ export default function useAuthorizationsTabsData(props) {
 		);
 
 		let domain = computed(() => store.getters["appDomain/allDomaines"]);
-		return domain.value;
+		return (authorizationDomainObj.value = domain.value.Authorizations);
 	};
 	refreshAuthorizationTab();
 
@@ -129,5 +130,6 @@ export default function useAuthorizationsTabsData(props) {
 		authorizationUserIDRef,
 		opendEditAuthorizationDialog,
 		openAddAuthorizationDialog,
+		authorizationDomainObj,
 	};
 }

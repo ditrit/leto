@@ -199,6 +199,9 @@
 								:authorizationRoleID="member.Role.ID"
 								:authorizationDomainID="member.DomainID"
 								:authorizationUserID="member.User.ID"
+								@deleteAuthorizationAction="
+									confirmDeleteAuthorization(member.ID)
+								"
 							/>
 						</div>
 						<div v-else>
@@ -215,6 +218,9 @@
 								:authorizationRoleID="member.Role.ID"
 								:authorizationDomainID="member.DomainID"
 								:authorizationUserID="member.User.ID"
+								@deleteAuthorizationAction="
+									confirmDeleteAuthorization(member.ID)
+								"
 							/>
 						</div>
 					</div>
@@ -484,7 +490,7 @@ export default {
 		ProductsTabCard,
 		AuthorizationsTabCard,
 	},
-	emits: ["openModalToAddItem"],
+	emits: ["openModalToAddItem", "deleteAuthorizationAction"],
 	props: {
 		allTags: {
 			type: [],
@@ -641,8 +647,12 @@ export default {
 			updateProduct,
 		} = useProductsTabData(props);
 
-		let { authorizationNameRef, authorizationRoleRef } =
-			useAuthorizationsTabsData(props);
+		let {
+			authorizationNameRef,
+			authorizationRoleRef,
+			confirmDeleteAuthorization,
+			authorizationDomainObj,
+		} = useAuthorizationsTabsData(props);
 
 		let { refreshDomainData } = useContentCardData();
 		const isEnvironmentsCreationOpened = ref(false);
@@ -653,7 +663,7 @@ export default {
 		const isEnvironmentsModificationOpened = ref(false);
 
 		const authorizationDomainNameRef = ref(null);
-		const authorizationDomainObj = ref(props.teamMembers);
+
 		const domainList = ref(null);
 
 		const openModal = (item) => {
@@ -736,7 +746,7 @@ export default {
 				"data from refreshDomainAuthorizations: ",
 				choosenDomain.Authorizations
 			);
-			authorizationDomainObj.value = choosenDomain.Authorizations;
+			return (authorizationDomainObj.value = choosenDomain.Authorizations);
 		};
 
 		const onSubmitAuthorization = async () => {
@@ -822,6 +832,7 @@ export default {
 			onSubmitAuthorization,
 			domainList,
 			getDominListTab,
+			confirmDeleteAuthorization,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};
