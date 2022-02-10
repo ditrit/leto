@@ -70,10 +70,14 @@ export default function useAuthorizationsTabsData(props) {
 			route.currentRoute.value.params.id
 		);
 
-		let domain = computed(() => store.getters["appDomain/allDomaines"]);
-		return (authorizationDomainObj.value = domain.value.Authorizations);
+		let domain = store.getters["appDomain/allDomaines"];
+
+		let choosenDomain = domain.find(
+			(d) => d.ID === route.currentRoute.value.params.id
+		);
+		console.log(" choosenDomain: ", Object.values(choosenDomain)[7]);
+		return (authorizationDomainObj.value = Object.values(choosenDomain)[7]);
 	};
-	refreshAuthorizationTab();
 
 	const deleteAuthorization = async (id) => {
 		await store

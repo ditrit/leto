@@ -209,7 +209,7 @@ export default {
 		};
 
 		onMounted(() => {
-			getDominListTable();
+			// getDominListTable();
 		});
 
 		const openEditionModal = (currentItem) => {
