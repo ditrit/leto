@@ -227,12 +227,6 @@ export default {
 		};
 		const delteItem = () => {
 			emit("deleteProductAction", props);
-			console.log("props: ", props);
-			console.table({
-				id: props.id,
-				domainID: props.domainID,
-				productName: productName.value,
-			});
 		};
 
 		const refreshProduct = async (id, updatesData) => {
@@ -258,8 +252,6 @@ export default {
 				repositoryURL: productProductRepositoryURL.value,
 				description: productDescription.value,
 			};
-			console.log("updates: ", updates);
-			console.log("submitProductUpdateAction: ", updates);
 			emit("updateProductAction", updates);
 			await store
 				.dispatch("appProducts/updateProduct", updates)

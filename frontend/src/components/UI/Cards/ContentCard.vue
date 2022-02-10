@@ -220,8 +220,6 @@ export default {
 
 		const DeleteDomain = async (props) => {
 			emit("emitRemoveDomain", props);
-			console.log(props);
-
 			try {
 				store
 					.dispatch("appDomain/removeDomain", props.id)
@@ -252,10 +250,7 @@ export default {
 
 		const onSubmitUpdate = async (props) => {
 			emit("emitUpdateDomain", props);
-			console.log("Domain to edit:", Object.values(props));
 			let domain = Object.values(props);
-			console.log("domain from onSubmitUpdate: ", domain);
-
 			let updatedDomain = {
 				id: props.id,
 				name: props.name,
@@ -265,7 +260,6 @@ export default {
 				parentID: props.parentID,
 			};
 			try {
-				console.log("updatedDomain from onSubmitUpdate: ", updatedDomain);
 				store.dispatch("appDomain/updateDomain", updatedDomain).then(() => {
 					refreshDomainData(props.id, props.data);
 					getMenuData();

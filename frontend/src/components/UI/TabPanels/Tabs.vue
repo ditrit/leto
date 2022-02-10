@@ -671,19 +671,15 @@ export default {
 		const openEnvironmentCreationModal = () => {
 			isEnvironmentsCreationOpened.value = true;
 			emit("openNewItemModal", props);
-			console.log("isEnvironmentsCreationOpened props: ", props);
 		};
 
 		const openCreationProductModal = (props) => {
 			isCreationProductsOpened.value = true;
 			emit("openNewItemModal", props);
-			console.log("isCreationProductsOpened props: ", props);
 		};
 
 		const openAuthorizsationCreationModal = (props) => {
 			isAuthorCreationOpened.value = true;
-			console.log("openAuthorizsationCreationModal props: ", props);
-			console.log("selectedParentData : ", selectedParentData.value);
 			getDominListTab();
 		};
 
@@ -691,13 +687,11 @@ export default {
 		const openModificationProductModal = (props) => {
 			isModificationProductsOpened.value = true;
 			emit("openNewItemModal", props);
-			console.log("isCreationProductsOpened props: ", props);
 		};
 
 		const openModificationEnvironmentModal = (props) => {
 			isEnvironmentsModificationOpened.value = true;
 			emit("updateAction", props);
-			console.log("isEnvironmentsModificationOpened props: ", props);
 		};
 
 		const onFileUpload = (event) => {

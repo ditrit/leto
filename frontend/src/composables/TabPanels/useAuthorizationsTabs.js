@@ -9,8 +9,6 @@ export default function useAuthorizationsTabsData(props) {
 	const $q = useQuasar();
 	const usersList = ref([]);
 	const roleList = ref([]);
-	const optionsSelections = ref([]);
-	const selectedParentData = ref([]);
 	const authorizationIdRef = ref(props.authorizationId);
 	const authorizationRoleRef = ref(props.authorizationRole);
 	const authorizationRoleIDRef = ref(props.authorizationRoleID);
@@ -30,7 +28,6 @@ export default function useAuthorizationsTabsData(props) {
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
 		const list = computed(() => store.getters["appUsers/allUsers"]);
-
 		usersList.value = list.value.map((user) => {
 			return {
 				id: user.ID,
@@ -69,13 +66,10 @@ export default function useAuthorizationsTabsData(props) {
 			"appDomain/fetchDomainById",
 			route.currentRoute.value.params.id
 		);
-
 		let domain = store.getters["appDomain/allDomaines"];
-
 		let choosenDomain = domain.find(
 			(d) => d.ID === route.currentRoute.value.params.id
 		);
-		console.log(" choosenDomain: ", Object.values(choosenDomain)[7]);
 		return (authorizationDomainObj.value = Object.values(choosenDomain)[7]);
 	};
 
@@ -105,11 +99,9 @@ export default function useAuthorizationsTabsData(props) {
 		route,
 		$q,
 		usersList,
-		getUsersList,
 		roleList,
+		getUsersList,
 		getRolesList,
-		selectedParentData,
-		optionsSelections,
 		confirmDeleteAuthorization,
 		authorizationIdRef,
 		authorizationNameRef,

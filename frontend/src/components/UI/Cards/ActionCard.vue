@@ -235,12 +235,6 @@ export default {
 		};
 		const delteItem = () => {
 			emit("deleteAction", props);
-			console.log("props: ", props);
-			console.table({
-				id: props.id,
-				domainID: props.domainID,
-				environmentName: environmentName.value,
-			});
 		};
 
 		const refreshEnvironment = async (id, updatesData) => {
@@ -267,8 +261,6 @@ export default {
 				description: environmentDescription.value,
 				environmentTypeID: props.id,
 			};
-			console.log("updates: ", updates);
-			console.log("submitUpdateAction: ", updates);
 			emit("updateAction", updates);
 			await store
 				.dispatch("appEnvironment/updateEnvironment", updates)

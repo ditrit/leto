@@ -162,7 +162,7 @@
 					<q-form
 						@submit.prevent="onSubmitAdd"
 						@reset="onResetAdd"
-						class="q-gutter-sm"
+						class="q-gutter-md q-pa-md"
 					>
 						<div class="row col-md-12 q-gutter-sm">
 							<div class="col">
@@ -329,7 +329,6 @@ export default {
 		const userPassword = ref("");
 		const userDescription = ref("");
 		const confirm = (item) => {
-			console.log("item: ", item);
 			$q.dialog({
 				title: "Confirm",
 				message: "Are you sure to delete this item?",
@@ -373,7 +372,6 @@ export default {
 			userDescription.value = "";
 		};
 		const onSubmitAdd = async () => {
-			console.log("onSubmitAdd");
 			const userData = {
 				firstName: userFirstName.value,
 				lastName: userLastName.value,
