@@ -100,16 +100,6 @@ export default function useAuthorizationsTabsData(props) {
 			.onCancel(() => {});
 	};
 
-	const addNewAuthorization = async () => {
-		const newAuthorization = {
-			// userID: pickedUsers.value.User.ID,
-			// roleID: pickedRole.value.Role.ID,
-		};
-
-		// await store.dispatch("appAuthorization/addAuthorization", newAuthorization )
-	};
-	addNewAuthorization();
-
 	return {
 		store,
 		route,
@@ -120,7 +110,6 @@ export default function useAuthorizationsTabsData(props) {
 		getRolesList,
 		selectedParentData,
 		optionsSelections,
-		addNewAuthorization,
 		confirmDeleteAuthorization,
 		authorizationIdRef,
 		authorizationNameRef,

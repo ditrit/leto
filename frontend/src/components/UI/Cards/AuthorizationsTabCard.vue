@@ -104,7 +104,7 @@
 													disabled
 													filled
 													label="Domain"
-													v-model="authorizationDomainNameRef.Name"
+													v-model="authorizationDomainNameRef"
 												/>
 											</div>
 										</div>
@@ -135,7 +135,7 @@
 	</div>
 </template>
 <script>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
 
 export default {
@@ -164,7 +164,6 @@ export default {
 	},
 	setup(props, { emit }) {
 		const isOpened = ref(false);
-		const domainList = ref(null);
 		const authorizationDomainNameRef = ref(props.authorizationDomainName);
 		const authorizationDomainIDRef = ref(props.authorizationDomainID);
 
@@ -174,8 +173,8 @@ export default {
 			$q,
 			usersList,
 			roleList,
-			optionsSelections,
-			selectedParentData,
+			getRolesList,
+			getUsersList,
 			authorizationIdRef,
 			authorizationNameRef,
 			authorizationLogoRef,
@@ -185,62 +184,26 @@ export default {
 			authorizationRoleNameRef,
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
-			getRolesList,
-			getUsersList,
 			confirmDeleteAuthorization,
 		} = useAuthorizationsTabsData(props);
 
 		const getDominListTable = async () => {
-			await store.dispatch("appDomain/fetchAllDomaines");
-			let data = computed(() => store.getters["appDomain/allDomaines"]);
-			let choosenDomain = data.value.find(
-				(domain) => domain.ID === authorizationDomainIDRef.value
+			store.dispatch(
+				"appDomain/fetchDomainById",
+				authorizationDomainIDRef.value
 			);
-			domainList.value = data.value.map((domain) => {
-				return {
-					id: domain.ID,
-					name: domain.Name,
-					value: domain.Name,
-					label: domain.Name,
-				};
-			});
-
-			return (authorizationDomainNameRef.value = choosenDomain);
+			let data = store.getters["appDomain/allDomaines"];
+			return (authorizationDomainNameRef.value = data[0].Name);
 		};
-
-		onMounted(() => {
-			// getDominListTable();
-		});
 
 		const openEditionModal = (currentItem) => {
 			isOpened.value = true;
 			emit("openAuthorizationEditModal", currentItem);
+			getDominListTable();
 		};
-
-		// const refreshDomainAuthorizations = async (id) => {
-		// 	await store.dispatch("appDomain/fetchDomainById", id);
-		// 	let data = computed(() => {
-		// 		return store.getters["appDomain/allDomaines"];
-		// 	});
-		// 	let choosenDomain = data.value.find(
-		// 		(domain) => domain.ID === domainID.value
-		// 	);
-		// 	console.log(
-		// 		"data from refreshDomainAuthorizations: ",
-		// 		choosenDomain.Authorizations
-		// 	);
-		// 	authorizationDomainObj.value = choosenDomain.Authorizations;
-		// };
 
 		const delteItem = async (props) => {
 			emit("deleteAuthorizationAction", props);
-			console.log("deleteAuthorizationAction props: ", props);
-
-			// await store
-			// 	.dispatch("appAuthorization/removeAuthorization", id)
-			// 	.then(() => {
-			// 		refreshDomainAuthorizations(id);
-			// 	});
 		};
 
 		const refreshAuthorization = async (id) => {
@@ -288,6 +251,8 @@ export default {
 			route,
 			usersList,
 			roleList,
+			getRolesList,
+			getUsersList,
 			isOpened,
 			openEditionModal,
 			delteItem,
@@ -296,8 +261,6 @@ export default {
 			onFileUpload,
 			onRejected,
 			confirmDeleteAuthorization,
-			selectedParentData,
-			optionsSelections,
 			authorizationIdRef,
 			authorizationNameRef,
 			authorizationLogoRef,
@@ -308,9 +271,6 @@ export default {
 			authorizationRoleNameRef,
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
-			getRolesList,
-			getUsersList,
-			domainList,
 			authorizationDomainNameRef,
 		};
 	},

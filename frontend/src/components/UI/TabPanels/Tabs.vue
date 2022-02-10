@@ -230,7 +230,7 @@
 							text-color="primary"
 							icon="add"
 							label="New Authorization"
-							@click.prevent="
+							@click.stop="
 								openAuthorizsationCreationModal(authorizationDomainObj)
 							"
 						/>
@@ -269,7 +269,7 @@
 											disabled
 											filled
 											label="Domain"
-											v-model="authorizationDomainNameRef.Name"
+											v-model="authorizationDomainNameRef"
 										/>
 									</div>
 
@@ -473,7 +473,7 @@
 	</div>
 </template>
 <script>
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed } from "vue";
 import ActionCard from "../Cards/ActionCard.vue";
 import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
 import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
@@ -661,7 +661,6 @@ export default {
 		const isCreationProductsOpened = ref(false);
 		const isModificationProductsOpened = ref(false);
 		const isEnvironmentsModificationOpened = ref(false);
-
 		const authorizationDomainNameRef = ref(null);
 
 		const domainList = ref(null);
@@ -685,6 +684,7 @@ export default {
 			isAuthorCreationOpened.value = true;
 			console.log("openAuthorizsationCreationModal props: ", props);
 			console.log("selectedParentData : ", selectedParentData.value);
+			getDominListTab();
 		};
 
 		// Modifications
@@ -713,26 +713,11 @@ export default {
 			});
 		};
 
-		const getDominListTab = async () => {
-			await store.dispatch("appDomain/fetchAllDomaines");
-			let data = computed(() => store.getters["appDomain/allDomaines"]);
-			let choosenDomain = data.value.find(
-				(domain) => domain.ID === domainID.value
-			);
-			domainList.value = data.value.map((domain) => {
-				return {
-					id: domain.ID,
-					name: domain.Name,
-					value: domain.Name,
-					label: domain.Name,
-				};
-			});
-			return (authorizationDomainNameRef.value = choosenDomain);
+		const getDominListTab = () => {
+			store.dispatch("appDomain/fetchDomainById", domainID.value);
+			let data = store.getters["appDomain/allDomaines"];
+			return (authorizationDomainNameRef.value = data[0].Name);
 		};
-		onMounted(() => {
-			getDominListTab();
-			console.log("mounted!");
-		});
 
 		const refreshDomainAuthorizations = async (id) => {
 			await store.dispatch("appDomain/fetchDomainById", id);
@@ -741,10 +726,6 @@ export default {
 			});
 			let choosenDomain = data.value.find(
 				(domain) => domain.ID === domainID.value
-			);
-			console.log(
-				"data from refreshDomainAuthorizations: ",
-				choosenDomain.Authorizations
 			);
 			return (authorizationDomainObj.value = choosenDomain.Authorizations);
 		};
@@ -755,12 +736,14 @@ export default {
 				userID: authorizationNameRef.value.id,
 				roleID: authorizationRoleRef.value.id,
 			};
-
 			try {
 				await store
 					.dispatch("appAuthorization/addAuthorization", authorizationData)
 					.then(() => {
-						refreshDomainAuthorizations(domainID.value);
+						refreshDomainAuthorizations(domainID.value).then(() => {
+							authorizationNameRef.value = "";
+							authorizationRoleRef.value = "";
+						});
 					});
 
 				$q.notify({
@@ -774,11 +757,6 @@ export default {
 				});
 			}
 		};
-
-		watch(environmentTeam, (nextVal, prevVal) => {
-			console.log("domainID nextVal", nextVal);
-			console.log("domainID prevVal", prevVal);
-		});
 
 		return {
 			store,
@@ -831,7 +809,6 @@ export default {
 			authorizationDomainNameRef,
 			onSubmitAuthorization,
 			domainList,
-			getDominListTab,
 			confirmDeleteAuthorization,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
