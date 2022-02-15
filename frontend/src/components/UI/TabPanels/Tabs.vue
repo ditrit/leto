@@ -298,7 +298,7 @@
 						:key="library.ID"
 					>
 						<div v-if="library.Logo">
-							<ActionCard
+							<LibraryTabCard
 								v-if="library.Name"
 								:id="library.ID"
 								:name="library.Name"
@@ -307,7 +307,7 @@
 							/>
 						</div>
 						<div v-else>
-							<ActionCard
+							<LibraryTabCard
 								v-if="library.Name"
 								:id="library.ID"
 								:name="library.Name"
@@ -474,7 +474,7 @@
 </template>
 <script>
 import { ref, computed } from "vue";
-import ActionCard from "../Cards/ActionCard.vue";
+import LibraryTabCard from "../Cards/LibraryTabCard.vue";
 import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
 import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
 import ProductsTabCard from "../Cards/ProductsTabCard.vue";
@@ -485,7 +485,7 @@ import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 
 export default {
 	components: {
-		ActionCard,
+		LibraryTabCard,
 		EnvironemtsTabCard,
 		ProductsTabCard,
 		AuthorizationsTabCard,

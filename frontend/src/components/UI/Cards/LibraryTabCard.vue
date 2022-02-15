@@ -16,25 +16,13 @@
 						/>
 					</div>
 					<div class="col">
-						<div class="text-subtitle2 ellipsis">{{ environmentName }}</div>
-						<div class="text-small tr_width__role ellipsis-2-lines text-grey-8">
-							{{ role }}
-						</div>
-						<div class="text-h8 text-grey-8">
-							{{ environmentTypeName }}
-						</div>
-						<div class="text-h8 text-grey-8 ellipsis">
-							{{ repo }}
-						</div>
-						<div class="text-h8 text-grey-8 ellipsis">
-							{{ productRepositoryURL }}
-						</div>
+						<div class="text-subtitle2 ellipsis">{{ name }}</div>
 					</div>
 					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>
-									<q-item
+									<!-- <q-item
 										clickable
 										@click.prevent="
 											openEditionModal([
@@ -56,7 +44,7 @@
 										<q-item-section class="action_card__item">
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
-									</q-item>
+									</q-item> -->
 									<q-item clickable @click.prevent="delteItem()">
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
@@ -179,7 +167,7 @@
 				</div>
 			</q-card-section>
 			<q-card-section class="ellipsis-2-lines">
-				{{ environmentShortDescription }}
+				{{ shortDescription }}
 			</q-card-section>
 		</q-card>
 	</div>
