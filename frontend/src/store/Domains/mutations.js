@@ -27,3 +27,6 @@ export const DELETE_DOMAIN_TAG = (state, tagId) =>
 	(state.domainTags = state.domainTags.filter(
 		(domainTag) => domainTag.id !== tagId
 	));
+
+export const ADD_DOMAIN_LIBRARY = (state, domainLib) =>
+	state.domainLibraries.unshift(domainLib);
