@@ -27,6 +27,8 @@ export const removeDomain = async ({ commit }, id) => {
 	await API.delete(`/domain/${id}`);
 	commit("DELETE_DOMAIN", id);
 };
+
+// Domain Tags
 export const fetchDomainTags = async ({ commit }, id) => {
 	await API.get(`/domain/${id}/tag`);
 	commit("GET_DOMAIN_TAGS", id);
@@ -40,6 +42,12 @@ export const addDomainTag = async ({ commit }, domainId, tagId) => {
 export const removeDomainTag = async ({ commit }, domainId, tagId) => {
 	await API.delete(`/domain/${domainId}/tag/${tagId}`);
 	commit("DELETE_DOMAIN_TAG", domainId, tagId);
+};
+
+// Domain Libraries
+export const fetchDomainLibraries = async ({ commit }, id) => {
+	await API.get(`/domain/${id}/library`);
+	commit("GET_DOMAIN_LIBRARIES", id);
 };
 
 export const addDomainLibrary = async ({ commit }, domainId, libraryId) => {
