@@ -21,7 +21,7 @@ const upload = multer({
 });
 
 // Routes
-app.post("/file", upload.single("image"), (req, res) => {
+app.post("/file", upload.single("file"), (req, res) => {
 	console.log(req.file);
 	res.send("File upload success");
 });

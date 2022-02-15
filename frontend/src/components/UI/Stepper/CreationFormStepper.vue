@@ -25,6 +25,11 @@
 								v-model="name"
 							/>
 						</div>
+						<q-img
+							:src="avatarUrl"
+							spinner-color="white"
+							style="height: 140px; max-width: 150px"
+						/>
 						<div class="col">
 							<q-select
 								filled
@@ -56,6 +61,17 @@
 								v-model="description"
 							/>
 						</div>
+						<!-- <div class="col">
+							<q-uploader
+								name="file"
+								style="max-width: 100%"
+								label="Your Logo"
+								accept=".jpg, svg, image/*"
+								@rejected="onRejected"
+								color="primary"
+								:factory="uploadSingleFile"
+							/>
+						</div> -->
 						<div class="col">
 							<q-uploader
 								style="max-width: 100%"
@@ -157,7 +173,7 @@ export default {
 		const options = ref([]);
 		const SelectedDomain = ref([]);
 		const $q = useQuasar();
-		const avatarUrl = ref(null);
+		const avatarUrl = ref("");
 
 		function onRejected(rejectedEntries) {
 			$q.notify({
@@ -170,17 +186,37 @@ export default {
 		 * 	2 - regroupe functions by thematique
 		 */
 
-		const uploadFile = (file) => {
+		// const uploadSingleFile = (file) => {
+		// 	const formData = new FormData();
+		// 	formData.append("id", imagesUID);
+		// 	formData.append("file", file[0], file[0].name);
+		// 	API.post(`http://localhost:5000/file/`, formData).then((res) => {
+		// 		avatarUrl.value = res.request.responseURL;
+		// 		console.log("avatarUrl.value: ", avatarUrl.value);
+		// 		console.log(res);
+		// 	});
+		// 	console.log("formData: ", formData);
+		// 	console.log("file: ", file);
+		// };
+		const uploadFile = async (file) => {
 			const formData = new FormData();
 			formData.append("id", imagesUID);
 			formData.append("file", file[0], file[0].name);
-			API.post(`/file/${imagesUID}`, formData).then((res) => {
-				avatarUrl.value = res.request.responseURL;
+			await API.post(`/file/${imagesUID}`, formData).then((res) => {
+				// avatarUrl.value = res.request.responseURL;
+				avatarUrl.value = res.config.url;
 				console.log("avatarUrl.value: ", avatarUrl.value);
-				console.log(res);
+				console.log("res", res);
+				console.log("res.config.url", res.config.url);
 			});
 			console.log("formData: ", formData);
 			console.log("file: ", file);
+			getFile();
+		};
+
+		const getFile = async () => {
+			let target = await API.get(`${avatarUrl.value}`);
+			console.log("target: ", target);
 		};
 
 		const getAllDomains = async () => {
@@ -232,8 +268,8 @@ export default {
 			avatarUrl,
 			imagesUID,
 			API,
-
 			uploadFile,
+			// uploadSingleFile,
 
 			onFileUpload(event) {},
 
