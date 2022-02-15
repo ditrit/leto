@@ -43,6 +43,11 @@ export const removeDomainTag = async ({ commit }, domainId, tagId) => {
 };
 
 export const addDomainLibrary = async ({ commit }, domainId, libraryId) => {
-	await API.post(`/domain/${domainId}/tag/${libraryId}`);
+	await API.post(`/domain/${domainId}/library/${libraryId}`);
 	commit("ADD_DOMAIN_LIBRARY", libraryId);
+};
+
+export const removeDomainLibrary = async ({ commit }, domainId, libraryId) => {
+	await API.delete(`/domain/${domainId}/library/${libraryId}`);
+	commit("DELETE_DOMAIN_LIBRARY", domainId, libraryId);
 };
