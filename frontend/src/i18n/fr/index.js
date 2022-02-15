@@ -43,6 +43,7 @@ export default {
 	library: "Bibliothèque",
 	add_library: "Nouvelle bibliothèque",
 	create_library: "Créer une bibliothèque",
+	manage_library: "Gérer les bibliothèque",
 
 	failed: "Action échoué",
 	success: "Action réussi",

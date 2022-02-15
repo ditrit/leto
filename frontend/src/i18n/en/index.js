@@ -41,6 +41,7 @@ export default {
 	library: "Libraries",
 	add_library: "Add new library",
 	create_library: "Create New library",
+	manage_library: "Manage libraries",
 
 	failed: "Action failed",
 	success: "Action was successful",

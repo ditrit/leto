@@ -28,6 +28,7 @@ export default {
 				icon: "group",
 			},
 			{ label: "Tags", link: "/settings/tags", icon: "tag" },
+			{ label: "Libraries", link: "/settings/libraries", icon: "libraries" },
 			{
 				label: "Environments Type",
 				link: "/settings/environmentstypes",
