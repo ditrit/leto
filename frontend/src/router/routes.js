@@ -76,11 +76,6 @@ const routes = [
 				meta: { requiresAuth: true },
 			},
 			{
-				path: "settings/libraries",
-				component: () => import("pages/PageSettingsLibraries.vue"),
-				meta: { requiresAuth: true },
-			},
-			{
 				path: "settings/environmentstypes",
 				component: () => import("pages/PageSettingsEnviType.vue"),
 				meta: { requiresAuth: true },
