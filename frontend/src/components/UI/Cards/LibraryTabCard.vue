@@ -55,7 +55,7 @@
 							</q-menu>
 						</q-btn>
 						<!-- Modification dialog -->
-						<q-dialog v-model="isOpened" persistent>
+						<q-dialog v-model="isOpened" persistent position="bottom">
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">{{ `Edit ${name}` }}</div>

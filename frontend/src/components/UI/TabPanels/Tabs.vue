@@ -79,7 +79,11 @@
 						/>
 					</div>
 					<!-- Products Creation dialog -->
-					<q-dialog v-model="isCreationProductsOpened" persistent>
+					<q-dialog
+						v-model="isCreationProductsOpened"
+						persistent
+						position="bottom"
+					>
 						<q-card style="width: 750px; max-width: 80vw">
 							<q-card-section>
 								<div class="text-h6 q-pa-md">{{ $t("add_product") }}</div>
@@ -325,8 +329,12 @@
 							@click.prevent="openCreationLibraryModal(teamLibraries)"
 						/>
 					</div>
-					<!-- Products Creation dialog -->
-					<q-dialog v-model="isCreationLibraryOpened" persistent>
+					<!-- Library Creation dialog -->
+					<q-dialog
+						v-model="isCreationLibraryOpened"
+						persistent
+						position="bottom"
+					>
 						<q-card style="width: 750px; max-width: 80vw">
 							<q-card-section>
 								<div class="text-h6 q-pa-md">{{ $t("add_library") }}</div>
@@ -334,8 +342,8 @@
 
 							<q-card-section class="q-pt-none">
 								<q-form
-									@submit.prevent="addNewProduct"
-									@reset="onResetProduct"
+									@submit.prevent="addNewLibrary"
+									@reset="onResetLibrary"
 									class="q-gutter-sm q-pa-md"
 								>
 									<div class="row col-md-12 q-gutter-md">
@@ -349,7 +357,7 @@
 													(val) =>
 														(val && val.length > 0) || 'Please type something',
 												]"
-												v-model="productName"
+												v-model="libraryName"
 											/>
 										</div>
 									</div>
@@ -362,18 +370,7 @@
 											(val) =>
 												(val && val.length > 0) || 'Please type something',
 										]"
-										v-model="productShortDescription"
-									/>
-									<q-input
-										class="q-gutter-md"
-										filled
-										label="Repo *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-										v-model="productProductRepositoryURL"
+										v-model="libraryShortDescription"
 									/>
 
 									<div class="row q-gutter-md">
@@ -388,7 +385,7 @@
 													(val) =>
 														(val && val.length > 0) || 'Please type something',
 												]"
-												v-model="productDescription"
+												v-model="libraryDescription"
 											/>
 										</div>
 										<div class="col">
@@ -457,7 +454,11 @@
 							/>
 						</div>
 						<!-- Environments Creation dialog -->
-						<q-dialog v-model="isEnvironmentsCreationOpened" persistent>
+						<q-dialog
+							v-model="isEnvironmentsCreationOpened"
+							persistent
+							position="bottom"
+						>
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">
@@ -580,6 +581,7 @@ import ProductsTabCard from "../Cards/ProductsTabCard.vue";
 import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
 import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
+import useLibraryTabData from "../../../composables/TabPanels/useLibraryTab";
 import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 
 export default {
@@ -747,6 +749,17 @@ export default {
 		} = useProductsTabData(props);
 
 		let {
+			libraryTeam,
+			libraryName,
+			libraryShortDescription,
+			libraryDescription,
+			deleteLibrary,
+			confirmDeleteLibrary,
+			addNewLibrary,
+			updateLibrary,
+		} = useLibraryTabData(props);
+
+		let {
 			authorizationNameRef,
 			authorizationRoleRef,
 			confirmDeleteAuthorization,
@@ -910,6 +923,14 @@ export default {
 			confirmDeleteAuthorization,
 			openCreationLibraryModal,
 			isCreationLibraryOpened,
+			libraryTeam,
+			libraryName,
+			libraryShortDescription,
+			libraryDescription,
+			deleteLibrary,
+			confirmDeleteLibrary,
+			addNewLibrary,
+			updateLibrary,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};
