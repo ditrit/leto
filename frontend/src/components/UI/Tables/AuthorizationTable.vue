@@ -182,7 +182,7 @@ const columns = [
 		field: (row) => row.name,
 		format: (val) => `${val}`,
 		sortable: true,
-		classes: "tr_width__avatar",
+		classes: "tr_width__actions30",
 	},
 
 	{
@@ -215,7 +215,7 @@ const columns = [
 		align: "left",
 		field: "actionsButtons",
 		sortable: false,
-		classes: "tr_width__actions",
+		classes: "tr_width__actions40",
 	},
 ];
 

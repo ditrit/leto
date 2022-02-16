@@ -256,7 +256,7 @@ const columns = [
 		align: "left",
 		field: "actionsButtons",
 		sortable: false,
-		classes: "tr_width__actions",
+		classes: "tr_width__actions70",
 	},
 ];
 
