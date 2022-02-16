@@ -46,7 +46,7 @@
 				<PageContent
 					icon="person"
 					:headline="$t('enviType')"
-					:subTitle="$t('manage_environments')"
+					:subTitle="$t('manage_environment_type')"
 					textContent=""
 				/>
 				<div class="q-px-lg"><EnvirTypeTable /></div>

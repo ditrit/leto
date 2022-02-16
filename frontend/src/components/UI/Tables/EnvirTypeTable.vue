@@ -23,7 +23,9 @@
 				<q-dialog v-model="opendDialog" persistent position="bottom">
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
-							<div class="text-h6 q-pa-md">{{ $t("edit_environment") }}</div>
+							<div class="text-h6 q-pa-md">
+								{{ $t("edit_environment_type") }}
+							</div>
 						</q-card-section>
 
 						<q-card-section class="q-pt-none">
@@ -133,7 +135,7 @@
 		<q-dialog v-model="openAddEnviTypeDialog" persistent position="bottom">
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("add_environment") }}</div>
+					<div class="text-h6 q-pa-md">{{ $t("create_environment_type") }}</div>
 				</q-card-section>
 
 				<q-card-section class="q-pt-none">

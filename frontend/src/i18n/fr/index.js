@@ -34,6 +34,9 @@ export default {
 
 	manage_environments: "Gérer les environnements",
 	create_environment: "Créer un nouvel environement",
+	create_environment_type: "Créer un nouvel environement Type",
+	edit_environment_type: "Modifier l'environment Type",
+	manage_environment_type: "Gérer l'environment Type",
 	edit_environment: "Modifier l'environement",
 
 	products: "Produits",
