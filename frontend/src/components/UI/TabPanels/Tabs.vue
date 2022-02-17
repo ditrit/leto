@@ -308,6 +308,7 @@
 								:name="library.Name"
 								:shortDescription="library.ShortDescription"
 								:logo="library.Logo"
+								@deleteAction="confirmDeleteLibrary(library.ID)"
 							/>
 						</div>
 						<div v-else>
@@ -317,6 +318,7 @@
 								:name="library.Name"
 								:shortDescription="library.ShortDescription"
 								:logo="logo"
+								@deleteAction="confirmDeleteLibrary(library.ID)"
 							/>
 						</div>
 					</div>
@@ -714,7 +716,6 @@ export default {
 			libraryName,
 			libraryShortDescription,
 			libraryDescription,
-			deleteLibrary,
 			confirmDeleteLibrary,
 			addNewLibrary,
 			updateLibrary,
@@ -892,7 +893,6 @@ export default {
 			libraryName,
 			libraryShortDescription,
 			libraryDescription,
-			deleteLibrary,
 			confirmDeleteLibrary,
 			addNewLibrary,
 			updateLibrary,

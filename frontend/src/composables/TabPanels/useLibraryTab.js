@@ -52,13 +52,18 @@ export default function useLibraryTabData(props) {
 		return (libraryTeam.value = data.value[0].Libraries);
 	};
 
-	const deleteLibrary = async (id) => {
+	const deleteLibrary = async (library_id) => {
 		await store
-			.dispatch("appLibraries/removeLibrary", `${id}`)
+			.dispatch(
+				"appDomain/removeDomainLibrary",
+				route.currentRoute.value.params.id,
+				`${library_id}`
+			)
 			.then(() => refreshData());
 	};
 
-	const confirmDeleteLibrary = (id) => {
+	const confirmDeleteLibrary = (props) => {
+		console.log("props: ", props);
 		$q.dialog({
 			title: "Confirm",
 			message: "Are you sure to delete this item?",
@@ -66,7 +71,13 @@ export default function useLibraryTabData(props) {
 			persistent: true,
 		})
 			.onOk(() => {
-				deleteLibrary(id);
+				store
+					.dispatch(
+						"appDomain/removeDomainLibrary",
+						route.currentRoute.value.params.id,
+						props
+					)
+					.then(() => refreshData());
 			})
 			.onCancel(() => {
 				console.log("Cancel");
