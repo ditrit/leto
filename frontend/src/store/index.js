@@ -10,6 +10,7 @@ import appRoles from "./Roles/index";
 import appEnviType from "./EnviType/index";
 import appEnvironment from "./Environment/index";
 import appProducts from "./Products/index";
+import appLibraries from "./Libraries/index";
 import appAuthorization from "./Authorization/index";
 import appFiles from "./Files/index";
 
@@ -35,6 +36,7 @@ export default store(function (/* { ssrContext } */) {
 			appAuthorization,
 			appFiles,
 			appProducts,
+			appLibraries,
 		},
 		strict: process.env.DEBUGGING,
 	});

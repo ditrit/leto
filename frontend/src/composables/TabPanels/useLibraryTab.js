@@ -14,13 +14,11 @@ export default function useLibraryTabData(props) {
 	const libraryDescription = ref("");
 
 	const getLibrariesList = async () => {
-		await store.dispatch(
-			"appDomain/fetchDomainLibraries",
-			route.currentRoute.value.params.id
-		);
+		await store.dispatch("appLibraries/fetchAllLibraries");
 		const libraries = computed(
-			() => store.getters["appDomain/allDomainLibraries"]
+			() => store.getters["appLibraries/allLibraries"]
 		);
+		console.log("libraries.value: ", libraries.value);
 
 		librariesList.value = libraries.value.map((library) => {
 			return {
@@ -141,6 +139,5 @@ export default function useLibraryTabData(props) {
 		confirmDeleteLibrary,
 		addNewLibrary,
 		updateLibrary,
-		getLibrariesList,
 	};
 }

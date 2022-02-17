@@ -360,7 +360,7 @@
 												disabled
 												filled
 												label="Domain"
-												v-model="domainName"
+												v-model="domainNameRef"
 											/>
 										</div>
 									</div>
@@ -738,6 +738,7 @@ export default {
 		const authorizationDomainNameRef = ref(null);
 
 		const domainList = ref(null);
+		const domainNameRef = ref(null);
 
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
@@ -788,7 +789,8 @@ export default {
 		const getDominListTab = () => {
 			store.dispatch("appDomain/fetchDomainById", domainID.value);
 			let data = store.getters["appDomain/allDomaines"];
-			return (authorizationDomainNameRef.value = data[0].Name);
+			authorizationDomainNameRef.value = data[0].Name;
+			domainNameRef.value = data[0].Name;
 		};
 
 		const refreshDomainAuthorizations = async (id) => {
@@ -894,6 +896,7 @@ export default {
 			updateLibrary,
 			librariesList,
 			getLibrariesList,
+			domainNameRef,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};
