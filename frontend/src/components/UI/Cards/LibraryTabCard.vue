@@ -200,17 +200,6 @@ export default {
 	setup(props, { emit }) {
 		const store = useStore();
 		const $q = useQuasar();
-		const environmentId = ref(props.id);
-		const environmentName = ref(props.name);
-		const environmentRepo = ref(props.repo);
-		const environmentLogo = ref(props.logo);
-		const environmentRole = ref(props.role);
-		const environmentShortDescription = ref(props.shortDescription);
-		const environmentDescription = ref(props.description);
-		const environmentProductRepositoryURL = ref(props.productRepositoryURL);
-		const environmentTypeIDRef = ref(props.environmentTypeID);
-		const environmentTypeName = ref(props.environmentTypeName);
-		const environmentDomainID = ref(props.domainID);
 		const isOpened = ref(false);
 
 		// const openEditionModal = (props) => {
@@ -288,14 +277,6 @@ export default {
 			onResetUpdate,
 			onFileUpload,
 			onRejected,
-			environmentTypeIDRef,
-			environmentName,
-			environmentShortDescription,
-			environmentDescription,
-			environmentId,
-			environmentRepo,
-			environmentRole,
-			environmentProductRepositoryURL,
 			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
 		};
 	},

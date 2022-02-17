@@ -49,7 +49,7 @@ export default function useLibraryTabData(props) {
 			"	route.currentRoute.value.params.id: ",
 			route.currentRoute.value.params.id
 		);
-		libraryTeam.value = data.value[0].Libraries;
+		return (libraryTeam.value = data.value[0].Libraries);
 	};
 
 	const deleteLibrary = async (id) => {
@@ -140,5 +140,6 @@ export default function useLibraryTabData(props) {
 		confirmDeleteLibrary,
 		addNewLibrary,
 		updateLibrary,
+		libraryTeam,
 	};
 }
