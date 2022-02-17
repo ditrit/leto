@@ -786,6 +786,7 @@ export default {
 			});
 		};
 
+		// Use to get domain list for Authorization and Libraries Tab
 		const getDominListTab = () => {
 			store.dispatch("appDomain/fetchDomainById", domainID.value);
 			let data = store.getters["appDomain/allDomaines"];
