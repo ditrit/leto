@@ -8,9 +8,34 @@ export default function useLibraryTabData(props) {
 	const route = useRouter();
 	const $q = useQuasar();
 	const libraryTeam = ref(props.teamLibraries);
+	const librariesList = ref([]);
 	const libraryName = ref("");
 	const libraryShortDescription = ref("");
 	const libraryDescription = ref("");
+
+	const getLibrariesList = async () => {
+		await store.dispatch(
+			"appDomain/fetchDomainLibraries",
+			route.currentRoute.value.params.id
+		);
+		const libraries = computed(
+			() => store.getters["appDomain/allDomainLibraries"]
+		);
+
+		librariesList.value = libraries.value.map((library) => {
+			return {
+				id: library.ID,
+				domainId: route.currentRoute.value.params.id,
+				name: library.Name,
+				label: library.Name,
+				value: library.Name,
+				logo: library.Logo,
+				shortDescription: library.ShortDescription,
+				description: library.Description,
+			};
+		});
+	};
+	getLibrariesList();
 
 	const refreshData = async () => {
 		await store.dispatch(
@@ -87,8 +112,6 @@ export default function useLibraryTabData(props) {
 		let library = {
 			id: id,
 			name: libraryName.value,
-			shortDescription: libraryShortDescription.value,
-			description: libraryDescription.value,
 			domainID: route.currentRoute.value.params.id,
 		};
 
@@ -110,7 +133,7 @@ export default function useLibraryTabData(props) {
 		store,
 		route,
 		$q,
-		libraryTeam,
+		librariesList,
 		libraryName,
 		libraryShortDescription,
 		libraryDescription,
@@ -118,5 +141,6 @@ export default function useLibraryTabData(props) {
 		confirmDeleteLibrary,
 		addNewLibrary,
 		updateLibrary,
+		getLibrariesList,
 	};
 }

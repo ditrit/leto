@@ -213,10 +213,10 @@ export default {
 		const environmentDomainID = ref(props.domainID);
 		const isOpened = ref(false);
 
-		const openEditionModal = (props) => {
-			isOpened.value = true;
-			emit("openEditModal", props);
-		};
+		// const openEditionModal = (props) => {
+		// 	isOpened.value = true;
+		// 	emit("openEditModal", props);
+		// };
 
 		const updateItem = () => {
 			emit("updateAction", props);
@@ -281,7 +281,7 @@ export default {
 		};
 		return {
 			isOpened,
-			openEditionModal,
+			// openEditionModal,
 			updateItem,
 			delteItem,
 			onSubmitUpdate,

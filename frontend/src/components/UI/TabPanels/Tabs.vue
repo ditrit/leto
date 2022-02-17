@@ -346,62 +346,21 @@
 									@reset="onResetLibrary"
 									class="q-gutter-sm q-pa-md"
 								>
-									<div class="row col-md-12 q-gutter-md">
+									<div class="col-md-12 q-gutter-md">
 										<div class="col">
-											<q-input
+											<q-select
 												filled
-												label="Name *"
-												hint=""
-												lazy-rules
-												:rules="[
-													(val) =>
-														(val && val.length > 0) || 'Please type something',
-												]"
+												:options="librariesList"
+												label="Library"
 												v-model="libraryName"
 											/>
 										</div>
-									</div>
-									<q-input
-										class="q-gutter-md"
-										filled
-										label="Short Description *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-										v-model="libraryShortDescription"
-									/>
-
-									<div class="row q-gutter-md">
-										<div class="col col-md-8">
-											<q-input
-												class="q-gutter-md"
+										<div class="col" disabled>
+											<q-select
+												disabled
 												filled
-												type="textarea"
-												label="Description *"
-												lazy-rules
-												:rules="[
-													(val) =>
-														(val && val.length > 0) || 'Please type something',
-												]"
-												v-model="libraryDescription"
-											/>
-										</div>
-										<div class="col">
-											<q-uploader
-												style="max-width: 100%"
-												url="http://localhost:3000/upload"
-												label="Your Logo"
-												multiple
-												accept=".jpg, svg, image/*"
-												@rejected="onRejected"
-												color="primary"
-												factory
-												files
-												hide-upload-btn="true"
-												auto-upload
-												@uploaded="onFileUpload"
+												label="Domain"
+												v-model="domainName"
 											/>
 										</div>
 									</div>
@@ -749,6 +708,8 @@ export default {
 		} = useProductsTabData(props);
 
 		let {
+			librariesList,
+			getLibrariesList,
 			libraryTeam,
 			libraryName,
 			libraryShortDescription,
@@ -890,7 +851,7 @@ export default {
 			getRolesList,
 			domainID,
 			authorizationDomainObj,
-			tab: ref("authorizations"),
+			tab: ref("libraries"),
 			environmentName,
 			environmentShortDescription,
 			environmentDescription,
@@ -931,6 +892,8 @@ export default {
 			confirmDeleteLibrary,
 			addNewLibrary,
 			updateLibrary,
+			librariesList,
+			getLibrariesList,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};
