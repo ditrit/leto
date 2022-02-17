@@ -9,6 +9,7 @@ export default function useLibraryTabData(props) {
 	const $q = useQuasar();
 	const libraryTeam = ref(props.teamLibraries);
 	const librariesList = ref([]);
+	const libraryId = ref("");
 	const libraryName = ref("");
 	const libraryShortDescription = ref("");
 	const libraryDescription = ref("");
@@ -23,7 +24,6 @@ export default function useLibraryTabData(props) {
 		librariesList.value = libraries.value.map((library) => {
 			return {
 				id: library.ID,
-				domainId: route.currentRoute.value.params.id,
 				name: library.Name,
 				label: library.Name,
 				value: library.Name,
@@ -73,12 +73,12 @@ export default function useLibraryTabData(props) {
 			});
 	};
 
-	const addNewLibrary = async (libID) => {
+	const addNewLibrary = async (props) => {
+		console.log("props: ", props);
 		let newLibrary = {
 			domainId: route.currentRoute.value.params.id,
-			libraryId: libID,
+			libraryId: libraryName.value.id,
 		};
-		console.log("libID: ", libID);
 		console.log("newLibrary: ", newLibrary);
 		try {
 			await store
@@ -132,6 +132,7 @@ export default function useLibraryTabData(props) {
 		route,
 		$q,
 		librariesList,
+		libraryId,
 		libraryName,
 		libraryShortDescription,
 		libraryDescription,

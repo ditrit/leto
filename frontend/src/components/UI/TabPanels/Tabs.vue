@@ -298,7 +298,7 @@
 				<q-tab-panel name="libraries" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="library in teamLibraries"
+						v-for="library in libraryTeam"
 						:key="library.ID"
 					>
 						<div v-if="library.Logo">
@@ -326,60 +326,60 @@
 							text-color="primary"
 							icon="add"
 							label="New library"
-							@click.prevent="openCreationLibraryModal(teamLibraries)"
+							@click.prevent="openCreationLibraryModal(libraryTeam)"
 						/>
-					</div>
-					<!-- Library Creation dialog -->
-					<q-dialog
-						v-model="isCreationLibraryOpened"
-						persistent
-						position="bottom"
-					>
-						<q-card style="width: 750px; max-width: 80vw">
-							<q-card-section>
-								<div class="text-h6 q-pa-md">{{ $t("add_library") }}</div>
-							</q-card-section>
+						<!-- Library Creation dialog -->
+						<q-dialog
+							v-model="isCreationLibraryOpened"
+							persistent
+							position="bottom"
+						>
+							<q-card style="width: 750px; max-width: 80vw">
+								<q-card-section>
+									<div class="text-h6 q-pa-md">{{ $t("add_library") }}</div>
+								</q-card-section>
 
-							<q-card-section class="q-pt-none">
-								<q-form
-									@submit.prevent="addNewLibrary"
-									@reset="onResetLibrary"
-									class="q-gutter-sm q-pa-md"
-								>
-									<div class="col-md-12 q-gutter-md">
-										<div class="col">
-											<q-select
-												filled
-												:options="librariesList"
-												label="Library"
-												v-model="libraryName"
-											/>
-										</div>
-										<div class="col" disabled>
-											<q-select
-												disabled
-												filled
-												label="Domain"
-												v-model="domainNameRef"
-											/>
-										</div>
-									</div>
-									<q-card-actions
-										align="right"
-										class="text-primary flex justify-center"
+								<q-card-section class="q-pt-none">
+									<q-form
+										@submit.prevent="addNewLibrary(library)"
+										@reset="onResetLibrary"
+										class="q-gutter-sm q-pa-md"
 									>
-										<q-btn type="reset" label="Cancel" v-close-popup />
-										<q-btn
-											label="Create"
-											type="submit"
-											color="primary"
-											v-close-popup
-										/>
-									</q-card-actions>
-								</q-form>
-							</q-card-section>
-						</q-card>
-					</q-dialog>
+										<div class="col-md-12 q-gutter-md">
+											<div class="col">
+												<q-select
+													filled
+													:options="librariesList"
+													label="Library"
+													v-model="libraryName"
+												/>
+											</div>
+											<div class="col" disabled>
+												<q-select
+													disabled
+													filled
+													label="Domain"
+													v-model="domainNameRef"
+												/>
+											</div>
+										</div>
+										<q-card-actions
+											align="right"
+											class="text-primary flex justify-center"
+										>
+											<q-btn type="reset" label="Cancel" v-close-popup />
+											<q-btn
+												label="Create"
+												type="submit"
+												color="primary"
+												v-close-popup
+											/>
+										</q-card-actions>
+									</q-form>
+								</q-card-section>
+							</q-card>
+						</q-dialog>
+					</div>
 				</q-tab-panel>
 
 				<q-tab-panel name="environnements" class="flex q-gutter-md">
@@ -709,8 +709,8 @@ export default {
 
 		let {
 			librariesList,
-			getLibrariesList,
 			libraryTeam,
+			libraryId,
 			libraryName,
 			libraryShortDescription,
 			libraryDescription,
@@ -793,7 +793,7 @@ export default {
 			authorizationDomainNameRef.value = data[0].Name;
 			domainNameRef.value = data[0].Name;
 		};
-
+		getDominListTab();
 		const refreshDomainAuthorizations = async (id) => {
 			await store.dispatch("appDomain/fetchDomainById", id);
 			let data = computed(() => {
@@ -888,6 +888,7 @@ export default {
 			openCreationLibraryModal,
 			isCreationLibraryOpened,
 			libraryTeam,
+			libraryId,
 			libraryName,
 			libraryShortDescription,
 			libraryDescription,
@@ -896,7 +897,6 @@ export default {
 			addNewLibrary,
 			updateLibrary,
 			librariesList,
-			getLibrariesList,
 			domainNameRef,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],

@@ -50,9 +50,9 @@ export const fetchDomainLibraries = async ({ commit }, id) => {
 	commit("GET_DOMAIN_LIBRARIES", id);
 };
 
-export const addDomainLibrary = async ({ commit }, domainId, libraryId) => {
-	await API.post(`/domain/${domainId}/library/${libraryId}`);
-	commit("ADD_DOMAIN_LIBRARY", libraryId);
+export const addDomainLibrary = async ({ commit }, library) => {
+	await API.post(`/domain/${library.domainId}/library/${library.libraryId}`);
+	commit("ADD_DOMAIN_LIBRARY", library);
 };
 
 export const removeDomainLibrary = async ({ commit }, domainId, libraryId) => {
