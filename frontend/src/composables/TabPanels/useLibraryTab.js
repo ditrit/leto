@@ -11,6 +11,7 @@ export default function useLibraryTabData(props) {
 	const librariesList = ref([]);
 	const libraryId = ref("");
 	const libraryName = ref("");
+	const domainID = ref(route.currentRoute.value.params.id);
 	const libraryShortDescription = ref("");
 	const libraryDescription = ref("");
 
@@ -36,29 +37,17 @@ export default function useLibraryTabData(props) {
 	getLibrariesList();
 
 	const refreshData = async () => {
-		await store.dispatch(
-			"appDomain/fetchDomainById",
-			route.currentRoute.value.params.id
-		);
+		await store.dispatch("appDomain/fetchDomainById", domainID.value);
 		let data = computed(() => {
 			return store.getters["appDomain/allDomaines"];
 		});
-		console.log('"data from refreshData: ": ', data.value);
-		console.log("data.value[0].Libraries: ", data.value[0].Libraries);
-		console.log(
-			"	route.currentRoute.value.params.id: ",
-			route.currentRoute.value.params.id
-		);
+
 		return (libraryTeam.value = data.value[0].Libraries);
 	};
 
 	const deleteLibrary = async (library_id) => {
 		await store
-			.dispatch(
-				"appDomain/removeDomainLibrary",
-				route.currentRoute.value.params.id,
-				`${library_id}`
-			)
+			.dispatch("appDomain/removeDomainLibrary", domainID.value, library_id)
 			.then(() => refreshData());
 	};
 
@@ -72,11 +61,7 @@ export default function useLibraryTabData(props) {
 		})
 			.onOk(() => {
 				store
-					.dispatch(
-						"appDomain/removeDomainLibrary",
-						route.currentRoute.value.params.id,
-						props
-					)
+					.dispatch("appDomain/removeDomainLibrary", domainID.value, props)
 					.then(() => refreshData());
 			})
 			.onCancel(() => {
@@ -84,10 +69,9 @@ export default function useLibraryTabData(props) {
 			});
 	};
 
-	const addNewLibrary = async (props) => {
-		console.log("props: ", props);
+	const addNewLibrary = async () => {
 		let newLibrary = {
-			domainId: route.currentRoute.value.params.id,
+			domainId: domainID.value,
 			libraryId: libraryName.value.id,
 		};
 		console.log("newLibrary: ", newLibrary);
@@ -100,42 +84,15 @@ export default function useLibraryTabData(props) {
 				.then(() => {
 					$q.notify({
 						type: "positive",
-						message: `${libraryName.value} library was succefuly created`,
+						message: `${libraryName.value.name} library was succefuly created`,
 					});
 				});
-
-			console.log("libraryTeam from useTabs:", libraryTeam.value);
 		} catch (error) {
 			$q.notify({
 				type: "negative",
-				message: `${libraryName.value} library was not created`,
+				message: `${libraryName.value.name} library was not created`,
 			});
 		}
-
-		libraryName.value = "";
-		libraryShortDescription.value = "";
-		libraryDescription.value = "";
-	};
-
-	const updateLibrary = async (id) => {
-		let library = {
-			id: id,
-			name: libraryName.value,
-			domainID: route.currentRoute.value.params.id,
-		};
-
-		await store
-			.dispatch("appLibraries/updateLibrary", library)
-			.then(() => {
-				refreshData();
-			})
-			.then(() => {
-				$q.notify({
-					type: "positive",
-					message: `${libraryName.value} library was succefuly updated`,
-				});
-			});
-		console.log("Update library from useTabs: ", library);
 	};
 
 	return {
@@ -150,7 +107,7 @@ export default function useLibraryTabData(props) {
 		deleteLibrary,
 		confirmDeleteLibrary,
 		addNewLibrary,
-		updateLibrary,
 		libraryTeam,
+		domainID,
 	};
 }

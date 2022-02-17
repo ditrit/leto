@@ -343,7 +343,7 @@
 
 								<q-card-section class="q-pt-none">
 									<q-form
-										@submit.prevent="addNewLibrary(library)"
+										@submit.prevent="addNewLibrary"
 										@reset="onResetLibrary"
 										class="q-gutter-sm q-pa-md"
 									>
@@ -719,6 +719,7 @@ export default {
 			confirmDeleteLibrary,
 			addNewLibrary,
 			updateLibrary,
+			domainID,
 		} = useLibraryTabData(props);
 
 		let {
@@ -730,7 +731,6 @@ export default {
 
 		let { refreshDomainData } = useContentCardData();
 		const isEnvironmentsCreationOpened = ref(false);
-		const domainID = ref(route.currentRoute.value.params.id);
 		const isAuthorCreationOpened = ref(false);
 		const isCreationProductsOpened = ref(false);
 		const isCreationLibraryOpened = ref(false);
