@@ -44,7 +44,7 @@
 import { ref } from "vue";
 
 export default {
-	emits: ["openEditModal", "deleteAction", "openNewItemModal"],
+	emits: ["deleteAction"],
 	props: {
 		id: { type: String },
 		logo: { type: String, default: "https://cdn.quasar.dev/img/parallax2.jpg" },

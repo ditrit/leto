@@ -2,6 +2,7 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import API from "../../services/index";
 
 export default function useLibraryTabData(props) {
 	const store = useStore();
@@ -45,9 +46,10 @@ export default function useLibraryTabData(props) {
 		return (libraryTeam.value = data.value[0].Libraries);
 	};
 
-	const deleteLibrary = async (library_id) => {
-		await store
-			.dispatch("appDomain/removeDomainLibrary", domainID.value, library_id)
+	const deleteLibrary = async (libraryId) => {
+		API.delete(`/domain/${domainID.value}/library/${libraryId}`)
+			// await store
+			// 	.dispatch("appDomain/removeDomainLibrary", domainID.value, library_id)
 			.then(() => refreshData());
 	};
 
@@ -60,9 +62,7 @@ export default function useLibraryTabData(props) {
 			persistent: true,
 		})
 			.onOk(() => {
-				store
-					.dispatch("appDomain/removeDomainLibrary", domainID.value, props)
-					.then(() => refreshData());
+				deleteLibrary(props);
 			})
 			.onCancel(() => {
 				console.log("Cancel");

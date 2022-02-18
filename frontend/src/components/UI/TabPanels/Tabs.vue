@@ -795,6 +795,7 @@ export default {
 			domainNameRef.value = data[0].Name;
 		};
 		getDominListTab();
+
 		const refreshDomainAuthorizations = async (id) => {
 			await store.dispatch("appDomain/fetchDomainById", id);
 			let data = computed(() => {
