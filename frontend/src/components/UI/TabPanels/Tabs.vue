@@ -11,6 +11,7 @@
 			>
 				<q-tab v-if="tags" dense name="tags" label="Tags" icon="sell" />
 				<q-tab dense name="products" label="Products" icon="apps" />
+				<q-tab dense name="requirements" label="Requirements" icon="info" />
 				<q-tab
 					dense
 					name="authorizations"
@@ -181,6 +182,11 @@
 							</q-card-section>
 						</q-card>
 					</q-dialog>
+				</q-tab-panel>
+				<q-tab-panel name="requirements" class="flex q-gutter-md">
+					<div class="cards_wrapper">
+						<RequirementsTabCard />
+					</div>
 				</q-tab-panel>
 
 				<q-tab-panel name="authorizations" class="flex q-gutter-md">
@@ -539,6 +545,7 @@ import LibraryTabCard from "../Cards/LibraryTabCard.vue";
 import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
 import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
 import ProductsTabCard from "../Cards/ProductsTabCard.vue";
+import RequirementsTabCard from "../Cards/RequirementsTabCard.vue";
 import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
 import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
@@ -550,6 +557,7 @@ export default {
 		LibraryTabCard,
 		EnvironemtsTabCard,
 		ProductsTabCard,
+		RequirementsTabCard,
 		AuthorizationsTabCard,
 	},
 	emits: ["openModalToAddItem", "deleteAuthorizationAction"],

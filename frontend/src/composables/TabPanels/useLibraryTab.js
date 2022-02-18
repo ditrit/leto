@@ -21,8 +21,6 @@ export default function useLibraryTabData(props) {
 		const libraries = computed(
 			() => store.getters["appLibraries/allLibraries"]
 		);
-		console.log("libraries.value: ", libraries.value);
-
 		librariesList.value = libraries.value.map((library) => {
 			return {
 				id: library.ID,
@@ -48,13 +46,13 @@ export default function useLibraryTabData(props) {
 
 	const deleteLibrary = async (libraryId) => {
 		API.delete(`/domain/${domainID.value}/library/${libraryId}`)
+			// TODO : Add vuex action
 			// await store
-			// 	.dispatch("appDomain/removeDomainLibrary", domainID.value, library_id)
+			// 	.dispatch("appDomain/removeDomainLibrary", domainID.value, libraryId)
 			.then(() => refreshData());
 	};
 
 	const confirmDeleteLibrary = (props) => {
-		console.log("props: ", props);
 		$q.dialog({
 			title: "Confirm",
 			message: "Are you sure to delete this item?",
@@ -65,7 +63,7 @@ export default function useLibraryTabData(props) {
 				deleteLibrary(props);
 			})
 			.onCancel(() => {
-				console.log("Cancel");
+				console.log("Canceled");
 			});
 	};
 
@@ -74,7 +72,6 @@ export default function useLibraryTabData(props) {
 			domainId: domainID.value,
 			libraryId: libraryName.value.id,
 		};
-		console.log("newLibrary: ", newLibrary);
 		try {
 			await store
 				.dispatch("appDomain/addDomainLibrary", newLibrary)

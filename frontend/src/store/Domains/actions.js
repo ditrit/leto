@@ -57,5 +57,5 @@ export const addDomainLibrary = async ({ commit }, library) => {
 
 export const removeDomainLibrary = async ({ commit }, domainId, libraryId) => {
 	await API.delete(`/domain/${domainId}/library/${libraryId}`);
-	commit("DELETE_DOMAIN_LIBRARY", libraryId);
+	commit("DELETE_DOMAIN_LIBRARY", domainId, libraryId);
 };
