@@ -27,7 +27,7 @@
 						</div>
 						<q-img
 							:src="avatarUrl"
-							spinner-color="white"
+							spinner-color="red"
 							style="height: 140px; max-width: 150px"
 						/>
 						<div class="col">
@@ -204,7 +204,7 @@ export default {
 			formData.append("file", file[0], file[0].name);
 			await API.post(`/file/${imagesUID}`, formData).then((res) => {
 				// avatarUrl.value = res.request.responseURL;
-				avatarUrl.value = res.config.url;
+
 				console.log("avatarUrl.value: ", avatarUrl.value);
 				console.log("res", res);
 				console.log("res.config.url", res.config.url);
@@ -215,8 +215,10 @@ export default {
 		};
 
 		const getFile = async () => {
-			let target = await API.get(`${avatarUrl.value}`);
+			let target = await API.get(`file/${imagesUID}`);
 			console.log("target: ", target);
+			console.log("responseURL: ", target.request.responseURL);
+			return (avatarUrl.value = target.request.responseURL);
 		};
 
 		const getAllDomains = async () => {
