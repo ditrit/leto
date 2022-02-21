@@ -26,7 +26,7 @@
 							/>
 						</div>
 						<q-img
-							:src="avatarUrl"
+							:src="base64"
 							spinner-color="red"
 							style="height: 140px; max-width: 150px"
 						/>
@@ -174,6 +174,7 @@ export default {
 		const SelectedDomain = ref([]);
 		const $q = useQuasar();
 		const avatarUrl = ref("");
+		const base64 = ref("");
 
 		function onRejected(rejectedEntries) {
 			$q.notify({
@@ -198,28 +199,49 @@ export default {
 		// 	console.log("formData: ", formData);
 		// 	console.log("file: ", file);
 		// };
+		const headers = {
+			"Content-Type": "image/png",
+		};
 		const uploadFile = async (file) => {
 			const formData = new FormData();
+
 			formData.append("id", imagesUID);
 			formData.append("file", file[0], file[0].name);
 			await API.post(`/file/${imagesUID}`, formData).then((res) => {
 				// avatarUrl.value = res.request.responseURL;
-
+				// avatarUrl.value = res.config.url;
 				console.log("avatarUrl.value: ", avatarUrl.value);
+				console.log("res.data", res.data);
 				console.log("res", res);
 				console.log("res.config.url", res.config.url);
 			});
+			// parseURI(file[0]);
+			console.log("	base64.value: ", base64.value);
+			console.log("	parseURI(file[0]): ", parseURI(file[0]));
 			console.log("formData: ", formData);
 			console.log("file: ", file);
 			getFile();
 		};
 
 		const getFile = async () => {
-			let target = await API.get(`file/${imagesUID}`);
+			let target = await API.get(`/file/${imagesUID}`, {
+				headers: headers,
+			});
 			console.log("target: ", target);
-			console.log("responseURL: ", target.request.responseURL);
-			return (avatarUrl.value = target.request.responseURL);
+			avatarUrl.value = target.request.responseURL;
 		};
+		getFile();
+		async function parseURI(d) {
+			var reader = new FileReader();
+			reader.readAsDataURL(d);
+			return new Promise((res, rej) => {
+				reader.onload = () => {
+					res(reader.result);
+					base64.value = reader.result;
+				};
+				reader.onerror = (error) => reject(error);
+			});
+		}
 
 		const getAllDomains = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
@@ -271,6 +293,7 @@ export default {
 			imagesUID,
 			API,
 			uploadFile,
+			base64,
 			// uploadSingleFile,
 
 			onFileUpload(event) {},
