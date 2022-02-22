@@ -206,9 +206,7 @@ export default {
 			const formData = new FormData();
 			formData.append("id", imagesUID);
 			formData.append("file", file[0], file[0].name);
-			formData.append("file64", parseURI(file[0]));
 			// await store.dispatch("appFiles/uploadFile", imagesUID, formData);
-			// avatarUrl.value = await store.getters["appFiles/getFiles"];
 
 			await API.post(`/file/${imagesUID}`, formData).then((res) => {
 				// avatarUrl.value = res.request.responseURL;
@@ -227,7 +225,9 @@ export default {
 			let target = await API.get(`/file/${imagesUID}`, {
 				headers: headers,
 			});
+			// let response = store.dispatch("appFiles/downloadFile", imagesUID);
 			console.log("target: ", target);
+			// console.log("response: ", response);
 
 			const array = [target.request.responseURL]; // an array consisting of a single DOMString
 			console.log("array: ", array);
