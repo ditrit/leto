@@ -207,10 +207,13 @@ export default {
 			formData.append("id", imagesUID);
 			formData.append("file", file[0], file[0].name);
 			formData.append("file64", parseURI(file[0]));
+			// await store.dispatch("appFiles/uploadFile", imagesUID, formData);
+			// avatarUrl.value = await store.getters["appFiles/getFiles"];
+
 			await API.post(`/file/${imagesUID}`, formData).then((res) => {
 				// avatarUrl.value = res.request.responseURL;
 				// avatarUrl.value = res.config.url;
-				parseURI(file[0]);
+
 				console.log("res.data", res.data);
 				console.log("res", res);
 				console.log("res.config.url", res.config.url);
@@ -230,12 +233,9 @@ export default {
 			console.log("array: ", array);
 			const blob = new Blob(array, { type: "image/png" });
 			console.log("blob: ", blob);
-			parseURI(blob);
-			console.log(
-				"	parseURI(blob): ",
-				parseURI(blob).then((res) => (avatarUrl.value = res))
-			);
-			console.log("avatarUrl.value: ", avatarUrl.value);
+			// parseURI(blob).then((res) => {
+			// 	console.log("res", res);
+			// });
 		};
 
 		const parseURI = async (d) => {
@@ -244,6 +244,7 @@ export default {
 			return new Promise((res, rej) => {
 				reader.onload = () => {
 					res(reader.result);
+					avatarUrl.value = reader.result;
 				};
 				reader.onerror = (error) => reject(error);
 			});

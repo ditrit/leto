@@ -6,5 +6,5 @@ export const uploadFile = async ({ commit }, id, file) => {
 };
 export const downloadFile = async ({ commit }, id) => {
 	let response = await API.get(`/file/${id}`);
-	commit("GET_FILE", response);
+	commit("GET_FILE", id, file);
 };
