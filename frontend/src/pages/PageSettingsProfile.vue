@@ -73,7 +73,7 @@
 							</div>
 						</q-form>
 						<q-avatar class="q-my-lg" size="100px">
-							<img :src="user.Logo" />
+							<img :src="user.Logo ? user.Logo : logo" />
 						</q-avatar>
 					</div>
 					<div class="row">
@@ -200,6 +200,12 @@ export default {
 		Drawer,
 		AccountSettings,
 		SettingsNav,
+	},
+	props: {
+		logo: {
+			type: String,
+			default: "https://cdn.quasar.dev/img/boy-avatar.png",
+		},
 	},
 
 	setup() {
