@@ -3,7 +3,7 @@
 		<q-item clickable>
 			<q-item-section>
 				<q-avatar round size="40px" v-if="user">
-					<img :src="user.Logo" />
+					<img :src="user.Logo ? user.Logo : logo" />
 				</q-avatar>
 			</q-item-section>
 		</q-item>
@@ -33,7 +33,7 @@
 
 				<div class="column" v-if="user">
 					<q-avatar size="72px">
-						<img :src="user.Logo" />
+						<img :src="user.Logo ? user.Logo : logo" />
 					</q-avatar>
 
 					<div class="q-mt-md q-mb-xs">
@@ -60,12 +60,16 @@ import { useRouter } from "vue-router";
 import LangSwitcher from "../../LangSwitcher.vue";
 export default {
 	components: { LangSwitcher },
+	props: {
+		logo: {
+			type: String,
+			default: "https://cdn.quasar.dev/img/boy-avatar.png",
+		},
+	},
 	setup() {
 		const store = useStore();
 		const router = useRouter();
-
 		const user = ref(null);
-
 		user.value = store.getters["auth/user"];
 
 		const getToken = async () => {
