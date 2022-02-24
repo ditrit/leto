@@ -28,7 +28,7 @@ export default {
 				icon: "group",
 			},
 			{
-				label: "Requirementss",
+				label: "Requirements",
 				link: "/settings/requirements",
 				icon: "info ",
 			},

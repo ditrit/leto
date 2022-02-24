@@ -71,6 +71,11 @@ const routes = [
 				meta: { requiresAuth: true },
 			},
 			{
+				path: "settings/requirements",
+				component: () => import("pages/PageSettingsRequirements.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
 				path: "settings/tags",
 				component: () => import("pages/PageSettingsTags.vue"),
 				meta: { requiresAuth: true },
