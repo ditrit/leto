@@ -9,6 +9,10 @@
 				@click.prevent="AddUser"
 			/>
 		</div>
+		<Modal class="modalGlobal">
+			<template v-slot:ModalTitle> {{ $t("add_requirements") }} </template>
+			<template v-slot:ModalContent> Hello </template>
+		</Modal>
 		<q-table
 			:key="updateKey"
 			title=""
@@ -51,9 +55,8 @@
 				</q-td>
 			</template>
 		</q-table>
-
 		<!-- Create Dialog -->
-		<!-- <q-dialog v-model="openAddUserDialog" persistent position="bottom">
+		<q-dialog v-model="openAddUserDialog" persistent position="bottom">
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
 					<div class="text-h6 q-pa-md">{{ $t("create_user") }}</div>
@@ -143,7 +146,7 @@
 					</q-form>
 				</q-card-section>
 			</q-card>
-		</q-dialog> -->
+		</q-dialog>
 	</div>
 </template>
 
@@ -151,6 +154,7 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import Modal from "../Dialogs/Modal.vue";
 
 const columns = [
 	{
@@ -231,6 +235,7 @@ const columns = [
 ];
 
 export default {
+	components: { Modal },
 	rowsData: {
 		type: Array,
 		default: [
@@ -249,7 +254,7 @@ export default {
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
-		const opendDialog = ref(false);
+		const opendDialog = ref(true);
 		const userObj = ref(null);
 
 		const editedIndex = ref(null);
