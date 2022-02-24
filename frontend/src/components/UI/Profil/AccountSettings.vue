@@ -75,7 +75,7 @@ export default {
 		const getToken = async () => {
 			const token = await localStorage.getItem("user");
 			if (token) {
-				return token;
+				return user;
 			}
 			return null;
 		};

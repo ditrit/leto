@@ -56,12 +56,12 @@
 				/>
 				<div class="buttons_wrapper">
 					<div class="teams_buttons__container">
-						<Modal :oepnDialog="oepnDialog">
+						<ModalStepper :oepnDialog="oepnDialog">
 							<template v-slot:ModalHeadline> {{ $t("add_team") }} </template>
 							<template v-slot:ModalBody>
 								<CreationFormStepper />
 							</template>
-						</Modal>
+						</ModalStepper>
 					</div>
 				</div>
 			</q-page>
@@ -73,7 +73,7 @@
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import Modal from "../components/UI/Dialogs/Modal.vue";
+import ModalStepper from "../components/UI/Dialogs/ModalStepper.vue";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import PageContent from "../components/Content/PageContent";
 import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
@@ -86,7 +86,7 @@ export default defineComponent({
 	components: {
 		AccountSettings,
 		PageContent,
-		Modal,
+		ModalStepper,
 		CreationFormStepper,
 		AjaxBar,
 		Drawer,

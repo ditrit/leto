@@ -50,11 +50,6 @@
 					textContent=""
 				/>
 				<div class="q-px-lg"><RolesTable /></div>
-				<Modal>
-					<template v-slot:ModalBody>
-						<CreationFormStepperVue />
-					</template>
-				</Modal>
 			</q-page>
 		</q-page-container>
 	</q-layout>

@@ -101,7 +101,7 @@ import ProductCreationStepper from "../components/UI/Stepper/ProductCreationStep
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-import Modal from "../components/UI/Dialogs/Modal.vue";
+import Modal from "../components/UI/Dialogs/ModalStepper.vue";
 import { pageSizeTweak } from "../common/index";
 
 const buttonsList = [
