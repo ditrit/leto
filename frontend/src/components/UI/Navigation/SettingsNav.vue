@@ -27,6 +27,11 @@ export default {
 				link: "/settings/authorizations",
 				icon: "group",
 			},
+			{
+				label: "Requirements",
+				link: "/settings/requirements",
+				icon: "info ",
+			},
 			{ label: "Tags", link: "/settings/tags", icon: "tag" },
 			{
 				label: "Environments Type",
