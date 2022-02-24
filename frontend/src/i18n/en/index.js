@@ -45,6 +45,9 @@ export default {
 	add_library: "Add new library",
 	create_library: "Create New library",
 	manage_library: "Manage libraries",
+	requirements: "Requirements",
+	manage_requirements: "Manage requirements",
+	create_requirements: "Create New requirement",
 
 	failed: "Action failed",
 	success: "Action was successful",

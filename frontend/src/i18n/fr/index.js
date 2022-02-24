@@ -48,6 +48,10 @@ export default {
 	create_library: "Créer une bibliothèque",
 	manage_library: "Gérer les bibliothèque",
 
+	requirements: "Conditions",
+	manage_requirements: "Gérer les conditions",
+	create_requirements: "Créer une condition",
+
 	failed: "Action échoué",
 	success: "Action réussi",
 	text_content:
