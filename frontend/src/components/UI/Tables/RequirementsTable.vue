@@ -4,7 +4,7 @@
 			<q-btn
 				color="white"
 				text-color="primary"
-				label="Add new User"
+				label="Add new Requirement"
 				class="q-my-md"
 				@click.prevent="AddUser"
 			/>
@@ -22,101 +22,6 @@
 		>
 			<template v-slot:body-cell-avatar="props">
 				<!-- Modification Dialog -->
-				<q-dialog v-model="opendDialog" persistent position="bottom">
-					<q-card style="width: 750px; max-width: 80vw">
-						<q-card-section>
-							<div class="text-h6 q-pa-md">{{ $t("edit_user") }}</div>
-						</q-card-section>
-
-						<q-card-section class="q-pt-none">
-							<q-form
-								@submit.prevent="onSubmitUpdate"
-								@reset="onResetUpdate"
-								class="q-gutter-md q-pa-md"
-							>
-								<div class="row col-md-12 q-gutter-sm">
-									<div class="col">
-										<q-input
-											filled
-											v-model="userObj[2]"
-											label="Your First Name *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-									</div>
-									<div class="col q-pl-md">
-										<q-input
-											filled
-											v-model="userObj[3]"
-											label="Your Last Name *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-									</div>
-								</div>
-								<div class="row col-md-12 q-gutter-sm">
-									<div class="col">
-										<q-input
-											filled
-											v-model="userObj[4]"
-											label="Your Email *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-									</div>
-									<div class="col q-pl-md">
-										<q-input
-											filled
-											v-model="userObj[5]"
-											label="password *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-									</div>
-								</div>
-								<div class="row col-md-12 q-gutter-sm">
-									<div class="col">
-										<q-input
-											filled
-											type="textarea"
-											v-model="userObj[6]"
-											label="Description *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-									</div>
-								</div>
-								<q-card-actions
-									align="right"
-									class="text-primary flex justify-center"
-								>
-									<q-btn type="reset" label="Cancel" v-close-popup />
-									<q-btn
-										label="Update"
-										type="submit"
-										color="primary"
-										v-close-popup
-									/>
-								</q-card-actions>
-							</q-form>
-						</q-card-section>
-					</q-card>
-				</q-dialog>
 
 				<q-td :props="props">
 					<q-avatar size="26px">
@@ -124,11 +29,7 @@
 					</q-avatar>
 				</q-td>
 			</template>
-			<!-- <template style="width: 100px">
-				<q-td key="password" :props="props" class="ellipsis">
-					{{ props.row.password }}
-				</q-td>
-			</template> -->
+
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
 					<q-btn
@@ -152,7 +53,7 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddUserDialog" persistent position="bottom">
+		<!-- <q-dialog v-model="openAddUserDialog" persistent position="bottom">
 			<q-card style="width: 750px; max-width: 80vw">
 				<q-card-section>
 					<div class="text-h6 q-pa-md">{{ $t("create_user") }}</div>
@@ -242,7 +143,7 @@
 					</q-form>
 				</q-card-section>
 			</q-card>
-		</q-dialog>
+		</q-dialog> -->
 	</div>
 </template>
 
@@ -253,9 +154,9 @@ import { useQuasar } from "quasar";
 
 const columns = [
 	{
-		name: "avatar",
+		name: "name",
 		required: true,
-		label: "Avatar",
+		label: "Name",
 		align: "left",
 		field: (row) => row.name,
 		format: (val) => `${val}`,
@@ -264,46 +165,61 @@ const columns = [
 	},
 
 	{
-		name: "firstName",
-		label: "First Name",
+		name: "active",
+		label: "Active",
 		align: "left",
-		field: "firstName",
+		field: "active",
 		sortable: true,
 		classes: "tr_width__name ellipsis",
 	},
 	{
-		name: "lastName",
-		label: "Last Name",
+		name: "required",
+		label: "Required",
 		align: "left",
-		field: "lastName",
+		field: "required",
 		sortable: true,
 		classes: "tr_width__name ellipsis",
 	},
 	{
-		name: "email",
-		label: "Email",
+		name: "dataType",
+		label: "Data Type",
 		align: "left",
-		field: "email",
+		field: "dataType",
 		sortable: true,
 		classes: "tr_width__email ellipsis",
 	},
 	{
-		name: "password",
-		label: "Password",
+		name: "valueType",
+		label: "Value Type",
 		align: "left",
-		field: "password",
+		field: "valueType",
 		sortable: false,
 		classes: "tr_width ellipsis",
 	},
 	{
-		name: "description",
-		label: "Description",
+		name: "possibleValue",
+		label: "Possible Value",
 		align: "left",
-		field: "description",
+		field: "possibleValue",
 		sortable: false,
 		classes: "tr_width__descr ellipsis",
 	},
-
+	{
+		name: "widget",
+		label: "Widget",
+		align: "left",
+		field: "widget",
+		sortable: false,
+		classes: "tr_width__descr ellipsis",
+	},
+	{
+		name: "value",
+		label: "Value",
+		align: "left",
+		field: "value",
+		sortable: false,
+		classes: "tr_width__descr ellipsis",
+	},
 	{
 		name: "actionsButtons",
 		label: "",
@@ -315,19 +231,28 @@ const columns = [
 ];
 
 export default {
+	rowsData: {
+		type: Array,
+		default: [
+			{ name: ["nameOne", "nameTwo", "nameThree", "nameFour"] },
+			{ active: ["Yes", "No", "No", "Yes"] },
+			{ required: ["Yes", "No", "No", "Yes"] },
+			{ dataType: ["String", "Int", "Boolean", "Real"] },
+			{ valueType: ["Single", "Muliple", "Muliple", "Single"] },
+			{ possibleValueType: ["AWS", "OCS", "KUB", "AZURE"] },
+			{
+				vidget: ["Range", "Input", "Dropdown", "Radio Button", "Checkbox"],
+			},
+		],
+	},
+
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
 		const opendDialog = ref(false);
-		const openAddUserDialog = ref(false);
 		const userObj = ref(null);
-		const rowsData = ref([]);
+
 		const editedIndex = ref(null);
-		const userFirstName = ref("");
-		const userLastName = ref("");
-		const userEmail = ref("");
-		const userPassword = ref("");
-		const userDescription = ref("");
 		const confirm = (item) => {
 			$q.dialog({
 				title: "Confirm",
@@ -342,92 +267,7 @@ export default {
 					console.log("Cancel");
 				});
 		};
-		const allUsers = async () => {
-			// fetch All Users
-			await store.dispatch("appUsers/fetchUsers");
-			const getUsers = computed(() => store.getters["appUsers/allUsers"]);
-			return (rowsData.value = Object.values(
-				getUsers.value.map((item) => {
-					return {
-						id: item.ID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
-						firstName: item.FirstName,
-						lastName: item.LastName,
-						email: item.Email,
-						password: item.Password,
-						description: item.Description,
-					};
-				})
-			));
-		};
-		allUsers();
 
-		const AddUser = () => {
-			openAddUserDialog.value = "";
-			userFirstName.value = "";
-			userLastName.value = "";
-			userEmail.value = "";
-			userPassword.value = "";
-			userDescription.value = "";
-		};
-		const onSubmitAdd = async () => {
-			const userData = {
-				firstName: userFirstName.value,
-				lastName: userLastName.value,
-				email: userEmail.value,
-				password: userPassword.value,
-				description: userDescription.value,
-			};
-
-			try {
-				await store.dispatch("appUsers/addUser", userData);
-				await allUsers();
-				(userFirstName.value = ""),
-					(userLastName.value = ""),
-					(userEmail.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "User has been successfully created",
-					});
-			} catch (error) {
-				$q.notify({
-					type: "negative",
-					message: "Sorry, user has not been created",
-				});
-			}
-		};
-
-		const onSubmitUpdate = async () => {
-			const userData = {
-				id: userObj.value[0],
-				firstName: userObj.value[2],
-				lastName: userObj.value[3],
-				email: userObj.value[4],
-				password: userObj.value[5],
-				description: userObj.value[6],
-			};
-
-			try {
-				await store.dispatch("appUsers/updateUser", userData);
-				await allUsers();
-				$q.notify({
-					type: "positive",
-					message: "User has been successfully updated",
-				});
-			} catch (error) {
-				$q.notify({
-					type: "negative",
-					message: "Sorry, user has not been updated",
-				});
-			}
-		};
-		const onResetUpdate = () => {
-			return (openAddUserDialog.value = false);
-		};
-		const onResetAdd = () => {
-			return (openAddUserDialog.value = false);
-		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
 			userObj.value = Object.values(currentTarget);
@@ -453,24 +293,10 @@ export default {
 			confirm,
 			editedIndex,
 			columns,
-			rowsData,
 			userObj,
-			AddUser,
-			userFirstName,
-			userLastName,
-			userEmail,
 			editRow,
 			deleteRow,
-			onSubmitAdd,
-			onSubmitUpdate,
-			onResetUpdate,
-			onResetAdd,
 			opendDialog,
-			openAddUserDialog,
-			userPassword,
-			userDescription,
-			password: ref(""),
-			isPwd: ref(true),
 		};
 	},
 };
