@@ -112,7 +112,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="row col-md-12 q-gutter-sm">
+						<div class="row col-md-12">
 							<div class="col">
 								<div>
 									Value Type:
@@ -129,7 +129,35 @@
 									filled
 									v-model="model"
 									:options="options"
-									label="Filled"
+									label="Possible Value"
+								/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div>
+									Value:
+									<div class="q-pa-lg">
+										<q-range
+											:model-value="lazy"
+											@change="
+												(val) => {
+													lazy = val;
+												}
+											"
+											:min="0"
+											:max="50"
+											label
+										/>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<q-select
+									filled
+									v-model="model"
+									:options="options"
+									label="Widget"
 								/>
 							</div>
 						</div>
@@ -329,6 +357,10 @@ export default {
 			deleteRow,
 			opendDialog,
 			addNewRequirement,
+			lazy: ref({
+				min: 10,
+				max: 35,
+			}),
 		};
 	},
 };
