@@ -1,5 +1,5 @@
 <template>
-	<q-dialog v-model="isOpened" v-show="oepnDialog" position="bottom">
+	<q-dialog v-model="isOpened" position="bottom">
 		<q-card style="width: 750px; max-width: 80vw">
 			<q-card-section>
 				<q-card-actions align="right" class="bg-white text-teal">

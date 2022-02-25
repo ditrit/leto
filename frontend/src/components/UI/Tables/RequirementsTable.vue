@@ -6,13 +6,10 @@
 				text-color="primary"
 				label="Add new Requirement"
 				class="q-my-md"
-				@click.prevent="AddUser"
+				@click.prevent="addNewRequirement"
 			/>
 		</div>
-		<Modal class="modalGlobal">
-			<template v-slot:ModalTitle> {{ $t("add_requirements") }} </template>
-			<template v-slot:ModalContent> Hello </template>
-		</Modal>
+
 		<q-table
 			:key="updateKey"
 			title=""
@@ -26,7 +23,6 @@
 		>
 			<template v-slot:body-cell-avatar="props">
 				<!-- Modification Dialog -->
-
 				<q-td :props="props">
 					<q-avatar size="26px">
 						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
@@ -56,12 +52,15 @@
 			</template>
 		</q-table>
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddUserDialog" persistent position="bottom">
-			<q-card style="width: 750px; max-width: 80vw">
-				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("create_user") }}</div>
-				</q-card-section>
-
+		<Modal
+			class="modalGlobal"
+			v-show="opendDialog"
+			v-model="opendDialog"
+			persistent
+			position="bottom"
+		>
+			<template v-slot:ModalTitle> {{ $t("create_requirements") }} </template>
+			<template v-slot:ModalContent>
 				<q-card-section class="q-pt-none">
 					<q-form
 						@submit.prevent="onSubmitAdd"
@@ -72,62 +71,65 @@
 							<div class="col">
 								<q-input
 									filled
-									label="Your First Name *"
+									label="Requirement Name *"
 									lazy-rules
 									:rules="[
 										(val) => (val && val.length > 0) || 'Please type something',
 									]"
-									v-model="userFirstName"
+									v-model="requirementName"
 								/>
 							</div>
 
 							<div class="col q-pl-md">
 								<q-input
 									filled
-									label="Your Last Name *"
+									label="Data Type *"
 									lazy-rules
 									:rules="[
 										(val) => (val && val.length > 0) || 'Please type something',
 									]"
-									v-model="userLastName"
+									v-model="requirementDataType"
 								/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div>
+									Active:
+									<q-radio v-model="requirementActive" val="yes" label="Yes" />
+									<q-radio v-model="requirementActive" val="no" label="No" />
+								</div>
+							</div>
+							<div class="col">
+								<div>
+									Required:
+									<q-radio
+										v-model="requirementRequired"
+										val="yes"
+										label="Yes"
+									/>
+									<q-radio v-model="requirementRequired" val="no" label="No" />
+								</div>
 							</div>
 						</div>
 						<div class="row col-md-12 q-gutter-sm">
 							<div class="col">
-								<q-input
-									filled
-									label="Your Email *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userEmail"
-								/>
+								<div>
+									Value Type:
+									<q-radio
+										v-model="requirementValueType"
+										val="yes"
+										label="Yes"
+									/>
+									<q-radio v-model="requirementValueType" val="no" label="No" />
+								</div>
 							</div>
-							<div class="col q-pl-md">
-								<q-input
-									filled
-									label="Your password *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userPassword"
-								/>
-							</div>
-						</div>
-						<div class="row col-md-12 q-gutter-sm">
 							<div class="col">
-								<q-input
+								<q-select
 									filled
-									type="textarea"
-									label="Descripiton *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userDescription"
+									v-model="model"
+									:options="options"
+									label="Filled"
 								/>
 							</div>
 						</div>
@@ -145,8 +147,8 @@
 						</q-card-actions>
 					</q-form>
 				</q-card-section>
-			</q-card>
-		</q-dialog>
+			</template>
+		</Modal>
 	</div>
 </template>
 
@@ -236,28 +238,44 @@ const columns = [
 
 export default {
 	components: { Modal },
-	rowsData: {
-		type: Array,
-		default: [
-			{ name: ["nameOne", "nameTwo", "nameThree", "nameFour"] },
-			{ active: ["Yes", "No", "No", "Yes"] },
-			{ required: ["Yes", "No", "No", "Yes"] },
-			{ dataType: ["String", "Int", "Boolean", "Real"] },
-			{ valueType: ["Single", "Muliple", "Muliple", "Single"] },
-			{ possibleValueType: ["AWS", "OCS", "KUB", "AZURE"] },
-			{
-				vidget: ["Range", "Input", "Dropdown", "Radio Button", "Checkbox"],
-			},
-		],
-	},
-
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
-		const opendDialog = ref(true);
+		const opendDialog = ref(false);
 		const userObj = ref(null);
-
 		const editedIndex = ref(null);
+		const rowsData = ref([
+			{
+				name: "nameOne",
+				active: "Yes",
+				required: "No",
+				dataType: "Int",
+				valueType: "Multiple",
+				possibleValue: "AWS",
+				widget: "Range",
+				value: [{ Min: 10, Max: 100 }],
+			},
+			{
+				name: "nameTwo",
+				active: "No",
+				required: "Yes",
+				dataType: "String",
+				valueType: "Single",
+				possibleValue: "Kup",
+				widget: "Input",
+				value: "Lorem ipsum",
+			},
+			{
+				name: "nameThree",
+				active: "Yes",
+				required: "No",
+				dataType: "Boolean",
+				valueType: "Single",
+				possibleValue: "Yes",
+				widget: "Radio button",
+				value: "Yes",
+			},
+		]);
 		const confirm = (item) => {
 			$q.dialog({
 				title: "Confirm",
@@ -271,6 +289,11 @@ export default {
 				.onCancel(() => {
 					console.log("Cancel");
 				});
+		};
+		const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"]);
+		const model = ref(null);
+		const addNewRequirement = () => {
+			opendDialog.value = true;
 		};
 
 		const editRow = (currentTarget) => {
@@ -295,6 +318,9 @@ export default {
 		};
 
 		return {
+			rowsData,
+			options,
+			model,
 			confirm,
 			editedIndex,
 			columns,
@@ -302,6 +328,7 @@ export default {
 			editRow,
 			deleteRow,
 			opendDialog,
+			addNewRequirement,
 		};
 	},
 };
