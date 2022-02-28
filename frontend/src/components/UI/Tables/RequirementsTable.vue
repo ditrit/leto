@@ -168,10 +168,131 @@
 				</q-td>
 			</template>
 		</q-table>
-		<!-- Edit Dialog -->
-		<Modal class="modalGlobal">
-			<template v-slot:ModalTitle> {{ $t("edit_requirements") }} </template>
-			<template v-slot:ModalContent> Hello </template>
+		<!-- Create Dialog -->
+		<Modal
+			class="modalGlobal"
+			v-show="opendDialog"
+			v-model="opendDialog"
+			persistent
+			position="bottom"
+		>
+			<template v-slot:ModalTitle> {{ $t("create_requirements") }} </template>
+			<template v-slot:ModalContent>
+				<q-card-section class="q-pt-none">
+					<q-form
+						@submit.prevent="onSubmitAdd"
+						@reset="onResetAdd"
+						class="q-gutter-md q-pa-md"
+					>
+						<div class="row col-md-12 q-gutter-sm">
+							<div class="col">
+								<q-input
+									filled
+									label="Requirement Name *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="requirementName"
+								/>
+							</div>
+
+							<div class="col q-pl-md">
+								<q-input
+									filled
+									label="Data Type *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="requirementDataType"
+								/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div>
+									Active:
+									<q-radio v-model="requirementActive" val="yes" label="Yes" />
+									<q-radio v-model="requirementActive" val="no" label="No" />
+								</div>
+							</div>
+							<div class="col">
+								<div>
+									Required:
+									<q-radio
+										v-model="requirementRequired"
+										val="yes"
+										label="Yes"
+									/>
+									<q-radio v-model="requirementRequired" val="no" label="No" />
+								</div>
+							</div>
+						</div>
+						<div class="row col-md-12">
+							<div class="col">
+								<div>
+									Value Type:
+									<q-radio
+										v-model="requirementValueType"
+										val="yes"
+										label="Yes"
+									/>
+									<q-radio v-model="requirementValueType" val="no" label="No" />
+								</div>
+							</div>
+							<div class="col">
+								<q-select
+									filled
+									v-model="model"
+									:options="options"
+									label="Possible Value"
+								/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div>
+									Value:
+									<div class="q-pa-lg">
+										<q-range
+											:model-value="lazy"
+											@change="
+												(val) => {
+													lazy = val;
+												}
+											"
+											:min="0"
+											:max="50"
+											label
+										/>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<q-select
+									filled
+									v-model="model"
+									:options="options"
+									label="Widget"
+								/>
+							</div>
+						</div>
+						<q-card-actions
+							align="right"
+							class="text-primary flex justify-center"
+						>
+							<q-btn type="reset" label="Cancel" v-close-popup />
+							<q-btn
+								label="Create"
+								type="submit"
+								color="primary"
+								v-close-popup
+							/>
+						</q-card-actions>
+					</q-form>
+				</q-card-section>
+			</template>
 		</Modal>
 	</div>
 </template>
@@ -316,6 +437,38 @@ export default {
 			isOpened.value = true;
 		};
 		const editedIndex = ref(null);
+		const rowsData = ref([
+			{
+				name: "nameOne",
+				active: "Yes",
+				required: "No",
+				dataType: "Int",
+				valueType: "Multiple",
+				possibleValue: "AWS",
+				widget: "Range",
+				value: [{ Min: 10, Max: 100 }],
+			},
+			{
+				name: "nameTwo",
+				active: "No",
+				required: "Yes",
+				dataType: "String",
+				valueType: "Single",
+				possibleValue: "Kup",
+				widget: "Input",
+				value: "Lorem ipsum",
+			},
+			{
+				name: "nameThree",
+				active: "Yes",
+				required: "No",
+				dataType: "Boolean",
+				valueType: "Single",
+				possibleValue: "Yes",
+				widget: "Radio button",
+				value: "Yes",
+			},
+		]);
 		const confirm = (item) => {
 			$q.dialog({
 				title: "Confirm",
@@ -329,6 +482,11 @@ export default {
 				.onCancel(() => {
 					console.log("Cancel");
 				});
+		};
+		const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"]);
+		const model = ref(null);
+		const addNewRequirement = () => {
+			opendDialog.value = true;
 		};
 
 		const editRow = (currentTarget) => {
