@@ -6,7 +6,7 @@
 					<q-btn outline round color="primary" icon="close" v-close-popup />
 				</q-card-actions>
 				<div class="text-h6 q-pa-md">
-					<slot name="ModalTitle"> </slot>
+					<slot name="ModalTitle"> Test Titles </slot>
 				</div>
 			</q-card-section>
 
