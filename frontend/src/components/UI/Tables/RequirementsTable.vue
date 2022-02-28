@@ -217,10 +217,18 @@ const columns = [
 		classes: "tr_width__descr ellipsis",
 	},
 	{
-		name: "value",
-		label: "Value",
+		name: "min_value",
+		label: "Min Value",
 		align: "left",
-		field: "value",
+		field: "min_value",
+		sortable: false,
+		classes: "tr_width__descr ellipsis",
+	},
+	{
+		name: "max_value",
+		label: "Max Value",
+		align: "left",
+		field: "max_value",
 		sortable: false,
 		classes: "tr_width__descr ellipsis",
 	},
@@ -236,26 +244,46 @@ const columns = [
 
 export default {
 	components: { Modal },
-	rowsData: {
-		type: Array,
-		default: [
-			{ name: ["nameOne", "nameTwo", "nameThree", "nameFour"] },
-			{ active: ["Yes", "No", "No", "Yes"] },
-			{ required: ["Yes", "No", "No", "Yes"] },
-			{ dataType: ["String", "Int", "Boolean", "Real"] },
-			{ valueType: ["Single", "Muliple", "Muliple", "Single"] },
-			{ possibleValueType: ["AWS", "OCS", "KUB", "AZURE"] },
-			{
-				vidget: ["Range", "Input", "Dropdown", "Radio Button", "Checkbox"],
-			},
-		],
-	},
-
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
 		const opendDialog = ref(true);
 		const userObj = ref(null);
+		const rowsData = ref([
+			{
+				name: "nameOne",
+				active: "Yes",
+				required: "No",
+				dataType: "Int",
+				valueType: "Multiple",
+				possibleValue: "AWS",
+				widget: "Range",
+				min_value: 0,
+				max_value: 100,
+			},
+			{
+				name: "nameTwo",
+				active: "Yes",
+				required: "No",
+				dataType: "String",
+				valueType: "Single",
+				possibleValue: "OCS",
+				widget: "Input",
+				min_value: null,
+				max_value: "lorem ipsum",
+			},
+			{
+				name: "nameThree",
+				active: "No",
+				required: "No",
+				dataType: "Int",
+				valueType: "Single",
+				possibleValue: "Kub",
+				widget: "dropdown",
+				min_value: 0,
+				max_value: 20,
+			},
+		]);
 
 		const editedIndex = ref(null);
 		const confirm = (item) => {
@@ -295,6 +323,7 @@ export default {
 		};
 
 		return {
+			rowsData,
 			confirm,
 			editedIndex,
 			columns,
