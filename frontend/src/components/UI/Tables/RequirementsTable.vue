@@ -79,8 +79,8 @@
 							<div class="col">
 								<q-select
 									filled
-									v-model="model"
-									:options="options"
+									v-model="optionsWidgetSelected"
+									:options="optionsWidget"
 									label="Possible Value"
 								/>
 							</div>
@@ -214,7 +214,7 @@
 								<div>
 									Active:
 									<q-radio v-model="requirementActive" val="yes" label="Yes" />
-									<q-radio v-model="requirementActive" val="no" label="No" />
+									<q-radio v-model="requirementActive" val="no" label="Yes" />
 								</div>
 							</div>
 							<div class="col">
@@ -244,9 +244,9 @@
 							<div class="col">
 								<q-select
 									filled
-									v-model="model"
-									:options="options"
-									label="Possible Value"
+									v-model="optionsWidgetSelected"
+									:options="optionsWidget"
+									label="Widget"
 								/>
 							</div>
 						</div>
@@ -272,9 +272,9 @@
 							<div class="col">
 								<q-select
 									filled
-									v-model="model"
-									:options="options"
-									label="Widget"
+									v-model="optionsValueSelected"
+									:options="optionsValue"
+									label="Possible Value"
 								/>
 							</div>
 						</div>
@@ -298,7 +298,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
@@ -391,7 +391,7 @@ const columns = [
 
 export default {
 	components: { Modal },
-	setup(props) {
+	setup() {
 		const store = useStore();
 		const $q = useQuasar();
 		const isOpened = ref(false);
@@ -431,44 +431,30 @@ export default {
 				max_value: 20,
 			},
 		]);
+		// const optionsWidget = ref([
+		// 	"Range",
+		// 	"Text Input",
+		// 	"Dropdown",
+		// 	"Radio button",
+		// 	"Checkbox",
+		// ]);
+		const optionsWidget = ref([
+			"Range",
+			"Text Input",
+			"Dropdown",
+			"Radio button",
+			"Checkbox",
+		]);
+		const optionsValue = ref(["OCS", "KUP", "AWS", "Azure", "FireBase"]);
+		const optionsValueSelected = ref(null);
+		const optionsWidgetSelected = ref(null);
 
 		const AddRequirement = () => {
 			console.log("opend");
 			isOpened.value = true;
 		};
 		const editedIndex = ref(null);
-		const rowsData = ref([
-			{
-				name: "nameOne",
-				active: "Yes",
-				required: "No",
-				dataType: "Int",
-				valueType: "Multiple",
-				possibleValue: "AWS",
-				widget: "Range",
-				value: [{ Min: 10, Max: 100 }],
-			},
-			{
-				name: "nameTwo",
-				active: "No",
-				required: "Yes",
-				dataType: "String",
-				valueType: "Single",
-				possibleValue: "Kup",
-				widget: "Input",
-				value: "Lorem ipsum",
-			},
-			{
-				name: "nameThree",
-				active: "Yes",
-				required: "No",
-				dataType: "Boolean",
-				valueType: "Single",
-				possibleValue: "Yes",
-				widget: "Radio button",
-				value: "Yes",
-			},
-		]);
+
 		const confirm = (item) => {
 			$q.dialog({
 				title: "Confirm",
@@ -482,11 +468,6 @@ export default {
 				.onCancel(() => {
 					console.log("Cancel");
 				});
-		};
-		const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"]);
-		const model = ref(null);
-		const addNewRequirement = () => {
-			opendDialog.value = true;
 		};
 
 		const editRow = (currentTarget) => {
@@ -513,6 +494,10 @@ export default {
 		return {
 			rowsData,
 			confirm,
+			optionsValue,
+			optionsWidget,
+			optionsValueSelected,
+			optionsWidgetSelected,
 			editedIndex,
 			columns,
 			userObj,
@@ -520,6 +505,9 @@ export default {
 			deleteRow,
 			isOpened,
 			AddRequirement,
+			requirementActive: ref("yes"),
+			requirementRequired: ref("yes"),
+			requirementValueType: ref("yes"),
 		};
 	},
 };
