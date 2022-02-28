@@ -1,5 +1,5 @@
 <template>
-	<q-dialog v-model="isOpened" v-show="oepnDialog" position="bottom">
+	<q-dialog v-model="isOpened" position="bottom">
 		<q-card style="width: 750px; max-width: 80vw">
 			<q-card-section>
 				<q-card-actions align="right" class="bg-white text-teal">
@@ -20,16 +20,10 @@
 import { ref } from "vue";
 export default {
 	name: "Modal",
-
-	props: ["oepnDialog"],
 	setup() {
 		const isOpened = ref(false);
-		const openedDailog = () => {
-			isOpened.value = true;
-		};
 		return {
 			isOpened,
-			openedDailog,
 		};
 	},
 };

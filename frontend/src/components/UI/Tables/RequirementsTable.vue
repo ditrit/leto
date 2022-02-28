@@ -6,12 +6,128 @@
 				text-color="primary"
 				label="Add new Requirement"
 				class="q-my-md"
-				@click.prevent="AddUser"
+				@click.prevent="AddRequirement"
 			/>
 		</div>
-		<Modal class="modalGlobal">
-			<template v-slot:ModalTitle> {{ $t("add_requirements") }} </template>
-			<template v-slot:ModalContent> Hello </template>
+		<!-- Create Dialog -->
+		<Modal class="modalGlobal" v-model="isOpened">
+			<template v-slot:ModalTitle> {{ $t("create_requirements") }} </template>
+			<template v-slot:ModalContent>
+				<q-card-section class="q-pt-none">
+					<q-form
+						@submit.prevent="onSubmitAdd"
+						@reset="onResetAdd"
+						class="q-gutter-md q-pa-md"
+					>
+						<div class="row col-md-12 q-gutter-sm">
+							<div class="col">
+								<q-input
+									filled
+									label="Requirement Name *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="requirementName"
+								/>
+							</div>
+
+							<div class="col q-pl-md">
+								<q-input
+									filled
+									label="Data Type *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="requirementDataType"
+								/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div>
+									Active:
+									<q-radio v-model="requirementActive" val="yes" label="Yes" />
+									<q-radio v-model="requirementActive" val="no" label="No" />
+								</div>
+							</div>
+							<div class="col">
+								<div>
+									Required:
+									<q-radio
+										v-model="requirementRequired"
+										val="yes"
+										label="Yes"
+									/>
+									<q-radio v-model="requirementRequired" val="no" label="No" />
+								</div>
+							</div>
+						</div>
+						<div class="row col-md-12">
+							<div class="col">
+								<div>
+									Value Type:
+									<q-radio
+										v-model="requirementValueType"
+										val="yes"
+										label="Yes"
+									/>
+									<q-radio v-model="requirementValueType" val="no" label="No" />
+								</div>
+							</div>
+							<div class="col">
+								<q-select
+									filled
+									v-model="model"
+									:options="options"
+									label="Possible Value"
+								/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div>
+									Value:
+									<div class="q-pa-lg">
+										<q-range
+											:model-value="lazy"
+											@change="
+												(val) => {
+													lazy = val;
+												}
+											"
+											:min="0"
+											:max="50"
+											label
+										/>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<q-select
+									filled
+									v-model="model"
+									:options="options"
+									label="Widget"
+								/>
+							</div>
+						</div>
+						<q-card-actions
+							align="right"
+							class="text-primary flex justify-center"
+						>
+							<q-btn type="reset" label="Cancel" v-close-popup />
+							<q-btn
+								label="Create"
+								type="submit"
+								color="primary"
+								v-close-popup
+							/>
+						</q-card-actions>
+					</q-form>
+				</q-card-section>
+			</template>
 		</Modal>
 		<q-table
 			:key="updateKey"
@@ -25,15 +141,12 @@
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
-				<!-- Modification Dialog -->
-
 				<q-td :props="props">
 					<q-avatar size="26px">
 						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
 					</q-avatar>
 				</q-td>
 			</template>
-
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
 					<q-btn
@@ -55,98 +168,11 @@
 				</q-td>
 			</template>
 		</q-table>
-		<!-- Create Dialog -->
-		<q-dialog v-model="openAddUserDialog" persistent position="bottom">
-			<q-card style="width: 750px; max-width: 80vw">
-				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("create_user") }}</div>
-				</q-card-section>
-
-				<q-card-section class="q-pt-none">
-					<q-form
-						@submit.prevent="onSubmitAdd"
-						@reset="onResetAdd"
-						class="q-gutter-md q-pa-md"
-					>
-						<div class="row col-md-12 q-gutter-sm">
-							<div class="col">
-								<q-input
-									filled
-									label="Your First Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userFirstName"
-								/>
-							</div>
-
-							<div class="col q-pl-md">
-								<q-input
-									filled
-									label="Your Last Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userLastName"
-								/>
-							</div>
-						</div>
-						<div class="row col-md-12 q-gutter-sm">
-							<div class="col">
-								<q-input
-									filled
-									label="Your Email *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userEmail"
-								/>
-							</div>
-							<div class="col q-pl-md">
-								<q-input
-									filled
-									label="Your password *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userPassword"
-								/>
-							</div>
-						</div>
-						<div class="row col-md-12 q-gutter-sm">
-							<div class="col">
-								<q-input
-									filled
-									type="textarea"
-									label="Descripiton *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userDescription"
-								/>
-							</div>
-						</div>
-						<q-card-actions
-							align="right"
-							class="text-primary flex justify-center"
-						>
-							<q-btn type="reset" label="Cancel" v-close-popup />
-							<q-btn
-								label="Create"
-								type="submit"
-								color="primary"
-								v-close-popup
-							/>
-						</q-card-actions>
-					</q-form>
-				</q-card-section>
-			</q-card>
-		</q-dialog>
+		<!-- Edit Dialog -->
+		<Modal class="modalGlobal">
+			<template v-slot:ModalTitle> {{ $t("edit_requirements") }} </template>
+			<template v-slot:ModalContent> Hello </template>
+		</Modal>
 	</div>
 </template>
 
@@ -244,10 +270,10 @@ const columns = [
 
 export default {
 	components: { Modal },
-	setup() {
+	setup(props) {
 		const store = useStore();
 		const $q = useQuasar();
-		const opendDialog = ref(true);
+		const isOpened = ref(false);
 		const userObj = ref(null);
 		const rowsData = ref([
 			{
@@ -285,6 +311,10 @@ export default {
 			},
 		]);
 
+		const AddRequirement = () => {
+			console.log("opend");
+			isOpened.value = true;
+		};
 		const editedIndex = ref(null);
 		const confirm = (item) => {
 			$q.dialog({
@@ -330,7 +360,8 @@ export default {
 			userObj,
 			editRow,
 			deleteRow,
-			opendDialog,
+			isOpened,
+			AddRequirement,
 		};
 	},
 };
