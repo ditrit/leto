@@ -99,13 +99,12 @@
 <script>
 import { defineComponent, ref } from "vue";
 import PageContent from "../components/Content/PageContent";
-import ProductCreationStepper from "../components/UI/Stepper/ProductCreationStepper";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
 import { pageSizeTweak } from "../common/index";
-
 import AccountSettings from "components/UI/Profil/AccountSettings";
+import { useStore } from "vuex";
 
 const buttonsList = [
 	{
@@ -142,6 +141,7 @@ export default defineComponent({
 	},
 
 	setup() {
+		const store = useStore();
 		const drawer = ref(false);
 		const productsData = ref([
 			{
@@ -157,6 +157,11 @@ export default defineComponent({
 		const filterRef = ref(null);
 		const oepnDialog = ref(false);
 
+		const executeGit = async () => {
+			let exc = await store.dispatch("appGit/execute");
+			console.log("exc: ", exc);
+		};
+		executeGit();
 		return {
 			drawer,
 			buttonsList,
