@@ -19,6 +19,7 @@
 		"axios": "^0.21.2",
 		"core-js": "^3.6.5",
 		"express": "^4.17.2",
+		"isomorphic-git": "^1.12.1",
 		"json-bigint": "^1.0.0",
 		"json-server": "^0.16.3",
 		"monaco-editor": "^0.25.2",

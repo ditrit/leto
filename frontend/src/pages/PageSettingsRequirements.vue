@@ -44,7 +44,7 @@
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak" class="">
 				<PageContent
-					icon="groups"
+					icon="info"
 					:headline="$t('requirements')"
 					:subTitle="$t('manage_requirements')"
 					textContent=""
