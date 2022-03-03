@@ -5,9 +5,15 @@ import * as BrowserFS from "browserfs";
 console.log("git: ", git);
 console.log("http: ", http);
 console.log("*: ", BrowserFS);
+git.clone("https://github.com/ditrit/leto.git");
 
 BrowserFS.install(window);
-BrowserFS.configure({ fs: "LocalStorage" }, () => {});
+BrowserFS.configure({ fs: "LocalStorage" }, (err) => {
+	if (err) return console.log(err);
+});
+
+window.dir = "/tutorial";
+console.log(dir);
 
 const httpCommands = [
 	"clone",
