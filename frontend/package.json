@@ -17,6 +17,7 @@
 		"@intlify/vue-i18n-loader": "^3.3.0",
 		"@quasar/extras": "^1.0.0",
 		"axios": "^0.21.2",
+		"browserfs": "^1.4.3",
 		"core-js": "^3.6.5",
 		"express": "^4.17.2",
 		"isomorphic-git": "^1.12.1",

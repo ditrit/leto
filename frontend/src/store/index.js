@@ -13,6 +13,7 @@ import appProducts from "./Products/index";
 import appLibraries from "./Libraries/index";
 import appAuthorization from "./Authorization/index";
 import appFiles from "./Files/index";
+import appGit from "./Git/index";
 
 /*
  * If not building with SSR mode, you can
@@ -37,6 +38,7 @@ export default store(function (/* { ssrContext } */) {
 			appFiles,
 			appProducts,
 			appLibraries,
+			appGit,
 		},
 		strict: process.env.DEBUGGING,
 	});
