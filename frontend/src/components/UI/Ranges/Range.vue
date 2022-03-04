@@ -5,12 +5,12 @@
 
 			<div class="col-8">
 				<q-range
+					v-model="data"
 					:min="minValue"
 					:max="maxValue"
 					:step="stepValue"
 					color="primary"
-					selection-color="red"
-					label
+					label-always
 				/>
 			</div>
 		</div>
@@ -20,6 +20,9 @@
 import { ref } from "@vue/reactivity";
 export default {
 	props: {
+		dataV: {
+			type: Object,
+		},
 		titleV: {
 			type: String,
 			default: "title",
@@ -38,11 +41,13 @@ export default {
 		},
 	},
 	setup(props) {
+		const data = ref(props.dataV);
 		const titleValue = ref(props.titleV);
 		const minValue = ref(props.minV);
 		const maxValue = ref(props.maxV);
 		const stepValue = ref(props.stepV);
 		return {
+			data,
 			minValue,
 			maxValue,
 			stepValue,
