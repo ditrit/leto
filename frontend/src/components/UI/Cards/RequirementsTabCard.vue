@@ -20,7 +20,7 @@
 				</DropDown>
 			</q-card-section>
 			<q-card-section>
-				<CheckBox :labelV="title4">
+				<CheckBox :labelV1="yes" :labelV2="no">
 					<template v-slot:checkBoxTitle> {{ title4 }} </template>
 				</CheckBox>
 			</q-card-section>
@@ -49,6 +49,8 @@ export default {
 		const title2 = ref("Git Organization");
 		const title3 = ref("Monitoring");
 		const title4 = ref("Providers");
+		const yes = ref("Yes");
+		const no = ref("No");
 		const groupName = ref(props.cardTitle);
 		const dataValue = ref({ min: 300, max: 700 });
 		const textValue = ref("https://github.com/ditrit/leto.git");
@@ -61,6 +63,8 @@ export default {
 			title2,
 			title3,
 			title4,
+			yes,
+			no,
 			groupName,
 			dataValue,
 			textValue,
