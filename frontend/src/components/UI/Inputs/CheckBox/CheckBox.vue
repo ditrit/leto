@@ -6,7 +6,7 @@
 			</div>
 
 			<div class="col-8">
-				<q-checkbox v-model="checkValue" :label="labelValuet" />
+				<q-checkbox v-model="checkValue" :label="labelValue" />
 			</div>
 		</div>
 	</div>

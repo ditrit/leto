@@ -20,7 +20,7 @@
 				</DropDown>
 			</q-card-section>
 			<q-card-section>
-				<CheckBox :labelV="title2">
+				<CheckBox :labelV="title4">
 					<template v-slot:checkBoxTitle> {{ title4 }} </template>
 				</CheckBox>
 			</q-card-section>
