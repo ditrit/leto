@@ -1,7 +1,9 @@
 <template>
 	<div>
 		<div class="row q-pa-sm">
-			<div class="col-4 q-pt-sm">{{ titleValue }}</div>
+			<div class="col-4 q-pt-sm">
+				<slot name="rangeTitle"> Title </slot>
+			</div>
 
 			<div class="col-8">
 				<q-range
@@ -23,10 +25,6 @@ export default {
 		dataV: {
 			type: Object,
 		},
-		titleV: {
-			type: String,
-			default: "title",
-		},
 		minV: {
 			type: Number,
 			default: 5,
@@ -42,7 +40,6 @@ export default {
 	},
 	setup(props) {
 		const data = ref(props.dataV);
-		const titleValue = ref(props.titleV);
 		const minValue = ref(props.minV);
 		const maxValue = ref(props.maxV);
 		const stepValue = ref(props.stepV);
@@ -51,7 +48,6 @@ export default {
 			minValue,
 			maxValue,
 			stepValue,
-			titleValue,
 		};
 	},
 };

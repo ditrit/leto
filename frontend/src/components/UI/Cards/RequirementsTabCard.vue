@@ -5,16 +5,14 @@
 				{{ groupName }}
 			</div>
 			<q-card-section>
-				<Range
-					:minV="10"
-					:maxV="1000"
-					:stepV="10"
-					:titleV="title"
-					:dataV="dataValue"
-				/>
+				<Range :minV="10" :maxV="1000" :stepV="10" :dataV="dataValue">
+					<template v-slot:rangeTitle> {{ title1 }}</template>
+				</Range>
 			</q-card-section>
 			<q-card-section>
-				<TextInput :titleV="title" :textV="textValue" />
+				<TextInput>
+					<template v-slot:textInputTitle> {{ title2 }} </template>
+				</TextInput>
 			</q-card-section>
 		</q-card>
 	</div>
@@ -35,7 +33,8 @@ export default {
 	},
 	setup(props) {
 		const isOpened = ref(false);
-		const title = ref("Security Level");
+		const title1 = ref("Security Level");
+		const title2 = ref("Git Organization");
 		const groupName = ref(props.cardTitle);
 		const dataValue = ref({ min: 300, max: 700 });
 		const textValue = ref("https://github.com/ditrit/leto.git");
@@ -44,7 +43,8 @@ export default {
 		return {
 			isOpened,
 			Test,
-			title,
+			title1,
+			title2,
 			groupName,
 			dataValue,
 			textValue,
