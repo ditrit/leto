@@ -2,11 +2,12 @@
 	<div>
 		<div class="row q-pa-sm">
 			<div class="col-4 q-pt-sm">
-				<slot name="checkBoxTitle"> Title </slot>
+				<slot name="radioButtonTitle"> Title </slot>
 			</div>
 
 			<div class="col-8">
-				<q-checkbox v-model="checkValue" :label="labelValue" />
+				<q-radio v-model="radioValue" :val="labelValue1" :label="labelValue1" />
+				<q-radio v-model="radioValue" :val="labelValue2" :label="labelValue2" />
 			</div>
 		</div>
 	</div>
@@ -15,19 +16,24 @@
 import { ref } from "@vue/reactivity";
 export default {
 	props: {
-		labelV: {
+		labelV1: {
 			type: String,
-			default: "Repository",
+			default: "Yes",
+		},
+		labelV2: {
+			type: String,
+			default: "No",
 		},
 	},
 	setup(props) {
-		const textValue = ref(props.textV);
-		const labelValue = ref(props.labelV);
-		const checkValue = ref(false);
+		const labelValue1 = ref(props.labelV1);
+		const radioValue = ref("Yes");
+		const labelValue2 = ref(props.labelV2);
+
 		return {
-			textValue,
-			labelValue,
-			checkValue,
+			labelValue1,
+			radioValue,
+			labelValue2,
 		};
 	},
 };

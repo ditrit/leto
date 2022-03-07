@@ -15,12 +15,17 @@
 				</TextInput>
 			</q-card-section>
 			<q-card-section>
+				<RadioButton :labelV1="yes" :labelV2="no">
+					<template v-slot:radioButtonTitle> {{ title5 }} </template>
+				</RadioButton>
+			</q-card-section>
+			<q-card-section>
 				<DropDown :labelV="title3">
 					<template v-slot:dropDownInputTitle> {{ title3 }} </template>
 				</DropDown>
 			</q-card-section>
 			<q-card-section>
-				<CheckBox :labelV1="yes" :labelV2="no">
+				<CheckBox :labelV1="choiceOne" :labelV2="choiceTwo">
 					<template v-slot:checkBoxTitle> {{ title4 }} </template>
 				</CheckBox>
 			</q-card-section>
@@ -34,9 +39,10 @@ import Range from "../Inputs/Ranges/Range.vue";
 import TextInput from "../Inputs/Texts/TextInput.vue";
 import DropDown from "../Inputs/DropDowns/DropDown.vue";
 import CheckBox from "../Inputs/CheckBox/CheckBox.vue";
+import RadioButton from "../Inputs/RadioButtons/RadioButton.vue";
 
 export default {
-	components: { Range, TextInput, DropDown, CheckBox },
+	components: { Range, TextInput, DropDown, CheckBox, RadioButton },
 	props: {
 		cardTitle: {
 			type: String,
@@ -49,6 +55,9 @@ export default {
 		const title2 = ref("Git Organization");
 		const title3 = ref("Monitoring");
 		const title4 = ref("Providers");
+		const title5 = ref("APM");
+		const choiceOne = ref("First choice");
+		const choiceTwo = ref("Second choice");
 		const yes = ref("Yes");
 		const no = ref("No");
 		const groupName = ref(props.cardTitle);
@@ -63,6 +72,9 @@ export default {
 			title2,
 			title3,
 			title4,
+			title5,
+			choiceOne,
+			choiceTwo,
 			yes,
 			no,
 			groupName,
