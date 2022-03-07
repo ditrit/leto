@@ -6,7 +6,7 @@
 			</div>
 
 			<div class="col-8">
-				<q-input filled v-model="textValue" label="Reppo" />
+				<q-input filled v-model="textValue" :label="labelValue" />
 			</div>
 		</div>
 	</div>
@@ -19,11 +19,17 @@ export default {
 			type: String,
 			default: "https://github.com/ditrit/leto.git",
 		},
+		labelV: {
+			type: String,
+			default: "Repository",
+		},
 	},
 	setup(props) {
 		const textValue = ref(props.textV);
+		const labelValue = ref(props.labelV);
 		return {
 			textValue,
+			labelValue,
 		};
 	},
 };

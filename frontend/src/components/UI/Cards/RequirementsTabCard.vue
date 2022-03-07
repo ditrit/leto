@@ -10,7 +10,7 @@
 				</Range>
 			</q-card-section>
 			<q-card-section>
-				<TextInput>
+				<TextInput :labelV="title2">
 					<template v-slot:textInputTitle> {{ title2 }} </template>
 				</TextInput>
 			</q-card-section>
