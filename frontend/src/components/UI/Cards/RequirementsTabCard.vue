@@ -14,6 +14,11 @@
 					<template v-slot:textInputTitle> {{ title2 }} </template>
 				</TextInput>
 			</q-card-section>
+			<q-card-section>
+				<DropDown :labelV="title3">
+					<template v-slot:dropDownInputTitle> {{ title3 }} </template>
+				</DropDown>
+			</q-card-section>
 		</q-card>
 	</div>
 </template>
@@ -22,9 +27,10 @@ import { ref } from "vue";
 import useRequirementsTab from "../../../composables/TabPanels/useRequirementsTab";
 import Range from "../Inputs/Ranges/Range.vue";
 import TextInput from "../Inputs/Texts/TextInput.vue";
+import DropDown from "../Inputs/DropDowns/DropDown.vue";
 
 export default {
-	components: { Range, TextInput },
+	components: { Range, TextInput, DropDown },
 	props: {
 		cardTitle: {
 			type: String,
@@ -35,6 +41,7 @@ export default {
 		const isOpened = ref(false);
 		const title1 = ref("Security Level");
 		const title2 = ref("Git Organization");
+		const title3 = ref("Providers");
 		const groupName = ref(props.cardTitle);
 		const dataValue = ref({ min: 300, max: 700 });
 		const textValue = ref("https://github.com/ditrit/leto.git");
@@ -45,6 +52,7 @@ export default {
 			Test,
 			title1,
 			title2,
+			title3,
 			groupName,
 			dataValue,
 			textValue,
