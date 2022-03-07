@@ -13,16 +13,20 @@
 					:dataV="dataValue"
 				/>
 			</q-card-section>
+			<q-card-section>
+				<TextInput :titleV="title" :textV="textValue" />
+			</q-card-section>
 		</q-card>
 	</div>
 </template>
 <script>
 import { ref } from "vue";
 import useRequirementsTab from "../../../composables/TabPanels/useRequirementsTab";
-import Range from "../Ranges/Range.vue";
+import Range from "../Inputs/Ranges/Range.vue";
+import TextInput from "../Inputs/Texts/TextInput.vue";
 
 export default {
-	components: { Range },
+	components: { Range, TextInput },
 	props: {
 		cardTitle: {
 			type: String,
@@ -34,6 +38,7 @@ export default {
 		const title = ref("Security Level");
 		const groupName = ref(props.cardTitle);
 		const dataValue = ref({ min: 300, max: 700 });
+		const textValue = ref("https://github.com/ditrit/leto.git");
 		let { Test } = useRequirementsTab();
 		Test();
 		return {
@@ -42,6 +47,7 @@ export default {
 			title,
 			groupName,
 			dataValue,
+			textValue,
 		};
 	},
 };

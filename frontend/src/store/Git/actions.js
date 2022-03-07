@@ -12,7 +12,7 @@ BrowserFS.configure({ fs: "LocalStorage" }, (err) => {
 	if (err) return console.log(err);
 });
 
-window.dir = "/tutorial";
+window.dir = "/leto";
 console.log(dir);
 
 const httpCommands = [

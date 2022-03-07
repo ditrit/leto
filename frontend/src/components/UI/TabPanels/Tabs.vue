@@ -185,7 +185,7 @@
 				</q-tab-panel>
 				<q-tab-panel name="requirements" class="flex q-gutter-md">
 					<div class="cards_wrapper">
-						<RequirementsTabCard />
+						<RequirementsTabCard cardTitle="Groupe Name One" />
 					</div>
 				</q-tab-panel>
 
