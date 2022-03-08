@@ -45,6 +45,11 @@ const routes = [
 				meta: { requiresAuth: true },
 			},
 			{
+				path: "home/workspaces",
+				component: () => import("pages/PageHomeWorkspaces.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
 				path: "libraries",
 				component: () => import("pages/PageLibraries.vue"),
 				meta: { requiresAuth: true },

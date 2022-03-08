@@ -3,6 +3,7 @@ export default {
 	home: "Accueil",
 	add_team: "Nouvelle espace de travail",
 	my_product: "Mes Produits",
+	my_workspaces: "Mes espaces de travail",
 	edit_team: "Modifier l'espace de travail",
 	profile: "Profil",
 	users: "Utilisateurs",

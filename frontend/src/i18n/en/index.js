@@ -3,6 +3,7 @@ export default {
 	home: "Home",
 	add_team: "Add new workspace",
 	my_product: "My Products",
+	my_workspaces: "My Workspaces",
 	edit_team: "Edit workspace",
 	profile: "Profile",
 	users: "Users",
