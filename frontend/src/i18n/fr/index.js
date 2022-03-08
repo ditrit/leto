@@ -1,5 +1,6 @@
 export default {
 	teams: "Espaces de travail",
+	home: "Accueil",
 	add_team: "Nouvelle espace de travail",
 	edit_team: "Modifier l'espace de travail",
 	profile: "Profil",

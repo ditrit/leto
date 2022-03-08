@@ -1,5 +1,6 @@
 export default {
 	teams: "Workspaces",
+	home: "Home",
 	add_team: "Add new workspace",
 	edit_team: "Edit workspace",
 	profile: "Profile",
