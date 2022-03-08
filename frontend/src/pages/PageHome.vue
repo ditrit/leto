@@ -38,11 +38,7 @@
 				</div>
 			</template>
 			<template v-slot:drawerMenu>
-				<ul>
-					<li>7</li>
-					<li>7</li>
-					<li>7</li>
-				</ul>
+				<home-nav />
 			</template>
 		</Drawer>
 
@@ -69,6 +65,7 @@ import Drawer from "../components/UI/Drawers/Drawer.vue";
 import { pageSizeTweak } from "../common/index";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { useStore } from "vuex";
+import HomeNav from "../components/UI/Navigation/HomeNav.vue";
 
 const buttonsList = [
 	{
@@ -101,6 +98,7 @@ export default defineComponent({
 		PageContent,
 		AjaxBar,
 		Drawer,
+		HomeNav,
 	},
 
 	setup() {
