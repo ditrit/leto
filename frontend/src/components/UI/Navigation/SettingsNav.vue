@@ -19,7 +19,6 @@ import { ref } from "vue";
 export default {
 	setup() {
 		const navigationItem = ref([
-			{ label: "Profile", link: "/settings/profile", icon: "user" },
 			{ label: "Users", link: "/settings/users", icon: "group" },
 			{ label: "Roles", link: "/settings/roles", icon: "group" },
 			{
