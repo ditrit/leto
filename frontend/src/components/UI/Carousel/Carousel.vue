@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="flex justify-center">
 		<q-carousel
 			v-model="slide"
 			transition-prev="slide-right"
@@ -10,6 +10,7 @@
 			padding
 			arrows
 			height="300px"
+			width="-webkit-fill-available"
 			class="bg-grey-1 shadow-2 rounded-borders"
 		>
 			<q-carousel-slide :name="1" class="wrap">

@@ -11,7 +11,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="q-ml-md">
+				<div class="favorite_content q-ml-md">
 					<img src="logo" alt="logo" />
 					<slot name="favoriteContent">
 						{{ textContent }}
@@ -48,10 +48,15 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+.q-carousel
+  width: -webkit-fill-available !important
 
 .favorite_header
   padding-left: 30px
   // margin-bottom: 60px
+
+.favorite_content
+  width: 1000px
 
 .title_container
   display: flex
