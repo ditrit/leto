@@ -4,6 +4,8 @@ export default {
 	add_team: "Nouvelle espace de travail",
 	my_product: "Mes Produits",
 	my_workspaces: "Mes espaces de travail",
+	favorite_workspaces: "Mes espaces de travail préférés",
+	favorite_products: "Mes produits préférés",
 	edit_team: "Modifier l'espace de travail",
 	profile: "Profil",
 	users: "Utilisateurs",
