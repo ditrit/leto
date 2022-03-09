@@ -58,7 +58,7 @@
 					:headline="$t('favorite_workspaces')"
 					:textContent="$t('text_content')"
 				>
-					<template v-slot:favoriteContent class="q-ml-lg"> Hello </template>
+					<template v-slot:favoriteContent> My favorite list </template>
 				</FavoriteContent>
 			</q-page>
 		</q-page-container>
