@@ -15,17 +15,18 @@
 			<q-carousel-slide
 				v-for="(item, index) in data"
 				:key="index"
-				:name="item.name"
+				:name="item.slideName"
 				class="no-wrap"
 			>
 				<div
 					class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
 				>
-					<q-img
-						v-for="(image, index) in item.images"
+					<FavoriteCard
+						v-for="(card, index) in item.cards"
 						:key="index"
-						:class="item.class"
-						:src="image"
+						:name="card.name"
+						:repositoryURL="card.repo"
+						:shortDescription="card.description"
 					/>
 				</div>
 			</q-carousel-slide>
@@ -34,80 +35,112 @@
 </template>
 <script>
 import { ref } from "vue";
+import FavoriteCard from "../Cards/FavoriteCard.vue";
 
 export default {
+	components: { FavoriteCard },
 	setup() {
 		const data = ref([
 			{
-				images: [
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
+				slideName: 1,
+				cards: [
+					{
+						name: "Product One",
+						repo: "gitRepo One",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
+					{
+						name: "Product One - 1",
+						repo: "gitRepo One",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
+					{
+						name: "Product One - 2",
+						repo: "gitRepo One",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
+					{
+						name: "Product One - 3",
+						repo: "gitRepo One",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
 				],
-				class: "rounded-borders col-3 full-height",
-				name: 1,
 			},
 			{
-				images: [
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
+				slideName: 2,
+				cards: [
+					{
+						name: "Product Two",
+						repo: "gitRepo Two",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
+					{
+						name: "Product Two - 1",
+						repo: "gitRepo Two",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
+					{
+						name: "Product Two - 2",
+						repo: "gitRepo Two",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
+					{
+						name: "Product Two - 3",
+						repo: "gitRepo Two",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
 				],
-				class: "rounded-borders col-3 full-height",
-				name: 2,
 			},
 			{
-				images: [
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
+				slideName: 3,
+				cards: [
+					{
+						name: "Product Three",
+						repo: "gitRepo Three",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
+					{
+						name: "Product Three - 1",
+						repo: "gitRepo Three",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
+					{
+						name: "Product Three - 2",
+						repo: "gitRepo Three",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
+					{
+						name: "Product Three - 3",
+						repo: "gitRepo Three",
+						description:
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					},
 				],
-				class: "rounded-borders col-3 full-height",
-				name: 3,
-			},
-			{
-				images: [
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-					"https://cdn.quasar.dev/img/parallax1.jpg",
-					"https://cdn.quasar.dev/img/mountains.jpg",
-				],
-				class: "rounded-borders col-3 full-height",
-				name: 4,
 			},
 		]);
 		return {
 			data,
 			slide: ref(1),
+			lorem:
+				"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
 		};
 	},
 };
 </script>
 <style lang="sass" scoped>
-
+.q-panel
+  overflow: hidden !important
 .carousel_container
   background: transparent !important
   max-width: 1000px
