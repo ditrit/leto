@@ -29,42 +29,6 @@
 					/>
 				</div>
 			</q-carousel-slide>
-			<!-- <q-carousel-slide :name="2" class="no-wrap">
-				<div
-					class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
-				>
-					<q-img
-						v-for="(item, index) in data"
-						:key="index"
-						:class="item.class"
-						:src="item.img"
-					/>
-				</div>
-			</q-carousel-slide>
-			<q-carousel-slide :name="3" class="no-wrap">
-				<div
-					class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
-				>
-					<q-img
-						v-for="(item, index) in data"
-						:key="index"
-						:class="item.class"
-						:src="item.img"
-					/>
-				</div>
-			</q-carousel-slide>
-			<q-carousel-slide :name="4" class="column no-wrap">
-				<div
-					class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
-				>
-					<q-img
-						v-for="(item, index) in data"
-						:key="index"
-						:class="item.class"
-						:src="item.img"
-					/>
-				</div>
-			</q-carousel-slide> -->
 		</q-carousel>
 	</div>
 </template>
@@ -143,6 +107,7 @@ export default {
 };
 </script>
 <style lang="sass" scoped>
+
 .carousel_container
   background: transparent !important
   max-width: 1000px

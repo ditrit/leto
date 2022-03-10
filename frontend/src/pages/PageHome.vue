@@ -151,7 +151,7 @@ export default defineComponent({
 			let exc = await store.dispatch("appGit/execute");
 			console.log("exc: ", exc);
 		};
-		executeGit();
+		// executeGit();
 		return {
 			drawer,
 			homeData,
@@ -170,8 +170,6 @@ export default defineComponent({
 });
 </script>
 <style lang="sass" scoped>
-
-
 .teams_buttons__container
 	display: flex
 	flex-direction: row
