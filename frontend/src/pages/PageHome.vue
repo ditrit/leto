@@ -62,7 +62,7 @@
 							:textContent="$t('text_content')"
 						>
 							<template v-slot:favoriteContent>
-								<Carousel />
+								<FavoriteWorkSpacesTable />
 							</template>
 						</FavoriteContent>
 					</div>
@@ -75,7 +75,7 @@
 							:textContent="$t('text_content')"
 						>
 							<template v-slot:favoriteContent>
-								<FavoriteWorkSpacesTable />
+								<Carousel />
 							</template>
 						</FavoriteContent>
 					</div>

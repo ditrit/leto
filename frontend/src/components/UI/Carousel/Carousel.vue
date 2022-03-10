@@ -18,9 +18,7 @@
 				:name="item.slideName"
 				class="no-wrap"
 			>
-				<div
-					class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
-				>
+				<div class="row fit justify-start items-center q-gutter-xs no-wrap">
 					<FavoriteCard
 						v-for="(card, index) in item.cards"
 						:key="index"
@@ -147,8 +145,8 @@ export default {
   width: 100%
 
 .q-carousel__prev-arrow--horizontal
-  left: -4px
+  left: 0px
 
 .q-carousel__next-arrow--horizontal
-  right: -5px !important
+  right: 0px !important
 </style>
