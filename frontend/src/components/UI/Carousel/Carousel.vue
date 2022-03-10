@@ -12,19 +12,24 @@
 			height="200px"
 			class="carousel_container"
 		>
-			<q-carousel-slide :name="1" class="no-wrap">
+			<q-carousel-slide
+				v-for="(item, index) in data"
+				:key="index"
+				:name="item.name"
+				class="no-wrap"
+			>
 				<div
 					class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
 				>
 					<q-img
-						v-for="(item, index) in data"
+						v-for="(image, index) in item.images"
 						:key="index"
 						:class="item.class"
-						:src="item.img"
+						:src="image"
 					/>
 				</div>
 			</q-carousel-slide>
-			<q-carousel-slide :name="2" class="no-wrap">
+			<!-- <q-carousel-slide :name="2" class="no-wrap">
 				<div
 					class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
 				>
@@ -53,24 +58,13 @@
 					class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
 				>
 					<q-img
-						class="rounded-borders col-3 full-height"
-						src="https://cdn.quasar.dev/img/material.png"
-					/>
-					<q-img
-						class="rounded-borders col-3 full-height"
-						src="https://cdn.quasar.dev/img/donuts.png"
-					/>
-					<q-img
-						class="rounded-borders col-3 full-height"
-						src="https://cdn.quasar.dev/img/material.png"
-					/>
-					<q-img
-						class="rounded-borders col-3 full-height"
-						src="https://cdn.quasar.dev/img/donuts.png"
+						v-for="(item, index) in data"
+						:key="index"
+						:class="item.class"
+						:src="item.img"
 					/>
 				</div>
-			</q-carousel-slide>
-			-->
+			</q-carousel-slide> -->
 		</q-carousel>
 	</div>
 </template>
@@ -81,72 +75,64 @@ export default {
 	setup() {
 		const data = ref([
 			{
-				img: "https://cdn.quasar.dev/img/mountains.jpg",
+				images: [
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+				],
 				class: "rounded-borders col-3 full-height",
+				name: 1,
 			},
 			{
-				img: "https://cdn.quasar.dev/img/parallax1.jpg",
+				images: [
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+				],
 				class: "rounded-borders col-3 full-height",
+				name: 2,
 			},
 			{
-				img: "https://cdn.quasar.dev/img/mountains.jpg",
+				images: [
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+				],
 				class: "rounded-borders col-3 full-height",
-			},
-
-			{
-				img: "https://cdn.quasar.dev/img/parallax1.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-			{
-				img: "https://cdn.quasar.dev/img/mountains.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-			{
-				img: "https://cdn.quasar.dev/img/parallax1.jpg",
-				class: "rounded-borders col-3 full-height",
+				name: 3,
 			},
 			{
-				img: "https://cdn.quasar.dev/img/mountains.jpg",
+				images: [
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+					"https://cdn.quasar.dev/img/parallax1.jpg",
+					"https://cdn.quasar.dev/img/mountains.jpg",
+				],
 				class: "rounded-borders col-3 full-height",
-			},
-
-			{
-				img: "https://cdn.quasar.dev/img/parallax1.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-			{
-				img: "https://cdn.quasar.dev/img/mountains.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-			{
-				img: "https://cdn.quasar.dev/img/parallax1.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-			{
-				img: "https://cdn.quasar.dev/img/mountains.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-
-			{
-				img: "https://cdn.quasar.dev/img/parallax1.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-			{
-				img: "https://cdn.quasar.dev/img/mountains.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-			{
-				img: "https://cdn.quasar.dev/img/parallax1.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-			{
-				img: "https://cdn.quasar.dev/img/mountains.jpg",
-				class: "rounded-borders col-3 full-height",
-			},
-
-			{
-				img: "https://cdn.quasar.dev/img/parallax1.jpg",
-				class: "rounded-borders col-3 full-height",
+				name: 4,
 			},
 		]);
 		return {
