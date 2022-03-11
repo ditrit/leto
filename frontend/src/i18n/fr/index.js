@@ -57,6 +57,9 @@ export default {
 	manage_requirements: "Gérer les conditions",
 	create_requirements: "Créer une condition",
 
+	remove: "Supprimer",
+	open: "Ouvrir",
+	favorite: "Préféré",
 	failed: "Action échoué",
 	success: "Action réussi",
 	text_content:

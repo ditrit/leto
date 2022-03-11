@@ -42,6 +42,12 @@
 												Delete</q-item-section
 											>
 										</q-item>
+										<q-item clickable @click="addFavorite(item)">
+											<q-item-section>
+												<q-icon name="star" size="1.5em" class="q-mr-sm" />
+												{{ $t("favorite") }}</q-item-section
+											>
+										</q-item>
 									</q-list>
 								</q-menu>
 							</q-btn>
@@ -200,7 +206,12 @@ export default {
 			default: "https://cdn.quasar.dev/img/parallax2.jpg",
 		},
 	},
-	emit: ["emitRemoveDomain", "emitSubmitDomain", "emitResetDomain"],
+	emit: [
+		"emitRemoveDomain",
+		"emitSubmitDomain",
+		"emitResetDomain",
+		"emitAddFavorite",
+	],
 	setup(props, { emit }) {
 		let { store, route, $q, refreshDomainData } = useContentCardData();
 		let { getMenuData } = useDomainData();
@@ -217,6 +228,10 @@ export default {
 				item.toLowerCase().match(search.value.toLowerCase())
 			);
 		});
+		const addFavorite = async () => {
+			emit("emitAddFavorite", props);
+			console.log("Add to favorite");
+		};
 
 		const DeleteDomain = async (props) => {
 			emit("emitRemoveDomain", props);
@@ -300,6 +315,7 @@ export default {
 			onFileUpload,
 			onRejected,
 			confirm,
+			addFavorite,
 		};
 	},
 };
