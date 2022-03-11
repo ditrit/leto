@@ -62,7 +62,7 @@
 							:textContent="$t('text_content')"
 						>
 							<template v-slot:favoriteContent>
-								<ProductsCarousel />
+								<WorkspacesCarousel />
 							</template>
 						</FavoriteContent>
 					</div>
@@ -96,6 +96,7 @@ import AccountSettings from "components/UI/Profil/AccountSettings";
 import { useStore } from "vuex";
 import HomeNav from "../components/UI/Navigation/HomeNav.vue";
 import ProductsCarousel from "../components/UI/Carousel/ProductsCarousel.vue";
+import WorkspacesCarousel from "../components/UI/Carousel/WorkspacesCarousel.vue";
 
 export default defineComponent({
 	name: "PageTeams",
@@ -107,6 +108,7 @@ export default defineComponent({
 		Drawer,
 		HomeNav,
 		ProductsCarousel,
+		WorkspacesCarousel,
 	},
 
 	setup() {
