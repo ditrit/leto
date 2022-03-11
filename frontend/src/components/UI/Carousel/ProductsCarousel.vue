@@ -130,15 +130,15 @@ export default {
 		return {
 			data,
 			slide: ref(1),
-			lorem:
-				"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
 		};
 	},
 };
 </script>
 <style lang="sass" scoped>
+
 .q-panel
   overflow: hidden !important
+
 .carousel_container
   background: transparent !important
   max-width: 1000px

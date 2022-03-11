@@ -62,7 +62,7 @@
 							:textContent="$t('text_content')"
 						>
 							<template v-slot:favoriteContent>
-								<FavoriteWorkSpacesTable />
+								<ProductsCarousel />
 							</template>
 						</FavoriteContent>
 					</div>
@@ -75,7 +75,7 @@
 							:textContent="$t('text_content')"
 						>
 							<template v-slot:favoriteContent>
-								<Carousel />
+								<ProductsCarousel />
 							</template>
 						</FavoriteContent>
 					</div>
@@ -91,13 +91,11 @@ import PageContent from "../components/Content/PageContent";
 import FavoriteContent from "../components/Content/FavoriteContent";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
-
 import { pageSizeTweak } from "../common/index";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { useStore } from "vuex";
 import HomeNav from "../components/UI/Navigation/HomeNav.vue";
-import Carousel from "../components/UI/Carousel/Carousel.vue";
-import FavoriteWorkSpacesTable from "../components/UI/Tables/FavoriteWorkSpacesTable.vue";
+import ProductsCarousel from "../components/UI/Carousel/ProductsCarousel.vue";
 
 export default defineComponent({
 	name: "PageTeams",
@@ -108,8 +106,7 @@ export default defineComponent({
 		AjaxBar,
 		Drawer,
 		HomeNav,
-		Carousel,
-		FavoriteWorkSpacesTable,
+		ProductsCarousel,
 	},
 
 	setup() {
