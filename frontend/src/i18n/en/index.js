@@ -54,7 +54,7 @@ export default {
 	manage_requirements: "Manage requirements",
 	create_requirements: "Create New requirement",
 
-	open: "Open item",
+	open: "Open  ",
 	favorite: "Favorite",
 	remove: "Remove",
 	failed: "Action failed",
