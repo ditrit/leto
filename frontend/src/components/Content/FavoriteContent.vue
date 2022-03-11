@@ -3,9 +3,9 @@
 		<div class="row">
 			<div class="">
 				<div class="flex">
-					<q-icon :name="icon" size="30px" class="q-ml-md q-mr-sm" />
+					<q-icon :name="icon" size="20px" class="q-ml-md q-mr-sm" />
 					<div class="title_container">
-						<p class="text-bold text-h6">{{ headline }}</p>
+						<p class="text-bold text-h7">{{ headline }}</p>
 						<p v-if="subTitle" class="text-subtitle3 text-grey-8">
 							{{ subTitle }}
 						</p>

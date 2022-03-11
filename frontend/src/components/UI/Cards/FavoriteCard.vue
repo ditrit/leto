@@ -28,13 +28,13 @@
 									<q-item clickable @click.prevent="delteItem(item)">
 										<q-item-section class="action_card__item">
 											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
-											Remove
+											{{ $t("remove") }}
 										</q-item-section>
 									</q-item>
 									<q-item clickable @click.prevent="openCard(item)">
 										<q-item-section class="action_card__item">
 											<q-icon name="link" size="1.5em" class="q-mr-sm" />
-											Open card
+											{{ $t("open") }}
 										</q-item-section>
 									</q-item>
 								</q-list>
