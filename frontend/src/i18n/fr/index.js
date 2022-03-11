@@ -59,6 +59,7 @@ export default {
 
 	remove: "Supprimer",
 	open: "Ouvrir",
+	favorite: "Préféré",
 	failed: "Action échoué",
 	success: "Action réussi",
 	text_content:

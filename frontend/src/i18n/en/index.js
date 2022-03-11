@@ -55,6 +55,7 @@ export default {
 	create_requirements: "Create New requirement",
 
 	open: "Open item",
+	favorite: "Favorite",
 	remove: "Remove",
 	failed: "Action failed",
 	success: "Action was successful",
