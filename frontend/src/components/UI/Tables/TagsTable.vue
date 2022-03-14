@@ -20,7 +20,60 @@
 		>
 			<template v-slot:body-cell-avatar="props">
 				<!-- Modification Dialog -->
-				<q-dialog v-model="opendDialog" persistent position="bottom">
+				<Modal class="modalGlobal" v-model="opendDialog">
+					<template v-slot:ModalTitle>
+						{{ $t("edit_tag") }}
+					</template>
+					<template v-slot:ModalContent>
+						<q-form
+							@submit.prevent="onSubmitUpdate"
+							@reset="onResetUpdate"
+							class="q-gutter-md q-pa-md"
+						>
+							<q-input
+								filled
+								v-model="tagsObj[3]"
+								label="Name *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+							<q-input
+								filled
+								v-model="tagsObj[4]"
+								label="Short Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+							<q-input
+								filled
+								v-model="tagsObj[5]"
+								label="Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+
+							<q-card-actions
+								align="right"
+								class="text-primary flex justify-center"
+							>
+								<q-btn type="reset" label="Cancel" v-close-popup />
+								<q-btn
+									label="Update"
+									type="submit"
+									color="primary"
+									v-close-popup
+								/>
+							</q-card-actions>
+						</q-form>
+					</template>
+				</Modal>
+				<!-- <q-dialog v-model="opendDialog" persistent position="bottom">
 					<q-card style="width: 750px; max-width: 80vw">
 						<q-card-section>
 							<div class="text-h6 q-pa-md">{{ $t("edit_tag") }}</div>
@@ -75,7 +128,7 @@
 							</q-form>
 						</q-card-section>
 					</q-card>
-				</q-dialog>
+				</q-dialog> -->
 
 				<q-td :props="props">
 					<q-avatar size="26px">
@@ -169,6 +222,7 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import Modal from "../Dialogs/Modal.vue";
 
 const columns = [
 	{
@@ -213,6 +267,7 @@ const columns = [
 ];
 
 export default {
+	components: { Modal },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();

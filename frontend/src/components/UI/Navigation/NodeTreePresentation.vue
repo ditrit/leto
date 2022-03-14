@@ -75,7 +75,77 @@
 						<p>{{ tagData.description }}</p>
 
 						<!-- Create Dialog -->
-						<q-dialog v-model="openAddTagDialog" persistent position="bottom">
+						<Modal class="modalGlobal" v-model="openAddTagDialog">
+							<template v-slot:ModalTitle>
+								{{ $t("create_tag") }}
+							</template>
+							<template v-slot:ModalContent>
+								<q-form
+									@submit.prevent="onSubmitAdd"
+									@reset="onResetAdd"
+									class="q-gutter-md q-pa-md"
+								>
+									<div class="row col-md-12">
+										<div class="col">
+											<q-input
+												filled
+												label="Name *"
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="tagName"
+											/>
+										</div>
+										<div class="col-4 q-ml-md">
+											<q-select
+												filled
+												:options="optionsSelections"
+												label="Tag Parent"
+												v-model="selectedParentData"
+											/>
+										</div>
+									</div>
+
+									<q-input
+										filled
+										label="Short Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+										v-model="tagShortDescription"
+									/>
+									<q-input
+										filled
+										type="textarea"
+										label="Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+										v-model="tagDescription"
+									/>
+
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Create"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</template>
+						</Modal>
+						<!-- <q-dialog v-model="openAddTagDialog" persistent position="bottom">
 							<q-card style="width: 750px; max-width: 80vw">
 								<q-card-section>
 									<div class="text-h6 q-pa-md">{{ $t("create_tag") }}</div>
@@ -148,81 +218,77 @@
 									</q-form>
 								</q-card-section>
 							</q-card>
-						</q-dialog>
+						</q-dialog> -->
 
 						<!-- Modification Dialog -->
-						<q-dialog v-model="openEditDialog" persistent position="bottom">
-							<q-card style="width: 750px; max-width: 80vw">
-								<q-card-section>
-									<div class="text-h6 q-pa-md">{{ $t("edit_tag") }}</div>
-								</q-card-section>
-
-								<q-card-section class="q-pt-none">
-									<q-form
-										@submit.prevent="onSubmitUpdate"
-										@reset="onResetUpdate"
-										class="q-gutter-md q-pa-md"
-									>
-										<div class="row col-md-12">
-											<div class="col">
-												<q-input
-													filled
-													v-model="tagData.label"
-													label="Name *"
-													lazy-rules
-													:rules="[
-														(val) =>
-															(val && val.length > 0) ||
-															'Please type something',
-													]"
-												/>
-											</div>
-											<div class="col-4 q-ml-md">
-												<q-select
-													filled
-													:options="optionsSelections"
-													label="Tag Parent"
-													v-model="selectedParentData"
-												/>
-											</div>
-										</div>
-										<q-input
-											filled
-											v-model="tagData.shortDescription"
-											label="Short description *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-										<q-input
-											filled
-											type="textarea"
-											v-model="tagData.description"
-											label="Description *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-										<q-card-actions
-											align="right"
-											class="text-primary flex justify-center"
-										>
-											<q-btn type="reset" label="Cancel" v-close-popup />
-											<q-btn
-												label="Update"
-												type="submit"
-												color="primary"
-												v-close-popup
+						<Modal class="modalGlobal" v-model="openEditDialog">
+							<template v-slot:ModalTitle>
+								{{ $t("edit_tag") }}
+							</template>
+							<template v-slot:ModalContent>
+								<q-form
+									@submit.prevent="onSubmitUpdate"
+									@reset="onResetUpdate"
+									class="q-gutter-md q-pa-md"
+								>
+									<div class="row col-md-12">
+										<div class="col">
+											<q-input
+												filled
+												v-model="tagData.label"
+												label="Name *"
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
 											/>
-										</q-card-actions>
-									</q-form>
-								</q-card-section>
-							</q-card>
-						</q-dialog>
+										</div>
+										<div class="col-4 q-ml-md">
+											<q-select
+												filled
+												:options="optionsSelections"
+												label="Tag Parent"
+												v-model="selectedParentData"
+											/>
+										</div>
+									</div>
+									<q-input
+										filled
+										v-model="tagData.shortDescription"
+										label="Short description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+									/>
+									<q-input
+										filled
+										type="textarea"
+										v-model="tagData.description"
+										label="Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+									/>
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Update"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</template>
+						</Modal>
 					</q-tab-panel>
 				</q-tab-panels>
 			</template>
@@ -233,8 +299,10 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import Modal from "../Dialogs/Modal.vue";
 
 export default {
+	components: { Modal },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
