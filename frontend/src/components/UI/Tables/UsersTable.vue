@@ -75,6 +75,7 @@
 									</div>
 									<div class="col q-pl-md">
 										<q-input
+											:type="isPwd ? 'password' : 'text'"
 											filled
 											v-model="userObj[5]"
 											label="password *"
@@ -83,7 +84,15 @@
 												(val) =>
 													(val && val.length > 0) || 'Please type something',
 											]"
-										/>
+										>
+											<template v-slot:append>
+												<q-icon
+													:name="isPwd ? 'visibility_off' : 'visibility'"
+													class="cursor-pointer"
+													@click="isPwd = !isPwd"
+												/>
+											</template>
+										</q-input>
 									</div>
 								</div>
 								<div class="row col-md-12 q-gutter-sm">
@@ -199,18 +208,28 @@
 										(val) => (val && val.length > 0) || 'Please type something',
 									]"
 									v-model="userEmail"
-								/>
+								>
+								</q-input>
 							</div>
 							<div class="col q-pl-md">
 								<q-input
 									filled
 									label="Your password *"
+									:type="isPwd ? 'password' : 'text'"
 									lazy-rules
 									:rules="[
 										(val) => (val && val.length > 0) || 'Please type something',
 									]"
 									v-model="userPassword"
-								/>
+								>
+									<template v-slot:append>
+										<q-icon
+											:name="isPwd ? 'visibility_off' : 'visibility'"
+											class="cursor-pointer"
+											@click="isPwd = !isPwd"
+										/>
+									</template>
+								</q-input>
 							</div>
 						</div>
 						<div class="row col-md-12 q-gutter-sm">
@@ -319,6 +338,7 @@ export default {
 		const store = useStore();
 		const $q = useQuasar();
 		const opendDialog = ref(false);
+		const isPwd = ref(true);
 		const openAddUserDialog = ref(false);
 		const userObj = ref(null);
 		const rowsData = ref([]);
@@ -397,7 +417,6 @@ export default {
 				});
 			}
 		};
-
 		const onSubmitUpdate = async () => {
 			const userData = {
 				id: userObj.value[0],
@@ -450,6 +469,7 @@ export default {
 		};
 
 		return {
+			isPwd,
 			confirm,
 			editedIndex,
 			columns,
@@ -470,7 +490,6 @@ export default {
 			userPassword,
 			userDescription,
 			password: ref(""),
-			isPwd: ref(true),
 		};
 	},
 };
