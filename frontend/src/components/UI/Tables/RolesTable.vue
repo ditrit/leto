@@ -19,60 +19,6 @@
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
-				<!-- Modification Dialog -->
-				<Modal class="modalGlobal" v-model="opendDialog">
-					<template v-slot:ModalTitle> {{ $t("edit_role") }} </template>
-					<template v-slot:ModalContent>
-						<q-form
-							@submit.prevent="onSubmitUpdate"
-							@reset="onResetUpdate"
-							class="q-gutter-md q-pa-md"
-						>
-							<q-input
-								filled
-								v-model="roleObj[2]"
-								label="Name *"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-							<q-input
-								filled
-								v-model="roleObj[3]"
-								label="Short Description *"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-							<q-input
-								filled
-								type="textarea"
-								v-model="roleObj[4]"
-								label="Description *"
-								lazy-rules
-								:rules="[
-									(val) => (val && val.length > 0) || 'Please type something',
-								]"
-							/>
-
-							<q-card-actions
-								align="right"
-								class="text-primary flex justify-center"
-							>
-								<q-btn type="reset" label="Cancel" v-close-popup />
-								<q-btn
-									label="Update"
-									type="submit"
-									color="primary"
-									v-close-popup
-								/>
-							</q-card-actions>
-						</q-form>
-					</template>
-				</Modal>
-
 				<q-td :props="props">
 					<q-avatar size="26px">
 						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
@@ -145,6 +91,55 @@
 					>
 						<q-btn type="reset" label="Cancel" v-close-popup />
 						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
+			</template>
+		</Modal>
+
+		<!-- Modification Dialog -->
+		<Modal class="modalGlobal" v-model="opendDialog">
+			<template v-slot:ModalTitle> {{ $t("edit_role") }} </template>
+			<template v-slot:ModalContent>
+				<q-form
+					@submit.prevent="onSubmitUpdate"
+					@reset="onResetUpdate"
+					class="q-gutter-md q-pa-md"
+				>
+					<q-input
+						filled
+						v-model="roleObj[2]"
+						label="Name *"
+						lazy-rules
+						:rules="[
+							(val) => (val && val.length > 0) || 'Please type something',
+						]"
+					/>
+					<q-input
+						filled
+						v-model="roleObj[3]"
+						label="Short Description *"
+						lazy-rules
+						:rules="[
+							(val) => (val && val.length > 0) || 'Please type something',
+						]"
+					/>
+					<q-input
+						filled
+						type="textarea"
+						v-model="roleObj[4]"
+						label="Description *"
+						lazy-rules
+						:rules="[
+							(val) => (val && val.length > 0) || 'Please type something',
+						]"
+					/>
+
+					<q-card-actions
+						align="right"
+						class="text-primary flex justify-center"
+					>
+						<q-btn type="reset" label="Cancel" v-close-popup />
+						<q-btn label="Update" type="submit" color="primary" v-close-popup />
 					</q-card-actions>
 				</q-form>
 			</template>
