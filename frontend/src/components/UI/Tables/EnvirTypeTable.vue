@@ -20,25 +20,45 @@
 		>
 			<template v-slot:body-cell-avatar="props">
 				<!-- Modification Dialog -->
-				<q-dialog v-model="opendDialog" persistent position="bottom">
-					<q-card style="width: 750px; max-width: 80vw">
-						<q-card-section>
-							<div class="text-h6 q-pa-md">
-								{{ $t("edit_environment_type") }}
+				<Modal class="modalGlobal" v-model="opendDialog">
+					<template v-slot:ModalTitle>
+						{{ $t("edit_environment_type") }}
+					</template>
+					<template v-slot:ModalContent>
+						<q-form
+							@submit.prevent="onSubmitUpdate"
+							@reset="onResetUpdate"
+							class="q-gutter-md q-pa-md"
+						>
+							<div class="col">
+								<q-input
+									filled
+									v-model="enviTypeObj[2]"
+									label="Name *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+								/>
 							</div>
-						</q-card-section>
-
-						<q-card-section class="q-pt-none">
-							<q-form
-								@submit.prevent="onSubmitUpdate"
-								@reset="onResetUpdate"
-								class="q-gutter-md q-pa-md"
-							>
+							<div class="col">
+								<q-input
+									filled
+									v-model="enviTypeObj[3]"
+									label="Short Description *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+								/>
+							</div>
+							<div class="row">
 								<div class="col">
 									<q-input
 										filled
-										v-model="enviTypeObj[2]"
-										label="Name *"
+										type="textarea"
+										v-model="enviTypeObj[4]"
+										label="Description *"
 										lazy-rules
 										:rules="[
 											(val) =>
@@ -46,63 +66,35 @@
 										]"
 									/>
 								</div>
-								<div class="col">
-									<q-input
-										filled
-										v-model="enviTypeObj[3]"
-										label="Short Description *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-									/>
-								</div>
-								<div class="row">
-									<div class="col">
-										<q-input
-											filled
-											type="textarea"
-											v-model="enviTypeObj[4]"
-											label="Description *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-										/>
-									</div>
-									<div class="col-4 q-ml-md">
-										<q-uploader
-											style="max-width: 100%"
-											label="Your Logo"
-											multiple
-											accept=".jpg, svg, image/*"
-											@rejected="onRejected"
-											color="primary"
-											:factory="uploadFile"
-											@uploaded="onFileUpload"
-										/>
-									</div>
-								</div>
-
-								<q-card-actions
-									align="right"
-									class="text-primary flex justify-center"
-								>
-									<q-btn type="reset" label="Cancel" v-close-popup />
-									<q-btn
-										label="Update"
-										type="submit"
+								<div class="col-4 q-ml-md">
+									<q-uploader
+										style="max-width: 100%"
+										label="Your Logo"
+										multiple
+										accept=".jpg, svg, image/*"
+										@rejected="onRejected"
 										color="primary"
-										v-close-popup
+										:factory="uploadFile"
+										@uploaded="onFileUpload"
 									/>
-								</q-card-actions>
-							</q-form>
-						</q-card-section>
-					</q-card>
-				</q-dialog>
+								</div>
+							</div>
 
+							<q-card-actions
+								align="right"
+								class="text-primary flex justify-center"
+							>
+								<q-btn type="reset" label="Cancel" v-close-popup />
+								<q-btn
+									label="Update"
+									type="submit"
+									color="primary"
+									v-close-popup
+								/>
+							</q-card-actions>
+						</q-form>
+					</template>
+				</Modal>
 				<q-td :props="props">
 					<q-avatar size="26px">
 						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
@@ -132,79 +124,71 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddEnviTypeDialog" persistent position="bottom">
-			<q-card style="width: 750px; max-width: 80vw">
-				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("create_environment_type") }}</div>
-				</q-card-section>
-
-				<q-card-section class="q-pt-none">
-					<q-form
-						@submit.prevent="onSubmitAdd"
-						@reset="onResetAdd"
-						class="q-gutter-md q-pa-md"
-					>
-						<q-input
-							filled
-							label="Name *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="enviTypeName"
-						/>
-						<q-input
-							filled
-							label="Short Description *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="enviTypeShortDescription"
-						/>
-						<div class="row">
-							<div class="col">
-								<q-input
-									filled
-									type="textarea"
-									label="Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="enviTypeDescription"
-								/>
-							</div>
-							<div class="col-4 q-ml-md">
-								<q-uploader
-									style="max-width: 100%"
-									label="Your Logo"
-									multiple
-									accept=".jpg, svg, image/*"
-									@rejected="onRejected"
-									color="primary"
-									:factory="uploadFile"
-									@uploaded="onFileUpload"
-								/>
-							</div>
-						</div>
-
-						<q-card-actions
-							align="right"
-							class="text-primary flex justify-center"
-						>
-							<q-btn type="reset" label="Cancel" v-close-popup />
-							<q-btn
-								label="Create"
-								type="submit"
-								color="primary"
-								v-close-popup
+		<Modal class="modalGlobal" v-model="openAddEnviTypeDialog">
+			<template v-slot:ModalTitle>
+				{{ $t("create_environment_type") }}
+			</template>
+			<template v-slot:ModalContent>
+				<q-form
+					@submit.prevent="onSubmitAdd"
+					@reset="onResetAdd"
+					class="q-gutter-md q-pa-md"
+				>
+					<q-input
+						filled
+						label="Name *"
+						lazy-rules
+						:rules="[
+							(val) => (val && val.length > 0) || 'Please type something',
+						]"
+						v-model="enviTypeName"
+					/>
+					<q-input
+						filled
+						label="Short Description *"
+						lazy-rules
+						:rules="[
+							(val) => (val && val.length > 0) || 'Please type something',
+						]"
+						v-model="enviTypeShortDescription"
+					/>
+					<div class="row">
+						<div class="col">
+							<q-input
+								filled
+								type="textarea"
+								label="Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+								v-model="enviTypeDescription"
 							/>
-						</q-card-actions>
-					</q-form>
-				</q-card-section>
-			</q-card>
-		</q-dialog>
+						</div>
+						<div class="col-4 q-ml-md">
+							<q-uploader
+								style="max-width: 100%"
+								label="Your Logo"
+								multiple
+								accept=".jpg, svg, image/*"
+								@rejected="onRejected"
+								color="primary"
+								:factory="uploadFile"
+								@uploaded="onFileUpload"
+							/>
+						</div>
+					</div>
+
+					<q-card-actions
+						align="right"
+						class="text-primary flex justify-center"
+					>
+						<q-btn type="reset" label="Cancel" v-close-popup />
+						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
+			</template>
+		</Modal>
 	</div>
 </template>
 
@@ -212,6 +196,7 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import Modal from "../Dialogs/Modal.vue";
 
 const columns = [
 	{
@@ -261,6 +246,7 @@ const columns = [
 ];
 
 export default {
+	components: { Modal },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
