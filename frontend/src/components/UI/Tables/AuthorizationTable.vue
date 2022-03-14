@@ -25,59 +25,6 @@
 				</q-td>
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
-				<!-- Modification Dialog -->
-				<Modal class="modalGlobal" v-model="opendEditAuthorizationDialog">
-					<template v-slot:ModalTitle>
-						{{ $t("edit_authorization") }}
-					</template>
-					<template v-slot:ModalContent>
-						<q-form
-							@submit.prevent="onSubmitUpdate(props)"
-							@reset="onResetUpdate"
-							class="q-gutter-md q-pa-md"
-						>
-							<div class="col-md-12 q-gutter-md">
-								<div class="col">
-									<q-select
-										filled
-										:options="usersList"
-										label="User*"
-										v-model="authorizationObj[7]"
-									/>
-								</div>
-								<div class="col">
-									<q-select
-										filled
-										:options="roleList"
-										label="Role*"
-										v-model="authorizationObj[5]"
-									/>
-								</div>
-								<div class="col">
-									<q-select
-										filled
-										:options="domainList"
-										label="Domain*"
-										v-model="authorizationObj[3]"
-									/>
-								</div>
-							</div>
-
-							<q-card-actions
-								align="right"
-								class="text-primary flex justify-center"
-							>
-								<q-btn type="reset" label="Cancel" v-close-popup />
-								<q-btn
-									label="Update"
-									type="submit"
-									color="primary"
-									v-close-popup
-								/>
-							</q-card-actions>
-						</q-form>
-					</template>
-				</Modal>
 				<q-td :props="props">
 					<q-btn
 						dense
@@ -98,6 +45,54 @@
 				</q-td>
 			</template>
 		</q-table>
+		<!-- Modification Dialog -->
+		<Modal class="modalGlobal" v-model="opendEditAuthorizationDialog">
+			<template v-slot:ModalTitle>
+				{{ $t("edit_authorization") }}
+			</template>
+			<template v-slot:ModalContent>
+				<q-form
+					@submit.prevent="onSubmitUpdate(props)"
+					@reset="onResetUpdate"
+					class="q-gutter-md q-pa-md"
+				>
+					<div class="col-md-12 q-gutter-md">
+						<div class="col">
+							<q-select
+								filled
+								:options="usersList"
+								label="User*"
+								v-model="authorizationObj[7]"
+							/>
+						</div>
+						<div class="col">
+							<q-select
+								filled
+								:options="roleList"
+								label="Role*"
+								v-model="authorizationObj[5]"
+							/>
+						</div>
+						<div class="col">
+							<q-select
+								filled
+								:options="domainList"
+								label="Domain*"
+								v-model="authorizationObj[3]"
+							/>
+						</div>
+					</div>
+
+					<q-card-actions
+						align="right"
+						class="text-primary flex justify-center"
+					>
+						<q-btn type="reset" label="Cancel" v-close-popup />
+						<q-btn label="Update" type="submit" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
+			</template>
+		</Modal>
 
 		<!-- Create Dialog -->
 		<Modal class="modalGlobal" v-model="openAddAuthorizationDialog">
@@ -315,6 +310,7 @@ export default {
 					(authorisationUser.value = ""),
 					(authorizationRole.value = ""),
 					await allAuthorizations();
+
 				$q.notify({
 					type: "positive",
 					message: "Authorizsation has been successfully updated",
