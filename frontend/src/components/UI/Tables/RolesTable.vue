@@ -149,63 +149,6 @@
 				</q-form>
 			</template>
 		</Modal>
-		<!-- <q-dialog v-model="openAddRoleDialog" persistent position="bottom">
-			<q-card style="width: 750px; max-width: 80vw">
-				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("create_role") }}</div>
-				</q-card-section>
-
-				<q-card-section class="q-pt-none">
-					<q-form
-						@submit.prevent="onSubmitAdd"
-						@reset="onResetAdd"
-						class="q-gutter-md q-pa-md"
-					>
-						<q-input
-							filled
-							label="Name *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="roleName"
-						/>
-						<q-input
-							filled
-							label="Short Description *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="roleShortDescription"
-						/>
-						<q-input
-							filled
-							type="textarea"
-							label="Description *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="roleDescription"
-						/>
-
-						<q-card-actions
-							align="right"
-							class="text-primary flex justify-center"
-						>
-							<q-btn type="reset" label="Cancel" v-close-popup />
-							<q-btn
-								label="Create"
-								type="submit"
-								color="primary"
-								v-close-popup
-							/>
-						</q-card-actions>
-					</q-form>
-				</q-card-section>
-			</q-card>
-		</q-dialog> -->
 	</div>
 </template>
 
