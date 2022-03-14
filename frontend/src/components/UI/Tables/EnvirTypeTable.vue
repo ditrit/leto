@@ -19,82 +19,6 @@
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
-				<!-- Modification Dialog -->
-				<Modal class="modalGlobal" v-model="opendDialog">
-					<template v-slot:ModalTitle>
-						{{ $t("edit_environment_type") }}
-					</template>
-					<template v-slot:ModalContent>
-						<q-form
-							@submit.prevent="onSubmitUpdate"
-							@reset="onResetUpdate"
-							class="q-gutter-md q-pa-md"
-						>
-							<div class="col">
-								<q-input
-									filled
-									v-model="enviTypeObj[2]"
-									label="Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-							</div>
-							<div class="col">
-								<q-input
-									filled
-									v-model="enviTypeObj[3]"
-									label="Short Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-							</div>
-							<div class="row">
-								<div class="col">
-									<q-input
-										filled
-										type="textarea"
-										v-model="enviTypeObj[4]"
-										label="Description *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-									/>
-								</div>
-								<div class="col-4 q-ml-md">
-									<q-uploader
-										style="max-width: 100%"
-										label="Your Logo"
-										multiple
-										accept=".jpg, svg, image/*"
-										@rejected="onRejected"
-										color="primary"
-										:factory="uploadFile"
-										@uploaded="onFileUpload"
-									/>
-								</div>
-							</div>
-
-							<q-card-actions
-								align="right"
-								class="text-primary flex justify-center"
-							>
-								<q-btn type="reset" label="Cancel" v-close-popup />
-								<q-btn
-									label="Update"
-									type="submit"
-									color="primary"
-									v-close-popup
-								/>
-							</q-card-actions>
-						</q-form>
-					</template>
-				</Modal>
 				<q-td :props="props">
 					<q-avatar size="26px">
 						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
@@ -185,6 +109,77 @@
 					>
 						<q-btn type="reset" label="Cancel" v-close-popup />
 						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
+			</template>
+		</Modal>
+
+		<!-- Modification Dialog -->
+		<Modal class="modalGlobal" v-model="opendDialog">
+			<template v-slot:ModalTitle>
+				{{ $t("edit_environment_type") }}
+			</template>
+			<template v-slot:ModalContent>
+				<q-form
+					@submit.prevent="onSubmitUpdate"
+					@reset="onResetUpdate"
+					class="q-gutter-md q-pa-md"
+				>
+					<div class="col">
+						<q-input
+							filled
+							v-model="enviTypeObj[2]"
+							label="Name *"
+							lazy-rules
+							:rules="[
+								(val) => (val && val.length > 0) || 'Please type something',
+							]"
+						/>
+					</div>
+					<div class="col">
+						<q-input
+							filled
+							v-model="enviTypeObj[3]"
+							label="Short Description *"
+							lazy-rules
+							:rules="[
+								(val) => (val && val.length > 0) || 'Please type something',
+							]"
+						/>
+					</div>
+					<div class="row">
+						<div class="col">
+							<q-input
+								filled
+								type="textarea"
+								v-model="enviTypeObj[4]"
+								label="Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+						<div class="col-4 q-ml-md">
+							<q-uploader
+								style="max-width: 100%"
+								label="Your Logo"
+								multiple
+								accept=".jpg, svg, image/*"
+								@rejected="onRejected"
+								color="primary"
+								:factory="uploadFile"
+								@uploaded="onFileUpload"
+							/>
+						</div>
+					</div>
+
+					<q-card-actions
+						align="right"
+						class="text-primary flex justify-center"
+					>
+						<q-btn type="reset" label="Cancel" v-close-popup />
+						<q-btn label="Update" type="submit" color="primary" v-close-popup />
 					</q-card-actions>
 				</q-form>
 			</template>
