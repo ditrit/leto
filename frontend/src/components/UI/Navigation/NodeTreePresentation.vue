@@ -327,6 +327,7 @@ export default {
 			console.log("Edit tag");
 			openEditDialog.value = true;
 			console.log("tag: ", tag);
+			selectedParentData.value = tag;
 		};
 
 		const confirm = (props) => {
