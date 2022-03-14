@@ -168,7 +168,8 @@
 				</q-td>
 			</template>
 		</q-table>
-		<!-- Create Dialog -->
+
+		<!-- Edit Dialog -->
 		<Modal
 			class="modalGlobal"
 			v-show="opendDialog"
@@ -395,6 +396,7 @@ export default {
 		const store = useStore();
 		const $q = useQuasar();
 		const isOpened = ref(false);
+		const opendDialog = ref(false);
 		const userObj = ref(null);
 		const rowsData = ref([
 			{
@@ -473,12 +475,14 @@ export default {
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
 			userObj.value = Object.values(currentTarget);
+			console.log("Edit this row");
 		};
 		const deleteRow = async (currentTarget) => {
 			try {
-				const userID = Object.values(currentTarget)[0];
-				await store.dispatch("appUsers/removeUser", userID);
-				await allUsers();
+				console.log("Delete this element");
+				// const userID = Object.values(currentTarget)[0];
+				// await store.dispatch("appUsers/removeUser", userID);
+				// await allUsers();
 				$q.notify({
 					type: "positive",
 					message: "User has been successfully deleted",
@@ -504,6 +508,7 @@ export default {
 			editRow,
 			deleteRow,
 			isOpened,
+			opendDialog,
 			AddRequirement,
 			requirementActive: ref("yes"),
 			requirementRequired: ref("yes"),
