@@ -26,67 +26,58 @@
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<!-- Modification Dialog -->
-				<q-dialog
-					v-model="opendEditAuthorizationDialog"
-					persistent
-					position="bottom"
-				>
-					<q-card style="width: 750px; max-width: 80vw">
-						<q-card-section>
-							<div class="text-h6 q-pa-md">
-								{{ $t("edit_authorization") }}
-							</div>
-						</q-card-section>
-
-						<q-card-section class="q-pt-none">
-							<q-form
-								@submit.prevent="onSubmitUpdate(props)"
-								@reset="onResetUpdate"
-								class="q-gutter-md q-pa-md"
-							>
-								<div class="col-md-12 q-gutter-md">
-									<div class="col">
-										<q-select
-											filled
-											:options="usersList"
-											label="User*"
-											v-model="authorizationObj[7]"
-										/>
-									</div>
-									<div class="col">
-										<q-select
-											filled
-											:options="roleList"
-											label="Role*"
-											v-model="authorizationObj[5]"
-										/>
-									</div>
-									<div class="col">
-										<q-select
-											filled
-											:options="domainList"
-											label="Domain*"
-											v-model="authorizationObj[3]"
-										/>
-									</div>
-								</div>
-
-								<q-card-actions
-									align="right"
-									class="text-primary flex justify-center"
-								>
-									<q-btn type="reset" label="Cancel" v-close-popup />
-									<q-btn
-										label="Update"
-										type="submit"
-										color="primary"
-										v-close-popup
+				<Modal class="modalGlobal" v-model="opendEditAuthorizationDialog">
+					<template v-slot:ModalTitle>
+						{{ $t("edit_authorization") }}
+					</template>
+					<template v-slot:ModalContent>
+						<q-form
+							@submit.prevent="onSubmitUpdate(props)"
+							@reset="onResetUpdate"
+							class="q-gutter-md q-pa-md"
+						>
+							<div class="col-md-12 q-gutter-md">
+								<div class="col">
+									<q-select
+										filled
+										:options="usersList"
+										label="User*"
+										v-model="authorizationObj[7]"
 									/>
-								</q-card-actions>
-							</q-form>
-						</q-card-section>
-					</q-card>
-				</q-dialog>
+								</div>
+								<div class="col">
+									<q-select
+										filled
+										:options="roleList"
+										label="Role*"
+										v-model="authorizationObj[5]"
+									/>
+								</div>
+								<div class="col">
+									<q-select
+										filled
+										:options="domainList"
+										label="Domain*"
+										v-model="authorizationObj[3]"
+									/>
+								</div>
+							</div>
+
+							<q-card-actions
+								align="right"
+								class="text-primary flex justify-center"
+							>
+								<q-btn type="reset" label="Cancel" v-close-popup />
+								<q-btn
+									label="Update"
+									type="submit"
+									color="primary"
+									v-close-popup
+								/>
+							</q-card-actions>
+						</q-form>
+					</template>
+				</Modal>
 				<q-td :props="props">
 					<q-btn
 						dense
@@ -172,6 +163,7 @@ import { ref, computed, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
+import Modal from "../Dialogs/Modal.vue";
 
 const columns = [
 	{
@@ -220,6 +212,7 @@ const columns = [
 ];
 
 export default {
+	components: { Modal },
 	setup(props) {
 		const store = useStore();
 		const $q = useQuasar();
