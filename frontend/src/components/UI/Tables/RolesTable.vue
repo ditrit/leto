@@ -20,63 +20,58 @@
 		>
 			<template v-slot:body-cell-avatar="props">
 				<!-- Modification Dialog -->
-				<q-dialog v-model="opendDialog" persistent position="bottom">
-					<q-card style="width: 750px; max-width: 80vw">
-						<q-card-section>
-							<div class="text-h6 q-pa-md">{{ $t("edit_role") }}</div>
-						</q-card-section>
+				<Modal class="modalGlobal" v-model="opendDialog">
+					<template v-slot:ModalTitle> {{ $t("edit_role") }} </template>
+					<template v-slot:ModalContent>
+						<q-form
+							@submit.prevent="onSubmitUpdate"
+							@reset="onResetUpdate"
+							class="q-gutter-md q-pa-md"
+						>
+							<q-input
+								filled
+								v-model="roleObj[2]"
+								label="Name *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+							<q-input
+								filled
+								v-model="roleObj[3]"
+								label="Short Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+							<q-input
+								filled
+								type="textarea"
+								v-model="roleObj[4]"
+								label="Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
 
-						<q-card-section class="q-pt-none">
-							<q-form
-								@submit.prevent="onSubmitUpdate"
-								@reset="onResetUpdate"
-								class="q-gutter-md q-pa-md"
+							<q-card-actions
+								align="right"
+								class="text-primary flex justify-center"
 							>
-								<q-input
-									filled
-									v-model="roleObj[2]"
-									label="Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
+								<q-btn type="reset" label="Cancel" v-close-popup />
+								<q-btn
+									label="Update"
+									type="submit"
+									color="primary"
+									v-close-popup
 								/>
-								<q-input
-									filled
-									v-model="roleObj[3]"
-									label="Short Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-								<q-input
-									filled
-									type="textarea"
-									v-model="roleObj[4]"
-									label="Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-
-								<q-card-actions
-									align="right"
-									class="text-primary flex justify-center"
-								>
-									<q-btn type="reset" label="Cancel" v-close-popup />
-									<q-btn
-										label="Update"
-										type="submit"
-										color="primary"
-										v-close-popup
-									/>
-								</q-card-actions>
-							</q-form>
-						</q-card-section>
-					</q-card>
-				</q-dialog>
+							</q-card-actions>
+						</q-form>
+					</template>
+				</Modal>
 
 				<q-td :props="props">
 					<q-avatar size="26px">
@@ -171,6 +166,7 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import Modal from "../Dialogs/Modal.vue";
 
 const columns = [
 	{
@@ -219,6 +215,7 @@ const columns = [
 ];
 
 export default {
+	components: { Modal },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
