@@ -21,112 +21,6 @@
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
-				<!-- Modification Dialog -->
-				<Modal
-					class="modalGlobal"
-					v-show="opendDialog"
-					v-model="opendDialog"
-					persistent
-					position="bottom"
-				>
-					<template v-slot:ModalTitle> {{ $t("edit_user") }} </template>
-					<template v-slot:ModalContent>
-						<q-form
-							@submit.prevent="onSubmitUpdate"
-							@reset="onResetUpdate"
-							class="q-gutter-md q-pa-md"
-						>
-							<div class="row col-md-12 q-gutter-sm">
-								<div class="col">
-									<q-input
-										filled
-										v-model="userObj[2]"
-										label="Your First Name *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-									/>
-								</div>
-								<div class="col q-pl-md">
-									<q-input
-										filled
-										v-model="userObj[3]"
-										label="Your Last Name *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-									/>
-								</div>
-							</div>
-							<div class="row col-md-12 q-gutter-sm">
-								<div class="col">
-									<q-input
-										filled
-										v-model="userObj[4]"
-										label="Your Email *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-									/>
-								</div>
-								<div class="col q-pl-md">
-									<q-input
-										:type="isPwd ? 'password' : 'text'"
-										filled
-										v-model="userObj[5]"
-										label="password *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-									>
-										<template v-slot:append>
-											<q-icon
-												:name="isPwd ? 'visibility_off' : 'visibility'"
-												class="cursor-pointer"
-												@click="isPwd = !isPwd"
-											/>
-										</template>
-									</q-input>
-								</div>
-							</div>
-							<div class="row col-md-12 q-gutter-sm">
-								<div class="col">
-									<q-input
-										filled
-										type="textarea"
-										v-model="userObj[6]"
-										label="Description *"
-										lazy-rules
-										:rules="[
-											(val) =>
-												(val && val.length > 0) || 'Please type something',
-										]"
-									/>
-								</div>
-							</div>
-							<q-card-actions
-								align="right"
-								class="text-primary flex justify-center"
-							>
-								<q-btn type="reset" label="Cancel" v-close-popup />
-								<q-btn
-									label="Update"
-									type="submit"
-									color="primary"
-									v-close-popup
-								/>
-							</q-card-actions>
-						</q-form>
-					</template>
-				</Modal>
 				<q-td :props="props">
 					<q-avatar size="26px">
 						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
@@ -254,6 +148,103 @@
 					>
 						<q-btn type="reset" label="Cancel" v-close-popup />
 						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
+			</template>
+		</Modal>
+
+		<!-- Modification Dialog -->
+		<Modal
+			class="modalGlobal"
+			v-show="opendDialog"
+			v-model="opendDialog"
+			persistent
+			position="bottom"
+		>
+			<template v-slot:ModalTitle> {{ $t("edit_user") }} </template>
+			<template v-slot:ModalContent>
+				<q-form
+					@submit.prevent="onSubmitUpdate"
+					@reset="onResetUpdate"
+					class="q-gutter-md q-pa-md"
+				>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col">
+							<q-input
+								filled
+								v-model="userObj[2]"
+								label="Your First Name *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+						<div class="col q-pl-md">
+							<q-input
+								filled
+								v-model="userObj[3]"
+								label="Your Last Name *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+					</div>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col">
+							<q-input
+								filled
+								v-model="userObj[4]"
+								label="Your Email *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+						<div class="col q-pl-md">
+							<q-input
+								:type="isPwd ? 'password' : 'text'"
+								filled
+								v-model="userObj[5]"
+								label="password *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							>
+								<template v-slot:append>
+									<q-icon
+										:name="isPwd ? 'visibility_off' : 'visibility'"
+										class="cursor-pointer"
+										@click="isPwd = !isPwd"
+									/>
+								</template>
+							</q-input>
+						</div>
+					</div>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col">
+							<q-input
+								filled
+								type="textarea"
+								v-model="userObj[6]"
+								label="Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+					</div>
+					<q-card-actions
+						align="right"
+						class="text-primary flex justify-center"
+					>
+						<q-btn type="reset" label="Cancel" v-close-popup />
+						<q-btn label="Update" type="submit" color="primary" v-close-popup />
 					</q-card-actions>
 				</q-form>
 			</template>
