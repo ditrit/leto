@@ -53,6 +53,7 @@ export default {
 	requirements: "Requirements",
 	manage_requirements: "Manage requirements",
 	create_requirements: "Create New requirement",
+	edit_requirements: "Edit requirement",
 
 	open: "Open  ",
 	favorite: "Favorite",

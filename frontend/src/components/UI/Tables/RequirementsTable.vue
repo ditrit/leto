@@ -177,7 +177,7 @@
 			persistent
 			position="bottom"
 		>
-			<template v-slot:ModalTitle> {{ $t("create_requirements") }} </template>
+			<template v-slot:ModalTitle> {{ $t("edit_requirements") }} </template>
 			<template v-slot:ModalContent>
 				<q-card-section class="q-pt-none">
 					<q-form
@@ -479,7 +479,7 @@ export default {
 		};
 		const deleteRow = async (currentTarget) => {
 			try {
-				console.log("Delete this element");
+				console.log("Delete this element", currentTarget);
 				// const userID = Object.values(currentTarget)[0];
 				// await store.dispatch("appUsers/removeUser", userID);
 				// await allUsers();

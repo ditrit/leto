@@ -56,6 +56,7 @@ export default {
 	requirements: "Conditions",
 	manage_requirements: "Gérer les conditions",
 	create_requirements: "Créer une condition",
+	edit_requirements: "Modifier la condition",
 
 	remove: "Supprimer",
 	open: "Ouvrir",
