@@ -52,7 +52,105 @@
 								</q-menu>
 							</q-btn>
 							<!-- Modification Dialog -->
-							<q-dialog v-model="isOpend" persistent position="bottom">
+							<Modal class="modalGlobal" v-model="isOpend">
+								<template v-slot:ModalTitle> {{ $t("edit_team") }} </template>
+								<template v-slot:ModalContent>
+									<q-form
+										@submit.prevent="onSubmitUpdate(item)"
+										@reset="onResetUpdate"
+										class="q-gutter-md q-pa-md"
+									>
+										<div class="">
+											<div class="row col-md-12 q-gutter-md">
+												<div class="col">
+													<q-input
+														filled
+														label="Name *"
+														hint=""
+														lazy-rules
+														:rules="[
+															(val) =>
+																(val && val.length > 0) ||
+																'Please type something',
+														]"
+														v-model="item.name"
+													/>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col">
+													<q-input
+														filled
+														label="Short description"
+														lazy-rules
+														:rules="[
+															(val) =>
+																(val && val.length > 0) ||
+																'Please type something',
+														]"
+														v-model="item.shortDescription"
+													/>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col">
+													<q-input
+														filled
+														label="Repository"
+														lazy-rules
+														:rules="[
+															(val) =>
+																(val && val.length > 0) ||
+																'Please type something',
+														]"
+														v-model="item.gitURL"
+													/>
+												</div>
+											</div>
+											<div class="row q-gutter-md">
+												<div class="col col-md-8">
+													<q-input
+														filled
+														type="textarea"
+														label="Description"
+														v-model="item.description"
+													/>
+												</div>
+												<div class="col">
+													<q-uploader
+														style="max-width: 100%"
+														url="http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file"
+														label="Your Logo"
+														multiple
+														accept=".jpg, svg, image/*"
+														color="primary"
+														factory
+														files
+														hide-upload-btn="true"
+														auto-upload
+														@rejected="onRejected"
+														@uploaded="onFileUpload"
+													/>
+												</div>
+											</div>
+										</div>
+
+										<q-card-actions
+											align="right"
+											class="text-primary flex justify-center"
+										>
+											<q-btn type="reset" label="Cancel" v-close-popup />
+											<q-btn
+												label="Update"
+												type="submit"
+												color="primary"
+												v-close-popup
+											/>
+										</q-card-actions>
+									</q-form>
+								</template>
+							</Modal>
+							<!-- <q-dialog v-model="isOpend" persistent position="bottom">
 								<q-card style="width: 750px; max-width: 80vw">
 									<q-card-section>
 										<div class="text-h6 q-pa-md">{{ $t("edit_team") }}</div>
@@ -154,7 +252,7 @@
 										</q-form>
 									</q-card-section>
 								</q-card>
-							</q-dialog>
+							</q-dialog> -->
 						</div>
 						<div class="col-4"><slot name="tagsCard"></slot></div>
 					</div>
@@ -193,10 +291,11 @@ import { ref, computed } from "vue";
 import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 import useDomainData from "../../../composables/WorkSpace/useContentCard";
 import Tabs from "../../UI/TabPanels/Tabs.vue";
+import Modal from "../Dialogs/Modal.vue";
 
 export default {
 	name: "ContentCard",
-	components: { Tabs },
+	components: { Tabs, Modal },
 	props: {
 		data: {
 			type: Array,
