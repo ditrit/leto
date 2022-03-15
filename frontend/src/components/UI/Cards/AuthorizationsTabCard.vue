@@ -58,73 +58,68 @@
 							</q-menu>
 						</q-btn>
 						<!-- Modification dialog -->
-						<q-dialog v-model="isOpened" persistent position="bottom">
-							<q-card style="width: 750px; max-width: 80vw">
-								<q-card-section>
-									<div class="text-h6 q-pa-md">
-										{{ $t("edit_authorization") }}
-									</div>
-								</q-card-section>
-
-								<q-card-section class="q-pt-none">
-									<q-form
-										@submit.stop="
-											onSubmitUpdate([
-												authorizationIdRef,
-												authorizationRoleIDRef,
-												authorizationRoleNameRef,
-												authorizationUserIDRef,
-												authorizationNameRef,
-												authorizationDomainIDRef,
-												authorizationDomainNameRef,
-											])
-										"
-										@reset="onResetUpdate"
-										class="q-gutter-sm q-pa-md"
-									>
-										<div class="col-md-12 q-gutter-md">
-											<div class="col">
-												<q-select
-													filled
-													:options="usersList"
-													label="User"
-													v-model="authorizationNameRef"
-												/>
-											</div>
-											<div class="col">
-												<q-select
-													filled
-													:options="roleList"
-													label="Role"
-													v-model="authorizationRoleNameRef"
-												/>
-											</div>
-											<div class="col" disabled>
-												<q-select
-													disabled
-													filled
-													label="Domain"
-													v-model="authorizationDomainNameRef"
-												/>
-											</div>
-										</div>
-
-										<q-card-actions
-											align="right"
-											class="text-primary flex justify-center"
-										>
-											<q-btn type="reset" label="Cancel" v-close-popup />
-											<q-btn
-												label="Update"
-												type="submit"
-												color="primary"
-												v-close-popup
+						<Modal class="modalGlobal" v-model="isOpened">
+							<template v-slot:ModalTitle>
+								{{ $t("edit_authorization") }}
+							</template>
+							<template v-slot:ModalContent>
+								<q-form
+									@submit.stop="
+										onSubmitUpdate([
+											authorizationIdRef,
+											authorizationRoleIDRef,
+											authorizationRoleNameRef,
+											authorizationUserIDRef,
+											authorizationNameRef,
+											authorizationDomainIDRef,
+											authorizationDomainNameRef,
+										])
+									"
+									@reset="onResetUpdate"
+									class="q-gutter-sm q-pa-md"
+								>
+									<div class="col-md-12 q-gutter-md">
+										<div class="col">
+											<q-select
+												filled
+												:options="usersList"
+												label="User"
+												v-model="authorizationNameRef"
 											/>
-										</q-card-actions>
-									</q-form>
-								</q-card-section>
-							</q-card>
-						</q-dialog>
+										</div>
+										<div class="col">
+											<q-select
+												filled
+												:options="roleList"
+												label="Role"
+												v-model="authorizationRoleNameRef"
+											/>
+										</div>
+										<div class="col" disabled>
+											<q-select
+												disabled
+												filled
+												label="Domain"
+												v-model="authorizationDomainNameRef"
+											/>
+										</div>
+									</div>
+
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Update"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</template>
+						</Modal>
 					</div>
 				</div>
 			</q-card-section>
@@ -137,8 +132,10 @@
 <script>
 import { ref, computed } from "vue";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
+import Modal from "../Dialogs/Modal.vue";
 
 export default {
+	components: { Modal },
 	emits: [
 		"openAuthorizationEditModal",
 		"deleteAuthorizationAction",
