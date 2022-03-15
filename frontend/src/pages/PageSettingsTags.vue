@@ -44,7 +44,7 @@
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak">
 				<PageContent
-					icon="person"
+					icon="sell"
 					:headline="$t('tags')"
 					:subTitle="$t('manage_tags')"
 					textContent=""

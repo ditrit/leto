@@ -90,7 +90,7 @@ export default {
 							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
 					},
 					{
-						name: "Product Two - 3",
+						name: "Workspace Two - 3",
 						repo: "gitRepo Two",
 						description:
 							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
@@ -101,25 +101,25 @@ export default {
 				slideName: 3,
 				cards: [
 					{
-						name: "Product Three",
+						name: "Workspace Three",
 						repo: "gitRepo Three",
 						description:
 							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
 					},
 					{
-						name: "Product Three - 1",
+						name: "Workspace Three - 1",
 						repo: "gitRepo Three",
 						description:
 							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
 					},
 					{
-						name: "Product Three - 2",
+						name: "Workspace Three - 2",
 						repo: "gitRepo Three",
 						description:
 							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
 					},
 					{
-						name: "Product Three - 3",
+						name: "Workspace Three - 3",
 						repo: "gitRepo Three",
 						description:
 							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
