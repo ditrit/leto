@@ -44,7 +44,7 @@
 										</q-item>
 										<q-item clickable @click="addFavorite(item)">
 											<q-item-section>
-												<q-icon name="star" size="1.5em" class="q-mr-sm" />
+												<q-icon name="favorite" size="1.5em" class="q-mr-sm" />
 												{{ $t("favorite") }}</q-item-section
 											>
 										</q-item>

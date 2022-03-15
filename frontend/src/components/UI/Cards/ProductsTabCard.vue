@@ -53,7 +53,7 @@
 									</q-item>
 									<q-item clickable @click.prevent="favoriteItem(item)">
 										<q-item-section class="action_card__item">
-											<q-icon name="star" size="1.5em" class="q-mr-sm" />
+											<q-icon name="favorite" size="1.5em" class="q-mr-sm" />
 											Favorite
 										</q-item-section>
 									</q-item>
