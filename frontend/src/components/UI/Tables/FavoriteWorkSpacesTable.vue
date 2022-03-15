@@ -149,97 +149,89 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddUserDialog" persistent position="bottom">
-			<q-card style="width: 750px; max-width: 80vw">
-				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("create_user") }}</div>
-				</q-card-section>
-
-				<q-card-section class="q-pt-none">
-					<q-form
-						@submit.prevent="onSubmitAdd"
-						@reset="onResetAdd"
-						class="q-gutter-md q-pa-md"
-					>
-						<div class="row col-md-12 q-gutter-sm">
-							<div class="col">
-								<q-input
-									filled
-									label="Your First Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userFirstName"
-								/>
-							</div>
-
-							<div class="col q-pl-md">
-								<q-input
-									filled
-									label="Your Last Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userLastName"
-								/>
-							</div>
-						</div>
-						<div class="row col-md-12 q-gutter-sm">
-							<div class="col">
-								<q-input
-									filled
-									label="Your Email *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userEmail"
-								/>
-							</div>
-							<div class="col q-pl-md">
-								<q-input
-									filled
-									label="Your password *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userPassword"
-								/>
-							</div>
-						</div>
-						<div class="row col-md-12 q-gutter-sm">
-							<div class="col">
-								<q-input
-									filled
-									type="textarea"
-									label="Descripiton *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="userDescription"
-								/>
-							</div>
-						</div>
-						<q-card-actions
-							align="right"
-							class="text-primary flex justify-center"
-						>
-							<q-btn type="reset" label="Cancel" v-close-popup />
-							<q-btn
-								label="Create"
-								type="submit"
-								color="primary"
-								v-close-popup
+		<Modal class="modalGlobal" v-model="openAddUserDialog">
+			<template v-slot:ModalTitle>
+				{{ $t("edit_workspace") }}
+			</template>
+			<template v-slot:ModalContent>
+				<q-form
+					@submit.prevent="onSubmitAdd"
+					@reset="onResetAdd"
+					class="q-gutter-md q-pa-md"
+				>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col">
+							<q-input
+								filled
+								label="Your First Name *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+								v-model="userFirstName"
 							/>
-						</q-card-actions>
-					</q-form>
-				</q-card-section>
-			</q-card>
-		</q-dialog>
+						</div>
+
+						<div class="col q-pl-md">
+							<q-input
+								filled
+								label="Your Last Name *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+								v-model="userLastName"
+							/>
+						</div>
+					</div>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col">
+							<q-input
+								filled
+								label="Your Email *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+								v-model="userEmail"
+							/>
+						</div>
+						<div class="col q-pl-md">
+							<q-input
+								filled
+								label="Your password *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+								v-model="userPassword"
+							/>
+						</div>
+					</div>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col">
+							<q-input
+								filled
+								type="textarea"
+								label="Descripiton *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+								v-model="userDescription"
+							/>
+						</div>
+					</div>
+					<q-card-actions
+						align="right"
+						class="text-primary flex justify-center"
+					>
+						<q-btn type="reset" label="Cancel" v-close-popup />
+						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
+			</template>
+		</Modal>
 	</div>
 </template>
 
