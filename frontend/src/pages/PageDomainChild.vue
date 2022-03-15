@@ -179,7 +179,7 @@ export default defineComponent({
 		const filterRef = ref(null);
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
-		const selected = ref("root");
+		const selected = ref("DDS");
 
 		let {
 			menu,

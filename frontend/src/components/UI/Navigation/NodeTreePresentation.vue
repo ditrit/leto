@@ -428,7 +428,7 @@ export default {
 
 		return {
 			splitterModel: ref(35),
-			selected: ref("Root"),
+			selected: ref("Tag Two"),
 			AddTag,
 			parentTag,
 			EditTag,

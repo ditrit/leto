@@ -58,7 +58,7 @@ export default defineComponent({
 .favorite_content
   width: 1000px
   padding: 0
-  margin-top: -20px
+  margin-top: -60px
 
 .title_container
   display: flex

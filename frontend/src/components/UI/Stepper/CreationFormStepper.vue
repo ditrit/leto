@@ -156,7 +156,7 @@ export default {
 
 	/**
 	 * TODO
-	 * 	1 - Add props and get aldomaies data from TeamPage
+	 * 	1 - Add props and get all domaines data from TeamPage
 	 */
 
 	setup() {
