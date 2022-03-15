@@ -80,7 +80,7 @@
 						/>
 					</div>
 					<!-- Products Creation dialog -->
-					<modal class="modalGlobal" v-model="isCreationProductsOpened">
+					<Modal class="modalGlobal" v-model="isCreationProductsOpened">
 						<template v-slot:ModalTitle> {{ $t("add_product") }} </template>
 						<template v-slot:ModalContent>
 							<q-form
@@ -170,7 +170,7 @@
 								</q-card-actions>
 							</q-form>
 						</template>
-					</modal>
+					</Modal>
 				</q-tab-panel>
 				<q-tab-panel name="requirements" class="flex q-gutter-md">
 					<div class="cards_wrapper">
@@ -410,109 +410,98 @@
 							/>
 						</div>
 						<!-- Environments Creation dialog -->
-						<q-dialog
-							v-model="isEnvironmentsCreationOpened"
-							persistent
-							position="bottom"
-						>
-							<q-card style="width: 750px; max-width: 80vw">
-								<q-card-section>
-									<div class="text-h6 q-pa-md">
-										{{ $t("create_environment") }}
-									</div>
-								</q-card-section>
-
-								<q-card-section class="q-pt-none">
-									<q-form
-										@submit.prevent="addNewEnvironment"
-										@reset="onResetEnvironment"
-										class="q-gutter-sm q-pa-md"
-									>
-										<div class="row col-md-12 q-gutter-md">
-											<div class="col">
-												<q-input
-													filled
-													label="Name *"
-													hint=""
-													lazy-rules
-													:rules="[
-														(val) =>
-															(val && val.length > 0) ||
-															'Please type something',
-													]"
-													v-model="environmentName"
-												/>
-											</div>
-											<div class="col">
-												<q-select
-													filled
-													:options="optionsSelections"
-													label="Environment Type"
-													v-model="selectedParentData"
-												/>
-											</div>
-										</div>
-										<q-input
-											class="q-gutter-md"
-											filled
-											label="Short Description *"
-											lazy-rules
-											:rules="[
-												(val) =>
-													(val && val.length > 0) || 'Please type something',
-											]"
-											v-model="environmentShortDescription"
-										/>
-
-										<div class="row q-gutter-md">
-											<div class="col col-md-8">
-												<q-input
-													class="q-gutter-md"
-													filled
-													type="textarea"
-													label="Description *"
-													lazy-rules
-													:rules="[
-														(val) =>
-															(val && val.length > 0) ||
-															'Please type something',
-													]"
-													v-model="environmentDescription"
-												/>
-											</div>
-											<div class="col">
-												<q-uploader
-													style="max-width: 100%"
-													url="http://localhost:3000/upload"
-													label="Your Logo"
-													multiple
-													accept=".jpg, svg, image/*"
-													@rejected="onRejected"
-													color="primary"
-													factory
-													files
-													hide-upload-btn="true"
-													auto-upload
-													@uploaded="onFileUpload"
-												/>
-											</div>
-										</div>
-										<q-card-actions
-											align="right"
-											class="text-primary flex justify-center"
-										>
-											<q-btn type="reset" label="Cancel" v-close-popup />
-											<q-btn
-												label="Create"
-												type="submit"
-												color="primary"
-												v-close-popup
+						<Modal class="modalGlobal" v-model="isEnvironmentsCreationOpened">
+							<template v-slot:ModalTitle>
+								{{ $t("create_environment") }}
+							</template>
+							<template v-slot:ModalContent>
+								<q-form
+									@submit.prevent="addNewEnvironment"
+									@reset="onResetEnvironment"
+									class="q-gutter-sm q-pa-md"
+								>
+									<div class="row col-md-12 q-gutter-md">
+										<div class="col">
+											<q-input
+												filled
+												label="Name *"
+												hint=""
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="environmentName"
 											/>
-										</q-card-actions>
-									</q-form>
-								</q-card-section>
-							</q-card>
-						</q-dialog>
+										</div>
+										<div class="col">
+											<q-select
+												filled
+												:options="optionsSelections"
+												label="Environment Type"
+												v-model="selectedParentData"
+											/>
+										</div>
+									</div>
+									<q-input
+										class="q-gutter-md"
+										filled
+										label="Short Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+										v-model="environmentShortDescription"
+									/>
+
+									<div class="row q-gutter-md">
+										<div class="col col-md-8">
+											<q-input
+												class="q-gutter-md"
+												filled
+												type="textarea"
+												label="Description *"
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="environmentDescription"
+											/>
+										</div>
+										<div class="col">
+											<q-uploader
+												style="max-width: 100%"
+												url="http://localhost:3000/upload"
+												label="Your Logo"
+												multiple
+												accept=".jpg, svg, image/*"
+												@rejected="onRejected"
+												color="primary"
+												factory
+												files
+												hide-upload-btn="true"
+												auto-upload
+												@uploaded="onFileUpload"
+											/>
+										</div>
+									</div>
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Create"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</template>
+						</Modal>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
