@@ -16,7 +16,7 @@
 					dense
 					name="authorizations"
 					label="Authorizations"
-					icon="group"
+					icon="reduce_capacity"
 				/>
 				<q-tab dense name="libraries" label="Libraries" icon="library_books" />
 				<q-tab

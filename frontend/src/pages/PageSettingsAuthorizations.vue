@@ -44,7 +44,7 @@
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak">
 				<PageContent
-					icon="person"
+					icon="reduce_capacity"
 					:headline="$t('authorization')"
 					:subTitle="$t('manage_autorization')"
 					textContent=""
