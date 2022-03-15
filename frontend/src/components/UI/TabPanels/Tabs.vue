@@ -235,59 +235,52 @@
 						/>
 					</div>
 					<!-- Authorizations Creation dialog -->
-					<q-dialog
-						v-model="isAuthorCreationOpened"
-						persistent
-						position="bottom"
-					>
-						<q-card style="width: 750px; max-width: 80vw">
-							<q-card-section>
-								<div class="text-h6 q-pa-md">{{ $t("add_authorization") }}</div>
-							</q-card-section>
+					<Modal class="modalGlobal" v-model="isAuthorCreationOpened">
+						<template v-slot:ModalTitle>
+							{{ $t("add_authorization") }}
+						</template>
+						<template v-slot:ModalContent>
+							<q-form
+								@submit.prevent="onSubmitAuthorization"
+								@reset="onResetAuthorization"
+								class="q-gutter-sm q-pa-md"
+							>
+								<q-select
+									filled
+									v-model="authorizationNameRef"
+									:options="usersList"
+									label="Choose a user"
+								/>
+								<q-select
+									filled
+									v-model="authorizationRoleRef"
+									:options="roleList"
+									label="Choose a role"
+								/>
+								<div class="col" disabled>
+									<q-select
+										disabled
+										filled
+										label="Domain"
+										v-model="authorizationDomainNameRef"
+									/>
+								</div>
 
-							<q-card-section class="q-pt-none">
-								<q-form
-									@submit.prevent="onSubmitAuthorization"
-									@reset="onResetAuthorization"
-									class="q-gutter-sm q-pa-md"
+								<q-card-actions
+									align="right"
+									class="text-primary flex justify-center q-mt-lg q-pt-md"
 								>
-									<q-select
-										filled
-										v-model="authorizationNameRef"
-										:options="usersList"
-										label="Choose a user"
+									<q-btn type="reset" label="Cancel" v-close-popup />
+									<q-btn
+										label="Update"
+										type="submit"
+										color="primary"
+										v-close-popup
 									/>
-									<q-select
-										filled
-										v-model="authorizationRoleRef"
-										:options="roleList"
-										label="Choose a role"
-									/>
-									<div class="col" disabled>
-										<q-select
-											disabled
-											filled
-											label="Domain"
-											v-model="authorizationDomainNameRef"
-										/>
-									</div>
-
-									<q-card-actions
-										align="right"
-										class="text-primary flex justify-center q-mt-lg q-pt-md"
-									>
-										<q-btn type="reset" label="Cancel" v-close-popup />
-										<q-btn
-											label="Update"
-											type="submit"
-											color="primary"
-											v-close-popup
-										/>
-									</q-card-actions>
-								</q-form>
-							</q-card-section>
-						</q-card>
-					</q-dialog>
+								</q-card-actions>
+							</q-form>
+						</template>
+					</Modal>
 				</q-tab-panel>
 
 				<q-tab-panel name="libraries" class="flex q-gutter-md">
