@@ -20,12 +20,12 @@
 						</template>
 					</q-input>
 					<q-tree
-						default-expand-all="true"
 						:nodes="tagsTree"
 						node-key="label"
 						selected-color="primary"
 						v-model:selected="selected"
 						:filter="filterTag"
+						default-expand-all
 					/>
 				</div>
 			</template>
@@ -231,7 +231,6 @@ export default {
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
-		const selected = ref("root");
 		const tagData = ref(null);
 		const tagDatalabel = ref(null);
 		const parentTag = ref(null);
@@ -429,7 +428,7 @@ export default {
 
 		return {
 			splitterModel: ref(35),
-			selected,
+			selected: ref("Root"),
 			AddTag,
 			parentTag,
 			EditTag,
