@@ -20,11 +20,11 @@
 						</template>
 					</q-input>
 					<q-tree
+						default-expand-all="true"
 						:nodes="tagsTree"
 						node-key="label"
 						selected-color="primary"
 						v-model:selected="selected"
-						default-expand-all
 						:filter="filterTag"
 					/>
 				</div>

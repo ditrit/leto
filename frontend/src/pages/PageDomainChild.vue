@@ -43,8 +43,8 @@
 						:nodes="menu"
 						node-key="label"
 						:filter="filter"
-						default-expand-all
 						v-model:selected="selected"
+						default-expand-all
 					/>
 				</div>
 			</template>
@@ -179,7 +179,7 @@ export default defineComponent({
 		const filterRef = ref(null);
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
-		const selected = ref(null);
+		const selected = ref("root");
 
 		let {
 			menu,
