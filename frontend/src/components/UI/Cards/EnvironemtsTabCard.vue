@@ -213,6 +213,7 @@ export default {
 		const environmentProductRepositoryURL = ref(props.productRepositoryURL);
 		const environmentTypeIDRef = ref(props.environmentTypeID);
 		const environmentDomainID = ref(props.domainID);
+		const environmentTypeNameRef = ref(props.environmentTypeName);
 		const isOpened = ref(false);
 
 		let {
@@ -220,7 +221,6 @@ export default {
 			optionsSelections,
 			getAllEnviTypes,
 			updateEnvironement,
-			environmentTypeNameRef,
 		} = useEnvironmentsTabsData(props);
 
 		const openEditionModal = (props) => {
@@ -259,7 +259,9 @@ export default {
 				environmentTypeID: props.id,
 				environmentTypeName: environmentTypeNameRef.value,
 			};
+			environmentTypeNameRef.value = updates.environmentTypeName;
 			emit("updateAction", updates);
+			console.log("updates: ", updates);
 			await store
 				.dispatch("appEnvironment/updateEnvironment", updates)
 				.then(() => {
@@ -310,7 +312,7 @@ export default {
 			optionsSelections,
 			getAllEnviTypes,
 			updateEnvironement,
-			environmentTypeNameRef: ref(props.environmentTypeName),
+			environmentTypeNameRef,
 		};
 	},
 };
