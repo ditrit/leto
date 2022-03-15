@@ -45,6 +45,53 @@
 				</q-td>
 			</template>
 		</q-table>
+		<!-- Create Dialog -->
+		<Modal class="modalGlobal" v-model="openAddAuthorizationDialog">
+			<template v-slot:ModalTitle> {{ $t("create_authorization") }} </template>
+			<template v-slot:ModalContent>
+				<q-form
+					@submit.prevent="onSubmitAdd(props)"
+					@reset="onResetAdd"
+					class="q-gutter-md q-pa-md"
+				>
+					<div class="col-md-12 q-gutter-md">
+						<div class="col">
+							<q-select
+								filled
+								:options="usersList"
+								label="User"
+								v-model="authorisationUser"
+							/>
+						</div>
+						<div class="col">
+							<q-select
+								filled
+								:options="roleList"
+								label="Role"
+								v-model="authorizationRole"
+							/>
+						</div>
+						<div class="col">
+							<q-select
+								filled
+								:options="domainList"
+								label="Domain"
+								v-model="authorizsationDomain"
+							/>
+						</div>
+					</div>
+
+					<q-card-actions
+						align="right"
+						class="text-primary flex justify-center"
+					>
+						<q-btn type="reset" label="Cancel" v-close-popup />
+						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
+			</template>
+		</Modal>
+
 		<!-- Modification Dialog -->
 		<Modal class="modalGlobal" v-model="opendEditAuthorizationDialog">
 			<template v-slot:ModalTitle>
@@ -89,53 +136,6 @@
 					>
 						<q-btn type="reset" label="Cancel" v-close-popup />
 						<q-btn label="Update" type="submit" color="primary" v-close-popup />
-					</q-card-actions>
-				</q-form>
-			</template>
-		</Modal>
-
-		<!-- Create Dialog -->
-		<Modal class="modalGlobal" v-model="openAddAuthorizationDialog">
-			<template v-slot:ModalTitle> {{ $t("create_authorization") }} </template>
-			<template v-slot:ModalContent>
-				<q-form
-					@submit.prevent="onSubmitAdd(props)"
-					@reset="onResetAdd"
-					class="q-gutter-md q-pa-md"
-				>
-					<div class="col-md-12 q-gutter-md">
-						<div class="col">
-							<q-select
-								filled
-								:options="usersList"
-								label="User"
-								v-model="authorisationUser"
-							/>
-						</div>
-						<div class="col">
-							<q-select
-								filled
-								:options="roleList"
-								label="Role"
-								v-model="authorizationRole"
-							/>
-						</div>
-						<div class="col">
-							<q-select
-								filled
-								:options="domainList"
-								label="Domain"
-								v-model="authorizsationDomain"
-							/>
-						</div>
-					</div>
-
-					<q-card-actions
-						align="right"
-						class="text-primary flex justify-center"
-					>
-						<q-btn type="reset" label="Cancel" v-close-popup />
-						<q-btn label="Create" type="submit" color="primary" v-close-popup />
 					</q-card-actions>
 				</q-form>
 			</template>

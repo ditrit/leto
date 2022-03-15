@@ -9,6 +9,46 @@
 				@click.prevent="AddRequirement"
 			/>
 		</div>
+
+		<q-table
+			:key="updateKey"
+			title=""
+			:rows="rowsData"
+			:columns="columns"
+			:fullscreen="fullscreen"
+			:grid="$q.screen.xs"
+			row-key="name"
+			field
+			table-header-class="table_header"
+		>
+			<template v-slot:body-cell-avatar="props">
+				<q-td :props="props">
+					<q-avatar size="26px">
+						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+					</q-avatar>
+				</q-td>
+			</template>
+			<template v-slot:body-cell-actionsButtons="props">
+				<q-td :props="props">
+					<q-btn
+						dense
+						round
+						flat
+						color="grey"
+						@click="editRow(props.row)"
+						icon="edit"
+					></q-btn>
+					<q-btn
+						dense
+						round
+						flat
+						color="grey"
+						@click="confirm(props.row)"
+						icon="delete"
+					></q-btn>
+				</q-td>
+			</template>
+		</q-table>
 		<!-- Create Dialog -->
 		<Modal class="modalGlobal" v-model="isOpened">
 			<template v-slot:ModalTitle> {{ $t("create_requirements") }} </template>
@@ -129,45 +169,6 @@
 				</q-card-section>
 			</template>
 		</Modal>
-		<q-table
-			:key="updateKey"
-			title=""
-			:rows="rowsData"
-			:columns="columns"
-			:fullscreen="fullscreen"
-			:grid="$q.screen.xs"
-			row-key="name"
-			field
-			table-header-class="table_header"
-		>
-			<template v-slot:body-cell-avatar="props">
-				<q-td :props="props">
-					<q-avatar size="26px">
-						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-					</q-avatar>
-				</q-td>
-			</template>
-			<template v-slot:body-cell-actionsButtons="props">
-				<q-td :props="props">
-					<q-btn
-						dense
-						round
-						flat
-						color="grey"
-						@click="editRow(props.row)"
-						icon="edit"
-					></q-btn>
-					<q-btn
-						dense
-						round
-						flat
-						color="grey"
-						@click="confirm(props.row)"
-						icon="delete"
-					></q-btn>
-				</q-td>
-			</template>
-		</q-table>
 
 		<!-- Edit Dialog -->
 		<Modal
