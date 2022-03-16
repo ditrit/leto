@@ -70,14 +70,22 @@ export default {
 		const store = useStore();
 		const router = useRouter();
 		const user = ref(null);
-		user.value = store.getters["auth/user"];
-
+		const refresh = () => {
+			window.addEventListener("beforeunload", (event) => {
+				console.log("event: ", event);
+			});
+		};
+		refresh();
 		const getToken = async () => {
 			const token = await localStorage.getItem("user");
+			console.log("token: ", token);
 			if (token) {
-				return user;
+				user.value = store.getters["auth/user"];
+				console.log("user: ", user.value);
+			} else {
+				user.value = store.getters["auth/user"];
+				console.log("user2: ", user.value);
 			}
-			return null;
 		};
 		getToken();
 

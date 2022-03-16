@@ -40,7 +40,7 @@
 			</template>
 			<template v-slot:drawerMenu>
 				<div class="q-pa-md q-gutter-sm" v-if="menu">
-					<q-tree :nodes="menu" node-key="label" />
+					<q-tree :nodes="menu" node-key="label" default-expand-all />
 				</div>
 			</template>
 		</Drawer>
