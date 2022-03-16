@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -21,7 +21,7 @@ export default function useDomainData(props) {
 		const allDomainTree = computed(
 			() => store.getters["appDomain/allDomainesTree"]
 		);
-		console.log("(menu.value: ", menu.value);
+
 		return (menu.value = [
 			{
 				id: allDomainTree?.value?.ID,
@@ -59,6 +59,7 @@ export default function useDomainData(props) {
 			},
 		]);
 	};
+	console.log("(menu.value: ", menu.value);
 	getMenuData();
 	const rigthData = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", `${id}`);
@@ -183,6 +184,9 @@ export default function useDomainData(props) {
 				console.log("Cancel");
 			});
 	};
+	watch(menu, () => {
+		getMenuData();
+	});
 
 	return {
 		$q,
