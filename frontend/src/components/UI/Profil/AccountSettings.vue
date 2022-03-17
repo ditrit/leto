@@ -75,15 +75,16 @@ export default {
 				console.log("event: ", event);
 			});
 		};
-		refresh();
+		// refresh();
 		const getToken = async () => {
-			const token = await localStorage.getItem("user");
+			const token = localStorage.getItem("user");
 			console.log("token: ", token);
+			store.dispatch("auth/currentUser");
 			if (token) {
-				user.value = store.getters["auth/user"];
+				user.value = store.getters["auth/currentUser"];
 				console.log("user: ", user.value);
 			} else {
-				user.value = store.getters["auth/user"];
+				user.value = store.getters["auth/currentUser"];
 				console.log("user2: ", user.value);
 			}
 		};
