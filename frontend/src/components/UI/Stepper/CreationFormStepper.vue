@@ -209,33 +209,42 @@ export default {
 			// await store.dispatch("appFiles/uploadFile", imagesUID, formData);
 
 			await API.post(`/file/${imagesUID}`, formData).then((res) => {
-				// avatarUrl.value = res.request.responseURL;
 				// avatarUrl.value = res.config.url;
 
 				console.log("res.data", res.data);
 				console.log("res", res);
 				console.log("res.config.url", res.config.url);
 			});
-			console.log("	base64.value: ", base64.value);
-			console.log("file: ", file);
 			getFile();
+
+			// console.log("file: ", file);
+			// avatarUrl.value = file;
+
+			// let fileReader = new FileReader();
+			// fileReader.readAsDataURL(res);
+			// avatarUrl.value = fileReader.result;
+			// console.log("fileReader.result: ", fileReader.result);
+			// console.log("avatarUrl.value : ", avatarUrl.value);
 		};
 
 		const getFile = async () => {
-			let target = await API.get(`/file/${imagesUID}`, {
-				headers: headers,
+			await API.get(`/file/${imagesUID}`).then((res) => {
+				// console.log(res.data);
+				let imagLink = res.request.responseURL;
+				const array = [imagLink]; // an array consisting of a single DOMString
+				console.log("array: ", array);
+				const blob = new Blob(array, { type: "image/png" });
+				console.log("blob: ", blob);
+				parseURI(blob).then((res) => {
+					console.log("res: ", res);
+					avatarUrl.value = res;
+				});
+				// let fileReader = new FileReader();
+				// fileReader.readAsDataURL(array);
+				// avatarUrl.value = fileReader.result;
+				// console.log("fileReader.result: ", fileReader.result);
+				// console.log("avatarUrl.value : ", avatarUrl.value);
 			});
-			// let response = store.dispatch("appFiles/downloadFile", imagesUID);
-			console.log("target: ", target);
-			// console.log("response: ", response);
-
-			const array = [target.request.responseURL]; // an array consisting of a single DOMString
-			console.log("array: ", array);
-			const blob = new Blob(array, { type: "image/png" });
-			console.log("blob: ", blob);
-			// parseURI(blob).then((res) => {
-			// 	console.log("res", res);
-			// });
 		};
 
 		const parseURI = async (d) => {
