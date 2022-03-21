@@ -58,71 +58,44 @@ export default {
 		const password = ref(null);
 		const error = ref(null);
 
-		const login = async () => {
-			const newUser = {
-				email: email.value,
-				password: password.value,
-			};
-			console.log("newUser: ", newUser);
-			await store
-				.dispatch("auth/login", newUser)
-				.then(() => {
-					$q.notify({
-						color: "green-4",
-						textColor: "white",
-						icon: "cloud_done",
-						message: "Login successfully",
-					});
-				})
-				.then(() => {
-					router.push("/dashboard");
-				})
-				.catch(() => {
-					$q.notify({
-						color: "negative",
-						textColor: "white",
-						icon: "error",
-						message: "Sorry,you can not login",
-					});
-				});
-		};
-
 		return {
 			email,
 			password,
 			error,
 			isPwd,
-			login,
-			// login() {
-			// 	const newUser = {
-			// 		email: email.value,
-			// 		password: password.value,
-			// 	};
-			// 	console.log("newUser: ", newUser);
-			// 	// store.dispatch("auth/login", newUser);
+			login() {
+				const newUser = {
+					email: email.value,
+					password: password.value,
+				};
+				console.log("newUser: ", newUser);
+				// store.dispatch("auth/login", newUser);
+				// store.dispatch("auth/login", newUser);
+				store
+					.dispatch("auth/login", newUser)
 
-			// 	store
-			// 		.dispatch("auth/login", newUser)
-			// 		.then(() => {
-			// 			$q.notify({
-			// 				color: "green-4",
-			// 				textColor: "white",
-			// 				icon: "cloud_done",
-			// 				message: "Login successfully",
-			// 			});
+					.then(() => {
+						$q.notify({
+							color: "green-4",
+							textColor: "white",
+							icon: "cloud_done",
+							message: "Login successfully",
+						});
+					})
+					.then(() => {
+						store.dispatch("auth/currentUser");
+						router.push("/dashboard");
+					})
 
-			// 			store.dispatch("auth/currentUser");
-			// 			router.push("/dashboard");
-			// 		})
-			// 		.catch(() => {
-			// 			$q.notify({
-			// 				color: "negative",
-			// 				textColor: "white",
-			// 				icon: "error",
-			// 				message: "Sorry,you can not login",
-			// 			});
-			// 		});
-			// },
+					.catch(() => {
+						$q.notify({
+							color: "negative",
+							textColor: "white",
+							icon: "error",
+							message: "Sorry,you can not login",
+						});
+					});
+			},
 		};
 	},
 };
