@@ -67,5 +67,9 @@ cd gandalf/core/
 - Run this command:
 
 ```bash
+./prepare_docker.sh
+```
+
+```bash
 ./testbackend.sh run <Storage> <-- This is optional
 ```
