@@ -50,7 +50,11 @@ quasar build
 Clone :
 
 ```bash
-git clone --branch swaggerAPI https://github.com/ditrit/gandalf.git
+git clone  https://github.com/ditrit/gandalf.git
+```
+
+```bash
+git checkout develop
 ```
 
 Cd :
