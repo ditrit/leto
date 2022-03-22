@@ -70,25 +70,28 @@ export default {
 		const store = useStore();
 		const router = useRouter();
 		const user = ref(null);
-		const refresh = () => {
-			window.addEventListener("beforeunload", (event) => {
-				console.log("event: ", event);
-			});
-		};
-		refresh();
-		const getToken = async () => {
-			const token = localStorage.getItem("user");
-			console.log("token: ", token);
-			store.dispatch("auth/currentUser");
-			if (token) {
-				user.value = store.getters["auth/currentUser"];
-				console.log("user: ", user.value);
-			} else {
-				user.value = store.getters["auth/currentUser"];
-				console.log("user2: ", user.value);
-			}
-		};
-		getToken();
+
+		user.value = store.getters["auth/currentUser"];
+
+		// const refresh = () => {
+		// 	window.addEventListener("beforeunload", (event) => {
+		// 		console.log("event: ", event);
+		// 	});
+		// };
+		// refresh();
+		// const getToken = async () => {
+		// 	const token = localStorage.getItem("user");
+		// 	console.log("token: ", token);
+		// 	store.dispatch("auth/currentUser");
+		// 	if (token) {
+		// 		user.value = store.getters["auth/currentUser"];
+		// 		console.log("user: ", user.value);
+		// 	} else {
+		// 		user.value = store.getters["auth/currentUser"];
+		// 		console.log("user2: ", user.value);
+		// 	}
+		// };
+		// getToken();
 
 		const logout = () => {
 			store.dispatch("auth/logout");

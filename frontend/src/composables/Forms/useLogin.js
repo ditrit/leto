@@ -18,9 +18,9 @@ export default function useLoginbData() {
 			password: password.value,
 		};
 		console.log("newUser: ", newUser);
-		store.dispatch("auth/login", newUser);
+		store.dispatch("auth/currentUser");
 		await store
-			.dispatch("auth/currentUser")
+			.dispatch("auth/login", newUser)
 			.then(() => {
 				$q.notify({
 					color: "green-4",
