@@ -37,7 +37,7 @@
 					</q-avatar>
 
 					<div class="q-mt-md q-mb-xs">
-						Hi, {{ user.FirstName }} {{ user.LastName }}
+						Hi, {{ user.user.FirstName }} {{ user.user.LastName }}
 					</div>
 
 					<q-btn

@@ -12,6 +12,7 @@ export const login = ({ commit }, credentials) => {
 	return API.post("/user/login", credentials)
 		.then(({ data }) => {
 			commit("SET_USER_DATA", data);
+			console.log("data: ", data);
 		})
 		.catch((err) => console.log(err));
 };

@@ -21,6 +21,7 @@ export default function useLoginbData() {
 		store.dispatch("auth/currentUser");
 		await store
 			.dispatch("auth/login", newUser)
+
 			.then(() => {
 				$q.notify({
 					color: "green-4",
