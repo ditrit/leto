@@ -7,8 +7,6 @@ export default boot(async ({ store }) => {
 		const userString = localStorage.getItem("user");
 		if (userString) {
 			const userData = userString;
-			console.log("userData: ", userData.user);
-			//store.commit("SET_USER_DATA", userData);
 			store.dispatch("auth/currentUser", JSON.parse(userData));
 		}
 	};

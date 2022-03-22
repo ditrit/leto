@@ -3,7 +3,7 @@
 		<q-item clickable>
 			<q-item-section>
 				<q-avatar round size="40px" v-if="user">
-					<img :src="user.Logo ? user.Logo : logo" />
+					<img :src="user.user.Logo ? user.user.Logo : logo" />
 				</q-avatar>
 			</q-item-section>
 		</q-item>
@@ -33,7 +33,7 @@
 
 				<div class="column" v-if="user">
 					<q-avatar size="72px">
-						<img :src="user.Logo ? user.Logo : logo" />
+						<img :src="user.user.Logo ? user.user.Logo : logo" />
 					</q-avatar>
 
 					<div class="q-mt-md q-mb-xs">
@@ -69,29 +69,6 @@ export default {
 	setup() {
 		const store = useStore();
 		const router = useRouter();
-		const user = ref(null);
-
-		user.value = store.getters["auth/currentUser"];
-
-		// const refresh = () => {
-		// 	window.addEventListener("beforeunload", (event) => {
-		// 		console.log("event: ", event);
-		// 	});
-		// };
-		// refresh();
-		// const getToken = async () => {
-		// 	const token = localStorage.getItem("user");
-		// 	console.log("token: ", token);
-		// 	store.dispatch("auth/currentUser");
-		// 	if (token) {
-		// 		user.value = store.getters["auth/currentUser"];
-		// 		console.log("user: ", user.value);
-		// 	} else {
-		// 		user.value = store.getters["auth/currentUser"];
-		// 		console.log("user2: ", user.value);
-		// 	}
-		// };
-		// getToken();
 
 		const logout = () => {
 			store.dispatch("auth/logout");
@@ -99,7 +76,7 @@ export default {
 		};
 
 		return {
-			user,
+			user: store.getters["auth/currentUser"],
 			logout,
 		};
 	},
