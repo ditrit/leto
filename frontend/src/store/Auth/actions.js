@@ -13,7 +13,7 @@ export const login = ({ commit }, credentials) => {
 		.then(({ data }) => {
 			commit("SET_USER_DATA", data);
 		})
-		.catch((err) => throw err);
+		.catch((err) => console.log(err));
 };
 
 export const currentUser = ({ commit }, user) => {

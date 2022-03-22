@@ -1,16 +1,46 @@
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 
 export default function useLoginbData() {
-	const isPwd = ref(true);
 	const router = useRouter();
-	const $q = useQuasar();
 	const store = useStore();
+	const $q = useQuasar();
+	const isPwd = ref(true);
 	const email = ref(null);
 	const password = ref(null);
 	const error = ref(null);
+
+	const login = async () => {
+		const newUser = {
+			email: email.value,
+			password: password.value,
+		};
+		console.log("newUser: ", newUser);
+		store.dispatch("auth/login", newUser);
+		await store
+			.dispatch("auth/currentUser")
+			.then(() => {
+				$q.notify({
+					color: "green-4",
+					textColor: "white",
+					icon: "cloud_done",
+					message: "Login successfully",
+				});
+			})
+			.then(() => {
+				router.push("/dashboard");
+			})
+			.catch(() => {
+				$q.notify({
+					color: "negative",
+					textColor: "white",
+					icon: "error",
+					message: "Sorry,you can not login",
+				});
+			});
+	};
 
 	return {
 		isPwd,
@@ -20,5 +50,6 @@ export default function useLoginbData() {
 		email,
 		password,
 		error,
+		login,
 	};
 }

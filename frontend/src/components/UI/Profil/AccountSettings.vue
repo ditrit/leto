@@ -75,7 +75,7 @@ export default {
 				console.log("event: ", event);
 			});
 		};
-		// refresh();
+		refresh();
 		const getToken = async () => {
 			const token = localStorage.getItem("user");
 			console.log("token: ", token);
