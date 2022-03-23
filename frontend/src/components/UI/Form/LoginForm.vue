@@ -49,6 +49,35 @@ export default {
 	setup() {
 		let { isPwd, email, password, error, login } = useLoginData();
 
+		const login = async () => {
+			const newUser = {
+				email: email.value,
+				password: password.value,
+			};
+			console.log("newUser: ", newUser);
+			await store
+				.dispatch("auth/login", newUser)
+				.then(() => {
+					$q.notify({
+						color: "green-4",
+						textColor: "white",
+						icon: "cloud_done",
+						message: "Login successfully",
+					});
+				})
+				.then(() => {
+					router.push("/dashboard");
+				})
+				.catch(() => {
+					$q.notify({
+						color: "negative",
+						textColor: "white",
+						icon: "error",
+						message: "Sorry,you can not login",
+					});
+				});
+		};
+
 		return {
 			email,
 			password,
