@@ -27,7 +27,6 @@ const httpCommands = [
 ];
 
 export const execute = ({ getters }, command) => {
-	console.log(command);
 	const defaultCommandOption = {
 		fs: BrowserFS.BFSRequire("fs"),
 		dir: command.product.ID,

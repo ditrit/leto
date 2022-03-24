@@ -7,7 +7,7 @@ if (localStorage.getItem("user")) {
 	API.interceptors.request.use(
 		(config) => {
 			let params = new URLSearchParams();
-			const { accessToken, user } = JSON.parse(localStorage.getItem("user"));
+			const { accessToken } = JSON.parse(localStorage.getItem("user"));
 			if (!config.headers.Authorization) {
 				axios.defaults.headers.common[
 					"Authorization"
@@ -27,7 +27,7 @@ if (localStorage.getItem("user")) {
 	API.interceptors.response.use(
 		(config) => {
 			let params = new URLSearchParams();
-			const { accessToken, user } = JSON.parse(localStorage.getItem("user"));
+			const { accessToken } = JSON.parse(localStorage.getItem("user"));
 
 			if (!config.headers.Authorization) {
 				axios.defaults.headers.common[

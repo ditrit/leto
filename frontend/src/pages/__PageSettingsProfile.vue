@@ -48,7 +48,7 @@
 					:headline="$t('profile')"
 					:subTitle="$t('manage_profile')"
 				/>
-				<div class="flex-col p_padding" v-if="user">
+				<div class="flex-col p_padding">
 					<div class="col">
 						<q-form
 							@submit="uploadAvatar"
@@ -73,7 +73,7 @@
 							</div>
 						</q-form>
 						<q-avatar class="q-my-lg" size="100px">
-							<img :src="user.Logo ? user.Logo : logo" />
+							<img :src="user.user.Logo ? user.user.Logo : logo" />
 						</q-avatar>
 					</div>
 					<div class="row">
@@ -225,17 +225,15 @@ export default {
 		const password = ref(null);
 		const confirmPassword = ref(null);
 
-		console.log("	logoID.value: ", logoID.value);
-
 		const currentUser = async () => {
-			let response = await store.getters["auth/user"];
-			logoID.value = imagesUID;
-			user.value = response;
-			console.log("user.value : ", user.value);
-			await store.dispatch("appFiles/downloadFile", `${logoID.value}`);
+			let response = store.getters["auth/currentUser"];
+			console.log("response: ", response);
+			// logoID.value = imagesUID;
+			// user.value = response;
+
+			//	await store.dispatch("appFiles/downloadFile", `${logoID.value}`);
 		};
 		currentUser();
-		console.log("	download avatar : ", avatar.value);
 
 		const OnEdit = () => {
 			disabled.value = !disabled.value;

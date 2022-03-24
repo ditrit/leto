@@ -228,9 +228,9 @@ export default {
 		console.log("	logoID.value: ", logoID.value);
 
 		const currentUser = async () => {
-			let response = await store.getters["auth/user"];
+			let response = await store.getters["auth/currentUser"];
 			logoID.value = imagesUID;
-			user.value = response;
+			user.value = response.user;
 			console.log("user.value : ", user.value);
 			await store.dispatch("appFiles/downloadFile", `${logoID.value}`);
 		};
