@@ -174,7 +174,6 @@ export default {
 		const SelectedDomain = ref([]);
 		const $q = useQuasar();
 		const avatarUrl = ref("");
-		const base64 = ref("");
 
 		function onRejected(rejectedEntries) {
 			$q.notify({
@@ -187,21 +186,6 @@ export default {
 		 * 	2 - regroupe functions by thematique
 		 */
 
-		// const uploadSingleFile = (file) => {
-		// 	const formData = new FormData();
-		// 	formData.append("id", imagesUID);
-		// 	formData.append("file", file[0], file[0].name);
-		// 	API.post(`http://localhost:5000/file/`, formData).then((res) => {
-		// 		avatarUrl.value = res.request.responseURL;
-		// 		console.log("avatarUrl.value: ", avatarUrl.value);
-		// 		console.log(res);
-		// 	});
-		// 	console.log("formData: ", formData);
-		// 	console.log("file: ", file);
-		// };
-		const headers = {
-			"Content-Type": "image/png",
-		};
 		const uploadFile = async (file) => {
 			const formData = new FormData();
 			formData.append("id", imagesUID);
@@ -276,8 +260,6 @@ export default {
 			imagesUID,
 			API,
 			uploadFile,
-			base64,
-			// uploadSingleFile,
 
 			onFileUpload(event) {},
 
@@ -289,6 +271,7 @@ export default {
 						teamParent: selectedParentData.value.parentName,
 						shortDescription: shortDescription.value,
 						description: description.value,
+						logo: avatarUrl.value,
 					};
 					if (newDomain.name.length && newDomain.teamParent.length) {
 						store.dispatch("appDomain/addDomain", newDomain);
