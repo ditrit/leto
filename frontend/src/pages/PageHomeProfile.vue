@@ -261,9 +261,7 @@ export default {
 		};
 
 		const getAvatar = async () => {
-			const response = await API.get(
-				`/file/dd429551-cf85-4ca6-8e49-c3defa2c6b7e`
-			);
+			const response = await API.get(`/file/${logoID.value}`);
 			console.log("response image: ", response);
 		};
 		getAvatar();

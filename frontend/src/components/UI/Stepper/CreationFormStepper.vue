@@ -208,55 +208,22 @@ export default {
 			formData.append("file", file[0], file[0].name);
 			// await store.dispatch("appFiles/uploadFile", imagesUID, formData);
 
-			await API.post(`/file/${imagesUID}`, formData).then((res) => {
-				// avatarUrl.value = res.config.url;
-
-				console.log("res.data", res.data);
-				console.log("res", res);
-				console.log("res.config.url", res.config.url);
-			});
+			await API.post(`/file/${imagesUID}`, formData)
+				// await store
+				// 	.dispatch("appFiles/uploadFile", imagesUID, formData)
+				.then((res) => {
+					console.log("res.data", res.data);
+					console.log("res", res);
+					console.log("url", res.config.url);
+					console.log("responseURL", res.request.responseURL);
+				});
 			getFile();
-
-			// console.log("file: ", file);
-			// avatarUrl.value = file;
-
-			// let fileReader = new FileReader();
-			// fileReader.readAsDataURL(res);
-			// avatarUrl.value = fileReader.result;
-			// console.log("fileReader.result: ", fileReader.result);
-			// console.log("avatarUrl.value : ", avatarUrl.value);
 		};
 
 		const getFile = async () => {
-			await API.get(`/file/${imagesUID}`).then((res) => {
-				// console.log(res.data);
-				let imagLink = res.request.responseURL;
-				const array = [imagLink]; // an array consisting of a single DOMString
-				console.log("array: ", array);
-				const blob = new Blob(array, { type: "image/png" });
-				console.log("blob: ", blob);
-				parseURI(blob).then((res) => {
-					console.log("res: ", res);
-					avatarUrl.value = res;
-				});
-				// let fileReader = new FileReader();
-				// fileReader.readAsDataURL(array);
-				// avatarUrl.value = fileReader.result;
-				// console.log("fileReader.result: ", fileReader.result);
-				// console.log("avatarUrl.value : ", avatarUrl.value);
-			});
-		};
-
-		const parseURI = async (d) => {
-			var reader = new FileReader();
-			reader.readAsDataURL(d);
-			return new Promise((res, rej) => {
-				reader.onload = () => {
-					res(reader.result);
-					avatarUrl.value = reader.result;
-				};
-				reader.onerror = (error) => reject(error);
-			});
+			await store.dispatch("appFiles/downloadFile", imagesUID);
+			const response = store.getters["appFiles/getFiles"];
+			avatarUrl.value = response[0].request.responseURL;
 		};
 
 		const getAllDomains = async () => {
