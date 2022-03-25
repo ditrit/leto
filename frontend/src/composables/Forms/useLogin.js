@@ -17,9 +17,8 @@ export default function useLoginbData() {
 			email: email.value,
 			password: password.value,
 		};
-		console.log("newUser: ", newUser);
 		store.dispatch("auth/currentUser");
-		await store
+		store
 			.dispatch("auth/login", newUser)
 
 			.then(() => {
@@ -29,8 +28,6 @@ export default function useLoginbData() {
 					icon: "cloud_done",
 					message: "Login successfully",
 				});
-			})
-			.then(() => {
 				router.push("/dashboard");
 			})
 			.catch(() => {
