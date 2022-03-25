@@ -72,7 +72,7 @@
 								:factory="uploadSingleFile"
 							/>
 						</div> -->
-						<div class="col">
+						<!-- <div class="col">
 							<q-uploader
 								style="max-width: 100%"
 								label="Your Logo"
@@ -83,7 +83,8 @@
 								:factory="uploadFile"
 								@uploaded="onFileUpload"
 							/>
-						</div>
+						</div> -->
+						<FileUploader />
 					</div>
 				</q-step>
 
@@ -150,9 +151,10 @@ import { useStore } from "vuex";
 import API from "../../../services";
 import { v4 as uuidv4 } from "uuid";
 import Tabs from "../TabPanels/Tabs";
+import FileUploader from "../Form/FileUploader.vue";
 
 export default {
-	components: { Tabs },
+	components: { Tabs, FileUploader },
 
 	/**
 	 * TODO
@@ -175,40 +177,40 @@ export default {
 		const $q = useQuasar();
 		const avatarUrl = ref("");
 
-		function onRejected(rejectedEntries) {
-			$q.notify({
-				type: "negative",
-				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
-			});
-		}
+		// function onRejected(rejectedEntries) {
+		// 	$q.notify({
+		// 		type: "negative",
+		// 		message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
+		// 	});
+		// }
 		/**
 		 * TODO
 		 * 	2 - regroupe functions by thematique
 		 */
 
-		const uploadFile = async (file) => {
-			const formData = new FormData();
-			formData.append("id", imagesUID);
-			formData.append("file", file[0], file[0].name);
-			// await store.dispatch("appFiles/uploadFile", imagesUID, formData);
+		// const uploadFile = async (file) => {
+		// 	const formData = new FormData();
+		// 	formData.append("id", imagesUID);
+		// 	formData.append("file", file[0], file[0].name);
+		// 	// await store.dispatch("appFiles/uploadFile", imagesUID, formData);
 
-			await API.post(`/file/${imagesUID}`, formData)
-				// await store
-				// 	.dispatch("appFiles/uploadFile", imagesUID, formData)
-				.then((res) => {
-					console.log("res.data", res.data);
-					console.log("res", res);
-					console.log("url", res.config.url);
-					console.log("responseURL", res.request.responseURL);
-				});
-			getFile();
-		};
+		// 	await API.post(`/file/${imagesUID}`, formData)
+		// 		// await store
+		// 		// 	.dispatch("appFiles/uploadFile", imagesUID, formData)
+		// 		.then((res) => {
+		// 			console.log("res.data", res.data);
+		// 			console.log("res", res);
+		// 			console.log("url", res.config.url);
+		// 			console.log("responseURL", res.request.responseURL);
+		// 		});
+		// 	getFile();
+		// };
 
-		const getFile = async () => {
-			await store.dispatch("appFiles/downloadFile", imagesUID);
-			const response = store.getters["appFiles/getFiles"];
-			avatarUrl.value = response[0].request.responseURL;
-		};
+		// const getFile = async () => {
+		// 	await store.dispatch("appFiles/downloadFile", imagesUID);
+		// 	const response = store.getters["appFiles/getFiles"];
+		// 	avatarUrl.value = response[0].request.responseURL;
+		// };
 
 		const getAllDomains = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
@@ -250,7 +252,8 @@ export default {
 			optionsSelections,
 			options,
 			domainID,
-			onRejected,
+			// getFile,
+			// onRejected,
 			store,
 			name,
 			teamParent,
@@ -259,9 +262,9 @@ export default {
 			avatarUrl,
 			imagesUID,
 			API,
-			uploadFile,
+			// uploadFile,
 
-			onFileUpload(event) {},
+			// onFileUpload(event) {},
 
 			onSubmit() {
 				try {
