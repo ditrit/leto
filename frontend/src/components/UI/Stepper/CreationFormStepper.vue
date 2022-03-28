@@ -61,29 +61,6 @@
 								v-model="description"
 							/>
 						</div>
-						<!-- <div class="col">
-							<q-uploader
-								name="file"
-								style="max-width: 100%"
-								label="Your Logo"
-								accept=".jpg, svg, image/*"
-								@rejected="onRejected"
-								color="primary"
-								:factory="uploadSingleFile"
-							/>
-						</div> -->
-						<!-- <div class="col">
-							<q-uploader
-								style="max-width: 100%"
-								label="Your Logo"
-								multiple
-								accept=".jpg, svg, image/*"
-								@rejected="onRejected"
-								color="primary"
-								:factory="uploadFile"
-								@uploaded="onFileUpload"
-							/>
-						</div> -->
 						<FileUploader @uploadAction="uploadFile" />
 					</div>
 				</q-step>
@@ -156,11 +133,6 @@ import FileUploader from "../Form/FileUploader.vue";
 export default {
 	components: { Tabs, FileUploader },
 
-	/**
-	 * TODO
-	 * 	1 - Add props and get all domaines data from TeamPage
-	 */
-
 	setup() {
 		const store = useStore();
 		const route = useRouter();
@@ -177,34 +149,17 @@ export default {
 		const $q = useQuasar();
 		const avatarUrl = ref("");
 
-		// function onRejected(rejectedEntries) {
-		// 	$q.notify({
-		// 		type: "negative",
-		// 		message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
-		// 	});
-		// }
-		/**
-		 * TODO
-		 * 	2 - regroupe functions by thematique
-		 */
-
 		const uploadFile = async (file) => {
 			const formData = new FormData();
 			formData.append("id", imagesUID);
 			formData.append("file", file[0], file[0].name);
-			// await store.dispatch("appFiles/uploadFile", imagesUID, formData);
-
-			await API.post(`/file/${imagesUID}`, formData)
-				// 	// await store
-				// 	// 	.dispatch("appFiles/uploadFile", imagesUID, formData)
-				.then((res) => {
-					console.log("res.data", res.data);
-					console.log("res", res);
-					console.log("url", res.config.url);
-					console.log("responseURL", res.request.responseURL);
-				});
+			await API.post(`/file/${imagesUID}`, formData).then((res) => {
+				console.log("res.data", res.data);
+				console.log("res", res);
+				console.log("url", res.config.url);
+				console.log("responseURL", res.request.responseURL);
+			});
 			getFile();
-			console.log("Hello emit");
 		};
 
 		const getFile = async () => {
@@ -217,7 +172,6 @@ export default {
 			await store.dispatch("appDomain/fetchAllDomaines");
 			const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
 			console.log("getDomaies: ", getDomaies.value);
-			// Get input Select options value
 			let dataReturned = getDomaies.value.map((payload) => {
 				return {
 					id: payload.ID,
@@ -239,7 +193,6 @@ export default {
 		};
 		getAllDomains();
 
-		// fetch Domaine tree
 		const getDomainstree = async (id) => {
 			await store.dispatch("appDomain/fetchDomainesTree");
 			await store.getters["appDomain/allDomainesTree"];
@@ -253,8 +206,6 @@ export default {
 			optionsSelections,
 			options,
 			domainID,
-			// getFile,
-			// onRejected,
 			store,
 			name,
 			teamParent,
@@ -264,8 +215,6 @@ export default {
 			imagesUID,
 			API,
 			uploadFile,
-
-			// onFileUpload(event) {},
 
 			onSubmit() {
 				try {
@@ -312,10 +261,6 @@ export default {
 	max-width: 100% !important
 	height: 100%
 	max-height: 100%
-.q-uploader__list
-	// display: none
-// .q-card__actions
-// 	display: none
 .q-stepper__dot
 	width: 40px
 	height: 40px
