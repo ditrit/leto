@@ -232,14 +232,12 @@ export default {
 		const DeleteDomain = async (props) => {
 			emit("emitRemoveDomain", props);
 			try {
-				store
-					.dispatch("appDomain/removeDomain", props.id)
-					.then(() => {
-						route.push(`/workspaces/${props.parentID}`);
-					})
-					.then(() => {
-						refreshDomainData(props.parentID, props.data);
-					});
+				store.dispatch("appDomain/removeDomain", props.id).then(() => {
+					route.push(`/workspaces`);
+				});
+				// .then(() => {
+				// 	refreshDomainData(props.parentID, props.data);
+				// });
 			} catch (error) {
 				console.log(error);
 			}

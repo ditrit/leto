@@ -162,7 +162,7 @@ export default function useDomainData(props) {
 		//TODO: Add Axios Action
 		await API.delete(`/domain/${choosenNodeID.value}/tag/${id}`)
 			.then((response) => console.log(response))
-			.then(() => refreshDomainTag(choosenNodeID.value))
+			.then(() => router.push("/workspaces"))
 			.catch((error) => console.log(error));
 	};
 
