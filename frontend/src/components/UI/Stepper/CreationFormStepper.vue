@@ -84,7 +84,7 @@
 								@uploaded="onFileUpload"
 							/>
 						</div> -->
-						<FileUploader />
+						<FileUploader @uploadAction="uploadFile" />
 					</div>
 				</q-step>
 
@@ -188,29 +188,30 @@ export default {
 		 * 	2 - regroupe functions by thematique
 		 */
 
-		// const uploadFile = async (file) => {
-		// 	const formData = new FormData();
-		// 	formData.append("id", imagesUID);
-		// 	formData.append("file", file[0], file[0].name);
-		// 	// await store.dispatch("appFiles/uploadFile", imagesUID, formData);
+		const uploadFile = async (file) => {
+			const formData = new FormData();
+			formData.append("id", imagesUID);
+			formData.append("file", file[0], file[0].name);
+			// await store.dispatch("appFiles/uploadFile", imagesUID, formData);
 
-		// 	await API.post(`/file/${imagesUID}`, formData)
-		// 		// await store
-		// 		// 	.dispatch("appFiles/uploadFile", imagesUID, formData)
-		// 		.then((res) => {
-		// 			console.log("res.data", res.data);
-		// 			console.log("res", res);
-		// 			console.log("url", res.config.url);
-		// 			console.log("responseURL", res.request.responseURL);
-		// 		});
-		// 	getFile();
-		// };
+			await API.post(`/file/${imagesUID}`, formData)
+				// 	// await store
+				// 	// 	.dispatch("appFiles/uploadFile", imagesUID, formData)
+				.then((res) => {
+					console.log("res.data", res.data);
+					console.log("res", res);
+					console.log("url", res.config.url);
+					console.log("responseURL", res.request.responseURL);
+				});
+			getFile();
+			console.log("Hello emit");
+		};
 
-		// const getFile = async () => {
-		// 	await store.dispatch("appFiles/downloadFile", imagesUID);
-		// 	const response = store.getters["appFiles/getFiles"];
-		// 	avatarUrl.value = response[0].request.responseURL;
-		// };
+		const getFile = async () => {
+			await store.dispatch("appFiles/downloadFile", imagesUID);
+			const response = store.getters["appFiles/getFiles"];
+			avatarUrl.value = response[0].request.responseURL;
+		};
 
 		const getAllDomains = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
@@ -262,7 +263,7 @@ export default {
 			avatarUrl,
 			imagesUID,
 			API,
-			// uploadFile,
+			uploadFile,
 
 			// onFileUpload(event) {},
 
