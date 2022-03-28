@@ -116,22 +116,7 @@
 														v-model="item.description"
 													/>
 												</div>
-												<div class="col">
-													<q-uploader
-														style="max-width: 100%"
-														url="http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file"
-														label="Your Logo"
-														multiple
-														accept=".jpg, svg, image/*"
-														color="primary"
-														factory
-														files
-														hide-upload-btn="true"
-														auto-upload
-														@rejected="onRejected"
-														@uploaded="onFileUpload"
-													/>
-												</div>
+												<FileUploader @uploadAction="uploadFile" />
 											</div>
 										</div>
 
@@ -189,10 +174,12 @@ import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 import useDomainData from "../../../composables/WorkSpace/useContentCard";
 import Tabs from "../../UI/TabPanels/Tabs.vue";
 import Modal from "../Dialogs/Modal.vue";
+import FileUploader from "../Form/FileUploader.vue";
+import useFileData from "../../../composables/Forms/useFile";
 
 export default {
 	name: "ContentCard",
-	components: { Tabs, Modal },
+	components: { Tabs, Modal, FileUploader },
 	props: {
 		data: {
 			type: Array,
@@ -211,6 +198,7 @@ export default {
 	setup(props, { emit }) {
 		let { store, route, $q, refreshDomainData } = useContentCardData();
 		let { getMenuData } = useDomainData();
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
 		const search = ref("");
 		const parentID = ref("");
@@ -258,10 +246,12 @@ export default {
 		};
 
 		const onSubmitUpdate = async (props) => {
+			console.log("props: ", props);
 			emit("emitUpdateDomain", props);
 			let domain = Object.values(props);
 			let updatedDomain = {
 				id: props.id,
+				logo: props.logo,
 				name: props.name,
 				shortDescription: props.shortDescription,
 				description: props.description,
@@ -310,6 +300,9 @@ export default {
 			onRejected,
 			confirm,
 			addFavorite,
+			imagesUID,
+			avatarUrl,
+			uploadFile,
 		};
 	},
 };
