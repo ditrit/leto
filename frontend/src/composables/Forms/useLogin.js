@@ -10,17 +10,14 @@ export default function useLoginbData() {
 	const isPwd = ref(true);
 	const email = ref(null);
 	const password = ref(null);
-	const error = ref(null);
 
 	const login = async () => {
 		const newUser = {
 			email: email.value,
 			password: password.value,
 		};
-		store.dispatch("auth/currentUser");
 		store
 			.dispatch("auth/login", newUser)
-
 			.then(() => {
 				$q.notify({
 					color: "green-4",
@@ -28,6 +25,8 @@ export default function useLoginbData() {
 					icon: "cloud_done",
 					message: "Login successfully",
 				});
+			})
+			.then(() => {
 				router.push("/dashboard");
 			})
 			.catch(() => {
@@ -47,7 +46,6 @@ export default function useLoginbData() {
 		store,
 		email,
 		password,
-		error,
 		login,
 	};
 }
