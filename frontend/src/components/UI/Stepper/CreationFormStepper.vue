@@ -125,10 +125,9 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
-import API from "../../../services";
-import { v4 as uuidv4 } from "uuid";
 import Tabs from "../TabPanels/Tabs";
 import FileUploader from "../Form/FileUploader.vue";
+import useFileData from "../../../composables/Forms/useFile";
 
 export default {
 	components: { Tabs, FileUploader },
@@ -136,7 +135,6 @@ export default {
 	setup() {
 		const store = useStore();
 		const route = useRouter();
-		const imagesUID = uuidv4();
 		const name = ref("");
 		const teamParent = ref("");
 		const domainID = ref("");
@@ -147,26 +145,8 @@ export default {
 		const options = ref([]);
 		const SelectedDomain = ref([]);
 		const $q = useQuasar();
-		const avatarUrl = ref("");
 
-		const uploadFile = async (file) => {
-			const formData = new FormData();
-			formData.append("id", imagesUID);
-			formData.append("file", file[0], file[0].name);
-			await API.post(`/file/${imagesUID}`, formData).then((res) => {
-				console.log("res.data", res.data);
-				console.log("res", res);
-				console.log("url", res.config.url);
-				console.log("responseURL", res.request.responseURL);
-			});
-			getFile();
-		};
-
-		const getFile = async () => {
-			await store.dispatch("appFiles/downloadFile", imagesUID);
-			const response = store.getters["appFiles/getFiles"];
-			avatarUrl.value = response[0].request.responseURL;
-		};
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
 		const getAllDomains = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
@@ -213,7 +193,6 @@ export default {
 			description,
 			avatarUrl,
 			imagesUID,
-			API,
 			uploadFile,
 
 			onSubmit() {
