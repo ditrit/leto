@@ -246,12 +246,16 @@ export default {
 		};
 
 		const onSubmitUpdate = async (props) => {
-			console.log("props: ", props);
 			emit("emitUpdateDomain", props);
+			console.log("props: ", props);
 			let domain = Object.values(props);
 			let updatedDomain = {
 				id: props.id,
-				logo: props.logo,
+				/**
+				 * TODO: Add a computed to get the new upoade logo
+				 */
+
+				logo: avatarUrl.value,
 				name: props.name,
 				shortDescription: props.shortDescription,
 				description: props.description,

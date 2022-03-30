@@ -12,6 +12,7 @@ export default function useContentCardData() {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
 		domainData = Object.values(data.value).map((item) => {
+			console.log("item: ", item);
 			return {
 				id: item.ID,
 				name: item.Name,
