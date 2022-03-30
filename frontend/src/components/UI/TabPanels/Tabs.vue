@@ -139,7 +139,7 @@
 											v-model="productDescription"
 										/>
 									</div>
-									<div class="col">
+									<!-- <div class="col">
 										<q-uploader
 											style="max-width: 100%"
 											url="http://localhost:3000/upload"
@@ -154,7 +154,8 @@
 											auto-upload
 											@uploaded="onFileUpload"
 										/>
-									</div>
+									</div> -->
+									<FileUploader @uploadAction="uploadFile" />
 								</div>
 								<q-card-actions
 									align="right"
@@ -514,6 +515,8 @@ import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
 import useLibraryTabData from "../../../composables/TabPanels/useLibraryTab";
 import useContentCardData from "../../../composables/WorkSpace/useContentCard";
 import Modal from "../Dialogs/Modal.vue";
+import FileUploader from "../Form/FileUploader.vue";
+import useFileData from "../../../composables/Forms/useFile";
 
 export default {
 	components: {
@@ -523,6 +526,7 @@ export default {
 		RequirementsTabCard,
 		AuthorizationsTabCard,
 		Modal,
+		FileUploader,
 	},
 	emits: ["openModalToAddItem", "deleteAuthorizationAction"],
 	props: {
@@ -700,6 +704,7 @@ export default {
 			confirmDeleteAuthorization,
 			authorizationDomainObj,
 		} = useAuthorizationsTabsData(props);
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
 		let { refreshDomainData } = useContentCardData();
 		const isEnvironmentsCreationOpened = ref(false);
@@ -871,6 +876,9 @@ export default {
 			updateLibrary,
 			librariesList,
 			domainNameRef,
+			imagesUID,
+			avatarUrl,
+			uploadFile,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};
