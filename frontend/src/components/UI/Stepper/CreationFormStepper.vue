@@ -25,11 +25,6 @@
 								v-model="name"
 							/>
 						</div>
-						<!-- <q-img
-							:src="avatarUrl"
-							spinner-color="red"
-							style="height: 140px; max-width: 150px"
-						/> -->
 						<div class="col">
 							<q-select
 								filled

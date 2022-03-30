@@ -7,7 +7,7 @@
 				v-model="email"
 				label="Email *"
 				lazy-rules
-				:rules="[(val) => !!val || 'Email is missing', emailValidation]"
+				:rules="[(val) => !!val || 'Email is missing']"
 			/>
 			<q-input
 				label="Password *"
@@ -43,7 +43,6 @@
 <script>
 import Headline6 from "../Headlines/Headline6";
 import useLoginData from "../../../composables/Forms/useLogin";
-import { emailValidation } from "../../../common";
 
 export default {
 	components: { Headline6 },
@@ -56,7 +55,6 @@ export default {
 			error,
 			isPwd,
 			login,
-			emailValidation,
 		};
 	},
 };
