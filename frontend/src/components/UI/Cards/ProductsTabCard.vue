@@ -5,7 +5,7 @@
 				<div class="row items-center no-wrap">
 					<div>
 						<q-img
-							:src="logo"
+							:src="avatarUrl"
 							alt=""
 							style="
 								height: 38px;
@@ -126,7 +126,7 @@
 												v-model="productDescription"
 											/>
 										</div>
-										<div class="col">
+										<!-- <div class="col">
 											<q-uploader
 												style="max-width: 100%"
 												url="http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/50"
@@ -141,7 +141,8 @@
 												auto-upload
 												@uploaded="onFileUpload"
 											/>
-										</div>
+										</div> -->
+										<FileUploader @uploadAction="uploadFile" />
 									</div>
 
 									<q-card-actions
@@ -173,9 +174,11 @@ import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import Modal from "../Dialogs/Modal.vue";
+import useFileData from "../../../composables/Forms/useFile";
+import FileUploader from "../Form/FileUploader.vue";
 
 export default {
-	components: { Modal },
+	components: { Modal, FileUploader },
 	emits: [
 		"openProductEditModal",
 		"deleteProductAction",
@@ -205,6 +208,7 @@ export default {
 		const productProductRepositoryURL = ref(props.repositoryURL);
 		const productDomainID = ref(props.domainID);
 		const isOpened = ref(false);
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
 		const openEditionModal = (props) => {
 			isOpened.value = true;
@@ -241,6 +245,7 @@ export default {
 				id: props.id,
 				domainID: props.domainID,
 				name: productName.value,
+				logo: avatarUrl.value,
 				productName: productName.value,
 				shortDescription: productShortDescription.value,
 				repositoryURL: productProductRepositoryURL.value,
@@ -264,12 +269,6 @@ export default {
 			console.log("event: ", props.id);
 		};
 
-		const onFileUpload = (event) => {
-			console.log("file name", event.files[0].name);
-			console.log("file upload number", event.files[0].__uploaded);
-			console.log("file Id", event.files[0].xhr.response);
-		};
-
 		const onRejected = (rejectedEntries) => {
 			$q.notify({
 				type: "negative",
@@ -284,14 +283,15 @@ export default {
 			favoriteItem,
 			onSubmitUpdate,
 			onResetUpdate,
-			onFileUpload,
 			onRejected,
 			productId,
 			productName,
 			productShortDescription,
 			productDescription,
 			productProductRepositoryURL,
-			lorem: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+			imagesUID,
+			avatarUrl,
+			uploadFile,
 		};
 	},
 };
