@@ -9,6 +9,7 @@ export default function useProductsTabData(props) {
 	const $q = useQuasar();
 	const productTeam = ref(props.teamProducts);
 	const productName = ref("");
+	const productLogo = ref("");
 	const productShortDescription = ref("");
 	const productDescription = ref("");
 	const productRepositoryURL = ref("");
@@ -55,6 +56,7 @@ export default function useProductsTabData(props) {
 		let newProduct = {
 			domainID: route.currentRoute.value.params.id,
 			name: productName.value,
+			logo: productLogo.value,
 			shortDescription: productShortDescription.value,
 			description: productDescription.value,
 		};
@@ -81,6 +83,7 @@ export default function useProductsTabData(props) {
 		}
 
 		productName.value = "";
+		productLogo.value = "";
 		productShortDescription.value = "";
 		productDescription.value = "";
 	};
@@ -89,6 +92,7 @@ export default function useProductsTabData(props) {
 		let product = {
 			id: id,
 			name: productName.value,
+			logo: productLogo.value,
 			shortDescription: productShortDescription.value,
 			description: productDescription.value,
 			repositoryURL: productRepositoryURL.value,
@@ -115,6 +119,7 @@ export default function useProductsTabData(props) {
 		$q,
 		productTeam,
 		productName,
+		productLogo,
 		productShortDescription,
 		productDescription,
 		productRepositoryURL,

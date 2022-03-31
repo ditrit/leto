@@ -65,7 +65,7 @@ export default function useDomainData(props) {
 		await store.dispatch("appDomain/fetchDomainById", `${id}`);
 		let data = await store.getters["appDomain/allDomaines"];
 		console.log("data: ", Object.values(data));
-		progress.value = Object.values(data).length;
+		progress.value = data.length;
 		currentDomainDataContent.value = Object.values(data).map((item) => {
 			return {
 				id: item.ID,

@@ -10,5 +10,5 @@ export default boot(async ({ store }) => {
 			store.dispatch("auth/currentUser", JSON.parse(userData));
 		}
 	};
-	autoLog();
+	//autoLog();
 });

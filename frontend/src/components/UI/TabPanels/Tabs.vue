@@ -139,22 +139,6 @@
 											v-model="productDescription"
 										/>
 									</div>
-									<!-- <div class="col">
-										<q-uploader
-											style="max-width: 100%"
-											url="http://localhost:3000/upload"
-											label="Your Logo"
-											multiple
-											accept=".jpg, svg, image/*"
-											@rejected="onRejected"
-											color="primary"
-											factory
-											files
-											hide-upload-btn="true"
-											auto-upload
-											@uploaded="onFileUpload"
-										/>
-									</div> -->
 									<FileUploader @uploadAction="uploadFile" />
 								</div>
 								<q-card-actions
@@ -319,7 +303,7 @@
 							label="New library"
 							@click.prevent="openCreationLibraryModal(libraryTeam)"
 						/>
-						<!-- Library Creation dialog -->
+
 						<Modal class="modalGlobal" v-model="isCreationLibraryOpened">
 							<template v-slot:ModalTitle> {{ $t("add_library") }} </template>
 							<template v-slot:ModalContent>
@@ -676,6 +660,7 @@ export default {
 		let {
 			productTeam,
 			productName,
+			productLogo,
 			productShortDescription,
 			productDescription,
 			productProductRepositoryURL,
@@ -751,12 +736,6 @@ export default {
 			emit("updateAction", props);
 		};
 
-		const onFileUpload = (event) => {
-			console.log("file name", event.files[0].name);
-			console.log("file upload number", event.files[0].__uploaded);
-			console.log("file Id", event.files[0].xhr.response);
-		};
-
 		const onRejected = (rejectedEntries) => {
 			$q.notify({
 				type: "negative",
@@ -818,6 +797,7 @@ export default {
 			$q,
 			productTeam,
 			productName,
+			productLogo: avatarUrl.value,
 			productShortDescription,
 			productDescription,
 			productProductRepositoryURL,
@@ -853,7 +833,6 @@ export default {
 			deleteEnvironement,
 			optionsSelections,
 			selectedParentData,
-			onFileUpload,
 			onRejected,
 			confirmDeleteEnvironment,
 			usersList,
