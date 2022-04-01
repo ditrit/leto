@@ -2,6 +2,7 @@
 	<div class="col">
 		<q-uploader
 			style="max-width: 100%"
+			class="full-height"
 			label="Your Logo"
 			accept=".jpg, svg, image/*"
 			@rejected="onRejected"

@@ -23,7 +23,13 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+						<img
+							:src="
+								userAvatar
+									? userAvatar
+									: 'https://cdn.quasar.dev/img/boy-avatar.png'
+							"
+						/>
 					</q-avatar>
 				</q-td>
 			</template>
@@ -129,8 +135,9 @@
 						</div>
 					</div>
 					<div class="row col-md-12 q-gutter-sm">
-						<div class="col">
+						<div class="col-md-8">
 							<q-input
+								class="full-height"
 								filled
 								type="textarea"
 								label="Descripiton *"
@@ -141,6 +148,7 @@
 								v-model="userDescription"
 							/>
 						</div>
+						<FileUploader @uploadAction="uploadFile" class="q-pl-md" />
 					</div>
 					<q-card-actions
 						align="right"
@@ -257,6 +265,8 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
+import useFileData from "../../../composables/Forms/useFile";
+import FileUploader from "../Form/FileUploader.vue";
 
 const columns = [
 	{
@@ -322,7 +332,7 @@ const columns = [
 ];
 
 export default {
-	components: { Modal },
+	components: { Modal, FileUploader },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
@@ -337,6 +347,9 @@ export default {
 		const userEmail = ref("");
 		const userPassword = ref("");
 		const userDescription = ref("");
+		const userAvatar = ref("");
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+
 		const confirm = (item) => {
 			$q.dialog({
 				title: "Confirm",
@@ -384,12 +397,15 @@ export default {
 			const userData = {
 				firstName: userFirstName.value,
 				lastName: userLastName.value,
+				avatar: avatarUrl.value,
 				email: userEmail.value,
 				password: userPassword.value,
 				description: userDescription.value,
 			};
+			console.log("userData: ", userData);
 
 			try {
+				userAvatar.value = userData.avatar;
 				await store.dispatch("appUsers/addUser", userData);
 				await allUsers();
 				(userFirstName.value = ""),
@@ -467,6 +483,7 @@ export default {
 			AddUser,
 			userFirstName,
 			userLastName,
+			userAvatar,
 			userEmail,
 			editRow,
 			deleteRow,
@@ -478,6 +495,9 @@ export default {
 			openAddUserDialog,
 			userPassword,
 			userDescription,
+			imagesUID,
+			avatarUrl,
+			uploadFile,
 			password: ref(""),
 		};
 	},

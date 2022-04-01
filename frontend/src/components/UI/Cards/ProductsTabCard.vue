@@ -5,7 +5,7 @@
 				<div class="row items-center no-wrap">
 					<div>
 						<q-img
-							:src="avatarUrl"
+							:src="avatarUrl ? avatarUrl : logo"
 							alt=""
 							style="
 								height: 38px;
