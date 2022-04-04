@@ -21,7 +21,7 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
 					</q-avatar>
 				</q-td>
 			</template>
@@ -77,7 +77,7 @@
 						v-model="enviTypeShortDescription"
 					/>
 					<div class="row">
-						<div class="col">
+						<div class="col-md-8">
 							<q-input
 								filled
 								type="textarea"
@@ -89,18 +89,7 @@
 								v-model="enviTypeDescription"
 							/>
 						</div>
-						<div class="col-4 q-ml-md">
-							<q-uploader
-								style="max-width: 100%"
-								label="Your Logo"
-								multiple
-								accept=".jpg, svg, image/*"
-								@rejected="onRejected"
-								color="primary"
-								:factory="uploadFile"
-								@uploaded="onFileUpload"
-							/>
-						</div>
+						<FileUploader @uploadAction="uploadFile" class="q-pl-md" />
 					</div>
 
 					<q-card-actions
@@ -192,6 +181,9 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
+import useFileData from "../../../composables/Forms/useFile";
+import FileUploader from "../Form/FileUploader.vue";
+import globalAvatar from "../../../assets/profil.png";
 
 const columns = [
 	{
@@ -241,7 +233,7 @@ const columns = [
 ];
 
 export default {
-	components: { Modal },
+	components: { Modal, FileUploader },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
@@ -254,6 +246,8 @@ export default {
 		const enviTypeName = ref("");
 		const enviTypeShortDescription = ref("");
 		const enviTypeDescription = ref("");
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+
 		const confirm = (item) => {
 			console.log("item: ", item);
 			$q.dialog({
@@ -281,8 +275,7 @@ export default {
 				getEnviTypes.value.map((item) => {
 					return {
 						id: item.ID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+						avatar: item.Logo,
 						name: item.Name,
 						shortDescription: item.ShortDescription,
 						description: item.Description,
@@ -300,6 +293,7 @@ export default {
 				name: enviTypeName.value,
 				shortDescription: enviTypeShortDescription.value,
 				description: enviTypeDescription.value,
+				logo: avatarUrl.value,
 			};
 
 			try {
@@ -326,6 +320,7 @@ export default {
 				name: enviTypeObj.value[2],
 				shortDescription: enviTypeObj.value[3],
 				description: enviTypeObj.value[4],
+				logo: avatarUrl.value,
 			};
 
 			try {
@@ -388,6 +383,10 @@ export default {
 			onResetAdd,
 			opendDialog,
 			openAddEnviTypeDialog,
+			globalAvatar,
+			imagesUID,
+			avatarUrl,
+			uploadFile,
 			password: ref(""),
 			isPwd: ref(true),
 		};
