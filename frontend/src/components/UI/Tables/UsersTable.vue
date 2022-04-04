@@ -23,13 +23,7 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img
-							:src="
-								props.row.avatar
-									? props.row.avatar
-									: 'https://cdn.quasar.dev/img/boy-avatar.png'
-							"
-						/>
+						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
 					</q-avatar>
 				</q-td>
 			</template>
@@ -234,7 +228,7 @@
 						</div>
 					</div>
 					<div class="row col-md-12 q-gutter-sm">
-						<div class="col">
+						<div class="col-md-8">
 							<q-input
 								filled
 								type="textarea"
@@ -246,6 +240,7 @@
 								]"
 							/>
 						</div>
+						<FileUploader @uploadAction="uploadFile" class="q-pl-md" />
 					</div>
 					<q-card-actions
 						align="right"
@@ -267,6 +262,7 @@ import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/useFile";
 import FileUploader from "../Form/FileUploader.vue";
+import globalAvatar from "../../../assets/profil.png";
 
 const columns = [
 	{
@@ -427,6 +423,7 @@ export default {
 				id: userObj.value[0],
 				firstName: userObj.value[2],
 				lastName: userObj.value[3],
+				logo: avatarUrl.value,
 				email: userObj.value[4],
 				password: userObj.value[5],
 				description: userObj.value[6],
@@ -498,6 +495,7 @@ export default {
 			imagesUID,
 			avatarUrl,
 			uploadFile,
+			globalAvatar,
 			password: ref(""),
 		};
 	},
