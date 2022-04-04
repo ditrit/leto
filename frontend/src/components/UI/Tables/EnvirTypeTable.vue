@@ -137,7 +137,7 @@
 						/>
 					</div>
 					<div class="row">
-						<div class="col">
+						<div class="col-md-8">
 							<q-input
 								filled
 								type="textarea"
@@ -149,18 +149,7 @@
 								]"
 							/>
 						</div>
-						<div class="col-4 q-ml-md">
-							<q-uploader
-								style="max-width: 100%"
-								label="Your Logo"
-								multiple
-								accept=".jpg, svg, image/*"
-								@rejected="onRejected"
-								color="primary"
-								:factory="uploadFile"
-								@uploaded="onFileUpload"
-							/>
-						</div>
+						<FileUploader @uploadAction="uploadFile" class="q-pl-md" />
 					</div>
 
 					<q-card-actions
