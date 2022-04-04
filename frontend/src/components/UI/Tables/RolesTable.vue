@@ -21,7 +21,7 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
 					</q-avatar>
 				</q-td>
 			</template>
@@ -74,16 +74,21 @@
 						]"
 						v-model="roleShortDescription"
 					/>
-					<q-input
-						filled
-						type="textarea"
-						label="Description *"
-						lazy-rules
-						:rules="[
-							(val) => (val && val.length > 0) || 'Please type something',
-						]"
-						v-model="roleDescription"
-					/>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col-md-8">
+							<q-input
+								filled
+								type="textarea"
+								label="Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+								v-model="roleDescription"
+							/>
+						</div>
+						<FileUploader @uploadAction="uploadFile" class="q-pl-md" />
+					</div>
 
 					<q-card-actions
 						align="right"
@@ -123,16 +128,21 @@
 							(val) => (val && val.length > 0) || 'Please type something',
 						]"
 					/>
-					<q-input
-						filled
-						type="textarea"
-						v-model="roleObj[4]"
-						label="Description *"
-						lazy-rules
-						:rules="[
-							(val) => (val && val.length > 0) || 'Please type something',
-						]"
-					/>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col-md-8">
+							<q-input
+								filled
+								type="textarea"
+								v-model="roleObj[4]"
+								label="Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+						<FileUploader @uploadAction="uploadFile" class="q-pl-md" />
+					</div>
 
 					<q-card-actions
 						align="right"
@@ -152,6 +162,9 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
+import useFileData from "../../../composables/Forms/useFile";
+import FileUploader from "../Form/FileUploader.vue";
+import globalAvatar from "../../../assets/profil.png";
 
 const columns = [
 	{
@@ -200,7 +213,7 @@ const columns = [
 ];
 
 export default {
-	components: { Modal },
+	components: { Modal, FileUploader },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
@@ -212,6 +225,7 @@ export default {
 		const roleName = ref("");
 		const roleShortDescription = ref("");
 		const roleDescription = ref("");
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
 		const confirm = (item) => {
 			console.log("item: ", item);
@@ -237,8 +251,7 @@ export default {
 				getRoles.value.map((item) => {
 					return {
 						id: item.ID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+						avatar: item.Logo,
 						name: item.Name,
 						shortDescription: item.ShortDescription,
 						description: item.Description,
@@ -256,6 +269,7 @@ export default {
 				name: roleName.value,
 				shortDescription: roleShortDescription.value,
 				description: roleDescription.value,
+				logo: avatarUrl.value,
 			};
 			console.log("roleData", roleData);
 
@@ -283,6 +297,7 @@ export default {
 				name: roleObj.value[2],
 				shortDescription: roleObj.value[3],
 				description: roleObj.value[4],
+				logo: avatarUrl.value,
 			};
 			console.log("roleObj: ", roleObj.value);
 
@@ -345,6 +360,10 @@ export default {
 			onResetAdd,
 			opendDialog,
 			openAddRoleDialog,
+			imagesUID,
+			avatarUrl,
+			uploadFile,
+			globalAvatar,
 			password: ref(""),
 			isPwd: ref(true),
 		};
