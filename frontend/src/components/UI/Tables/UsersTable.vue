@@ -25,8 +25,8 @@
 					<q-avatar size="26px">
 						<img
 							:src="
-								userAvatar
-									? userAvatar
+								props.row.avatar
+									? props.row.avatar
 									: 'https://cdn.quasar.dev/img/boy-avatar.png'
 							"
 						/>
@@ -372,8 +372,7 @@ export default {
 				getUsers.value.map((item) => {
 					return {
 						id: item.ID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+						avatar: item.Logo,
 						firstName: item.FirstName,
 						lastName: item.LastName,
 						email: item.Email,
@@ -389,6 +388,7 @@ export default {
 			openAddUserDialog.value = "";
 			userFirstName.value = "";
 			userLastName.value = "";
+			userAvatar.value = "";
 			userEmail.value = "";
 			userPassword.value = "";
 			userDescription.value = "";
@@ -397,7 +397,7 @@ export default {
 			const userData = {
 				firstName: userFirstName.value,
 				lastName: userLastName.value,
-				avatar: avatarUrl.value,
+				logo: avatarUrl.value,
 				email: userEmail.value,
 				password: userPassword.value,
 				description: userDescription.value,
@@ -405,7 +405,7 @@ export default {
 			console.log("userData: ", userData);
 
 			try {
-				userAvatar.value = userData.avatar;
+				// userAvatar.value = userData.logo;
 				await store.dispatch("appUsers/addUser", userData);
 				await allUsers();
 				(userFirstName.value = ""),
