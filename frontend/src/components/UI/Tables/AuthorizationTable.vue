@@ -54,8 +54,8 @@
 					@reset="onResetAdd"
 					class="q-gutter-md q-pa-md"
 				>
-					<div class="row col-md-12 q-gutter-x-md">
-						<div class="col-md-8 q-gutter-y-md">
+					<div class="col-md-12">
+						<div class="col q-gutter-md">
 							<q-select
 								filled
 								:options="usersList"
@@ -76,9 +76,6 @@
 								label="Domain"
 								v-model="authorizsationDomain"
 							/>
-						</div>
-						<div class="col-md-3">
-							<FileUploader @uploadAction="uploadFile" />
 						</div>
 					</div>
 
@@ -150,8 +147,6 @@ import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
 import Modal from "../Dialogs/Modal.vue";
-import useFileData from "../../../composables/Forms/useFile";
-import FileUploader from "../Form/FileUploader.vue";
 import globalAvatar from "../../../assets/profil.png";
 
 const columns = [
@@ -201,7 +196,7 @@ const columns = [
 ];
 
 export default {
-	components: { Modal, FileUploader },
+	components: { Modal },
 	setup(props) {
 		const store = useStore();
 		const $q = useQuasar();
@@ -211,8 +206,6 @@ export default {
 		const authorisationUser = ref("");
 		const authorizationRole = ref("");
 		const domainList = ref(null);
-
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
 		let {
 			usersList,
@@ -276,7 +269,6 @@ export default {
 				domainID: authorizsationDomain.value.id,
 				userID: authorisationUser.value.id,
 				roleID: authorizationRole.value.id,
-				logo: avatarUrl.value,
 			};
 
 			try {
@@ -306,7 +298,6 @@ export default {
 				domainID: authorizationObj.value[3].id,
 				roleID: authorizationObj.value[5].id,
 				userID: authorizationObj.value[7].id,
-				logo: avatarUrl.value,
 			};
 
 			try {
@@ -411,9 +402,6 @@ export default {
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
 			globalAvatar,
-			imagesUID,
-			avatarUrl,
-			uploadFile,
 		};
 	},
 };
