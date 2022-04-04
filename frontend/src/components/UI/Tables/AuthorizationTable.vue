@@ -20,7 +20,7 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
 					</q-avatar>
 				</q-td>
 			</template>
@@ -54,30 +54,31 @@
 					@reset="onResetAdd"
 					class="q-gutter-md q-pa-md"
 				>
-					<div class="col-md-12 q-gutter-md">
-						<div class="col">
+					<div class="row col-md-12 q-gutter-x-md">
+						<div class="col-md-8 q-gutter-y-md">
 							<q-select
 								filled
 								:options="usersList"
 								label="User"
 								v-model="authorisationUser"
 							/>
-						</div>
-						<div class="col">
+
 							<q-select
 								filled
 								:options="roleList"
 								label="Role"
 								v-model="authorizationRole"
 							/>
-						</div>
-						<div class="col">
+
 							<q-select
 								filled
 								:options="domainList"
 								label="Domain"
 								v-model="authorizsationDomain"
 							/>
+						</div>
+						<div class="col-md-3">
+							<FileUploader @uploadAction="uploadFile" />
 						</div>
 					</div>
 
@@ -144,11 +145,14 @@
 </template>
 
 <script>
-import { ref, computed, onUnmounted } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
 import Modal from "../Dialogs/Modal.vue";
+import useFileData from "../../../composables/Forms/useFile";
+import FileUploader from "../Form/FileUploader.vue";
+import globalAvatar from "../../../assets/profil.png";
 
 const columns = [
 	{
@@ -197,7 +201,7 @@ const columns = [
 ];
 
 export default {
-	components: { Modal },
+	components: { Modal, FileUploader },
 	setup(props) {
 		const store = useStore();
 		const $q = useQuasar();
@@ -207,6 +211,8 @@ export default {
 		const authorisationUser = ref("");
 		const authorizationRole = ref("");
 		const domainList = ref(null);
+
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
 		let {
 			usersList,
@@ -248,8 +254,7 @@ export default {
 				getAuth.value.map((item) => {
 					return {
 						id: item.ID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+						avatar: item.User.Logo,
 						domainID: item.Domain.ID,
 						domain: item.Domain.Name,
 						roleID: item.RoleID,
@@ -261,6 +266,7 @@ export default {
 			));
 		};
 		allAuthorizations();
+		console.log("rowsData.value : ", rowsData.value);
 
 		const addNewAuthorization = () => {
 			openAddAuthorizationDialog.value = true;
@@ -270,6 +276,7 @@ export default {
 				domainID: authorizsationDomain.value.id,
 				userID: authorisationUser.value.id,
 				roleID: authorizationRole.value.id,
+				logo: avatarUrl.value,
 			};
 
 			try {
@@ -299,6 +306,7 @@ export default {
 				domainID: authorizationObj.value[3].id,
 				roleID: authorizationObj.value[5].id,
 				userID: authorizationObj.value[7].id,
+				logo: avatarUrl.value,
 			};
 
 			try {
@@ -402,6 +410,10 @@ export default {
 			authorizationRoleNameRef,
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
+			globalAvatar,
+			imagesUID,
+			avatarUrl,
+			uploadFile,
 		};
 	},
 };
