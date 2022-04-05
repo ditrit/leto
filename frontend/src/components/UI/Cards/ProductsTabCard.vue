@@ -5,7 +5,7 @@
 				<div class="row items-center no-wrap">
 					<div>
 						<q-img
-							:src="avatarUrl ? avatarUrl : logo"
+							:src="avatarUrl ? avatarUrl : globalAvatar"
 							alt=""
 							style="
 								height: 38px;
@@ -160,6 +160,7 @@ import { useStore } from "vuex";
 import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/useFile";
 import FileUploader from "../Form/FileUploader.vue";
+import globalAvatar from "../../../assets/profil.png";
 
 export default {
 	components: { Modal, FileUploader },
@@ -217,7 +218,7 @@ export default {
 				return store.getters["appProducts/fetchAllProducts"];
 			});
 			productName.value = updatesData.name;
-			productLogo.value = updatesData.logo;
+			productLogo.value = avatarUrl.value;
 			productShortDescription.value = updatesData.shortDescription;
 			productProductRepositoryURL.value = updatesData.repositoryURL;
 			productDescription.value = updatesData.description;
@@ -276,6 +277,7 @@ export default {
 			imagesUID,
 			avatarUrl,
 			uploadFile,
+			globalAvatar,
 		};
 	},
 };

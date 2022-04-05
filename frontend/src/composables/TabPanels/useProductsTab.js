@@ -56,7 +56,7 @@ export default function useProductsTabData(props) {
 		let newProduct = {
 			domainID: route.currentRoute.value.params.id,
 			name: productName.value,
-			logo: productLogo.value,
+			logo: avatarUrl.value,
 			shortDescription: productShortDescription.value,
 			description: productDescription.value,
 		};
