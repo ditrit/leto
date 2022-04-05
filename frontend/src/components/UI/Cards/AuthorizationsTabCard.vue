@@ -5,7 +5,7 @@
 				<div class="row items-center no-wrap">
 					<div>
 						<q-img
-							:src="authorizationLogoRef"
+							:src="authorizationLogoRef ? authorizationLogoRef : globalAvatar"
 							alt=""
 							style="
 								height: 38px;
@@ -133,6 +133,7 @@
 import { ref, computed } from "vue";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
 import Modal from "../Dialogs/Modal.vue";
+import globalAvatar from "../../../assets/profil.png";
 
 export default {
 	components: { Modal },
@@ -269,6 +270,7 @@ export default {
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
 			authorizationDomainNameRef,
+			globalAvatar,
 		};
 	},
 };
