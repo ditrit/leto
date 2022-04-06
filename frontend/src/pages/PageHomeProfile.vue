@@ -50,13 +50,9 @@
 				/>
 				<div class="flex-col p_padding" v-if="user">
 					<div class="col">
-						<q-form
-							@submit="uploadAvatar"
-							class="q-gutter-md"
-							v-if="showButton"
-						>
+						<q-form @submit="uploadFile" class="q-gutter-md" v-if="showButton">
 							<q-file
-								v-model="file"
+								v-model="user.Logo"
 								type="file"
 								round
 								:loading="showSubmitBtn"
@@ -186,13 +182,15 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import API from "../services/index";
-import { v4 as uuidv4 } from "uuid";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import PageContent from "../components/Content/PageContent";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../common/index";
 import HomeNav from "../components/UI/Navigation/HomeNav.vue";
+import useFileData from "../composables/Forms/useFile";
+import globalAvatar from "../assets/profil.png";
+
 export default {
 	components: {
 		AjaxBar,
@@ -204,7 +202,7 @@ export default {
 	props: {
 		logo: {
 			type: String,
-			default: "https://cdn.quasar.dev/img/boy-avatar.png",
+			default: globalAvatar,
 		},
 	},
 
@@ -214,7 +212,6 @@ export default {
 		const filter = ref("");
 		const filterRef = ref(null);
 		const store = useStore();
-		const imagesUID = uuidv4();
 		const user = ref(null);
 		const disabled = ref(true);
 		const showSubmitBtn = ref(false);
@@ -224,8 +221,7 @@ export default {
 		const avatar = ref(null);
 		const password = ref(null);
 		const confirmPassword = ref(null);
-
-		console.log("	logoID.value: ", logoID.value);
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
 		const currentUser = async () => {
 			let response = await store.getters["auth/currentUser"];
@@ -246,19 +242,19 @@ export default {
 			showSubmitBtn.value = !showSubmitBtn.value;
 		};
 
-		const uploadAvatar = async () => {
-			console.log("file is:", file.value);
-			const formData = new FormData();
-			formData.append("file", file.value, file.value.name);
-			formData.append("id", logoID.value);
-			console.log("formData: ", formData);
-			await API.post(`/file/${logoID.value}`, formData).then((res) => {
-				console.log(res);
-				console.log(" upload avatar: ", avatar.value);
-			});
-			// store.dispatch("appFiles/uploadFile", imagesUID, formData);
-			showSubmitBtn.value = false;
-		};
+		// const uploadAvatar = async () => {
+		// 	console.log("file is:", file.value);
+		// 	const formData = new FormData();
+		// 	formData.append("file", file.value, file.value.name);
+		// 	formData.append("id", logoID.value);
+		// 	console.log("formData: ", formData);
+		// 	await API.post(`/file/${logoID.value}`, formData).then((res) => {
+		// 		console.log(res);
+		// 		console.log(" upload avatar: ", avatar.value);
+		// 	});
+		// 	// store.dispatch("appFiles/uploadFile", imagesUID, formData);
+		// 	showSubmitBtn.value = false;
+		// };
 
 		const getAvatar = async () => {
 			const response = await API.get(`/file/${logoID.value}`);
@@ -269,7 +265,7 @@ export default {
 		const submitPassword = () => {
 			const userUpdate = {
 				id: user.value.ID,
-				logo: imagesUID,
+				logo: avatarUrl.value,
 				firstName: user.value.FirstName,
 				lastName: user.value.LastName,
 				email: user.value.Email,
@@ -307,9 +303,12 @@ export default {
 			password,
 			confirmPassword,
 			submitPassword,
-			uploadAvatar,
 			editAvatar,
 			logoID,
+			globalAvatar,
+			imagesUID,
+			avatarUrl,
+			uploadFile,
 
 			resetFilter() {
 				filter.value = "";
