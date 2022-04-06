@@ -813,7 +813,7 @@ export default {
 			getRolesList,
 			domainID,
 			authorizationDomainObj,
-			tab: ref("libraries"),
+			tab: ref("authorizations"),
 			environmentName,
 			environmentShortDescription,
 			environmentDescription,

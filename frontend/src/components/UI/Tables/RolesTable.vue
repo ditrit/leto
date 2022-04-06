@@ -48,7 +48,7 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<Modal class="modalGlobal" v-model="openAddRoleDialog">
+		<Modal class="modalGlobal" v-model="openAddRoleDialog" persistent>
 			<template v-slot:ModalTitle> {{ $t("create_role") }} </template>
 			<template v-slot:ModalContent>
 				<q-form

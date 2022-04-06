@@ -50,7 +50,11 @@
 				/>
 				<div class="flex-col p_padding" v-if="user">
 					<div class="col">
-						<q-form @submit="uploadFile" class="q-gutter-md" v-if="showButton">
+						<q-form
+							@submit="uploadAvatar"
+							class="q-gutter-md"
+							v-if="showButton"
+						>
 							<q-file
 								v-model="user.Logo"
 								type="file"
@@ -167,9 +171,83 @@
 						</div>
 					</div>
 				</div>
-				<Modal>
-					<template v-slot:ModalBody>
-						<CreationFormStepperVue />
+				<!-- Modification Dialog -->
+				<Modal class="modalGlobal" v-model="opendDialog">
+					<template v-slot:ModalTitle> {{ $t("edit_user") }} </template>
+					<template v-slot:ModalContent>
+						<q-form
+							@submit.prevent="onSubmitUpdate"
+							@reset="onResetUpdate"
+							class="q-gutter-md q-pa-md"
+						>
+							<div class="row col-md-12 q-gutter-sm">
+								<div class="col">
+									<q-input
+										filled
+										v-model="user.FirstName"
+										label="Your First Name *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+									/>
+								</div>
+								<div class="col q-pl-md">
+									<q-input
+										filled
+										v-model="user.LastName"
+										label="Your Last Name *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+									/>
+								</div>
+							</div>
+							<div class="row col-md-12 q-gutter-sm">
+								<div class="col">
+									<q-input
+										filled
+										v-model="user.Email"
+										label="Your Email *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+									/>
+								</div>
+							</div>
+							<div class="row col-md-12 q-gutter-sm">
+								<div class="col-md-8">
+									<q-input
+										filled
+										type="textarea"
+										v-model="user.Descripiton"
+										label="Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+									/>
+								</div>
+							</div>
+							<q-card-actions
+								align="right"
+								class="text-primary flex justify-center"
+							>
+								<q-btn type="reset" label="Cancel" v-close-popup />
+								<q-btn
+									label="Update"
+									type="submit"
+									color="primary"
+									v-close-popup
+								/>
+							</q-card-actions>
+						</q-form>
 					</template>
 				</Modal>
 			</q-page>
@@ -182,14 +260,15 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import API from "../services/index";
+import { v4 as uuidv4 } from "uuid";
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import PageContent from "../components/Content/PageContent";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../common/index";
 import HomeNav from "../components/UI/Navigation/HomeNav.vue";
-import useFileData from "../composables/Forms/useFile";
 import globalAvatar from "../assets/profil.png";
+import Modal from "../components/UI/Dialogs/Modal.vue";
 
 export default {
 	components: {
@@ -198,6 +277,7 @@ export default {
 		Drawer,
 		AccountSettings,
 		HomeNav,
+		Modal,
 	},
 	props: {
 		logo: {
@@ -213,15 +293,16 @@ export default {
 		const filterRef = ref(null);
 		const store = useStore();
 		const user = ref(null);
+		const imagesUID = uuidv4();
 		const disabled = ref(true);
 		const showSubmitBtn = ref(false);
 		const showButton = ref(false);
+		const opendDialog = ref(true);
 		const file = ref(null);
 		const logoID = ref(null);
 		const avatar = ref(null);
 		const password = ref(null);
 		const confirmPassword = ref(null);
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
 		const currentUser = async () => {
 			let response = await store.getters["auth/currentUser"];
@@ -234,33 +315,33 @@ export default {
 		console.log("	download avatar : ", avatar.value);
 
 		const OnEdit = () => {
-			disabled.value = !disabled.value;
-			showButton.value = !showButton.value;
+			// disabled.value = !disabled.value;
+			// showButton.value = !showButton.value;
+			opendDialog.value = true;
 		};
 
 		const editAvatar = () => {
 			showSubmitBtn.value = !showSubmitBtn.value;
 		};
 
-		// const uploadAvatar = async () => {
-		// 	console.log("file is:", file.value);
-		// 	const formData = new FormData();
-		// 	formData.append("file", file.value, file.value.name);
-		// 	formData.append("id", logoID.value);
-		// 	console.log("formData: ", formData);
-		// 	await API.post(`/file/${logoID.value}`, formData).then((res) => {
-		// 		console.log(res);
-		// 		console.log(" upload avatar: ", avatar.value);
-		// 	});
-		// 	// store.dispatch("appFiles/uploadFile", imagesUID, formData);
-		// 	showSubmitBtn.value = false;
-		// };
+		const uploadAvatar = async (file) => {
+			const formData = new FormData();
+			formData.append("id", imagesUID);
+			formData.append("file", file[0], file[0].name);
+			await API.post(`/file/${imagesUID}`, formData).then((res) => {
+				console.log("res.data", res.data);
+				console.log("res", res);
+				console.log("url", res.config.url);
+				console.log("responseURL", res.request.responseURL);
+			});
+			showSubmitBtn.value = false;
+			getAvatar();
+		};
 
 		const getAvatar = async () => {
 			const response = await API.get(`/file/${logoID.value}`);
 			console.log("response image: ", response);
 		};
-		getAvatar();
 
 		const submitPassword = () => {
 			const userUpdate = {
@@ -306,9 +387,9 @@ export default {
 			editAvatar,
 			logoID,
 			globalAvatar,
+			uploadAvatar,
 			imagesUID,
-			avatarUrl,
-			uploadFile,
+			opendDialog,
 
 			resetFilter() {
 				filter.value = "";
