@@ -4,7 +4,7 @@
 			style="max-width: 100%"
 			class="full-height"
 			label="Your Logo"
-			accept=".jpg, svg, image/*"
+			accept=".jpg, .svg, image/*"
 			@rejected="onRejected"
 			color="primary"
 			:factory="uploadFile"
@@ -34,4 +34,7 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="sass">
+.text-negative
+  color: white !important
+</style>

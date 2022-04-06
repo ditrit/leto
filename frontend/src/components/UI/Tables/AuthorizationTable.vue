@@ -259,7 +259,6 @@ export default {
 			));
 		};
 		allAuthorizations();
-		console.log("rowsData.value : ", rowsData.value);
 
 		const addNewAuthorization = () => {
 			openAddAuthorizationDialog.value = true;
