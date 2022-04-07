@@ -10,14 +10,17 @@ const routes = [
 				component: () => import("pages/PageTeams.vue"),
 				meta: { requiresAuth: true },
 			},
-
 			{
 				path: "workspaces/:id",
 				component: () => import("pages/PageDomainChild.vue"),
 				props: true,
 				meta: { requiresAuth: true },
 			},
-
+			{
+				path: "product",
+				component: () => import("pages/Products/PageProductChild.vue"),
+				meta: { requiresAuth: true },
+			},
 			{
 				path: "model",
 				component: () => import("pages/Model.vue"),

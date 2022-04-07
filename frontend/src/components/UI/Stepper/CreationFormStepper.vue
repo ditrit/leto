@@ -17,7 +17,6 @@
 							<q-input
 								filled
 								label="Name *"
-								hint=""
 								lazy-rules
 								:rules="[
 									(val) => (val && val.length > 0) || 'Please type something',
