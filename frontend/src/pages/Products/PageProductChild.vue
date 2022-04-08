@@ -52,7 +52,9 @@
 		<q-page-container class="q-pa-lg">
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
 				<div class="domainWrapper">
-					<div class="col">{{ name }}</div>
+					<div class="col">
+						<ContentCard :data="currentProductContent" />
+					</div>
 				</div>
 			</q-page>
 		</q-page-container>
@@ -62,12 +64,11 @@
 <script>
 import { defineComponent, ref } from "vue";
 import AjaxBar from "../../components/UI/Progress/AjaxBar";
-
 import Drawer from "../../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "../../components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
-import useDomainData from "../../composables/WorkSpace/useDomain";
 import useProductDetails from "../../composables/Products/useProductDetails";
+import ContentCard from "../../components/UI/Cards/ContentCard.vue";
 
 export default defineComponent({
 	name: "PageDomainChild",
@@ -75,62 +76,28 @@ export default defineComponent({
 		AjaxBar,
 		Drawer,
 		AccountSettings,
+		ContentCard,
 	},
 	props: ["id"],
 	setup(props) {
 		const drawer = ref(false);
-		const actionsLinks = ref(["Edit"]);
 		const oepnDialog = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
 		const selected = ref("DDS");
-		const data = ref([
-			{
-				ID: "f260affe-26de-4e12-9d60-5eeeb0d52e03",
-				ShortDescription: "short description",
-				Description: " long description",
-				Logo: "",
-				GitURL: "https://github.com/ditrit",
-			},
-		]);
-		let { name, menu } = useProductDetails();
 
-		let {
-			store,
-			getMenuData,
-			router,
-			choosenNodeID,
-			currentDomainDataContent,
-			progress,
-			domainTags,
-			globalTagsTreeList,
-			getTagsTree,
-			OnDelete,
-			editMode,
-			$q,
-			confirm,
-			OnEdit,
-			domainID,
-		} = useDomainData(props);
+		let { store, router, $q, currentProductContent, menu } =
+			useProductDetails();
 
 		return {
-			name,
-			confirm,
-			progress,
+			currentProductContent,
 			store,
 			router,
 			drawer,
 			oepnDialog,
-			choosenNodeID,
-			currentDomainDataContent,
-			domainTags,
-			getTagsTree,
-			actionsLinks,
-			Drawer,
 			menu,
-			getMenuData,
 			filter,
 			filterRef,
 			filterTag,
@@ -146,12 +113,6 @@ export default defineComponent({
 				filterTagRef.value.focus();
 			},
 			pageSizeTweak,
-			editMode,
-			OnEdit,
-			OnDelete,
-			globalTagsTreeList,
-			domainID,
-			data,
 		};
 	},
 });

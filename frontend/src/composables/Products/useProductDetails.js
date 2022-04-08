@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -7,7 +7,7 @@ export default function useProductDetails() {
 	const store = useStore();
 	const route = useRouter();
 	const $q = useQuasar();
-	const name = ref("Brahim");
+	const currentProductContent = ref(null);
 	const menu = ref([
 		{
 			label: "ENV ONE",
@@ -36,5 +36,5 @@ export default function useProductDetails() {
 			],
 		},
 	]);
-	return { store, route, $q, name, menu };
+	return { store, route, $q, currentProductContent, menu };
 }
