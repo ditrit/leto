@@ -53,7 +53,7 @@
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
 				<div class="domainWrapper">
 					<div class="col">
-						<ContentCard :data="currentProductContent" />
+						<ProductContent :data="currentProductContent" />
 					</div>
 				</div>
 			</q-page>
@@ -68,7 +68,8 @@ import Drawer from "../../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "../../components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
 import useProductDetails from "../../composables/Products/useProductDetails";
-import ContentCard from "../../components/UI/Cards/ContentCard.vue";
+
+import ProductContent from "../../components/UI/Cards/ProductContent.vue";
 
 export default defineComponent({
 	name: "PageDomainChild",
@@ -76,7 +77,7 @@ export default defineComponent({
 		AjaxBar,
 		Drawer,
 		AccountSettings,
-		ContentCard,
+		ProductContent,
 	},
 	props: ["id"],
 	setup(props) {
