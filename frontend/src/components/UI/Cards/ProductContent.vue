@@ -135,10 +135,38 @@
 								</template>
 							</Modal> -->
 					</div>
-					<div class="col-4"><slot name="tagsCard"></slot></div>
+					<div class="col-4"><slot name="productTags"></slot> Product Tags</div>
 				</div>
 			</q-card-section>
 		</q-card>
+		<div class="col panel_wrapper">
+			<div class="q-mt-md" style="max-width: 350px">
+				<div class="q-gutter-md">
+					<div class="col"></div>
+					<div class="flex text-h6 items-start q-mt-lg">
+						<q-icon name="info" size="30px" class="q-mr-sm" />
+						<span class="text-uppercase"> REQUIREMENTS </span>
+					</div>
+					<!-- <q-input
+						v-model="search"
+						debounce="500"
+						placeholder="Search"
+						class="search_input q-mb-lg q-pa-md"
+					>
+						<template v-slot:append>
+							<q-icon name="search" />
+						</template>
+					</q-input> -->
+				</div>
+			</div>
+			<!-- <Tabs
+				:allTags="null"
+				:teamProducts="item.products"
+				:teamMembers="item.authorizations"
+				:teamLibraries="item.libraries"
+				:teamEnvironnements="item.envirnments"
+			/> -->
+		</div>
 	</div>
 </template>
 
