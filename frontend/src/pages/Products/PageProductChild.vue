@@ -52,7 +52,7 @@
 		<q-page-container class="q-pa-lg">
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
 				<div class="domainWrapper">
-					<div class="col">test</div>
+					<div class="col">{{ name }}</div>
 				</div>
 			</q-page>
 		</q-page-container>
@@ -67,6 +67,7 @@ import Drawer from "../../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "../../components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
 import useDomainData from "../../composables/WorkSpace/useDomain";
+import useProductDetails from "../../composables/Products/useProductDetails";
 
 export default defineComponent({
 	name: "PageDomainChild",
@@ -94,9 +95,9 @@ export default defineComponent({
 				GitURL: "https://github.com/ditrit",
 			},
 		]);
+		let { name, menu } = useProductDetails();
 
 		let {
-			menu,
 			store,
 			getMenuData,
 			router,
@@ -115,6 +116,7 @@ export default defineComponent({
 		} = useDomainData(props);
 
 		return {
+			name,
 			confirm,
 			progress,
 			store,
