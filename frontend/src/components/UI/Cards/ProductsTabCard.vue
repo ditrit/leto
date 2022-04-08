@@ -150,6 +150,9 @@
 			<q-card-section class="ellipsis-2-lines">
 				{{ productShortDescription }}
 			</q-card-section>
+			<div>
+				<span @click="openCard">details</span>
+			</div>
 		</q-card>
 	</div>
 </template>
@@ -157,6 +160,7 @@
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/useFile";
 import FileUploader from "../Form/FileUploader.vue";
@@ -184,6 +188,7 @@ export default {
 	},
 	setup(props, { emit }) {
 		const store = useStore();
+		const route = useRouter();
 		const $q = useQuasar();
 		const productId = ref(props.id);
 		const productName = ref(props.name);
@@ -194,6 +199,10 @@ export default {
 		const productDomainID = ref(props.domainID);
 		const isOpened = ref(false);
 		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+
+		const openCard = () => {
+			route.push(`/product/${productId.value}`);
+		};
 
 		const openEditionModal = (props) => {
 			isOpened.value = true;
@@ -278,6 +287,8 @@ export default {
 			avatarUrl,
 			uploadFile,
 			globalAvatar,
+			openCard,
+			route,
 		};
 	},
 };

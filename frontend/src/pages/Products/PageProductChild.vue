@@ -53,7 +53,7 @@
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
 				<div class="domainWrapper">
 					<div class="col">
-						<ProductContent :data="currentProductContent" />
+						<ProductContent :data="currentProductContent"> </ProductContent>
 					</div>
 				</div>
 			</q-page>

@@ -22,6 +22,12 @@ const routes = [
 				meta: { requiresAuth: true },
 			},
 			{
+				path: "product/:id",
+				component: () => import("pages/Products/PageProductChild.vue"),
+				props: true,
+				meta: { requiresAuth: true },
+			},
+			{
 				path: "model",
 				component: () => import("pages/Model.vue"),
 				meta: { requiresAuth: false },
