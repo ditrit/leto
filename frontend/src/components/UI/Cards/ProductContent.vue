@@ -1,5 +1,5 @@
 <template>
-	<div class="col-8" v-for="item in data" :key="item.id">
+	<div class="col" v-for="item in data" :key="item.id">
 		<q-card class="card_default" flat bordered>
 			<q-card-section>
 				<div class="row no-wrap">
@@ -182,4 +182,7 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="sass">
+.q-stepper__step-inner
+  padding: 24px 0 0 0 !important
+</style>

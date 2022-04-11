@@ -35,21 +35,21 @@ export default function useDomainData(props) {
 						parentID: item?.ParentID,
 						label: item?.Name,
 						avatar: item?.Logo,
-						handler: (item) => goToID(item),
+						handler: (node) => goToID(node),
 						children: item?.Childs?.map((subItem) => {
 							return {
 								id: subItem?.ID,
 								parentID: subItem?.ParentID,
 								label: subItem?.Name,
 								avatar: subItem?.Logo,
-								handler: (subItem) => goToID(subItem),
+								handler: (node) => goToID(node),
 								children: subItem?.Childs?.map((subLastItem) => {
 									return {
 										id: subLastItem?.ID,
 										parentID: subLastItem?.ParentID,
 										label: subLastItem?.Name,
 										avatar: subLastItem?.Logo,
-										handler: (subLastItem) => goToID(subLastItem),
+										handler: (node) => goToID(node),
 									};
 								}),
 							};
@@ -65,7 +65,7 @@ export default function useDomainData(props) {
 		await store.dispatch("appDomain/fetchDomainById", `${id}`);
 		let data = await store.getters["appDomain/allDomaines"];
 		console.log("data: ", Object.values(data));
-		progress.value = data.length;
+
 		currentDomainDataContent.value = Object.values(data).map((item) => {
 			return {
 				id: item.ID,
@@ -90,6 +90,7 @@ export default function useDomainData(props) {
 		console.log("goToID choosenNodeID.value: ", choosenNodeID.value);
 		await router.push(`/workspaces/${choosenNodeID.value}`);
 		editMode.value = false;
+
 		await rigthData(choosenNodeID.value);
 	};
 
@@ -137,13 +138,13 @@ export default function useDomainData(props) {
 							return {
 								id: subChild.ID,
 								label: subChild.Name,
-								handler: (subChild) => addTagtoDomain(subChild),
+								handler: (child) => addTagtoDomain(child),
 								icon: "sell",
 								children: subChild.Childs?.map((lastChild) => {
 									return {
 										id: lastChild.ID,
 										label: lastChild.Name,
-										handler: (lastChild) => addTagtoDomain(lastChild),
+										handler: (child) => addTagtoDomain(child),
 										icon: "sell",
 									};
 								}),
