@@ -11,7 +11,7 @@
 						<div class="text-subtitle3 text-grey-8">
 							{{ item.shortDescription }}
 						</div>
-						<div class="flex items-center text-subtitle3 q-py-sm">
+						<div class="flex text-subtitle3 q-py-sm">
 							<q-icon name="link" size="30px" class="q-mr-sm" /> Repository:
 							<a :href="item.gitURL" class="q-pl-sm"> {{ item.gitURL }}</a>
 						</div>
@@ -22,7 +22,7 @@
 							</p>
 						</div>
 					</div>
-					<div class="col-auto vertical_spatator">
+					<div class="vertical_spatator">
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
 								<q-list>

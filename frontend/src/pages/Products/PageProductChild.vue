@@ -68,7 +68,6 @@ import Drawer from "../../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "../../components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
 import useProductDetails from "../../composables/Products/useProductDetails";
-
 import ProductContent from "../../components/UI/Cards/ProductContent.vue";
 
 export default defineComponent({
@@ -89,10 +88,13 @@ export default defineComponent({
 		const filterTagRef = ref(null);
 		const selected = ref("DDS");
 
-		let { store, router, $q, currentProductContent, menu } =
+		let { store, router, $q, currentProductContent, menu, openProject } =
 			useProductDetails();
 
+		openProject(props.id);
+
 		return {
+			openProject,
 			currentProductContent,
 			store,
 			router,

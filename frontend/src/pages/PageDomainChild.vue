@@ -59,7 +59,7 @@
 									<div class="tags_wrapper">
 										<q-card flat bordered class="card_tags_default">
 											<q-card-section>
-												<div class="row items-center no-wrap">
+												<div class="row no-wrap">
 													<div class="col">
 														<div class="row">
 															<q-icon name="sell" size="30px" class="q-mr-sm" />

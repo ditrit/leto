@@ -9,6 +9,7 @@ export default function useProductDetails() {
 	const $q = useQuasar();
 	const currentProductContent = ref([
 		{
+			id: "1",
 			name: "Product One",
 			shortDescription: "Product One short description",
 			description:
@@ -45,5 +46,27 @@ export default function useProductDetails() {
 			],
 		},
 	]);
-	return { store, route, $q, currentProductContent, menu };
+
+	const openProject = async (id) => {
+		await store.dispatch("appProducts/fetchProductyId", id);
+
+		let data = store.getters["appProducts/allProducts"];
+
+		currentProductContent.value = data.map((item) => {
+			return {
+				id: item.ID,
+				name: item.Name,
+				shortDescription: item.ShortDescription,
+				description: item.Description,
+				logo: item.Logo,
+				gitURL: item.RepositoryURL,
+			};
+		});
+		// productName.value = updatesData.name;
+		// productLogo.value = avatarUrl.value;
+		// productShortDescription.value = updatesData.shortDescription;
+		// productProductRepositoryURL.value = updatesData.repositoryURL;
+		// productDescription.value = updatesData.description;
+	};
+	return { store, route, $q, currentProductContent, menu, openProject };
 }

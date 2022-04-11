@@ -24,6 +24,12 @@
 					<div class="button_actions__container col-auto">
 						<q-btn color="grey-7" round flat icon="more_vert">
 							<q-menu cover auto-close>
+								<q-item clickable @click.prevent="openCard(productId)">
+									<q-item-section class="action_card__item">
+										<q-icon name="link" size="1.5em" class="q-mr-sm" />
+										Details
+									</q-item-section>
+								</q-item>
 								<q-list>
 									<q-item
 										clickable
@@ -45,16 +51,16 @@
 											<q-icon name="edit" size="1.5em" class="q-mr-sm" />Update
 										</q-item-section>
 									</q-item>
-									<q-item clickable @click.prevent="delteItem(item)">
-										<q-item-section class="action_card__item">
-											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
-											Remove
-										</q-item-section>
-									</q-item>
 									<q-item clickable @click.prevent="favoriteItem(item)">
 										<q-item-section class="action_card__item">
 											<q-icon name="favorite" size="1.5em" class="q-mr-sm" />
 											Favorite
+										</q-item-section>
+									</q-item>
+									<q-item clickable @click.prevent="delteItem(item)">
+										<q-item-section class="action_card__item">
+											<q-icon name="delete" size="1.5em" class="q-mr-sm" />
+											Remove
 										</q-item-section>
 									</q-item>
 								</q-list>
@@ -150,9 +156,6 @@
 			<q-card-section class="ellipsis-2-lines">
 				{{ productShortDescription }}
 			</q-card-section>
-			<div>
-				<span @click="openCard">details</span>
-			</div>
 		</q-card>
 	</div>
 </template>
@@ -200,8 +203,9 @@ export default {
 		const isOpened = ref(false);
 		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
-		const openCard = () => {
-			route.push(`/product/${productId.value}`);
+		const openCard = (props) => {
+			console.log("props: ", props);
+			route.push(`/product/${props}`);
 		};
 
 		const openEditionModal = (props) => {
