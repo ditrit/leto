@@ -1,7 +1,7 @@
 <template>
 	<div class="q-pa-md">
 		<q-stepper v-model="step" header-nav ref="stepper" color="primary" animated>
-			<q-step :name="1" title="Select campaign settings" icon="settings">
+			<q-step :name="1" title="Definition" prefix="1">
 				<ProductContent :data="currentProductContent">
 					<template v-slot:productTags>
 						<section class="col-4">
@@ -97,21 +97,16 @@
 				</ProductContent>
 			</q-step>
 
-			<q-step
-				:name="2"
-				title="Create an ad group"
-				caption="Optional"
-				icon="create_new_folder"
-			>
-				An ad group contains one or more ads which target a shared set of
-				keywords.
+			<q-step :name="2" title="Modelization" prefix="2">
+				<!-- An ad group contains one or more ads which target a shared set of
+				keywords. -->
 			</q-step>
 
-			<q-step :name="3" title="Create an ad" icon="add_comment">
-				Try out different ad text to see what brings in the most customers, and
+			<q-step :name="3" title="Substurion" prefix="3">
+				<!-- Try out different ad text to see what brings in the most customers, and
 				learn how to enhance your ads using features like ad extensions. If you
 				run into any problems with your ads, find out how to tell if they're
-				running and how to resolve approval issues.
+				running and how to resolve approval issues. -->
 			</q-step>
 		</q-stepper>
 	</div>
@@ -163,5 +158,11 @@ export default {
 
 <style lang="sass" scoped>
 .q-stepper
+  background: none !important
+  box-shadow: none !important
   max-width: 1200px !important
+  border: none !important
+
+.q-stepper__header--border
+  border-bottom: none !important
 </style>

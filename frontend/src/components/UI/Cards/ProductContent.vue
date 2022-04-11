@@ -184,5 +184,7 @@ export default {
 
 <style lang="sass">
 .q-stepper__step-inner
-  padding: 24px 0 0 0 !important
+  padding: 24px 0 24px 0 !important
+.q-stepper__header--standard-labels .q-stepper__tab
+  justify-content: center !important
 </style>
