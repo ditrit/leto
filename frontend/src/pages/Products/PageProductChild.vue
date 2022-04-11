@@ -53,7 +53,99 @@
 			<q-page :style-fn="pageSizeTweak" class="q-pl-lg q-mt-lg">
 				<div class="domainWrapper">
 					<div class="col">
-						<ProductContent :data="currentProductContent"> </ProductContent>
+						<ProductContent :data="currentProductContent">
+							<template v-slot:productTags>
+								<section class="col-4">
+									<div class="tags_wrapper">
+										<q-card flat bordered class="card_tags_default">
+											<q-card-section>
+												<div class="row no-wrap">
+													<div class="col">
+														<div class="row">
+															<q-icon name="sell" size="30px" class="q-mr-sm" />
+															<div class="text-h6">Tags</div>
+														</div>
+													</div>
+													<div class="button_actions__container col-auto">
+														<q-btn color="grey-7" round flat icon="more_vert">
+															<q-menu cover auto-close>
+																<q-list>
+																	<q-item clickable @click.prevent="OnEdit">
+																		<q-item-section class="action_card__item">
+																			<q-icon
+																				name="edit"
+																				size="1.5em"
+																				class="q-mr-sm"
+																			/>
+																			Edit</q-item-section
+																		>
+																	</q-item>
+																</q-list>
+															</q-menu>
+														</q-btn>
+													</div>
+												</div>
+											</q-card-section>
+											<q-card-section>
+												<ul
+													class="cards_tags_wrapper rounded-borders overflow-hidden"
+												>
+													<li
+														v-for="item in domainTags"
+														:key="item.ID"
+														:class="item.class"
+													>
+														{{ item.Name }}
+														<q-btn
+															v-if="editMode"
+															round
+															dense
+															unelevated
+															size="xs"
+															color="red"
+															text-color="white"
+															icon="delete"
+															@click.prevent="confirm(item.ID)"
+															class="q-ml-sm"
+														/>
+													</li>
+												</ul>
+												<div
+													v-if="globalTagsTreeList"
+													v-show="editMode"
+													class="globalTagTree_container"
+												>
+													<q-input
+														ref="filterTagRef"
+														v-model="filterTag"
+														label="Search"
+														dense
+													>
+														<template v-slot:append>
+															<q-icon
+																v-if="filterTag !== ''"
+																name="clear"
+																class="cursor-pointer"
+																@click="resetFilterTag"
+															/>
+														</template>
+													</q-input>
+													<div class="q-pa-md q-gutter-sm">
+														<q-tree
+															dense
+															:nodes="globalTagsTreeList"
+															node-key="label"
+															:filter="filterTag"
+															default-expand-all
+														/>
+													</div>
+												</div>
+											</q-card-section>
+										</q-card>
+									</div>
+								</section>
+							</template>
+						</ProductContent>
 					</div>
 				</div>
 			</q-page>
@@ -69,6 +161,7 @@ import AccountSettings from "../../components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
 import useProductDetails from "../../composables/Products/useProductDetails";
 import ProductContent from "../../components/UI/Cards/ProductContent.vue";
+import useDomainData from "../../composables/WorkSpace/useDomain";
 
 export default defineComponent({
 	name: "PageDomainChild",
@@ -90,6 +183,18 @@ export default defineComponent({
 
 		let { store, router, $q, currentProductContent, menu, openProject } =
 			useProductDetails();
+
+		let {
+			domainTags,
+			globalTagsTreeList,
+			getTagsTree,
+			OnDelete,
+			editMode,
+
+			confirm,
+			OnEdit,
+			domainID,
+		} = useDomainData(props);
 
 		openProject(props.id);
 
@@ -116,6 +221,15 @@ export default defineComponent({
 				filterTagRef.value.focus();
 			},
 			pageSizeTweak,
+			domainTags,
+			globalTagsTreeList,
+			getTagsTree,
+			OnDelete,
+			editMode,
+
+			confirm,
+			OnEdit,
+			domainID,
 		};
 	},
 });

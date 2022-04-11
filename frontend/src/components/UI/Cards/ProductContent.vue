@@ -135,7 +135,7 @@
 								</template>
 							</Modal> -->
 					</div>
-					<div class="col-4"><slot name="productTags"></slot> Product Tags</div>
+					<div class="col-4"><slot name="productTags"></slot></div>
 				</div>
 			</q-card-section>
 		</q-card>
