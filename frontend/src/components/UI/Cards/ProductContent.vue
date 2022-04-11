@@ -143,11 +143,7 @@
 			<div class="q-mt-md" style="max-width: 350px">
 				<div class="q-gutter-md">
 					<div class="col"></div>
-					<div class="flex text-h6 items-start q-mt-lg">
-						<q-icon name="info" size="30px" class="q-mr-sm" />
-						<span class="text-uppercase"> REQUIREMENTS </span>
-					</div>
-					<!-- <q-input
+					<q-input
 						v-model="search"
 						debounce="500"
 						placeholder="Search"
@@ -156,22 +152,22 @@
 						<template v-slot:append>
 							<q-icon name="search" />
 						</template>
-					</q-input> -->
+					</q-input>
+					<div class="flex text-h6 items-start q-mt-lg">
+						<q-icon name="info" size="30px" class="q-mr-sm" />
+						<span class="text-uppercase"> REQUIREMENTS </span>
+					</div>
 				</div>
 			</div>
-			<!-- <Tabs
-				:allTags="null"
-				:teamProducts="item.products"
-				:teamMembers="item.authorizations"
-				:teamLibraries="item.libraries"
-				:teamEnvironnements="item.envirnments"
-			/> -->
+			<RequirementsTabCard class="q-mt-lg" />
 		</div>
 	</div>
 </template>
 
 <script>
+import RequirementsTabCard from "./RequirementsTabCard.vue";
 export default {
+	components: { RequirementsTabCard },
 	name: "ProductContent",
 
 	props: {
