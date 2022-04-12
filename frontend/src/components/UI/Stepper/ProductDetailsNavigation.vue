@@ -98,8 +98,9 @@
 			</q-step>
 
 			<q-step :name="2" title="Modelization" prefix="2">
-				<modelization />
-				<Monaco />
+				<Toggle :ValueOne="vOne" :ValueTwo="vTwo" />
+				<Modelization />
+				<Monaco v-model="vTwo" />
 			</q-step>
 
 			<q-step :name="3" title="Substurion" prefix="3">
@@ -119,11 +120,14 @@ import useProductDetails from "../../../composables/Products/useProductDetails";
 import useDomainData from "../../../composables/WorkSpace/useDomain";
 import Modelization from "../../2DModel/Modelization.vue";
 import Monaco from "../../Monaco/Monaco.vue";
+import Toggle from "../Toggles/Toggle.vue";
 
 export default {
-	components: { ProductContent, Modelization, Monaco },
+	components: { ProductContent, Modelization, Monaco, Toggle },
 	setup(props) {
 		const step = ref(1);
+		const vOne = ref("Model mode");
+		const vTwo = ref("Source mode");
 		let { store, router, $q, currentProductContent, menu, openProject } =
 			useProductDetails();
 		let {
@@ -153,6 +157,8 @@ export default {
 			confirm,
 			OnEdit,
 			domainID,
+			vOne,
+			vTwo,
 		};
 	},
 };
