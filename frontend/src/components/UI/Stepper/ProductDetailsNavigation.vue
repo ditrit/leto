@@ -98,8 +98,8 @@
 			</q-step>
 
 			<q-step :name="2" title="Modelization" prefix="2">
-				<!-- An ad group contains one or more ads which target a shared set of
-				keywords. -->
+				<modelization />
+				<Monaco />
 			</q-step>
 
 			<q-step :name="3" title="Substurion" prefix="3">
@@ -117,9 +117,11 @@ import { ref } from "vue";
 import ProductContent from "../Cards/ProductContent.vue";
 import useProductDetails from "../../../composables/Products/useProductDetails";
 import useDomainData from "../../../composables/WorkSpace/useDomain";
+import Modelization from "../../2DModel/Modelization.vue";
+import Monaco from "../../Monaco/Monaco.vue";
 
 export default {
-	components: { ProductContent },
+	components: { ProductContent, Modelization, Monaco },
 	setup(props) {
 		const step = ref(1);
 		let { store, router, $q, currentProductContent, menu, openProject } =
