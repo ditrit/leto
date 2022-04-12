@@ -34,10 +34,10 @@ export default {
 	},
 };
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
 .monaco
-  width: 100%
-  min-height: 1400px !important
+  width: 1400px
+  height: 1000px !important
   overflow-y: hidden
 
 .monaco-editor
