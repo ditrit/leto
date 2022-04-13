@@ -85,15 +85,14 @@ export default defineComponent({
 		const filterTagRef = ref(null);
 		const selected = ref("DDS");
 
-		let { store, router, $q } = useProductDetails();
-
+		let { store, router, $q, openProject } = useProductDetails();
+		openProject(props.id);
 		let {
 			domainTags,
 			globalTagsTreeList,
 			getTagsTree,
 			OnDelete,
 			editMode,
-
 			confirm,
 			OnEdit,
 			domainID,
@@ -104,7 +103,6 @@ export default defineComponent({
 			router,
 			drawer,
 			oepnDialog,
-
 			filter,
 			filterRef,
 			filterTag,
@@ -125,10 +123,10 @@ export default defineComponent({
 			getTagsTree,
 			OnDelete,
 			editMode,
-
 			confirm,
 			OnEdit,
 			domainID,
+			openProject,
 		};
 	},
 });

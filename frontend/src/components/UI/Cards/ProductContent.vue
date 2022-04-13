@@ -184,7 +184,15 @@ export default {
 
 <style lang="sass">
 .q-stepper__step-inner
-  padding: 24px 0 24px 0 !important
+  padding: 60px 0 24px 0 !important
+
+.q-stepper__title
+  line-height: 34px
+
 .q-stepper__header--standard-labels .q-stepper__tab
+  flex-direction: column
   justify-content: center !important
+
+.q-stepper--horizontal .q-stepper__line:before, .q-stepper--horizontal .q-stepper__line:after
+  display: none
 </style>

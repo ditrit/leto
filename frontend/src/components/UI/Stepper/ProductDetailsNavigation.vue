@@ -130,6 +130,7 @@ import Modelization from "../../2DModel/Modelization.vue";
 import Monaco from "../../Monaco/Monaco.vue";
 
 export default {
+	props: ["id"],
 	components: { ProductContent, Modelization, Monaco },
 	setup(props) {
 		const step = ref(1);
@@ -137,8 +138,9 @@ export default {
 		const vTwo = ref("Source mode");
 		const modelValue = ref("Model mode");
 
-		let { store, router, $q, currentProductContent, menu, openProject } =
+		let { store, router, $q, currentProductContent, menu } =
 			useProductDetails();
+
 		let {
 			domainTags,
 			globalTagsTreeList,
@@ -157,7 +159,6 @@ export default {
 			$q,
 			currentProductContent,
 			menu,
-			openProject,
 			domainTags,
 			globalTagsTreeList,
 			getTagsTree,
