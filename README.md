@@ -50,7 +50,11 @@ quasar build
 Clone :
 
 ```bash
-git clone --branch swaggerAPI https://github.com/ditrit/gandalf.git
+git clone  https://github.com/ditrit/gandalf.git
+```
+
+```bash
+git checkout develop
 ```
 
 Cd :
@@ -66,8 +70,6 @@ cd gandalf/core/
 ./prepare_docker.sh
 ```
 
-- After that run this other command:
-
 ```bash
- docker run -p 127.0.0.1:9203:9203/tcp gandalfdocker
- ```
+./testbackend.sh run <Storage> <-- This is optional
+```

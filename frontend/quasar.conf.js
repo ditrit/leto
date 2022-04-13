@@ -23,7 +23,7 @@ module.exports = configure(function (ctx) {
 		// app boot file (/src/boot)
 		// --> boot files are part of "main.js"
 		// https://v2.quasar.dev/quasar-cli/boot-files
-		boot: ["axios", "i18n"],
+		boot: ["i18n", "authomaticLogin"],
 
 		// https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
 		css: ["app.sass"],
@@ -95,6 +95,7 @@ module.exports = configure(function (ctx) {
 			https: false,
 			port: 8080,
 			open: true, // opens browser window automatically
+			proxy: { target: "http://localhost:5000" },
 		},
 
 		// https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
@@ -112,7 +113,7 @@ module.exports = configure(function (ctx) {
 			// directives: [],
 
 			// Quasar plugins
-			plugins: ["Notify"],
+			plugins: ["Notify", "Dialog"],
 		},
 
 		animations: "all", // --- includes all animations

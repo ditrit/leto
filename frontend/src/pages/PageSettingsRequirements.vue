@@ -42,18 +42,14 @@
 		</Drawer>
 
 		<q-page-container>
-			<q-page :style-fn="pageSizeTweak" class="flex">
+			<q-page :style-fn="pageSizeTweak" class="">
 				<PageContent
-					icon="person"
-					:headline="$t('profile')"
-					:subTitle="$t('manage_profile')"
-					:textContent="$t('text_content')"
+					icon="info"
+					:headline="$t('requirements')"
+					:subTitle="$t('manage_requirements')"
+					textContent=""
 				/>
-				<Modal>
-					<template v-slot:ModalBody>
-						<CreationFormStepperVue />
-					</template>
-				</Modal>
+				<div class="q-px-lg"><RequirementsTable /></div>
 			</q-page>
 		</q-page-container>
 	</q-layout>
@@ -67,6 +63,8 @@ import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import SettingsNav from "../components/UI/Navigation/SettingsNav";
 import { pageSizeTweak } from "../common/index";
+import RequirementsTable from "../components/UI/Tables/RequirementsTable";
+
 export default {
 	components: {
 		AjaxBar,
@@ -74,11 +72,13 @@ export default {
 		Drawer,
 		AccountSettings,
 		SettingsNav,
+		RequirementsTable,
 	},
 	setup() {
 		const drawer = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
+
 		return {
 			drawer,
 			filter,

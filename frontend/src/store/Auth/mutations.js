@@ -1,14 +1,14 @@
 import axios from "axios";
 
 export const SET_USER_DATA = (state, userData) => {
-	localStorage.setItem("user", userData.accessToken);
+	state.user = userData;
+	localStorage.setItem("user", JSON.stringify(userData));
 	axios.defaults.headers.common[
 		"Authorization"
 	] = `Bearer ${userData.accessToken}`;
 	userData.accessToken
 		? (state.authenticated = true)
 		: (state.authenticated = false);
-	state.user = userData.user;
 };
 
 export const CLEAR_USER_DATA = (state) => {

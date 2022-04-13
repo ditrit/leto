@@ -2,9 +2,8 @@
 	<div class="profil_settings" style="z-index: 2">
 		<q-item clickable>
 			<q-item-section>
-				<q-avatar round size="40px">
-					<img src="../../../assets/profil.png" />
-					<!-- <q-badge floating rounded color="orange">4</q-badge> -->
+				<q-avatar round size="40px" v-if="user">
+					<img :src="user.user.Logo ? user.user.Logo : logo" />
 				</q-avatar>
 			</q-item-section>
 		</q-item>
@@ -22,7 +21,6 @@
 							<q-item-label>
 								<router-link to="/settings">Settings</router-link>
 							</q-item-label>
-							<!-- <q-item-label caption></q-item-label> -->
 						</q-item-section>
 					</q-item>
 
@@ -35,11 +33,11 @@
 
 				<div class="column" v-if="user">
 					<q-avatar size="72px">
-						<img src="../../../assets/profil.png" />
+						<img :src="user.user.Logo ? user.user.Logo : logo" />
 					</q-avatar>
 
 					<div class="q-mt-md q-mb-xs">
-						Hi, {{ user.FirstName }} {{ user.LastName }}
+						Hi, {{ user.user.FirstName }} {{ user.user.LastName }}
 					</div>
 
 					<q-btn
@@ -62,12 +60,15 @@ import { useRouter } from "vue-router";
 import LangSwitcher from "../../LangSwitcher.vue";
 export default {
 	components: { LangSwitcher },
+	props: {
+		logo: {
+			type: String,
+			default: "https://cdn.quasar.dev/img/boy-avatar.png",
+		},
+	},
 	setup() {
 		const store = useStore();
 		const router = useRouter();
-
-		const user = ref(null);
-		user.value = store.getters["auth/user"];
 
 		const logout = () => {
 			store.dispatch("auth/logout");
@@ -75,7 +76,7 @@ export default {
 		};
 
 		return {
-			user,
+			user: store.getters["auth/currentUser"],
 			logout,
 		};
 	},

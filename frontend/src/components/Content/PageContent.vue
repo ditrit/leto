@@ -1,7 +1,7 @@
 <template>
 	<div class="teams_header">
 		<div class="row">
-			<div class="col col-md-8">
+			<div class="">
 				<div class="flex">
 					<q-icon :name="icon" size="30px" class="q-ml-md q-mr-sm" />
 					<div class="title_container">
@@ -11,11 +11,12 @@
 						</p>
 					</div>
 				</div>
-				<div class="content_wrapper">
+				<div v-if="textContent" class="content_wrapper">
 					<img v-if="logo" src="logo" alt="logo" />
-					<p class="q-ml-md">
+					<p v-if="textContent" class="q-ml-md">
 						{{ textContent }}
 					</p>
+					<p v-if="repo" class="text-subtitle3">{{ repo }}</p>
 				</div>
 			</div>
 		</div>
@@ -38,9 +39,11 @@ export default defineComponent({
 		textContent: {
 			type: String,
 			required: true,
+			default: "",
 		},
 		subTitle: { type: String, required: false },
 		logo: { type: String, required: false },
+		repo: { type: String, required: false },
 	},
 });
 </script>
@@ -50,12 +53,12 @@ export default defineComponent({
 .teams_header
   padding-top: 60px
   padding-left: 30px
-  margin-bottom: 60px
+  // margin-bottom: 60px
 
 .title_container
   display: flex
   flex-direction: column
-  align-items: center
+  align-items: flex-start
   & p:nth-child(2)
     margin-top: -16px
 

@@ -19,67 +19,9 @@
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
-				<!-- Modification Dialog -->
-				<q-dialog v-model="opendDialog" persistent>
-					<q-card style="width: 750px; max-width: 80vw">
-						<q-card-section>
-							<div class="text-h6 q-pa-md">{{ $t("edit_role") }}</div>
-						</q-card-section>
-
-						<q-card-section class="q-pt-none">
-							<q-form
-								@submit.prevent="onSubmitUpdate"
-								@reset="onResetUpdate"
-								class="q-gutter-md q-pa-md"
-							>
-								<q-input
-									filled
-									v-model="roleObj[2]"
-									label="Name *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-								<q-input
-									filled
-									v-model="roleObj[3]"
-									label="Short Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-								<q-input
-									filled
-									v-model="roleObj[4]"
-									label="Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-								/>
-
-								<q-card-actions
-									align="right"
-									class="text-primary flex justify-center"
-								>
-									<q-btn type="reset" label="Cancel" v-close-popup />
-									<q-btn
-										label="Update"
-										type="submit"
-										color="primary"
-										v-close-popup
-									/>
-								</q-card-actions>
-							</q-form>
-						</q-card-section>
-					</q-card>
-				</q-dialog>
-
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
 					</q-avatar>
 				</q-td>
 			</template>
@@ -98,7 +40,7 @@
 						round
 						flat
 						color="grey"
-						@click="deleteRow(props.row)"
+						@click="confirm(props.row)"
 						icon="delete"
 					></q-btn>
 				</q-td>
@@ -106,62 +48,112 @@
 		</q-table>
 
 		<!-- Create Dialog -->
-		<q-dialog v-model="openAddRoleDialog" persistent>
-			<q-card style="width: 750px; max-width: 80vw">
-				<q-card-section>
-					<div class="text-h6 q-pa-md">{{ $t("create_role") }}</div>
-				</q-card-section>
-
-				<q-card-section class="q-pt-none">
-					<q-form
-						@submit.prevent="onSubmitAdd"
-						@reset="onResetAdd"
-						class="q-gutter-md q-pa-md"
-					>
-						<q-input
-							filled
-							label="Name *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="roleName"
-						/>
-						<q-input
-							filled
-							label="Short Description *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="roleShortDescription"
-						/>
-						<q-input
-							filled
-							label="Description *"
-							lazy-rules
-							:rules="[
-								(val) => (val && val.length > 0) || 'Please type something',
-							]"
-							v-model="roleDescription"
-						/>
-
-						<q-card-actions
-							align="right"
-							class="text-primary flex justify-center"
-						>
-							<q-btn type="reset" label="Cancel" v-close-popup />
-							<q-btn
-								label="Create"
-								type="submit"
-								color="primary"
-								v-close-popup
+		<Modal class="modalGlobal" v-model="openAddRoleDialog" persistent>
+			<template v-slot:ModalTitle> {{ $t("create_role") }} </template>
+			<template v-slot:ModalContent>
+				<q-form
+					@submit.prevent="onSubmitAdd"
+					@reset="onResetAdd"
+					class="q-gutter-md q-pa-md"
+				>
+					<q-input
+						filled
+						label="Name *"
+						lazy-rules
+						:rules="[
+							(val) => (val && val.length > 0) || 'Please type something',
+						]"
+						v-model="roleName"
+					/>
+					<q-input
+						filled
+						label="Short Description *"
+						lazy-rules
+						:rules="[
+							(val) => (val && val.length > 0) || 'Please type something',
+						]"
+						v-model="roleShortDescription"
+					/>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col-md-8">
+							<q-input
+								filled
+								type="textarea"
+								label="Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+								v-model="roleDescription"
 							/>
-						</q-card-actions>
-					</q-form>
-				</q-card-section>
-			</q-card>
-		</q-dialog>
+						</div>
+						<FileUploader @uploadAction="uploadFile" class="q-pl-md" />
+					</div>
+
+					<q-card-actions
+						align="right"
+						class="text-primary flex justify-center"
+					>
+						<q-btn type="reset" label="Cancel" v-close-popup />
+						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
+			</template>
+		</Modal>
+
+		<!-- Modification Dialog -->
+		<Modal class="modalGlobal" v-model="opendDialog">
+			<template v-slot:ModalTitle> {{ $t("edit_role") }} </template>
+			<template v-slot:ModalContent>
+				<q-form
+					@submit.prevent="onSubmitUpdate"
+					@reset="onResetUpdate"
+					class="q-gutter-md q-pa-md"
+				>
+					<q-input
+						filled
+						v-model="roleObj[2]"
+						label="Name *"
+						lazy-rules
+						:rules="[
+							(val) => (val && val.length > 0) || 'Please type something',
+						]"
+					/>
+					<q-input
+						filled
+						v-model="roleObj[3]"
+						label="Short Description *"
+						lazy-rules
+						:rules="[
+							(val) => (val && val.length > 0) || 'Please type something',
+						]"
+					/>
+					<div class="row col-md-12 q-gutter-sm">
+						<div class="col-md-8">
+							<q-input
+								filled
+								type="textarea"
+								v-model="roleObj[4]"
+								label="Description *"
+								lazy-rules
+								:rules="[
+									(val) => (val && val.length > 0) || 'Please type something',
+								]"
+							/>
+						</div>
+						<FileUploader @uploadAction="uploadFile" class="q-pl-md" />
+					</div>
+
+					<q-card-actions
+						align="right"
+						class="text-primary flex justify-center"
+					>
+						<q-btn type="reset" label="Cancel" v-close-popup />
+						<q-btn label="Update" type="submit" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
+			</template>
+		</Modal>
 	</div>
 </template>
 
@@ -169,6 +161,10 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import Modal from "../Dialogs/Modal.vue";
+import useFileData from "../../../composables/Forms/useFile";
+import FileUploader from "../Form/FileUploader.vue";
+import globalAvatar from "../../../assets/profil.png";
 
 const columns = [
 	{
@@ -179,6 +175,7 @@ const columns = [
 		field: (row) => row.name,
 		format: (val) => `${val}`,
 		sortable: true,
+		classes: "tr_width__avatar",
 	},
 
 	{
@@ -187,6 +184,7 @@ const columns = [
 		align: "left",
 		field: "name",
 		sortable: true,
+		classes: "tr_width__name ellipsis",
 	},
 	{
 		name: "shortDescription",
@@ -194,6 +192,7 @@ const columns = [
 		align: "left",
 		field: "shortDescription",
 		sortable: true,
+		classes: "tr_width__shortdesc ellipsis",
 	},
 	{
 		name: "description",
@@ -201,6 +200,7 @@ const columns = [
 		align: "left",
 		field: "description",
 		sortable: true,
+		classes: "tr_width__descr ellipsis",
 	},
 	{
 		name: "actionsButtons",
@@ -208,10 +208,12 @@ const columns = [
 		align: "left",
 		field: "actionsButtons",
 		sortable: false,
+		classes: "tr_width__actions",
 	},
 ];
 
 export default {
+	components: { Modal, FileUploader },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
@@ -223,6 +225,23 @@ export default {
 		const roleName = ref("");
 		const roleShortDescription = ref("");
 		const roleDescription = ref("");
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+
+		const confirm = (item) => {
+			console.log("item: ", item);
+			$q.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
+				.onOk(() => {
+					deleteRow(item);
+				})
+				.onCancel(() => {
+					console.log("Cancel");
+				});
+		};
 
 		const allRoles = async () => {
 			// fetch All Users
@@ -232,8 +251,7 @@ export default {
 				getRoles.value.map((item) => {
 					return {
 						id: item.ID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+						avatar: item.Logo,
 						name: item.Name,
 						shortDescription: item.ShortDescription,
 						description: item.Description,
@@ -251,6 +269,7 @@ export default {
 				name: roleName.value,
 				shortDescription: roleShortDescription.value,
 				description: roleDescription.value,
+				logo: avatarUrl.value,
 			};
 			console.log("roleData", roleData);
 
@@ -278,6 +297,7 @@ export default {
 				name: roleObj.value[2],
 				shortDescription: roleObj.value[3],
 				description: roleObj.value[4],
+				logo: avatarUrl.value,
 			};
 			console.log("roleObj: ", roleObj.value);
 
@@ -323,6 +343,7 @@ export default {
 		};
 
 		return {
+			confirm,
 			editedIndex,
 			columns,
 			rowsData,
@@ -339,6 +360,10 @@ export default {
 			onResetAdd,
 			opendDialog,
 			openAddRoleDialog,
+			imagesUID,
+			avatarUrl,
+			uploadFile,
+			globalAvatar,
 			password: ref(""),
 			isPwd: ref(true),
 		};

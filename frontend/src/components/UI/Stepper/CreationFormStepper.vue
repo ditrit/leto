@@ -17,7 +17,6 @@
 							<q-input
 								filled
 								label="Name *"
-								hint=""
 								lazy-rules
 								:rules="[
 									(val) => (val && val.length > 0) || 'Please type something',
@@ -29,7 +28,7 @@
 							<q-select
 								filled
 								:options="optionsSelections"
-								label="Team Parent"
+								label="Workspace parent"
 								v-model="selectedParentData"
 							/>
 						</div>
@@ -56,22 +55,7 @@
 								v-model="description"
 							/>
 						</div>
-						<div class="col">
-							<q-uploader
-								style="max-width: 100%"
-								url="http://localhost:3000/upload"
-								label="Your Logo"
-								multiple
-								accept=".jpg, svg, image/*"
-								@rejected="onRejected"
-								color="primary"
-								factory
-								files
-								hide-upload-btn="true"
-								auto-upload
-								@uploaded="onFileUpload"
-							/>
-						</div>
+						<FileUploader @uploadAction="uploadFile" />
 					</div>
 				</q-step>
 
@@ -132,20 +116,19 @@
 </template>
 <script>
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import Tabs from "../TabPanels/Tabs";
+import FileUploader from "../Form/FileUploader.vue";
+import useFileData from "../../../composables/Forms/useFile";
 
 export default {
-	components: { Tabs },
-
-	/**
-	 * TODO
-	 * 	1 - Add props and get aldomaies data from TeamPage
-	 */
+	components: { Tabs, FileUploader },
 
 	setup() {
 		const store = useStore();
+		const route = useRouter();
 		const name = ref("");
 		const teamParent = ref("");
 		const domainID = ref("");
@@ -157,64 +140,54 @@ export default {
 		const SelectedDomain = ref([]);
 		const $q = useQuasar();
 
-		function onRejected(rejectedEntries) {
-			$q.notify({
-				type: "negative",
-				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+
+		const getAllDomains = async () => {
+			await store.dispatch("appDomain/fetchAllDomaines");
+			const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
+			console.log("getDomaies: ", getDomaies.value);
+			let dataReturned = getDomaies.value.map((payload) => {
+				return {
+					id: payload.ID,
+					name: payload.Name,
+					label: payload.Name,
+					value: payload.Name,
+					parentName: payload?.Name,
+					parentId: payload?.ParentID,
+					authorizations: payload?.Authorizations,
+					libraries: payload?.Libraries,
+					products: payload?.Products,
+					environments: payload?.Environments,
+				};
 			});
-		}
-		/**
-		 * TODO
-		 * 	2 - regroupe functions by thematique
-		 */
+			console.log("dataReturned from stepper: ", [...dataReturned]);
+			optionsSelections.value = [...new Set(dataReturned)].filter(
+				(item) => item != null
+			);
+		};
+		getAllDomains();
 
-		// fetch All Domaines
-		const fetchDomaines = store.dispatch("appDomain/fetchAllDomaines");
-		const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
-		console.log("getDomaies: ", getDomaies.value);
-
-		// Get input Select options value
-		let dataReturned = getDomaies.value.map((payload) => {
-			return {
-				id: payload.ID,
-				name: payload.Name,
-				label: payload.Name,
-				value: payload.Name,
-				parentName: payload?.Name,
-				parentId: payload?.ParentID,
-				authorizations: payload?.Authorizations,
-				libraries: payload?.Libraries,
-				products: payload?.Products,
-				environments: payload?.Environments,
-			};
-		});
-		console.log("dataReturned from stepper: ", [...dataReturned]);
-		// optionsSelections.value = dataReturned;
-		// console.log("selectedParentData: ", optionsSelections.value);
-		optionsSelections.value = [...new Set(dataReturned)].filter(
-			(item) => item != null
-		);
+		const getDomainstree = async (id) => {
+			await store.dispatch("appDomain/fetchDomainesTree");
+			await store.getters["appDomain/allDomainesTree"];
+			await route.push(`/workspaces/${id}`);
+		};
 
 		return {
 			step: ref(1),
 			selectedParentData,
-			fetchDomaines,
 			SelectedDomain,
 			optionsSelections,
 			options,
 			domainID,
-			onRejected,
 			store,
 			name,
 			teamParent,
 			shortDescription,
 			description,
-
-			onFileUpload(event) {
-				console.log("file name", event.files[0].name);
-				console.log("file upload number", event.files[0].__uploaded);
-				console.log("file Id", event.files[0].xhr.response);
-			},
+			avatarUrl,
+			imagesUID,
+			uploadFile,
 
 			onSubmit() {
 				try {
@@ -224,10 +197,11 @@ export default {
 						teamParent: selectedParentData.value.parentName,
 						shortDescription: shortDescription.value,
 						description: description.value,
+						logo: avatarUrl.value,
 					};
 					if (newDomain.name.length && newDomain.teamParent.length) {
 						store.dispatch("appDomain/addDomain", newDomain);
-						console.log(newDomain);
+						getDomainstree(newDomain.pid);
 
 						$q.notify({
 							type: "positive",
@@ -260,10 +234,6 @@ export default {
 	max-width: 100% !important
 	height: 100%
 	max-height: 100%
-.q-uploader__list
-	// display: none
-.q-card__actions
-	display: none
 .q-stepper__dot
 	width: 40px
 	height: 40px

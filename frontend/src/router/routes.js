@@ -6,18 +6,27 @@ const routes = [
 		children: [
 			{ path: "", redirect: "/login" },
 			{
-				path: "teams",
+				path: "workspaces",
 				component: () => import("pages/PageTeams.vue"),
 				meta: { requiresAuth: true },
 			},
-
 			{
-				path: "teams/:id",
+				path: "workspaces/:id",
 				component: () => import("pages/PageDomainChild.vue"),
 				props: true,
 				meta: { requiresAuth: true },
 			},
-
+			{
+				path: "product",
+				component: () => import("pages/Products/PageProductChild.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "product/:id",
+				component: () => import("pages/Products/PageProductChild.vue"),
+				props: true,
+				meta: { requiresAuth: true },
+			},
 			{
 				path: "model",
 				component: () => import("pages/Model.vue"),
@@ -30,8 +39,23 @@ const routes = [
 			},
 
 			{
-				path: "products",
-				component: () => import("pages/PageProducts.vue"),
+				path: "home",
+				component: () => import("pages/PageHome.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "home/profile",
+				component: () => import("pages/PageHomeProfile.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "home/products",
+				component: () => import("pages/PageHomeProducts.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "home/workspaces",
+				component: () => import("pages/PageHomeWorkspaces.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
@@ -46,13 +70,7 @@ const routes = [
 			},
 			{
 				path: "settings",
-				component: () => import("pages/PageSettingsProfile.vue"),
-				meta: { requiresAuth: true },
-			},
-
-			{
-				path: "settings/profile",
-				component: () => import("pages/PageSettingsProfile.vue"),
+				component: () => import("pages/PageSettingsUsers.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
@@ -63,6 +81,16 @@ const routes = [
 			{
 				path: "settings/roles",
 				component: () => import("pages/PageSettingsRoles.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "settings/authorizations",
+				component: () => import("pages/PageSettingsAuthorizations.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "settings/requirements",
+				component: () => import("pages/PageSettingsRequirements.vue"),
 				meta: { requiresAuth: true },
 			},
 			{

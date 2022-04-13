@@ -6,7 +6,6 @@ export const GET_DOMAIN_BY_ID = (state, id) => {
 	const index = state.domains.findIndex((domain) => domain.id === id);
 	state.domains.splice(index, 1, id);
 };
-
 export const NEW_DOMAIN = (state, domain) => state.domains.unshift(domain);
 
 export const UPDATE_DOMAIN = (state, updatedDomain) => {
@@ -27,4 +26,15 @@ export const ADD_DOMAIN_TAGS = (state, domainTag) =>
 export const DELETE_DOMAIN_TAG = (state, tagId) =>
 	(state.domainTags = state.domainTags.filter(
 		(domainTag) => domainTag.id !== tagId
+	));
+
+export const GET_DOMAIN_LIBRARIES = (state, domainLib) =>
+	(state.domainLibraries = domainLib);
+
+export const ADD_DOMAIN_LIBRARY = (state, domainLib) =>
+	state.domainLibraries.unshift(domainLib);
+
+export const DELETE_DOMAIN_LIBRARY = (state, libraryId) =>
+	(state.domainLibraries = state.domainLibraries.filter(
+		(domainLibrary) => domainLibrary.id !== libraryId
 	));

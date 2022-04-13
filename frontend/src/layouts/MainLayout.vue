@@ -33,21 +33,21 @@ import EssentialTools from "components/EssentialTools";
 const linksToolsList = [
 	{
 		title: "",
-		caption: "Teams ",
-		icon: "group",
-		link: "#/teams",
+		caption: "Home",
+		icon: "home",
+		link: "#/home",
+	},
+	{
+		title: "",
+		caption: "Workspaces ",
+		icon: "workspaces",
+		link: "#/workspaces",
 	},
 	{
 		title: "",
 		caption: "Ide ",
 		icon: "edit",
 		link: "#/model",
-	},
-	{
-		title: "",
-		caption: "Products",
-		icon: "apps",
-		link: "#/products",
 	},
 	{
 		title: "",

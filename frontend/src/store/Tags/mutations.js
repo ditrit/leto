@@ -9,7 +9,7 @@ export const GET_TAG_BY_ID = (state, id) => {
 export const NEW_TAG = (state, tag) => state.tags.unshift(tag);
 
 export const UPDATE_TAG = (state, updatedTag) => {
-	const index = state.tags.findIndex((tag) => tag.id === updatedTag);
+	const index = state.tags.findIndex((tag) => tag.id === updatedTag.id);
 	state.tags.splice(index, 1, updatedTag);
 };
 export const DELETE_TAG = (state, tagIid) =>

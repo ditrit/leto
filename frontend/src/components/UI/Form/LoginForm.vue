@@ -41,58 +41,20 @@
 	</div>
 </template>
 <script>
-import { useQuasar } from "quasar";
-import { ref } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
 import Headline6 from "../Headlines/Headline6";
+import useLoginData from "../../../composables/Forms/useLogin";
 
 export default {
 	components: { Headline6 },
 	setup() {
-		const isPwd = ref(false);
-		const router = useRouter();
-		const $q = useQuasar();
-		const store = useStore();
-		const email = ref(null);
-		const password = ref(null);
-		const error = ref(null);
+		let { isPwd, email, password, error, login } = useLoginData();
 
 		return {
 			email,
 			password,
 			error,
 			isPwd,
-
-			login() {
-				try {
-					const newUser = {
-						email: email.value,
-						password: password.value,
-					};
-					console.log("newUser: ", newUser);
-					store.dispatch("auth/login", newUser).then(() => {
-						router.push("/dashboard");
-					});
-					store.dispatch("auth/currentUser");
-
-					$q.notify({
-						color: "green-4",
-						textColor: "white",
-						icon: "cloud_done",
-						message: "Submitted successfully",
-					});
-				} catch (error) {
-					// error.value = err.response.data.error;
-					console.log("	error.value : ", response.error);
-					$q.notify({
-						color: "negative",
-						textColor: "white",
-						icon: "danger",
-						message: "Sorry,you can not login",
-					});
-				}
-			},
+			login,
 		};
 	},
 };

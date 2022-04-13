@@ -6,7 +6,6 @@ export const fetchDomainesTree = async ({ commit }) => {
 };
 export const fetchAllDomaines = async ({ commit }) => {
 	let response = await API.get("/domain");
-	console.log("response.data from action: ", response.data);
 	commit("GET_DOMAINS", response.data);
 };
 
@@ -28,23 +27,35 @@ export const removeDomain = async ({ commit }, id) => {
 	await API.delete(`/domain/${id}`);
 	commit("DELETE_DOMAIN", id);
 };
+
+// Domain Tags
 export const fetchDomainTags = async ({ commit }, id) => {
 	await API.get(`/domain/${id}/tag`);
 	commit("GET_DOMAIN_TAGS", id);
 };
 
-// TODO: Make domainID + tagID detection dynamic
-
 export const addDomainTag = async ({ commit }, domainId, tagId) => {
 	await API.post(`/domain/${domainId}/tag/${tagId}`);
-	commit("ADD_DOMAIN_TAGS", domainId, tagId);
+	commit("ADD_DOMAIN_TAGS", tagId);
 };
 
-export const removeDomainTag = async (
-	{ commit },
-	domainId = "703911909106483201",
-	tagId = "703911909124931585"
-) => {
+export const removeDomainTag = async ({ commit }, domainId, tagId) => {
 	await API.delete(`/domain/${domainId}/tag/${tagId}`);
 	commit("DELETE_DOMAIN_TAG", domainId, tagId);
+};
+
+// Domain Libraries
+export const fetchDomainLibraries = async ({ commit }, id) => {
+	await API.get(`/domain/${id}/library`);
+	commit("GET_DOMAIN_LIBRARIES", id);
+};
+
+export const addDomainLibrary = async ({ commit }, library) => {
+	await API.post(`/domain/${library.domainId}/library/${library.libraryId}`);
+	commit("ADD_DOMAIN_LIBRARY", library);
+};
+
+export const removeDomainLibrary = async ({ commit }, domainId, libraryId) => {
+	await API.delete(`/domain/${domainId}/library/${libraryId}`);
+	commit("DELETE_DOMAIN_LIBRARY", domainId, libraryId);
 };

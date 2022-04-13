@@ -8,7 +8,12 @@ import appDomain from "./Domains/index";
 import appTags from "./Tags/index";
 import appRoles from "./Roles/index";
 import appEnviType from "./EnviType/index";
+import appEnvironment from "./Environment/index";
+import appProducts from "./Products/index";
+import appLibraries from "./Libraries/index";
 import appAuthorization from "./Authorization/index";
+import appFiles from "./Files/index";
+import appGit from "./Git/index";
 
 /*
  * If not building with SSR mode, you can
@@ -28,7 +33,12 @@ export default store(function (/* { ssrContext } */) {
 			appRoles,
 			appTags,
 			appEnviType,
+			appEnvironment,
 			appAuthorization,
+			appFiles,
+			appProducts,
+			appLibraries,
+			appGit,
 		},
 		strict: process.env.DEBUGGING,
 	});

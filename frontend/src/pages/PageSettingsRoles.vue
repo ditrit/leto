@@ -44,17 +44,12 @@
 		<q-page-container>
 			<q-page :style-fn="pageSizeTweak">
 				<PageContent
-					icon="person"
+					icon="supervisor_account"
 					:headline="$t('roles')"
 					:subTitle="$t('manage_roles')"
 					textContent=""
 				/>
 				<div class="q-px-lg"><RolesTable /></div>
-				<Modal>
-					<template v-slot:ModalBody>
-						<CreationFormStepperVue />
-					</template>
-				</Modal>
 			</q-page>
 		</q-page-container>
 	</q-layout>

@@ -1,5 +1,5 @@
 <template>
-	<div class="col col-md-12">
+	<div class="col-12">
 		<q-card>
 			<q-tabs
 				v-model="tab"
@@ -11,9 +11,21 @@
 			>
 				<q-tab v-if="tags" dense name="tags" label="Tags" icon="sell" />
 				<q-tab dense name="products" label="Products" icon="apps" />
-				<q-tab dense name="team_members" label="Team members" icon="group" />
+				<q-tab dense name="requirements" label="Requirements" icon="info" />
+				<q-tab
+					dense
+					name="authorizations"
+					label="Authorizations"
+					icon="reduce_capacity"
+				/>
 				<q-tab dense name="libraries" label="Libraries" icon="library_books" />
-				<q-tab dense name="environnements" label="Environnements" icon="code" />
+				<q-tab
+					v-if="environmentTeam"
+					dense
+					name="environnements"
+					label="Environnements"
+					icon="code"
+				/>
 			</q-tabs>
 			<q-separator />
 
@@ -27,16 +39,35 @@
 				<q-tab-panel name="products" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="product in teamProducts"
+						v-for="product in productTeam"
 						:key="product.ID"
 					>
-						<ActionCard
-							v-if="product.Name"
-							:id="product.ID"
-							:name="product.Name"
-							:description="product.ShortDescription"
-							:logo="product.Logo"
-						/>
+						<div v-if="product.Logo">
+							<ProductsTabCard
+								v-if="product.Name"
+								:id="product.ID"
+								:domainID="product.DomainID"
+								:name="product.Name"
+								:shortDescription="product.ShortDescription"
+								:description="product.Description"
+								:logo="product.Logo"
+								:repositoryURL="product.RepositoryURL"
+								@deleteProductAction="confirmDeleteProduct(product.ID)"
+							/>
+						</div>
+						<div v-else>
+							<ProductsTabCard
+								v-if="product.Name"
+								:id="product.ID"
+								:domainID="product.DomainID"
+								:name="product.Name"
+								:shortDescription="product.ShortDescription"
+								:description="product.Description"
+								:logo="logo"
+								:repositoryURL="product.RepositoryURL"
+								@deleteProductAction="confirmDeleteProduct(product.ID)"
+							/>
+						</div>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
@@ -45,24 +76,137 @@
 							icon="add"
 							class="text-primary"
 							label="New product"
-							@click.prevent="openModal(teamProducts)"
+							@click.prevent="openCreationProductModal(productTeam)"
 						/>
 					</div>
+					<!-- Products Creation dialog -->
+					<Modal class="modalGlobal" v-model="isCreationProductsOpened">
+						<template v-slot:ModalTitle> {{ $t("add_product") }} </template>
+						<template v-slot:ModalContent>
+							<q-form
+								@submit.prevent="addNewProduct"
+								@reset="onResetProduct"
+								class="q-gutter-sm q-pa-md"
+							>
+								<div class="row col-md-12 q-gutter-md">
+									<div class="col">
+										<q-input
+											filled
+											label="Name *"
+											hint=""
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+											v-model="productName"
+										/>
+									</div>
+								</div>
+								<q-input
+									class="q-gutter-md"
+									filled
+									label="Short Description *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="productShortDescription"
+								/>
+								<q-input
+									class="q-gutter-md"
+									filled
+									label="Repo *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="productProductRepositoryURL"
+								/>
+
+								<div class="row q-gutter-md">
+									<div class="col col-md-8">
+										<q-input
+											class="q-gutter-md"
+											filled
+											type="textarea"
+											label="Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+											v-model="productDescription"
+										/>
+									</div>
+									<FileUploader @uploadAction="uploadFile" />
+								</div>
+								<q-card-actions
+									align="right"
+									class="text-primary flex justify-center"
+								>
+									<q-btn type="reset" label="Cancel" v-close-popup />
+									<q-btn
+										label="Create"
+										type="submit"
+										color="primary"
+										v-close-popup
+									/>
+								</q-card-actions>
+							</q-form>
+						</template>
+					</Modal>
 				</q-tab-panel>
-				<q-tab-panel name="team_members" class="flex q-gutter-md">
+				<q-tab-panel name="requirements" class="flex q-gutter-md">
+					<div class="cards_wrapper">
+						<RequirementsTabCard cardTitle="Groupe Name One" />
+					</div>
+				</q-tab-panel>
+
+				<q-tab-panel name="authorizations" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="member in teamMembers"
+						v-for="member in authorizationDomainObj"
 						:key="member.ID"
 					>
-						<ActionCard
-							v-if="member.User.LastName"
-							:id="member.ID"
-							:name="member.User.LastName"
-							:role="member.Role.Name"
-							:description="member.ShortDescription"
-							:logo="member.Logo"
-						/>
+						<div v-if="member.Logo">
+							<AuthorizationsTabCard
+								v-if="member.User.LastName"
+								:authorizationId="member.ID"
+								:authorizationName="
+									member.User.FirstName + ' ' + member.User.LastName
+								"
+								:authorizationRoleName="member.Role.Name"
+								:authorizationShortDescription="member.User.Description"
+								:authorizationDescription="member.User.Description"
+								:authorizationLogo="member.Logo"
+								:authorizationRoleID="member.Role.ID"
+								:authorizationDomainID="member.DomainID"
+								:authorizationUserID="member.User.ID"
+								@deleteAuthorizationAction="
+									confirmDeleteAuthorization(member.ID)
+								"
+							/>
+						</div>
+						<div v-else>
+							<AuthorizationsTabCard
+								v-if="member.User.LastName"
+								:authorizationId="member.ID"
+								:authorizationName="
+									member.User.FirstName + ' ' + member.User.LastName
+								"
+								:authorizationRoleName="member.Role.Name"
+								:authorizationShortDescription="member.User.Description"
+								:authorizationDescription="member.User.Description"
+								:authorizationLogo="logo"
+								:authorizationRoleID="member.Role.ID"
+								:authorizationDomainID="member.DomainID"
+								:authorizationUserID="member.User.ID"
+								@deleteAuthorizationAction="
+									confirmDeleteAuthorization(member.ID)
+								"
+							/>
+						</div>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
@@ -70,24 +214,86 @@
 							text-color="primary"
 							icon="add"
 							label="New Authorization"
-							@click.prevent="openModal(teamMembers)"
+							@click.stop="
+								openAuthorizsationCreationModal(authorizationDomainObj)
+							"
 						/>
 					</div>
+					<!-- Authorizations Creation dialog -->
+					<Modal class="modalGlobal" v-model="isAuthorCreationOpened">
+						<template v-slot:ModalTitle>
+							{{ $t("add_authorization") }}
+						</template>
+						<template v-slot:ModalContent>
+							<q-form
+								@submit.prevent="onSubmitAuthorization"
+								@reset="onResetAuthorization"
+								class="q-gutter-sm q-pa-md"
+							>
+								<q-select
+									filled
+									v-model="authorizationNameRef"
+									:options="usersList"
+									label="Choose a user"
+								/>
+								<q-select
+									filled
+									v-model="authorizationRoleRef"
+									:options="roleList"
+									label="Choose a role"
+								/>
+								<div class="col" disabled>
+									<q-select
+										disabled
+										filled
+										label="Domain"
+										v-model="authorizationDomainNameRef"
+									/>
+								</div>
+
+								<q-card-actions
+									align="right"
+									class="text-primary flex justify-center q-mt-lg q-pt-md"
+								>
+									<q-btn type="reset" label="Cancel" v-close-popup />
+									<q-btn
+										label="Update"
+										type="submit"
+										color="primary"
+										v-close-popup
+									/>
+								</q-card-actions>
+							</q-form>
+						</template>
+					</Modal>
 				</q-tab-panel>
 
 				<q-tab-panel name="libraries" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="library in teamLibraries"
+						v-for="library in libraryTeam"
 						:key="library.ID"
 					>
-						<ActionCard
-							v-if="library.Name"
-							:id="library.ID"
-							:name="library.Name"
-							:description="library.ShortDescription"
-							:logo="library.Logo"
-						/>
+						<div v-if="library.Logo">
+							<LibraryTabCard
+								v-if="library.Name"
+								:id="library.ID"
+								:name="library.Name"
+								:shortDescription="library.ShortDescription"
+								:logo="library.Logo"
+								@deleteAction="confirmDeleteLibrary(library.ID)"
+							/>
+						</div>
+						<div v-else>
+							<LibraryTabCard
+								v-if="library.Name"
+								:id="library.ID"
+								:name="library.Name"
+								:shortDescription="library.ShortDescription"
+								:logo="logo"
+								@deleteAction="confirmDeleteLibrary(library.ID)"
+							/>
+						</div>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
@@ -95,26 +301,176 @@
 							text-color="primary"
 							icon="add"
 							label="New library"
-							@click.prevent="openModal(teamLibraries)"
+							@click.prevent="openCreationLibraryModal(libraryTeam)"
 						/>
+
+						<Modal class="modalGlobal" v-model="isCreationLibraryOpened">
+							<template v-slot:ModalTitle> {{ $t("add_library") }} </template>
+							<template v-slot:ModalContent>
+								<q-form
+									@submit.prevent="addNewLibrary"
+									@reset="onResetLibrary"
+									class="q-gutter-sm q-pa-md"
+								>
+									<div class="col-md-12 q-gutter-md">
+										<div class="col">
+											<q-select
+												filled
+												:options="librariesList"
+												label="Library"
+												v-model="libraryName"
+											/>
+										</div>
+										<div class="col" disabled>
+											<q-select
+												disabled
+												filled
+												label="Domain"
+												v-model="domainNameRef"
+											/>
+										</div>
+									</div>
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Create"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</template>
+						</Modal>
 					</div>
 				</q-tab-panel>
 
 				<q-tab-panel name="environnements" class="flex q-gutter-md">
 					<div
 						class="cards_wrapper"
-						v-for="env in teamEnvironnements"
+						v-for="env in environmentTeam"
 						:key="env.ID"
 					>
-						<ActionCard
-							v-if="env.Name"
-							:id="env.ID"
-							:name="env.Name"
-							:description="env.ShortDescription"
-							:logo="env.Logo"
-							:environmentTypeID="env.EnvironmentTypeID"
-							:domainID="env.DomainID"
-						/>
+						<div v-if="env.Logo">
+							<EnvironemtsTabCard
+								:id="env.ID"
+								:domainID="env.DomainID"
+								:name="env.Name"
+								:shortDescription="env.ShortDescription"
+								:description="env.Description"
+								:logo="env.Logo"
+								:environmentTypeName="env.EnvironmentType.Name"
+								@deleteAction="confirmDeleteEnvironment"
+							/>
+						</div>
+						<div v-else>
+							<EnvironemtsTabCard
+								:id="env.ID"
+								:name="env.Name"
+								:shortDescription="env.ShortDescription"
+								:description="env.Description"
+								:logo="env.logo"
+								:domainID="env.DomainID"
+								:environmentTypeName="env.EnvironmentType.Name"
+								@deleteAction="confirmDeleteEnvironment"
+							/>
+						</div>
+						<!-- Environments Creation dialog -->
+						<Modal class="modalGlobal" v-model="isEnvironmentsCreationOpened">
+							<template v-slot:ModalTitle>
+								{{ $t("create_environment") }}
+							</template>
+							<template v-slot:ModalContent>
+								<q-form
+									@submit.prevent="addNewEnvironment"
+									@reset="onResetEnvironment"
+									class="q-gutter-sm q-pa-md"
+								>
+									<div class="row col-md-12 q-gutter-md">
+										<div class="col">
+											<q-input
+												filled
+												label="Name *"
+												hint=""
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="environmentName"
+											/>
+										</div>
+										<div class="col">
+											<q-select
+												filled
+												:options="optionsSelections"
+												label="Environment Type"
+												v-model="selectedParentData"
+											/>
+										</div>
+									</div>
+									<q-input
+										class="q-gutter-md"
+										filled
+										label="Short Description *"
+										lazy-rules
+										:rules="[
+											(val) =>
+												(val && val.length > 0) || 'Please type something',
+										]"
+										v-model="environmentShortDescription"
+									/>
+
+									<div class="row q-gutter-md">
+										<div class="col col-md-8">
+											<q-input
+												class="q-gutter-md"
+												filled
+												type="textarea"
+												label="Description *"
+												lazy-rules
+												:rules="[
+													(val) =>
+														(val && val.length > 0) || 'Please type something',
+												]"
+												v-model="environmentDescription"
+											/>
+										</div>
+										<div class="col">
+											<q-uploader
+												style="max-width: 100%"
+												url="http://localhost:3000/upload"
+												label="Your Logo"
+												multiple
+												accept=".jpg, svg, image/*"
+												@rejected="onRejected"
+												color="primary"
+												factory
+												files
+												hide-upload-btn="true"
+												auto-upload
+												@uploaded="onFileUpload"
+											/>
+										</div>
+									</div>
+									<q-card-actions
+										align="right"
+										class="text-primary flex justify-center"
+									>
+										<q-btn type="reset" label="Cancel" v-close-popup />
+										<q-btn
+											label="Create"
+											type="submit"
+											color="primary"
+											v-close-popup
+										/>
+									</q-card-actions>
+								</q-form>
+							</template>
+						</Modal>
 					</div>
 					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
 						<q-btn
@@ -122,7 +478,7 @@
 							text-color="primary"
 							icon="add"
 							label="New Environnement"
-							@click.prevent="openModal(teamEnvironnements)"
+							@click.prevent="openEnvironmentCreationModal()"
 						/>
 					</div>
 				</q-tab-panel>
@@ -131,12 +487,32 @@
 	</div>
 </template>
 <script>
-import { ref } from "vue";
-import ActionCard from "../Cards/ActionCard.vue";
+import { ref, computed } from "vue";
+import LibraryTabCard from "../Cards/LibraryTabCard.vue";
+import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
+import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
+import ProductsTabCard from "../Cards/ProductsTabCard.vue";
+import RequirementsTabCard from "../Cards/RequirementsTabCard.vue";
+import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
+import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
+import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
+import useLibraryTabData from "../../../composables/TabPanels/useLibraryTab";
+import useContentCardData from "../../../composables/WorkSpace/useContentCard";
+import Modal from "../Dialogs/Modal.vue";
+import FileUploader from "../Form/FileUploader.vue";
+import useFileData from "../../../composables/Forms/useFile";
 
 export default {
-	components: { ActionCard },
-	emits: ["openModalToAddItem"],
+	components: {
+		LibraryTabCard,
+		EnvironemtsTabCard,
+		ProductsTabCard,
+		RequirementsTabCard,
+		AuthorizationsTabCard,
+		Modal,
+		FileUploader,
+	},
+	emits: ["openModalToAddItem", "deleteAuthorizationAction"],
 	props: {
 		allTags: {
 			type: [],
@@ -189,6 +565,17 @@ export default {
 		},
 		teamProducts: {
 			type: [],
+			default: [
+				{
+					id: 0,
+					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
+					name: "Product 1",
+					shortDescription: "Ceci est une courte description ",
+					description:
+						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
+					repositoryURL: "https://github.com/ditrit/leto/projects/1",
+				},
+			],
 		},
 		teamLibraries: {
 			type: [],
@@ -223,6 +610,10 @@ export default {
 					id: 0,
 					logo: "https://cdn.quasar.dev/img/parallax2.jpg",
 					name: "Env 1",
+					environmentTypeName: "EnvTypeName",
+					environmentTypeID: "EnvTypeID",
+					shortDescription:
+						"Ceci est une description: molestiae quas vel sint commodi",
 					description:
 						"Ceci est une description: molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis",
 				},
@@ -244,13 +635,231 @@ export default {
 		},
 	},
 	setup(props, { emit }) {
+		let {
+			store,
+			route,
+			$q,
+			usersList,
+			getUsersList,
+			roleList,
+			getRolesList,
+			environmentName,
+			addNewEnvironment,
+			selectedParentData,
+			deleteEnvironement,
+			environmentShortDescription,
+			environmentDescription,
+			confirmDeleteEnvironment,
+			updateEnvironement,
+			getAllEnviTypes,
+			optionsSelections,
+			addNewAuthorization,
+			environmentTeam,
+		} = useEnvironmentsTabsData(props);
+
+		let {
+			productTeam,
+			productName,
+			productLogo,
+			productShortDescription,
+			productDescription,
+			productProductRepositoryURL,
+			deleteProduct,
+			confirmDeleteProduct,
+			addNewProduct,
+			updateProduct,
+		} = useProductsTabData(props);
+
+		let {
+			librariesList,
+			libraryTeam,
+			libraryId,
+			libraryName,
+			libraryShortDescription,
+			libraryDescription,
+			confirmDeleteLibrary,
+			addNewLibrary,
+			updateLibrary,
+			domainID,
+		} = useLibraryTabData(props);
+
+		let {
+			authorizationNameRef,
+			authorizationRoleRef,
+			confirmDeleteAuthorization,
+			authorizationDomainObj,
+		} = useAuthorizationsTabsData(props);
+		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+
+		let { refreshDomainData } = useContentCardData();
+		const isEnvironmentsCreationOpened = ref(false);
+		const isAuthorCreationOpened = ref(false);
+		const isCreationProductsOpened = ref(false);
+		const isCreationLibraryOpened = ref(false);
+		const isModificationProductsOpened = ref(false);
+		const isEnvironmentsModificationOpened = ref(false);
+		const authorizationDomainNameRef = ref(null);
+
+		const domainList = ref(null);
+		const domainNameRef = ref(null);
+
 		const openModal = (item) => {
 			emit("openModalToAddItem", item);
-			console.table({ ID: item[0].ID, DomainID: item[0].DomainID });
 		};
+		const openEnvironmentCreationModal = () => {
+			isEnvironmentsCreationOpened.value = true;
+			emit("openNewItemModal", props);
+		};
+
+		const openCreationProductModal = (props) => {
+			isCreationProductsOpened.value = true;
+			emit("openNewItemModal", props);
+		};
+		const openCreationLibraryModal = (props) => {
+			isCreationLibraryOpened.value = true;
+			emit("openNewItemModal", props);
+		};
+
+		const openAuthorizsationCreationModal = (props) => {
+			isAuthorCreationOpened.value = true;
+			getDominListTab();
+		};
+
+		// Modifications
+		const openModificationProductModal = (props) => {
+			isModificationProductsOpened.value = true;
+			emit("openNewItemModal", props);
+		};
+
+		const openModificationEnvironmentModal = (props) => {
+			isEnvironmentsModificationOpened.value = true;
+			emit("updateAction", props);
+		};
+
+		const onRejected = (rejectedEntries) => {
+			$q.notify({
+				type: "negative",
+				message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
+			});
+		};
+
+		// Use to get domain list for Authorization and Libraries Tab
+		const getDominListTab = () => {
+			store.dispatch("appDomain/fetchDomainById", domainID.value);
+			let data = store.getters["appDomain/allDomaines"];
+			authorizationDomainNameRef.value = data[0].Name;
+			domainNameRef.value = data[0].Name;
+		};
+		getDominListTab();
+
+		const refreshDomainAuthorizations = async (id) => {
+			await store.dispatch("appDomain/fetchDomainById", id);
+			let data = computed(() => {
+				return store.getters["appDomain/allDomaines"];
+			});
+			let choosenDomain = data.value.find(
+				(domain) => domain.ID === domainID.value
+			);
+			return (authorizationDomainObj.value = choosenDomain.Authorizations);
+		};
+
+		const onSubmitAuthorization = async () => {
+			const authorizationData = {
+				domainID: domainID.value,
+				userID: authorizationNameRef.value.id,
+				roleID: authorizationRoleRef.value.id,
+			};
+			try {
+				await store
+					.dispatch("appAuthorization/addAuthorization", authorizationData)
+					.then(() => {
+						refreshDomainAuthorizations(domainID.value).then(() => {
+							authorizationNameRef.value = "";
+							authorizationRoleRef.value = "";
+						});
+					});
+
+				$q.notify({
+					type: "positive",
+					message: "Authorizsation has been successfully created",
+				});
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: "Sorry, authorizsation has not been created",
+				});
+			}
+		};
+
 		return {
-			tab: ref("tags"),
+			store,
+			route,
+			$q,
+			productTeam,
+			productName,
+			productLogo: avatarUrl.value,
+			productShortDescription,
+			productDescription,
+			productProductRepositoryURL,
+			deleteProduct,
+			confirmDeleteProduct,
+			addNewProduct,
+			updateProduct,
+			refreshDomainData,
+			environmentTeam,
+			addNewAuthorization,
+			getAllEnviTypes,
+			getUsersList,
+			getRolesList,
+			domainID,
+			authorizationDomainObj,
+			tab: ref("authorizations"),
+			environmentName,
+			environmentShortDescription,
+			environmentDescription,
 			openModal,
+			isEnvironmentsCreationOpened,
+			openModificationEnvironmentModal,
+			isEnvironmentsModificationOpened,
+			isAuthorCreationOpened,
+			isCreationProductsOpened,
+			isModificationProductsOpened,
+			openModificationProductModal,
+			openCreationProductModal,
+			addNewEnvironment,
+			openEnvironmentCreationModal,
+			openAuthorizsationCreationModal,
+			updateEnvironement,
+			deleteEnvironement,
+			optionsSelections,
+			selectedParentData,
+			onRejected,
+			confirmDeleteEnvironment,
+			usersList,
+			roleList,
+			authorizationNameRef,
+			authorizationRoleRef,
+			authorizationDomainNameRef,
+			onSubmitAuthorization,
+			domainList,
+			confirmDeleteAuthorization,
+			openCreationLibraryModal,
+			isCreationLibraryOpened,
+			libraryTeam,
+			libraryId,
+			libraryName,
+			libraryShortDescription,
+			libraryDescription,
+			confirmDeleteLibrary,
+			addNewLibrary,
+			updateLibrary,
+			librariesList,
+			domainNameRef,
+			imagesUID,
+			avatarUrl,
+			uploadFile,
+			model: ref(null),
+			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],
 		};
 	},
 };

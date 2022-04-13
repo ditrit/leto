@@ -71,8 +71,16 @@
 						:href="btn.link"
 						@click="oepnDialog = false"
 					/> -->
+					<Modal class="modalGlobal" v-model="oepnDialog">
+						<template v-slot:ModalTitle>
+							{{ $t("create_library") }}
+						</template>
+						<template v-slot:ModalContent>
+							<ProductCreationStepper />
+						</template>
+					</Modal>
 
-					<q-dialog v-model="oepnDialog">
+					<!-- <q-dialog v-model="oepnDialog">
 						<q-card style="width: 700px; max-width: 80vw">
 							<q-card-section>
 								<div class="text-h6">{{ $t("create_library") }}</div>
@@ -86,7 +94,7 @@
 								<q-btn flat label="Next" v-close-popup />
 							</q-card-actions>
 						</q-card>
-					</q-dialog>
+					</q-dialog> -->
 				</div>
 			</q-page>
 		</q-page-container>
@@ -101,8 +109,9 @@ import ProductCreationStepper from "../components/UI/Stepper/ProductCreationStep
 import AjaxBar from "../components/UI/Progress/AjaxBar";
 import Drawer from "../components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-import Modal from "../components/UI/Dialogs/Modal.vue";
+
 import { pageSizeTweak } from "../common/index";
+import Modal from "../components/UI/Dialogs/Modal.vue";
 
 const buttonsList = [
 	{
@@ -119,11 +128,11 @@ export default defineComponent({
 	components: {
 		// BtnAddNew,
 		PageContent,
-		ProductCreationStepper,
+		// ProductCreationStepper,
 		AccountSettings,
 		AjaxBar,
 		Drawer,
-		// Modal,
+		Modal,
 	},
 
 	setup() {

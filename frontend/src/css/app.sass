@@ -3,17 +3,67 @@
   --box-shadow: 0 0 8px rgba(0,0,0,.3) 
   --light-gray : lightgray
   --gray: #424242
-  
+  --card-height : 140px
+  --p-padding: 0 53px
+  --dialog-bg: #474262e8
+
 html, body
     width: 100%
     height: 100%
     overflow: hidden
-
+.vertical_spatator 
+  border-right: 1px solid var(--light-gray)
+.tr_width
+  max-width: 80px !important
+  width: 80px !important
+.tr_width__actions
+  max-width: 85px !important
+  width: 44px !important
+.tr_width__actions30
+  max-width: 30px !important
+  width: 30px !important
+.tr_width__actions40
+  max-width: 40px !important
+  width: 40px !important
+.tr_width__actions50
+  max-width: 50px !important
+  width: 50px !important
+.tr_width__actions60
+  max-width: 60px !important
+  width: 60px !important
+.tr_width__actions70
+  max-width: 70px !important
+  width: 70px !important
+.tr_width__avatar
+  max-width: 80px !important
+  width: 80px !important
+.tr_width__name
+  max-width: 120px !important
+  width: 120px !important
+.tr_width__role
+  max-width: 130px !important
+  width: 130px !important
+.tr_width__email
+  max-width: 120px !important
+  width: 120px !important
+.tr_width__shortdesc
+  max-width: 180px !important
+  width: 180px !important
+.tr_width__descr
+  max-width: 300px !important
+  width: 300px !important
+.p_padding 
+  padding: var(--p-padding)
+.q-page
+  overflow-x: hidden
 .page_padding
   padding-left:100px
 
 .main_header 
   height: 56px
+
+.q-stepper__header
+  border: none !important
   
 .q-drawer 
   position: absolute
@@ -25,6 +75,7 @@ html, body
   &__node-header-content
     color: $primary
     font-weight: bold
+    text-transform: capitalize
   &__children div
     color: $primary
     font-weight: 500 !important
@@ -47,6 +98,11 @@ html, body
   position: absolute
   top: 0
 
+.q-dialog__backdrop 
+  z-index: -1
+  pointer-events: all
+  outline: 0
+  background: var(--dialog-bg)
 
 .menuDrawer aside
   z-index: 1 !important
@@ -63,29 +119,32 @@ html, body
     margin-top: 8px
     margin-right: 8px
     box-shadow: var(--box-shadow)
-
+.q-gutter-x-sm > *, .q-gutter-sm > *
+  margin-left: 0px
 .cards_tags_wrapper  
   display: flex
   justify-content: flex-start
   flex-wrap: wrap
   align-content: center
   list-style: none
+  padding: 6px
+  box-sizing: border-box
   li
     display: flex
     justify-content: center
     align-items: center
-    min-width: 80px
+    min-width: fit-content
     background: white
-    padding: 6px 8px
+    padding: 3px 6px
     border-radius: 12px
-    margin-top: 8px
-    margin-right: 8px
+    margin-top: 4px
+    margin-right: 4px
     box-shadow: var(--box-shadow)
+    text-transform: capitalize
 
 .card_default
   background: transparent !important 
   border: none
-  border-right: 1px solid var(--light-gray)
   border-radius:  0
   padding-right: 8px
 
@@ -93,29 +152,51 @@ html, body
   background: transparent !important 
   margin-left: 8px
   margin-right: 8px
-  width: 300px
+
   border: none
+
+.q-stepper__step .item_card
+  width: 270px
+  padding: 4px 6px
+  border: none !important
+  max-width: 230px
+  max-height:  max-content !important
+  height: max-content !important
+  box-shadow: var(--box-shadow) !important
 
 .item_card
   width: 270px
   padding: 4px 6px
   border: none !important
   max-width: 230px
-  height: max-content
+  // max-height: var(--card-height)
+  height: 120px !important
   box-shadow: var(--box-shadow) !important
-  
+
+.item_card__requirements 
+  padding: 4px 6px
+  border: none !important
+  height: fit-content !important
+  box-shadow: var(--box-shadow) !important
+  width: 32.6%
+  max-width: 344px
+  &:not(:first-child)
+    margin-left: 10px
+
 // .q-card
 //   width: 800px !important
-
+.q-splitter--vertical > .q-splitter__separator
+  width: 1px
+  min-height: 500px
 .q-card__section--vert
-  padding: 6px
+  padding: 4px
 
 .q-dialog .button_actions__container
   display: none !important
 
 .content_wrapper
   display: flex
-  margin-bottom: 60px
+  // margin-bottom: 60px
 
   & img 
     width: 100px
@@ -159,3 +240,12 @@ html, body
 
 .q-dialog--modal .panel_add__btn 
   display: none !important
+
+.q-dialog__inner--minimized > div 
+  padding: 10px
+
+.q-textarea.q-field--labeled .q-field__native
+  max-height: fit-content !important
+
+.q-splitter__before, .q-splitter__after
+  overflow: visible

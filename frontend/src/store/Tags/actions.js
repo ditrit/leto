@@ -15,12 +15,12 @@ export const fetchTagsById = async ({ commit }, tag) => {
 };
 
 export const addTag = async ({ commit }, tag) => {
-	let response = await API.post(`/tag/${tag.parentID}`, tag);
+	let response = await API.post(`/tag/${tag.pid}`, tag);
 	commit("NEW_TAG", response.data);
 };
 export const updateTag = async ({ commit }, tag) => {
 	let response = await API.put(`/tag/${tag.id}`, tag);
-	commit("UPDATE_TAGS", response.data);
+	commit("UPDATE_TAG", response.data);
 };
 
 export const removeTag = async ({ commit }, id) => {

@@ -255,13 +255,29 @@ async function start ({ app, router, store, storeKey }, bootFiles) {
 
   
   let hasRedirected = false
+  const getRedirectUrl = url => {
+    try { return router.resolve(url).href }
+    catch (err) {}
+
+    return Object(url) === url
+      ? null
+      : url
+  }
   const redirect = url => {
     hasRedirected = true
-    const normalized = Object(url) === url
-      ? router.resolve(url).fullPath
-      : url
 
-    window.location.href = normalized
+    if (typeof url === 'string' && /^https?:\/\//.test(url)) {
+      window.location.href = url
+      return
+    }
+
+    const href = getRedirectUrl(url)
+
+    // continue if we didn't fail to resolve the url
+    if (href !== null) {
+      window.location.href = href
+      window.location.reload()
+    }
   }
 
   const urlPath = window.location.href.replace(window.location.origin, '')
@@ -280,7 +296,7 @@ async function start ({ app, router, store, storeKey }, bootFiles) {
     }
     catch (err) {
       if (err && err.url) {
-        window.location.href = err.url
+        redirect(err.url)
         return
       }
 
@@ -318,9 +334,9 @@ createQuasarApp(createApp, quasarUserOptions)
   .then(app => {
     return Promise.all([
       
-      import(/* webpackMode: "eager" */ 'boot/axios'),
+      import(/* webpackMode: "eager" */ 'boot/i18n'),
       
-      import(/* webpackMode: "eager" */ 'boot/i18n')
+      import(/* webpackMode: "eager" */ 'boot/authomaticLogin')
       
     ]).then(bootFiles => {
       const boot = bootFiles

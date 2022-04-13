@@ -19,9 +19,18 @@ import { ref } from "vue";
 export default {
 	setup() {
 		const navigationItem = ref([
-			{ label: "Profile", link: "/settings/profile", icon: "user" },
 			{ label: "Users", link: "/settings/users", icon: "group" },
 			{ label: "Roles", link: "/settings/roles", icon: "group" },
+			{
+				label: "Authorizations",
+				link: "/settings/authorizations",
+				icon: "group",
+			},
+			{
+				label: "Requirements",
+				link: "/settings/requirements",
+				icon: "info ",
+			},
 			{ label: "Tags", link: "/settings/tags", icon: "tag" },
 			{
 				label: "Environments Type",
