@@ -19,6 +19,7 @@
 		"axios": "^0.21.2",
 		"browserfs": "^1.4.3",
 		"core-js": "^3.6.5",
+		"d3": "^7.4.4",
 		"express": "^4.17.2",
 		"isomorphic-git": "^1.12.1",
 		"json-bigint": "^1.0.0",
