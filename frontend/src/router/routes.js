@@ -19,13 +19,13 @@ const routes = [
 			{
 				path: "product",
 				component: () => import("pages/Products/PageProductChild.vue"),
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 			{
 				path: "product/:id",
 				component: () => import("pages/Products/PageProductChild.vue"),
 				props: true,
-				meta: { requiresAuth: true },
+				meta: { requiresAuth: false },
 			},
 			{
 				path: "model",
