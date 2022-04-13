@@ -54,7 +54,9 @@
 					:icon="item.icon"
 					:headline="$t('dashboard')"
 					:textContent="$t('text_content')"
-				/>
+				>
+				</PageContent>
+				<Grapes />
 				<Modal>
 					<template v-slot:ModalBody>
 						<CreationFormStepperVue />
@@ -68,10 +70,11 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex";
-import AjaxBar from "../components/UI/Progress/AjaxBar";
-import PageContent from "../components/Content/PageContent";
-import Drawer from "../components/UI/Drawers/Drawer.vue";
-import AccountSettings from "components/UI/Profil/AccountSettings";
+import AjaxBar from "../../components/UI/Progress/AjaxBar";
+import PageContent from "../../components/Content/PageContent";
+import Drawer from "../../components/UI/Drawers/Drawer.vue";
+import AccountSettings from "../../components/UI/Profil/AccountSettings";
+import Grapes from "../../components/Builder/Grapes.vue";
 
 export default {
 	components: {
@@ -79,6 +82,7 @@ export default {
 		PageContent,
 		Drawer,
 		AccountSettings,
+		Grapes,
 	},
 
 	setup() {

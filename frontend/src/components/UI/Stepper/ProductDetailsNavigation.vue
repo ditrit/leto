@@ -112,10 +112,10 @@
 			</q-step>
 
 			<q-step :name="3" title="Substurion" prefix="3">
-				<!-- Try out different ad text to see what brings in the most customers, and
-				learn how to enhance your ads using features like ad extensions. If you
-				run into any problems with your ads, find out how to tell if they're
-				running and how to resolve approval issues. -->
+				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam mollitia
+				ea voluptatum consequatur incidunt aspernatur maiores, quisquam, itaque
+				aut similique nihil id corrupti ipsa nulla, asperiores ratione molestias
+				quidem excepturi.
 			</q-step>
 		</q-stepper>
 	</div>
