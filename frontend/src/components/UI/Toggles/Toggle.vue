@@ -20,8 +20,9 @@ export default {
 		ValueTwo: { type: String, default: "Value Two" },
 	},
 	setup(props) {
+		const modelValue = ref(props.ValueOne);
 		return {
-			modelValue: ref(props.ValueOne),
+			modelValue,
 		};
 	},
 };

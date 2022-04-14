@@ -56,12 +56,12 @@
 					:textContent="$t('text_content')"
 				>
 				</PageContent>
-				<Grapes />
 				<Modal>
 					<template v-slot:ModalBody>
 						<CreationFormStepperVue />
 					</template>
 				</Modal>
+				<Grapes />
 			</q-page>
 		</q-page-container>
 	</q-layout>
