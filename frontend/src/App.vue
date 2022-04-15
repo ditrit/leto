@@ -6,27 +6,8 @@
 	</router-view>
 </template>
 <script>
-// import API from "./services/index";
-// import { useStore } from "vuex";
-
 export default {
 	name: "App",
-	setup() {
-		// const store = useStore();
-		// const refreshBrowser = () => {
-		// 	const userString = localStorage.getItem("usser");
-		// 	if (userString) {
-		// 		const userData = userString;
-		// 		console.log("userData: ", userData);
-		// 		store.commit("auth/SET_USER_DATA", userData);
-		// 		axios.defaults.headers.common["Authorization"] = `Bearer ${userData}`;
-		// 	}
-		// 	API.interceptors.response.use((response) => response);
-		// };
-		// return {
-		//refreshBrowser,
-		// };
-	},
 };
 </script>
 

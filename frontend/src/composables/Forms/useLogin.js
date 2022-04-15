@@ -16,7 +16,7 @@ export default function useLoginbData() {
 			email: email.value,
 			password: password.value,
 		};
-		store
+		await store
 			.dispatch("auth/login", newUser)
 			.then(() => {
 				$q.notify({
@@ -26,9 +26,9 @@ export default function useLoginbData() {
 					message: "Login successfully",
 				});
 			})
-			.then(() => {
-				router.push("/dashboard");
-			})
+			// .then(() => {
+			// 	router.push("/dashboard");
+			// })
 			.catch(() => {
 				$q.notify({
 					color: "negative",
