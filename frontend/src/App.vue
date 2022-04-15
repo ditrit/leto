@@ -23,9 +23,9 @@ export default {
 		// 	}
 		// 	API.interceptors.response.use((response) => response);
 		// };
-		return {
-			// refreshBrowser,
-		};
+		// return {
+		//refreshBrowser,
+		// };
 	},
 };
 </script>

@@ -35,7 +35,7 @@ export default {
 
 <style lang="sass">
 #gjs
-   border: 3px solid #444
+   border: 2px solid $primary
 
 .gjs-editor-cont
   margin: 45px 0 45px 45px
