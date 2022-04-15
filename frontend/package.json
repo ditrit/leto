@@ -10,6 +10,7 @@
 		"test": "echo \"No test specified\" && exit 0",
 		"dev": "quasar dev",
 		"build": "quasar build",
+		"sonar": "sonar-scanner",
 		"start": "quasar serve",
 		"build:pwa": "quasar build -m pwa"
 	},
@@ -44,7 +45,8 @@
 		"eslint-config-prettier": "^8.1.0",
 		"eslint-plugin-vue": "^7.0.0",
 		"eslint-webpack-plugin": "^2.4.0",
-		"json-server-auth": "^2.1.0"
+		"json-server-auth": "^2.1.0",
+		"sonarqube-scanner": "^2.8.1"
 	},
 	"browserslist": [
 		"last 10 Chrome versions",
