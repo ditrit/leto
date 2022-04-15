@@ -6,8 +6,8 @@
 	</router-view>
 </template>
 <script>
-import API from "./services/index";
-import { useStore } from "vuex";
+// import API from "./services/index";
+// import { useStore } from "vuex";
 
 export default {
 	name: "App",
