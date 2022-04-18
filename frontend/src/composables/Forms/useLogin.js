@@ -26,9 +26,9 @@ export default function useLoginbData() {
 					message: "Login successfully",
 				});
 			})
-			// .then(() => {
-			// 	router.push("/dashboard");
-			// })
+			.then(() => {
+				router.push("/dashboard");
+			})
 			.catch(() => {
 				$q.notify({
 					color: "negative",
