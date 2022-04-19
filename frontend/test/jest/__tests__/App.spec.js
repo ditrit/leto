@@ -10,7 +10,7 @@ const router = createRouter({
 		{
 			path: '/',
 			component: {
-				template: 'Welcome to the testing app'
+				template: 'Welcome to the Leto App testing'
 			}
 		},
 	],
