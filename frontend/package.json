@@ -7,11 +7,17 @@
 	"private": true,
 	"scripts": {
 		"lint": "eslint --ext .js,.vue ./",
-		"test": "echo \"No test specified\" && exit 0",
 		"dev": "quasar dev",
 		"build": "quasar build",
+		"sonar": "sonar-scanner",
 		"start": "quasar serve",
-		"build:pwa": "quasar build -m pwa"
+		"build:pwa": "quasar build -m pwa",
+		"test:unit:ci": "jest --ci",
+		"test:unit:coverage": "jest --coverage",
+		"test:unit:watch": "jest --watch",
+		"test:unit:watchAll": "jest --watchAll",
+		"serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
+		"concurrently:dev:jest": "concurrently \"quasar dev\" \"jest --watch\""
 	},
 	"dependencies": {
 		"@intlify/vue-i18n-loader": "^3.3.0",
@@ -21,19 +27,13 @@
 		"core-js": "^3.6.5",
 		"d3": "^7.4.4",
 		"express": "^4.17.2",
-		"grapesjs": "^0.18.4",
-		"grapesjs-preset-webpage": "^0.1.11",
 		"isomorphic-git": "^1.12.1",
 		"json-bigint": "^1.0.0",
 		"json-server": "^0.16.3",
 		"monaco-editor": "^0.25.2",
 		"multer": "^1.4.4",
-		"quasar": "^2.0.0",
-		"three": "^0.130.1",
-		"uuid": "^3.4.0",
-		"vue": "^3.2.31",
+		"quasar": "^2.0.4",
 		"vue-i18n": "^9.2.0-beta.22",
-		"vue-router": "^4.0.13",
 		"vue-threejs": "^0.2.0-alpha.1",
 		"vuex": "^4.0.1",
 		"vuex-persistedstate": "^4.0.0",
@@ -42,10 +42,14 @@
 	"devDependencies": {
 		"@babel/eslint-parser": "^7.13.14",
 		"@quasar/app": "^3.3.3",
+		"@quasar/quasar-app-extension-testing": "^2.0.3",
+		"@quasar/quasar-app-extension-testing-unit-jest": "^3.0.0-alpha.10",
 		"eslint": "^7.14.0",
 		"eslint-config-prettier": "^8.1.0",
+		"eslint-plugin-jest": "^25.2.2",
 		"eslint-plugin-vue": "^7.0.0",
 		"eslint-webpack-plugin": "^2.4.0",
+		"jest-sonar-reporter": "^2.0.0",
 		"json-server-auth": "^2.1.0"
 	},
 	"browserslist": [
@@ -63,6 +67,10 @@
 		"node": ">= 12.22.1",
 		"npm": ">= 6.13.4",
 		"yarn": ">= 1.21.1"
+	},
+	"jestSonar": {
+		"reportPath": "reports",
+		"reportFile": "test-reporter.xml",
+		"indent": 4
 	}
 }
-
