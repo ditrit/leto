@@ -5,7 +5,7 @@ Before you install and run the project, you need the have the following availabl
 
 1 - Docker Desktop, you cand download it [here](https://docs.docker.com/get-docker/)
 
-2 - Node.js: version 14.17.0 or higher [NodeJs](https://nodejs.org/)
+2 - Node.js: version 16.14.2 or higher [NodeJs](https://nodejs.org/)
 
 
 ## Quasar framework CLI installation
