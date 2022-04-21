@@ -19,7 +19,7 @@ export default {
 				container: "#gjs",
 				fromElement: true,
 				height: "800px",
-				width: "1000px",
+				width: "1100px",
 				storageManager: { autoload: 0 },
 				showOffsets: 1,
 				panels: { defaults: [] },

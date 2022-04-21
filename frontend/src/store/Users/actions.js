@@ -16,12 +16,12 @@ export const removeUser = async ({ commit }, id) => {
 	await API.delete(`/user/${id}`);
 	commit("DELETE_USER", id);
 };
-export const logInUser = async ({ commit }, user) => {
-	const response = await API.post("/login", user);
-	commit("LOGIN_USER", response.data);
-};
+// export const logInUser = async ({ commit }, user) => {
+// 	const response = await API.post("/login", user);
+// 	commit("LOGIN_USER", response.data);
+// };
 
-export const fetchappUsers = async ({ commit }) => {
-	let response = await API.get("/user");
-	commit("GET_LOGIN_USERS", response.data);
-};
+// export const fetchappUsers = async ({ commit }) => {
+// 	let response = await API.get("/user");
+// 	commit("GET_LOGIN_USERS", response.data);
+// };
