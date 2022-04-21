@@ -10,9 +10,6 @@ export default boot(({ store }) => {
 			store.dispatch("auth/currentUser", JSON.parse(userData));
 		}
 	};
-	autoLog();
 
-	// window.addEventListener("load", () => {
-	// 	autoLog();
-	// });
+	autoLog();
 });

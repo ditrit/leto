@@ -16,7 +16,7 @@ export default function useLoginbData() {
 			email: email.value,
 			password: password.value,
 		};
-		store
+		await store
 			.dispatch("auth/login", newUser)
 			.then(() => {
 				$q.notify({
