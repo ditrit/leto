@@ -11,12 +11,12 @@ export default function useLoginbData() {
 	const email = ref(null);
 	const password = ref(null);
 
-	const login = async () => {
+	const login = () => {
 		const newUser = {
 			email: email.value,
 			password: password.value,
 		};
-		await store
+		store
 			.dispatch("auth/login", newUser)
 			.then(() => {
 				$q.notify({
