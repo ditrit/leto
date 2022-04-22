@@ -9,12 +9,9 @@ export const register = ({ commit }, credentials) => {
 };
 
 export const login = async ({ commit }, credentials) => {
-	return API.post("/user/login", credentials)
-		.then(({ data }) => {
-			commit("SET_USER_DATA", data);
-			console.log("data: ", data);
-		})
-		.catch((err) => console.log(err));
+	return API.post("/user/login", credentials).then(({ data }) => {
+		commit("SET_USER_DATA", data);
+	});
 };
 
 export const currentUser = ({ commit }, user) => {
