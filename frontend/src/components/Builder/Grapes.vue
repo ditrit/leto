@@ -13,7 +13,7 @@ import StarterKit from "@tiptap/starter-kit";
 import CKEDITOR from "grapesjs-plugin-ckeditor";
 import "grapesjs/dist/css/grapes.min.css";
 import "grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css";
-import "grapesjs-preset-webpage";
+import webpage from "grapesjs-preset-webpage";
 
 export default {
 	name: "Grapes",
@@ -35,7 +35,7 @@ export default {
 				storageManager: { autoload: 0 },
 				showOffsets: 1,
 				panels: { defaults: [] },
-				plugins: ["gjs-preset-webpage", "grapesjs-plugin-ckeditor"],
+				plugins: [webpage],
 				pluginsOpts: { "gjs-preset-webpage": {} },
 			});
 
