@@ -386,13 +386,13 @@ export default {
 			try {
 				await store.dispatch("appUsers/addUser", userData);
 				await allUsers();
-				(userFirstName.value = ""),
-					(userLastName.value = ""),
-					(userEmail.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "User has been successfully created",
-					});
+				userFirstName.value = "";
+				userLastName.value = "";
+				userEmail.value = "";
+				$q.notify({
+					type: "positive",
+					message: "User has been successfully created",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
