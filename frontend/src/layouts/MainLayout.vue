@@ -45,12 +45,6 @@ const linksToolsList = [
 	},
 	{
 		title: "",
-		caption: "Ide ",
-		icon: "edit",
-		link: "#/model",
-	},
-	{
-		title: "",
 		caption: "Libraries",
 		icon: "library_books",
 		link: "#/libraries",
