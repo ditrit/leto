@@ -42,14 +42,18 @@
 		</Drawer>
 
 		<q-page-container>
-			<q-page :style-fn="pageSizeTweak">
+			<q-page :style-fn="pageSizeTweak" class="flex">
 				<PageContent
-					icon="supervisor_account"
-					:headline="$t('roles')"
-					:subTitle="$t('manage_roles')"
-					textContent=""
+					icon="settings"
+					:headline="$t('settings')"
+					:subTitle="$t('manage_settings')"
+					:textContent="$t('text_content')"
 				/>
-				<div class="q-px-lg"><RolesTable /></div>
+				<Modal>
+					<template v-slot:ModalBody>
+						<CreationFormStepperVue />
+					</template>
+				</Modal>
 			</q-page>
 		</q-page-container>
 	</q-layout>
@@ -57,13 +61,12 @@
 
 <script>
 import { ref } from "vue";
-import AjaxBar from "../components/UI/Progress/AjaxBar";
-import PageContent from "../components/Content/PageContent";
-import Drawer from "../components/UI/Drawers/Drawer.vue";
-import AccountSettings from "components/UI/Profil/AccountSettings";
-import SettingsNav from "../components/UI/Navigation/SettingsNav";
-import { pageSizeTweak } from "../common/index";
-import RolesTable from "src/components/UI/Tables/RolesTable.vue";
+import AjaxBar from "../../components/UI/Progress/AjaxBar";
+import PageContent from "../../components/Content/PageContent";
+import Drawer from "../../components/UI/Drawers/Drawer.vue";
+import AccountSettings from "../../components/UI/Profil/AccountSettings";
+import SettingsNav from "../../components/Navigations/SettingsNav";
+import { pageSizeTweak } from "../../common/index";
 export default {
 	components: {
 		AjaxBar,
@@ -71,7 +74,6 @@ export default {
 		Drawer,
 		AccountSettings,
 		SettingsNav,
-		RolesTable,
 	},
 	setup() {
 		const drawer = ref(false);
