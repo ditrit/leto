@@ -104,14 +104,14 @@
 <script>
 import { defineComponent, ref } from "vue";
 // import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
-import PageContent from "../components/Content/PageContent";
-import ProductCreationStepper from "../components/UI/Stepper/ProductCreationStepper";
-import AjaxBar from "../components/UI/Progress/AjaxBar";
-import Drawer from "../components/UI/Drawers/Drawer.vue";
+import PageContent from "components/Content/PageContent";
+import ProductCreationStepper from "components/UI/Stepper/ProductCreationStepper";
+import AjaxBar from "components/UI/Progress/AjaxBar";
+import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 
-import { pageSizeTweak } from "../common/index";
-import Modal from "../components/UI/Dialogs/Modal.vue";
+import { pageSizeTweak } from "../../common/index";
+import Modal from "components/UI/Dialogs/Modal.vue";
 
 const buttonsList = [
 	{
