@@ -365,7 +365,7 @@ export default {
 		allUsers();
 
 		const AddUser = () => {
-			openAddUserDialog.value = "";
+			openAddUserDialog.value = true;
 			userFirstName.value = "";
 			userLastName.value = "";
 			userLogo.value = "";
