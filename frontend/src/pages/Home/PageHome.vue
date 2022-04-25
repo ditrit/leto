@@ -87,16 +87,16 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import PageContent from "../components/Content/PageContent";
-import FavoriteContent from "../components/Content/FavoriteContent";
-import AjaxBar from "../components/UI/Progress/AjaxBar";
-import Drawer from "../components/UI/Drawers/Drawer.vue";
-import { pageSizeTweak } from "../common/index";
-import AccountSettings from "components/UI/Profil/AccountSettings";
+import PageContent from "../../components/Content/PageContent";
+import FavoriteContent from "../../components/Content/FavoriteContent";
+import AjaxBar from "../../components/UI/Progress/AjaxBar.vue";
+import Drawer from "../../components/UI/Drawers/Drawer.vue";
+import { pageSizeTweak } from "../../common/index";
+import AccountSettings from "../../components/UI/Profil/AccountSettings";
 import { useStore } from "vuex";
-import HomeNav from "../components/UI/Navigation/HomeNav.vue";
-import ProductsCarousel from "../components/UI/Carousel/ProductsCarousel.vue";
-import WorkspacesCarousel from "../components/UI/Carousel/WorkspacesCarousel.vue";
+import HomeNav from "../../components/UI/Navigation/HomeNav.vue";
+import ProductsCarousel from "../../components/UI/Carousel/ProductsCarousel.vue";
+import WorkspacesCarousel from "../../components/UI/Carousel/WorkspacesCarousel.vue";
 
 export default defineComponent({
 	name: "PageTeams",
