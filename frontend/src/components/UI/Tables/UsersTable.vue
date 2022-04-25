@@ -20,10 +20,13 @@
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-avatar="props">
+			<template v-slot:body-cell-Logo="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
+						<img
+							:src="props.row.Logo ? props.row.Logo : globalLogo"
+							:alt="`Avatar of ${props.row.Email}`"
+						/>
 					</q-avatar>
 				</q-td>
 			</template>
@@ -262,57 +265,57 @@ import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/useFile";
 import FileUploader from "../Form/FileUploader.vue";
-import globalAvatar from "../../../assets/profil.png";
+import globalLogo from "../../../assets/profil.png";
 
 const columns = [
 	{
-		name: "avatar",
+		name: "Logo",
 		required: true,
 		label: "Avatar",
 		align: "left",
-		field: (row) => row.name,
+		field: "Logo",
 		format: (val) => `${val}`,
 		sortable: true,
 		classes: "tr_width__avatar",
 	},
 
 	{
-		name: "firstName",
+		name: "FirstName",
 		label: "First Name",
 		align: "left",
-		field: "firstName",
+		field: "FirstName",
 		sortable: true,
 		classes: "tr_width__name ellipsis",
 	},
 	{
-		name: "lastName",
+		name: "LastName",
 		label: "Last Name",
 		align: "left",
-		field: "lastName",
+		field: "LastName",
 		sortable: true,
 		classes: "tr_width__name ellipsis",
 	},
 	{
-		name: "email",
+		name: "Email",
 		label: "Email",
 		align: "left",
-		field: "email",
+		field: "Email",
 		sortable: true,
 		classes: "tr_width__email ellipsis",
 	},
 	{
-		name: "password",
+		name: "Password",
 		label: "Password",
 		align: "left",
-		field: "password",
+		field: "Password",
 		sortable: false,
 		classes: "tr_width ellipsis",
 	},
 	{
-		name: "description",
+		name: "Description",
 		label: "Description",
 		align: "left",
-		field: "description",
+		field: "Description",
 		sortable: false,
 		classes: "tr_width__descr ellipsis",
 	},
@@ -343,8 +346,8 @@ export default {
 		const userEmail = ref("");
 		const userPassword = ref("");
 		const userDescription = ref("");
-		const userAvatar = ref("");
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+		const userLogo = ref("");
+		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const confirm = (item) => {
 			$q.dialog({
@@ -364,19 +367,7 @@ export default {
 			// fetch All Users
 			await store.dispatch("appUsers/fetchUsers");
 			const getUsers = computed(() => store.getters["appUsers/allUsers"]);
-			return (rowsData.value = Object.values(
-				getUsers.value.map((item) => {
-					return {
-						id: item.ID,
-						avatar: item.Logo,
-						firstName: item.FirstName,
-						lastName: item.LastName,
-						email: item.Email,
-						password: item.Password,
-						description: item.Description,
-					};
-				})
-			));
+			return (rowsData.value = Object.values(getUsers.value));
 		};
 		allUsers();
 
@@ -384,24 +375,23 @@ export default {
 			openAddUserDialog.value = "";
 			userFirstName.value = "";
 			userLastName.value = "";
-			userAvatar.value = "";
+			userLogo.value = "";
 			userEmail.value = "";
 			userPassword.value = "";
 			userDescription.value = "";
 		};
 		const onSubmitAdd = async () => {
 			const userData = {
-				firstName: userFirstName.value,
-				lastName: userLastName.value,
-				logo: avatarUrl.value,
-				email: userEmail.value,
-				password: userPassword.value,
-				description: userDescription.value,
+				FirstName: userFirstName.value,
+				LastName: userLastName.value,
+				Logo: logoUrl.value,
+				Email: userEmail.value,
+				Password: userPassword.value,
+				Description: userDescription.value,
 			};
 			console.log("userData: ", userData);
 
 			try {
-				// userAvatar.value = userData.logo;
 				await store.dispatch("appUsers/addUser", userData);
 				await allUsers();
 				(userFirstName.value = ""),
@@ -420,13 +410,13 @@ export default {
 		};
 		const onSubmitUpdate = async () => {
 			const userData = {
-				id: userObj.value[0],
-				firstName: userObj.value[2],
-				lastName: userObj.value[3],
-				logo: avatarUrl.value,
-				email: userObj.value[4],
-				password: userObj.value[5],
-				description: userObj.value[6],
+				ID: userObj.value[0],
+				FirstName: userObj.value[2],
+				LastName: userObj.value[3],
+				Logo: logoUrl.value,
+				Email: userObj.value[4],
+				Password: userObj.value[5],
+				Description: userObj.value[6],
 			};
 
 			try {
@@ -480,7 +470,7 @@ export default {
 			AddUser,
 			userFirstName,
 			userLastName,
-			userAvatar,
+			userLogo,
 			userEmail,
 			editRow,
 			deleteRow,
@@ -493,9 +483,9 @@ export default {
 			userPassword,
 			userDescription,
 			imagesUID,
-			avatarUrl,
+			logoUrl,
 			uploadFile,
-			globalAvatar,
+			globalLogo,
 			password: ref(""),
 		};
 	},
