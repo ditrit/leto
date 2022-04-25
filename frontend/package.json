@@ -9,7 +9,6 @@
 		"lint": "eslint --ext .js,.vue ./",
 		"dev": "quasar dev",
 		"build": "quasar build",
-		"sonar": "sonar-scanner",
 		"start": "quasar serve",
 		"build:pwa": "quasar build -m pwa",
 		"test:unit:ci": "jest --ci",
