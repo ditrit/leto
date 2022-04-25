@@ -60,7 +60,7 @@ const routes = [
 			},
 			{
 				path: "libraries",
-				component: () => import("pages/PageLibraries.vue"),
+				component: () => import("pages/Libraries/PageLibraries.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
