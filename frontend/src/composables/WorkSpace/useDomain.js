@@ -35,21 +35,21 @@ export default function useDomainData(props) {
 						parentID: item?.ParentID,
 						label: item?.Name,
 						avatar: item?.Logo,
-						handler: (node) => goToID(node),
+						handler: (item) => goToID(item),
 						children: item?.Childs?.map((subItem) => {
 							return {
 								id: subItem?.ID,
 								parentID: subItem?.ParentID,
 								label: subItem?.Name,
 								avatar: subItem?.Logo,
-								handler: (node) => goToID(node),
+								handler: (subItem) => goToID(subItem),
 								children: subItem?.Childs?.map((subLastItem) => {
 									return {
 										id: subLastItem?.ID,
 										parentID: subLastItem?.ParentID,
 										label: subLastItem?.Name,
 										avatar: subLastItem?.Logo,
-										handler: (node) => goToID(node),
+										handler: (subLastItem) => goToID(subLastItem),
 									};
 								}),
 							};
@@ -94,18 +94,17 @@ export default function useDomainData(props) {
 		await rigthData(choosenNodeID.value);
 	};
 
-	const refreshDomain = async (id) => {
-		await store.dispatch("appDomain/fetchDomainById", id);
-		let data = computed(() => store.getters["appDomain/allDomaines"]);
-		currentDomainDataContent.value = await data.value;
-		domainTags.value = await data.value[0].Tags;
-		await getMenuData();
-	};
+	// const refreshDomain = async (id) => {
+	// 	await store.dispatch("appDomain/fetchDomainById", id);
+	// 	let data = computed(() => store.getters["appDomain/allDomaines"]);
+	// 	currentDomainDataContent.value = await data.value;
+	// 	domainTags.value = await data.value[0].Tags;
+	// 	await getMenuData();
+	// };
 	const refreshDomainTag = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
 		return (domainTags.value = await data.value[0].Tags);
-		// await getMenuData();
 	};
 
 	const addTagtoDomain = async (tag) => {
@@ -162,8 +161,7 @@ export default function useDomainData(props) {
 		console.log("deleted ID:", id);
 		//TODO: Add Axios Action
 		await API.delete(`/domain/${choosenNodeID.value}/tag/${id}`)
-			.then((response) => console.log(response))
-			.then(() => router.push("/workspaces"))
+			.then(() => refreshDomainTag(choosenNodeID.value))
 			.catch((error) => console.log(error));
 	};
 
@@ -185,16 +183,12 @@ export default function useDomainData(props) {
 				console.log("Cancel");
 			});
 	};
-	watch(menu, () => {
-		getMenuData();
-	});
 
 	return {
 		$q,
 		menu,
 		store,
 		editMode,
-		getMenuData,
 		goToID,
 		rigthData,
 		choosenNodeID,
