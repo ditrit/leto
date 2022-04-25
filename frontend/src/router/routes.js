@@ -40,22 +40,22 @@ const routes = [
 
 			{
 				path: "home",
-				component: () => import("pages/PageHome.vue"),
+				component: () => import("pages/Home/PageHome.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/profile",
-				component: () => import("pages/PageHomeProfile.vue"),
+				component: () => import("pages/Home/PageHomeProfile.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/products",
-				component: () => import("pages/PageHomeProducts.vue"),
+				component: () => import("pages/Home/PageHomeProducts.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/workspaces",
-				component: () => import("pages/PageHomeWorkspaces.vue"),
+				component: () => import("pages/Home/PageHomeWorkspaces.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
@@ -119,34 +119,6 @@ const routes = [
 			},
 		],
 	},
-	// {
-	// 	path: "/home",
-	// 	component: () => import("layouts/NoLayout.vue"),
-	// 	children: [
-	// 		{
-	// 			path: "/home",
-	// 			component: () => import("pages/Home.vue"),
-	// 		},
-	// 		{
-	// 			path: "/signin",
-	// 			component: () => import("pages/SignIn.vue"),
-	// 		},
-	// 		{
-	// 			path: "/dash",
-	// 			component: () => import("pages/Dashboard.vue"),
-	// 			beforeEnter: (to, from, next) => {
-	// 				console.log("middleware:", from);
-	// 				console.log(store);
-	// 				if (store.getters["auth/authenticated"]) {
-	// 					next(router.push("signin"));
-	// 				}
-	// 			},
-	// 		},
-	// 	],
-	// },
-
-	// Always leave this as last one,
-	// but you can also remove it
 	{
 		path: "/:catchAll(.*)*",
 		component: () => import("pages/Error404.vue"),
