@@ -28,11 +28,6 @@
 					</q-avatar>
 				</q-td>
 			</template>
-			<!-- <template style="width: 100px">
-				<q-td key="password" :props="props" class="ellipsis">
-					{{ props.row.password }}
-				</q-td>
-			</template> -->
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
 					<q-btn
@@ -387,7 +382,6 @@ export default {
 				Password: userPassword.value,
 				Description: userDescription.value,
 			};
-			console.log("userData: ", userData);
 
 			try {
 				await store.dispatch("appUsers/addUser", userData);
