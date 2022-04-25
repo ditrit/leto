@@ -112,11 +112,11 @@ const routes = [
 		children: [
 			{
 				path: "/login",
-				component: () => import("pages/Login.vue"),
+				component: () => import("pages/Auth/Login.vue"),
 			},
 			{
 				path: "/register",
-				component: () => import("pages/Register.vue"),
+				component: () => import("pages/Auth/Register.vue"),
 			},
 		],
 	},
