@@ -28,17 +28,6 @@ const routes = [
 				meta: { requiresAuth: false },
 			},
 			{
-				path: "model",
-				component: () => import("pages/Model.vue"),
-				meta: { requiresAuth: false },
-			},
-			{
-				path: "source",
-				component: () => import("pages/Source.vue"),
-				meta: { requiresAuth: true },
-			},
-
-			{
 				path: "home",
 				component: () => import("pages/Home/PageHome.vue"),
 				meta: { requiresAuth: true },
