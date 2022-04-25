@@ -33,9 +33,6 @@ export default {
 			"removeUser",
 		]),
 	},
-	created() {
-		// this.fetchUsers();
-	},
 
 	setup() {
 		const store = useStore();
