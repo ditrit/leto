@@ -2,7 +2,7 @@
 	<div class="text-white">
 		<div class="row">
 			<div class="leftside text-secondary sm-hide xs-hide">
-				<q-img src="../assets/logoBest2.svg" width="30%" />
+				<q-img src="../../assets/logoBest2.svg" width="30%" />
 				<span> Orchestrateur TOSTA étendu </span>
 			</div>
 			<div class="rigthside">
@@ -13,8 +13,8 @@
 	</div>
 </template>
 <script>
-import LoginForm from "../components/UI/Form/LoginForm";
-import LoginNav from "../components/UI/Navigation/LoginNav";
+import LoginForm from "components/UI/Form/LoginForm";
+import LoginNav from "components/UI/Navigation/LoginNav";
 
 export default {
 	components: { LoginForm, LoginNav },

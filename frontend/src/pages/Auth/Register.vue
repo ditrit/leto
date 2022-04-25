@@ -2,7 +2,7 @@
 	<div class="text-white">
 		<div class="row">
 			<div class="leftside text-secondary md">
-				<q-img src="../assets/logoBest2.svg" width="30%" />
+				<q-img src="../../assets/logoBest2.svg" width="30%" />
 				<span> Orchestrateur TOSTA étendu </span>
 			</div>
 			<div class="rigthside">
@@ -19,9 +19,9 @@
 import { computed } from "vue";
 import { mapActions } from "vuex";
 import { useStore } from "vuex";
-import RegistrationForm from "../components/UI/Form/RegistrationForm";
-import SocialConnect from "../components/Login/SocialConnect";
-import LoginNav from "../components/UI/Navigation/LoginNav";
+import RegistrationForm from "components/UI/Form/RegistrationForm";
+import SocialConnect from "components/Login/SocialConnect";
+import LoginNav from "components/UI/Navigation/LoginNav";
 
 export default {
 	components: { RegistrationForm, SocialConnect, LoginNav },
