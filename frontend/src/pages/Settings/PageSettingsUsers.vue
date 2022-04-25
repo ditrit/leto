@@ -42,13 +42,15 @@
 		</Drawer>
 
 		<q-page-container>
-			<q-page :style-fn="pageSizeTweak" class="flex">
+			<q-page :style-fn="pageSizeTweak" class="">
 				<PageContent
-					icon="settings"
-					:headline="$t('settings')"
-					:subTitle="$t('manage_settings')"
-					:textContent="$t('text_content')"
+					icon="groups"
+					:headline="$t('users')"
+					:subTitle="$t('manage_users')"
+					textContent=""
 				/>
+				<div class="q-px-lg"><UsersTable /></div>
+
 				<Modal>
 					<template v-slot:ModalBody>
 						<CreationFormStepperVue />
@@ -61,12 +63,14 @@
 
 <script>
 import { ref } from "vue";
-import AjaxBar from "../components/UI/Progress/AjaxBar";
-import PageContent from "../components/Content/PageContent";
-import Drawer from "../components/UI/Drawers/Drawer.vue";
+import AjaxBar from "components/UI/Progress/AjaxBar";
+import PageContent from "components/Content/PageContent";
+import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-import SettingsNav from "../components/Navigations/SettingsNav";
-import { pageSizeTweak } from "../common/index";
+import SettingsNav from "components/UI/Navigation/SettingsNav";
+import { pageSizeTweak } from "../../common/index";
+import UsersTable from "components/UI/Tables/UsersTable";
+
 export default {
 	components: {
 		AjaxBar,
@@ -74,11 +78,13 @@ export default {
 		Drawer,
 		AccountSettings,
 		SettingsNav,
+		UsersTable,
 	},
 	setup() {
 		const drawer = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
+
 		return {
 			drawer,
 			filter,

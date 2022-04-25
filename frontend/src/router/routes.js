@@ -70,37 +70,38 @@ const routes = [
 			},
 			{
 				path: "settings",
-				component: () => import("pages/PageSettingsUsers.vue"),
+				component: () => import("pages/Settings/PageSettingsUsers.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/users",
-				component: () => import("pages/PageSettingsUsers.vue"),
+				component: () => import("pages/Settings/PageSettingsUsers.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/roles",
-				component: () => import("pages/PageSettingsRoles.vue"),
+				component: () => import("pages/Settings/PageSettingsRoles.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/authorizations",
-				component: () => import("pages/PageSettingsAuthorizations.vue"),
+				component: () =>
+					import("pages/Settings/PageSettingsAuthorizations.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/requirements",
-				component: () => import("pages/PageSettingsRequirements.vue"),
+				component: () => import("pages/Settings/PageSettingsRequirements.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/tags",
-				component: () => import("pages/PageSettingsTags.vue"),
+				component: () => import("pages/Settings/PageSettingsTags.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/environmentstypes",
-				component: () => import("pages/PageSettingsEnviType.vue"),
+				component: () => import("pages/Settings/PageSettingsEnviType.vue"),
 				meta: { requiresAuth: true },
 			},
 		],

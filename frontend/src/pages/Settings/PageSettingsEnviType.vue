@@ -42,14 +42,19 @@
 		</Drawer>
 
 		<q-page-container>
-			<q-page :style-fn="pageSizeTweak" class="">
+			<q-page :style-fn="pageSizeTweak">
 				<PageContent
-					icon="info"
-					:headline="$t('requirements')"
-					:subTitle="$t('manage_requirements')"
+					icon="person"
+					:headline="$t('enviType')"
+					:subTitle="$t('manage_environment_type')"
 					textContent=""
 				/>
-				<div class="q-px-lg"><RequirementsTable /></div>
+				<div class="q-px-lg"><EnvirTypeTable /></div>
+				<Modal>
+					<template v-slot:ModalBody>
+						<CreationFormStepperVue />
+					</template>
+				</Modal>
 			</q-page>
 		</q-page-container>
 	</q-layout>
@@ -57,14 +62,13 @@
 
 <script>
 import { ref } from "vue";
-import AjaxBar from "../components/UI/Progress/AjaxBar";
-import PageContent from "../components/Content/PageContent";
-import Drawer from "../components/UI/Drawers/Drawer.vue";
+import AjaxBar from "components/UI/Progress/AjaxBar";
+import PageContent from "components/Content/PageContent";
+import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-import SettingsNav from "../components/UI/Navigation/SettingsNav";
-import { pageSizeTweak } from "../common/index";
-import RequirementsTable from "../components/UI/Tables/RequirementsTable";
-
+import SettingsNav from "components/UI/Navigation/SettingsNav";
+import { pageSizeTweak } from "../../common/index";
+import EnvirTypeTable from "components/UI/Tables/EnvirTypeTable.vue";
 export default {
 	components: {
 		AjaxBar,
@@ -72,13 +76,12 @@ export default {
 		Drawer,
 		AccountSettings,
 		SettingsNav,
-		RequirementsTable,
+		EnvirTypeTable,
 	},
 	setup() {
 		const drawer = ref(false);
 		const filter = ref("");
 		const filterRef = ref(null);
-
 		return {
 			drawer,
 			filter,
