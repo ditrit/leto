@@ -7,12 +7,12 @@ const routes = [
 			{ path: "", redirect: "/login" },
 			{
 				path: "workspaces",
-				component: () => import("pages/PageTeams.vue"),
+				component: () => import("pages/Workspaces/PageWorkspace.vue"),
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "workspaces/:id",
-				component: () => import("pages/PageDomainChild.vue"),
+				component: () => import("pages/Workspaces/PageWorkspaceChild.vue"),
 				props: true,
 				meta: { requiresAuth: true },
 			},

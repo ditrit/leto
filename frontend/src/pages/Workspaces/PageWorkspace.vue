@@ -73,13 +73,13 @@
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import ModalStepper from "../components/UI/Dialogs/ModalStepper.vue";
-import Drawer from "../components/UI/Drawers/Drawer.vue";
-import PageContent from "../components/Content/PageContent";
-import CreationFormStepper from "../components/UI/Stepper/CreationFormStepper";
-import AjaxBar from "../components/UI/Progress/AjaxBar";
+import ModalStepper from "components/UI/Dialogs/ModalStepper.vue";
+import Drawer from "components/UI/Drawers/Drawer.vue";
+import PageContent from "components/Content/PageContent";
+import CreationFormStepper from "components/UI/Stepper/CreationFormStepper";
+import AjaxBar from "components/UI/Progress/AjaxBar";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-import { pageSizeTweak } from "../common/index";
+import { pageSizeTweak } from "../../common/index";
 
 export default defineComponent({
 	name: "PageTeams",
