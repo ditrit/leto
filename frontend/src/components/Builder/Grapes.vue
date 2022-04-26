@@ -6,43 +6,32 @@
 </template>
 
 <script>
-import { onMounted } from "vue";
 import grapesjs from "grapesjs";
-import { useEditor, EditorContent } from "@tiptap/vue-3";
-import StarterKit from "@tiptap/starter-kit";
-import CKEDITOR from "grapesjs-plugin-ckeditor";
+import webpage from "grapesjs-preset-webpage";
 import "grapesjs/dist/css/grapes.min.css";
 import "grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css";
-import webpage from "grapesjs-preset-webpage";
+import CKEDITOR from "grapesjs-plugin-ckeditor";
 
 export default {
 	name: "Grapes",
-	components: {
-		//EditorContent,
-	},
-	setup() {
-		const rte = useEditor({
-			content: "<p>I’m running Tiptap with Vue.js. 🎉</p>",
-			extensions: [StarterKit],
+	components: {},
+	mounted() {
+		const editor = grapesjs.init({
+			container: "#gjs",
+			fromElement: true,
+			allowScripts: 1,
+			width: "1100px",
+			storageManager: { autoload: 0 },
+			showOffsets: 1,
+			panels: { defaults: [] },
+			plugins: [CKEDITOR, webpage],
+			pluginsOpts: {
+				"gjs-preset-webpage": {},
+				CKEDITOR: {},
+			},
 		});
-
-		onMounted(() => {
-			const editor = grapesjs.init({
-				container: "#gjs",
-				fromElement: true,
-				allowScripts: 1,
-				width: "1100px",
-				storageManager: { autoload: 0 },
-				showOffsets: 1,
-				panels: { defaults: [] },
-				plugins: [webpage],
-				pluginsOpts: { "gjs-preset-webpage": {} },
-			});
-
-			console.log("editor: ", editor);
-		});
-
-		return { rte };
+		console.log("editor: ", editor);
+		console.log("CKEDITOR: ", CKEDITOR);
 	},
 };
 </script>
