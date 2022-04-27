@@ -27,7 +27,7 @@ export default function useLoginbData() {
 				});
 			})
 			.then(() => {
-				router.push("/dashboard");
+				router.push("/workspaces");
 			})
 			.catch(() => {
 				$q.notify({
