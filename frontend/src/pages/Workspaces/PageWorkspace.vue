@@ -16,7 +16,7 @@
 		</q-header>
 
 		<AjaxBar />
-		<Drawer v-model="drawer">
+		<!-- <Drawer v-model="drawer">
 			<template v-slot:drawerFilter>
 				<div class="search_container">
 					<q-input ref="filterRef" filled v-model="filter" label="Search">
@@ -43,7 +43,7 @@
 					<q-tree :nodes="menu" node-key="label" default-expand-all />
 				</div>
 			</template>
-		</Drawer>
+		</Drawer> -->
 
 		<q-page-container class="bg-gray">
 			<q-page :style-fn="pageSizeTweak">
@@ -74,7 +74,7 @@ import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import ModalStepper from "components/UI/Dialogs/ModalStepper.vue";
-import Drawer from "components/UI/Drawers/Drawer.vue";
+//import Drawer from "components/UI/Drawers/Drawer.vue";
 import PageContent from "components/Content/PageContent";
 import CreationFormStepper from "components/UI/Stepper/CreationFormStepper";
 import AjaxBar from "components/UI/Progress/AjaxBar";
@@ -89,7 +89,7 @@ export default defineComponent({
 		ModalStepper,
 		CreationFormStepper,
 		AjaxBar,
-		Drawer,
+		//Drawer,
 	},
 	props: ["nodeID"],
 	setup() {
