@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import "grapesjs/dist/css/grapes.min.css";
 import grapesjs from "grapesjs";
 import "ckeditor4";
-import ckePlugin from "grapesjs-plugin-ckeditor";
+import "grapesjs-plugin-ckeditor";
 // import "grapesjs-preset-webpage";
 // import "grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css";
 console.log("CKEDITOR: ", CKEDITOR);
@@ -34,16 +34,17 @@ export default {
 				storageManager: false,
 				showOffsets: 1,
 				panels: { defaults: [] },
-				plugins: [ckePlugin],
+				plugins: ["grapesjs-plugin-ckeditor"],
 				pluginsOpts: {
-					[ckePlugin]: {
+					"grapesjs-plugin-ckeditor": {
 						toolbar: [
 							{ name: "styles", items: ["Font", "FontSize"] },
 							["Bold", "Italic", "Underline", "Strike"],
 							{ name: "paragraph", items: ["NumberedList", "BulletedList"] },
 							{ name: "links", items: ["Link", "Unlink"] },
-							{ name: "colors", items: ["TextColor", "BGColor"] },
+							//{ name: "colors", items: ["TextColor", "BGColor"] },
 						],
+						position: "center",
 					},
 				},
 
