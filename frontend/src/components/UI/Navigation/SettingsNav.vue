@@ -37,6 +37,11 @@ export default {
 				link: "/settings/environmentstypes",
 				icon: "tag",
 			},
+			{
+				label: "Dashboard",
+				link: "/settings/dashboard",
+				icon: "dashboard",
+			},
 		]);
 		return { navigationItem };
 	},

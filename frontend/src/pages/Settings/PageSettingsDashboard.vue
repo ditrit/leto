@@ -38,11 +38,7 @@
 				</div>
 			</template>
 			<template v-slot:drawerMenu>
-				<ul>
-					<li>5</li>
-					<li>5</li>
-					<li>5</li>
-				</ul>
+				<SettingsNav />
 			</template>
 		</Drawer>
 
@@ -70,17 +66,19 @@
 <script>
 import { ref } from "vue";
 import { useStore } from "vuex";
-import AjaxBar from "../../components/UI/Progress/AjaxBar";
-import PageContent from "../../components/Content/PageContent";
-import Drawer from "../../components/UI/Drawers/Drawer.vue";
-import AccountSettings from "../../components/UI/Profil/AccountSettings";
-import Grapes from "../../components/Builder/Grapes.vue";
+import AjaxBar from "components/UI/Progress/AjaxBar";
+import PageContent from "components/Content/PageContent";
+import Drawer from "components/UI/Drawers/Drawer.vue";
+import SettingsNav from "components/UI/Navigation/SettingsNav";
+import AccountSettings from "components/UI/Profil/AccountSettings";
+import Grapes from "components/Builder/Grapes.vue";
 
 export default {
 	components: {
 		AjaxBar,
 		PageContent,
 		Drawer,
+		SettingsNav,
 		AccountSettings,
 		Grapes,
 	},

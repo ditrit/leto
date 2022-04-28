@@ -11,17 +11,19 @@
 </template>
 
 <script>
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import "grapesjs/dist/css/grapes.min.css";
 import grapesjs from "grapesjs";
 import "ckeditor4";
-import "grapesjs-plugin-ckeditor";
-import "grapesjs-preset-webpage";
+import ckePlugin from "grapesjs-plugin-ckeditor";
+// import "grapesjs-preset-webpage";
 // import "grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css";
+console.log("CKEDITOR: ", CKEDITOR);
 
 export default {
 	name: "Grapes",
 	components: {},
+
 	setup() {
 		onMounted(() => {
 			const editor = grapesjs.init({
@@ -32,10 +34,9 @@ export default {
 				storageManager: false,
 				showOffsets: 1,
 				panels: { defaults: [] },
-				plugins: ["gjs-plugin-ckeditor"],
+				plugins: [ckePlugin],
 				pluginsOpts: {
-					"gjs-plugin-ckeditor": {
-						// language: "en",
+					[ckePlugin]: {
 						toolbar: [
 							{ name: "styles", items: ["Font", "FontSize"] },
 							["Bold", "Italic", "Underline", "Strike"],
@@ -80,64 +81,25 @@ export default {
 			});
 
 			console.log("editor: ", editor);
-			editor.BlockManager.add("#blocks", {
-				content: {
-					tagName: "div",
-					draggable: false,
-					attributes: { "some-attribute": "some-value" },
-					components: [
-						{
-							tagName: "span",
-							content: "<b>Some static content</b>",
-						},
-						{
-							tagName: "div",
-							// use `content` for static strings, `components` string will be parsed
-							// and transformed in Components
-							components: "<span>HTML at some point</span>",
-						},
-					],
-				},
-			});
-			editor.Panels.addPanel({
-				id: "panel-top",
-				el: ".panel__top",
-			});
-			editor.Panels.addPanel({
-				id: "basic-actions",
-				el: ".panel__basic-actions",
-				buttons: [
-					{
-						id: "visibility",
-						active: true, // active by default
-						className: "btn-toggle-borders",
-						label: "<u>B</u>",
-						command: "sw-visibility", // Built-in command
-					},
-					{
-						id: "export",
-						className: "btn-open-export",
-						label: "Exp",
-						command: "export-template",
-						context: "export-template", // For grouping context of buttons from the same panel
-					},
-					{
-						id: "show-json",
-						className: "btn-show-json",
-						label: "JSON",
-						context: "show-json",
-						command(editor) {
-							editor.Modal.setTitle("Components JSON")
-								.setContent(
-									`<textarea style="width:100%; height: 250px;">
-            ${JSON.stringify(editor.getComponents())}
-          </textarea>`
-								)
-								.open();
-						},
-					},
-				],
-			});
+			// editor.BlockManager.add("#blocks", {
+			// 	content: {
+			// 		tagName: "div",
+			// 		draggable: false,
+			// 		attributes: { "some-attribute": "some-value" },
+			// 		components: [
+			// 			{
+			// 				tagName: "span",
+			// 				content: "<b>Some static content</b>",
+			// 			},
+			// 			{
+			// 				tagName: "div",
+			// 				// use `content` for static strings, `components` string will be parsed
+			// 				// and transformed in Components
+			// 				components: "<span>HTML at some point</span>",
+			// 			},
+			// 		],
+			// 	},
+			// });
 
 			// editor.setCustomRte({
 			// 	enable: function (el, rte) {
