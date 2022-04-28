@@ -73,7 +73,6 @@ export default function useAuthorizationsTabsData(props) {
 		return (authorizationDomainObj.value = Object.values(choosenDomain)[7]);
 	};
 	refreshAuthorizationTab();
-	console.log("authorizationDomainObj.value: ", authorizationDomainObj.value);
 
 	const deleteAuthorization = async (id) => {
 		await store
