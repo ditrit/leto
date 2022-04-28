@@ -31,7 +31,6 @@
 		"ckeditor": "^4.12.1",
 		"ckeditor4": "^4.18.0",
 		"ckeditor4-vue": "^2.0.0",
-		"ckeditor5": "^34.0.0",
 		"core-js": "^3.6.5",
 		"d3": "^7.4.4",
 		"express": "^4.17.2",
