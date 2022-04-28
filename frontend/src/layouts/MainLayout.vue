@@ -51,12 +51,6 @@ const linksToolsList = [
 	},
 	{
 		title: "",
-		caption: "Dashboard",
-		icon: "dashboard",
-		link: "#/dashboard",
-	},
-	{
-		title: "",
 		caption: "Settings",
 		icon: "settings",
 		link: "#/settings",

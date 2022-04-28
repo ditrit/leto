@@ -53,11 +53,6 @@ const routes = [
 				meta: { requiresAuth: true },
 			},
 			{
-				path: "dashboard",
-				component: () => import("pages/Dashboard/PageDashboard.vue"),
-				meta: { requiresAuth: true },
-			},
-			{
 				path: "settings",
 				component: () => import("pages/Settings/PageSettingsUsers.vue"),
 				meta: { requiresAuth: true },
@@ -91,6 +86,11 @@ const routes = [
 			{
 				path: "settings/environmentstypes",
 				component: () => import("pages/Settings/PageSettingsEnviType.vue"),
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "settings/dashboard",
+				component: () => import("pages/Settings/PageSettingsDashboard"),
 				meta: { requiresAuth: true },
 			},
 		],
