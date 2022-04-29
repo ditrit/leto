@@ -1,10 +1,10 @@
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import API from "../../services/index";
 
-export default function useDomainData(props) {
+export default function useDomainData() {
 	const store = useStore();
 	const $q = useQuasar();
 	const router = useRouter();
@@ -35,21 +35,21 @@ export default function useDomainData(props) {
 						parentID: item?.ParentID,
 						label: item?.Name,
 						avatar: item?.Logo,
-						handler: (item) => goToID(item),
+						handler: (node) => goToID(node),
 						children: item?.Childs?.map((subItem) => {
 							return {
 								id: subItem?.ID,
 								parentID: subItem?.ParentID,
 								label: subItem?.Name,
 								avatar: subItem?.Logo,
-								handler: (subItem) => goToID(subItem),
+								handler: (node) => goToID(node),
 								children: subItem?.Childs?.map((subLastItem) => {
 									return {
 										id: subLastItem?.ID,
 										parentID: subLastItem?.ParentID,
 										label: subLastItem?.Name,
 										avatar: subLastItem?.Logo,
-										handler: (subLastItem) => goToID(subLastItem),
+										handler: (node) => goToID(node),
 									};
 								}),
 							};
@@ -59,7 +59,7 @@ export default function useDomainData(props) {
 			},
 		]);
 	};
-	console.log("(menu.value: ", menu.value);
+
 	getMenuData();
 	const rigthData = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", `${id}`);
@@ -94,13 +94,6 @@ export default function useDomainData(props) {
 		await rigthData(choosenNodeID.value);
 	};
 
-	// const refreshDomain = async (id) => {
-	// 	await store.dispatch("appDomain/fetchDomainById", id);
-	// 	let data = computed(() => store.getters["appDomain/allDomaines"]);
-	// 	currentDomainDataContent.value = await data.value;
-	// 	domainTags.value = await data.value[0].Tags;
-	// 	await getMenuData();
-	// };
 	const refreshDomainTag = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
@@ -125,25 +118,25 @@ export default function useDomainData(props) {
 			return {
 				id: tag?.ID,
 				label: tag?.Name,
-				handler: (tag) => addTagtoDomain(tag),
+				handler: (node) => addTagtoDomain(node),
 				icon: "sell",
 				children: tag.Childs?.map((child) => {
 					return {
 						id: child.ID,
 						label: child.Name,
-						handler: (child) => addTagtoDomain(child),
+						handler: (node) => addTagtoDomain(node),
 						icon: "sell",
 						children: child.Childs?.map((subChild) => {
 							return {
 								id: subChild.ID,
 								label: subChild.Name,
-								handler: (child) => addTagtoDomain(child),
+								handler: (node) => addTagtoDomain(node),
 								icon: "sell",
 								children: subChild.Childs?.map((lastChild) => {
 									return {
 										id: lastChild.ID,
 										label: lastChild.Name,
-										handler: (child) => addTagtoDomain(child),
+										handler: (node) => addTagtoDomain(node),
 										icon: "sell",
 									};
 								}),
@@ -153,13 +146,11 @@ export default function useDomainData(props) {
 				}),
 			};
 		});
-		console.log("globalTagsTreeList: ", globalTagsTreeList.value);
 	};
 	getTagsTree();
 
 	const OnDelete = async (id) => {
 		console.log("deleted ID:", id);
-		//TODO: Add Axios Action
 		await API.delete(`/domain/${choosenNodeID.value}/tag/${id}`)
 			.then(() => refreshDomainTag(choosenNodeID.value))
 			.catch((error) => console.log(error));
