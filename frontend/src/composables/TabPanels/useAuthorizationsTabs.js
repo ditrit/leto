@@ -82,7 +82,7 @@ export default function useAuthorizationsTabsData(props) {
 			});
 	};
 
-	const confirmDeleteAuthorization = (props) => {
+	const confirmDeleteAuthorization = (id) => {
 		$q.dialog({
 			title: "Confirm",
 			message: "Are you sure to delete this item?",
@@ -90,7 +90,7 @@ export default function useAuthorizationsTabsData(props) {
 			persistent: true,
 		})
 			.onOk(() => {
-				deleteAuthorization(props);
+				deleteAuthorization(id);
 			})
 			.onCancel(() => {
 				console.log("canceled");
