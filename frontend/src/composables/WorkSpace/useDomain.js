@@ -22,7 +22,7 @@ export default function useDomainData() {
 			() => store.getters["appDomain/allDomainesTree"]
 		);
 
-		return (menu.value = [
+		menu.value = [
 			{
 				id: allDomainTree?.value?.ID,
 				parentID: allDomainTree?.value?.ParentID,
@@ -57,7 +57,7 @@ export default function useDomainData() {
 					};
 				}),
 			},
-		]);
+		];
 	};
 
 	getMenuData();
@@ -101,8 +101,6 @@ export default function useDomainData() {
 	};
 
 	const addTagtoDomain = async (tag) => {
-		// store.dispatch("appDomain/addDomainTag", props.id, `${tag.id}`);
-		//TODO: Modify Axios action
 		try {
 			await API.post(`/domain/${choosenNodeID.value}/tag/${tag.id}`);
 			refreshDomainTag(choosenNodeID.value);

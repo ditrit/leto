@@ -70,7 +70,7 @@ export default function useAuthorizationsTabsData(props) {
 		let choosenDomain = domain.find(
 			(d) => d.ID === route.currentRoute.value.params.id
 		);
-		return (authorizationDomainObj.value = Object.values(choosenDomain)[7]);
+		authorizationDomainObj.value = Object.values(choosenDomain)[7];
 	};
 	refreshAuthorizationTab();
 

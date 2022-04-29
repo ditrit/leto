@@ -8,7 +8,6 @@
 import { ref, onMounted } from "vue";
 import grapesjs from "grapesjs";
 import "ckeditor4";
-import ritchTextEditor from "grapesjs-plugin-ckeditor";
 import blocks from "grapesjs-blocks-basic";
 import "grapesjs/dist/css/grapes.min.css";
 

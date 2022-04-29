@@ -298,7 +298,6 @@ export default {
 		const showSubmitBtn = ref(false);
 		const showButton = ref(false);
 		const opendDialog = ref(true);
-		const file = ref(null);
 		const logoID = ref(null);
 		const avatar = ref(null);
 		const password = ref(null);
@@ -315,8 +314,6 @@ export default {
 		console.log("	download avatar : ", avatar.value);
 
 		const OnEdit = () => {
-			// disabled.value = !disabled.value;
-			// showButton.value = !showButton.value;
 			opendDialog.value = true;
 		};
 
@@ -368,7 +365,6 @@ export default {
 					message: "Password has not been updated.",
 				});
 			}
-			(password.value = ""), (confirmPassword.value = "");
 		};
 		return {
 			drawer,
@@ -380,7 +376,6 @@ export default {
 			OnEdit,
 			showButton,
 			showSubmitBtn,
-			file,
 			password,
 			confirmPassword,
 			submitPassword,

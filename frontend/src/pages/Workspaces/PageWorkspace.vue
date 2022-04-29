@@ -88,7 +88,7 @@ export default defineComponent({
 			const allDomainTree = computed(
 				() => store.getters["appDomain/allDomainesTree"]
 			);
-			return (menu.value = [
+			menu.value = [
 				{
 					id: allDomainTree?.value?.ID,
 					parentID: allDomainTree?.value?.ParentID,
@@ -123,7 +123,7 @@ export default defineComponent({
 						};
 					}),
 				},
-			]);
+			];
 		};
 		getMenuData();
 
