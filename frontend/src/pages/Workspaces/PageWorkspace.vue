@@ -16,34 +16,6 @@
 		</q-header>
 
 		<AjaxBar />
-		<!-- <Drawer v-model="drawer">
-			<template v-slot:drawerFilter>
-				<div class="search_container">
-					<q-input ref="filterRef" filled v-model="filter" label="Search">
-						<template v-slot:append>
-							<q-icon
-								v-if="filter !== ''"
-								name="clear"
-								class="cursor-pointer"
-								@click="resetFilter"
-							/>
-							<q-icon
-								v-else
-								name="search"
-								class="cursor-pointer"
-								@click="resetFilter"
-							/>
-						</template>
-					</q-input>
-					<div></div>
-				</div>
-			</template>
-			<template v-slot:drawerMenu>
-				<div class="q-pa-md q-gutter-sm" v-if="menu">
-					<q-tree :nodes="menu" node-key="label" default-expand-all />
-				</div>
-			</template>
-		</Drawer> -->
 
 		<q-page-container class="bg-gray">
 			<q-page :style-fn="pageSizeTweak">
@@ -74,7 +46,6 @@ import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import ModalStepper from "components/UI/Dialogs/ModalStepper.vue";
-//import Drawer from "components/UI/Drawers/Drawer.vue";
 import PageContent from "components/Content/PageContent";
 import CreationFormStepper from "components/UI/Stepper/CreationFormStepper";
 import AjaxBar from "components/UI/Progress/AjaxBar";
@@ -89,7 +60,6 @@ export default defineComponent({
 		ModalStepper,
 		CreationFormStepper,
 		AjaxBar,
-		//Drawer,
 	},
 	props: ["nodeID"],
 	setup() {
@@ -105,8 +75,7 @@ export default defineComponent({
 		const chosenNodeID = ref("");
 		const goToID = (node) => {
 			chosenNodeID.value = node.id;
-			router.push(`/workspaces/${node.id}`);
-			console.log("chosenNodeID: ", chosenNodeID.value);
+			router.push(`/workspaces/${chosenNodeID.value}`);
 		};
 
 		const oepnDialog = ref(false);
@@ -132,21 +101,21 @@ export default defineComponent({
 							parentID: item?.ParentID,
 							label: item?.Name,
 							avatar: item?.Logo,
-							handler: (item) => goToID(item),
+							handler: (node) => goToID(node),
 							children: item?.Childs?.map((subItem) => {
 								return {
 									id: subItem?.ID,
 									parentID: subItem?.ParentID,
 									label: subItem?.Name,
 									avatar: subItem?.Logo,
-									handler: (subItem) => goToID(subItem),
+									handler: (node) => goToID(node),
 									children: subItem?.Childs?.map((subLastItem) => {
 										return {
 											id: subLastItem?.ID,
 											parentID: subLastItem?.ParentID,
 											label: subLastItem?.Name,
 											avatar: subLastItem?.Logo,
-											handler: (subLastItem) => goToID(subLastItem),
+											handler: (node) => goToID(node),
 										};
 									}),
 								};
@@ -157,7 +126,6 @@ export default defineComponent({
 			]);
 		};
 		getMenuData();
-		console.log("menu.value: ", menu);
 
 		return {
 			teamData,

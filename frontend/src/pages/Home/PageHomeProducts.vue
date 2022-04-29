@@ -58,13 +58,13 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import PageContent from "../../components/Content/PageContent";
-import AjaxBar from "../../components/UI/Progress/AjaxBar";
-import Drawer from "../../components/UI/Drawers/Drawer.vue";
+import PageContent from "components/Content/PageContent";
+import AjaxBar from "components/UI/Progress/AjaxBar";
+import Drawer from "components/UI/Drawers/Drawer.vue";
 import { pageSizeTweak } from "../../common/index";
-import AccountSettings from "../../components/UI/Profil/AccountSettings";
+import AccountSettings from "components/UI/Profil/AccountSettings";
 import { useStore } from "vuex";
-import HomeNav from "../../components/UI/Navigation/HomeNav.vue";
+import HomeNav from "components/UI/Navigation/HomeNav.vue";
 
 export default defineComponent({
 	name: "PageTeams",

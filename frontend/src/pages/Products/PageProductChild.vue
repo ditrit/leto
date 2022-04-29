@@ -59,13 +59,13 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import AjaxBar from "../../components/UI/Progress/AjaxBar";
-import Drawer from "../../components/UI/Drawers/Drawer.vue";
-import AccountSettings from "../../components/UI/Profil/AccountSettings";
+import AjaxBar from "components/UI/Progress/AjaxBar";
+import Drawer from "components/UI/Drawers/Drawer.vue";
+import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
 import useProductDetails from "../../composables/Products/useProductDetails";
 import useDomainData from "../../composables/WorkSpace/useDomain";
-import ProductDetailsNavigation from "../../components/UI/Stepper/ProductDetailsNavigation.vue";
+import ProductDetailsNavigation from "components/UI/Stepper/ProductDetailsNavigation.vue";
 
 export default defineComponent({
 	name: "PageDomainChild",

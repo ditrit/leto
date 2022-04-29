@@ -261,14 +261,14 @@ import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import API from "../../services/index";
 import { v4 as uuidv4 } from "uuid";
-import AjaxBar from "../../components/UI/Progress/AjaxBar";
-import PageContent from "../../components/Content/PageContent";
-import Drawer from "../../components/UI/Drawers/Drawer.vue";
-import AccountSettings from "../../components/UI/Profil/AccountSettings";
+import AjaxBar from "components/UI/Progress/AjaxBar";
+import PageContent from "components/Content/PageContent";
+import Drawer from "components/UI/Drawers/Drawer.vue";
+import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
-import HomeNav from "../../components/UI/Navigation/HomeNav.vue";
+import HomeNav from "components/UI/Navigation/HomeNav.vue";
 import globalAvatar from "../../assets/profil.png";
-import Modal from "../../components/UI/Dialogs/Modal.vue";
+import Modal from "components/UI/Dialogs/Modal.vue";
 
 export default {
 	components: {
