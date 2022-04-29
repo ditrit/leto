@@ -1,7 +1,7 @@
-.DS_Store
+
 .thumbs.db
 node_modules
-
+.DS_Store
 # Quasar core related directories
 .quasar
 /dist
@@ -31,6 +31,7 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
 
 # Jest reports
 /reports/*
