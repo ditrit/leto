@@ -17,8 +17,7 @@
 </template>
 <script>
 import { computed } from "vue";
-import { mapActions } from "vuex";
-import { useStore } from "vuex";
+import { mapActions, useStore } from "vuex";
 import RegistrationForm from "components/UI/Form/RegistrationForm";
 import SocialConnect from "components/Login/SocialConnect";
 import LoginNav from "components/UI/Navigation/LoginNav";

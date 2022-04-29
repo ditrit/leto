@@ -61,16 +61,6 @@
 					v-for="btn in buttonsList"
 					:key="btn.title"
 				>
-					<!-- <BtnAddNew
-						:title="$t('add_library')"
-						:class="btn.styles"
-						outline
-						round
-						:color="btn.color"
-						:icon="btn.icon"
-						:href="btn.link"
-						@click="oepnDialog = false"
-					/> -->
 					<Modal class="modalGlobal" v-model="oepnDialog">
 						<template v-slot:ModalTitle>
 							{{ $t("create_library") }}
@@ -79,22 +69,6 @@
 							<ProductCreationStepper />
 						</template>
 					</Modal>
-
-					<!-- <q-dialog v-model="oepnDialog">
-						<q-card style="width: 700px; max-width: 80vw">
-							<q-card-section>
-								<div class="text-h6">{{ $t("create_library") }}</div>
-							</q-card-section>
-
-							<q-card-section class="q-pt-none">
-								<ProductCreationStepper />
-							</q-card-section>
-
-							<q-card-actions align="right" class="bg-white text-teal">
-								<q-btn flat label="Next" v-close-popup />
-							</q-card-actions>
-						</q-card>
-					</q-dialog> -->
 				</div>
 			</q-page>
 		</q-page-container>
@@ -103,9 +77,7 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-// import BtnAddNew from "../components/UI/Buttons/BtnAddNew";
 import PageContent from "components/Content/PageContent";
-import ProductCreationStepper from "components/UI/Stepper/ProductCreationStepper";
 import AjaxBar from "components/UI/Progress/AjaxBar";
 import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
@@ -126,9 +98,7 @@ const buttonsList = [
 export default defineComponent({
 	name: "PageLibraries",
 	components: {
-		// BtnAddNew,
 		PageContent,
-		// ProductCreationStepper,
 		AccountSettings,
 		AjaxBar,
 		Drawer,

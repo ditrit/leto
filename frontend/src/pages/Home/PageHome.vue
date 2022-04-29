@@ -146,11 +146,6 @@ export default defineComponent({
 		const filterRef = ref(null);
 		const oepnDialog = ref(false);
 
-		const executeGit = async () => {
-			let exc = await store.dispatch("appGit/execute");
-			console.log("exc: ", exc);
-		};
-		// executeGit();
 		return {
 			drawer,
 			homeData,
