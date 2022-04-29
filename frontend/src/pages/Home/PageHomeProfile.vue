@@ -73,7 +73,7 @@
 							</div>
 						</q-form>
 						<q-avatar class="q-my-lg" size="100px">
-							<img :src="user.Logo ? user.Logo : logo" />
+							<img :src="user.Logo ? user.Logo : logo" alt="user avatar" />
 						</q-avatar>
 					</div>
 					<div class="row">
