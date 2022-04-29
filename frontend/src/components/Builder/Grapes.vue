@@ -1,31 +1,17 @@
 <template>
 	<div>
-		<section id="gjs">
-			<h1>Leto Component!</h1>
-			<q-card class="my-card">
-				<q-card-section>
-					Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reiciendis
-					expedita minus delectus magnam deleniti! Porro magni pariatur illum,
-					amet provident quam voluptatum! Perferendis dolorum libero pariatur
-					exercitationem, molestias est explicabo.
-				</q-card-section>
-			</q-card>
-		</section>
-		<section id="blocks"></section>
-		<div class="panel__top">
-			<div class="panel__basic-actions"></div>
-		</div>
+		<section id="gjs"></section>
+		<section id="block"></section>
 	</div>
 </template>
 
 <script>
 import { ref, onMounted } from "vue";
-import "grapesjs/dist/css/grapes.min.css";
 import grapesjs from "grapesjs";
 import "ckeditor4";
-import "grapesjs-plugin-ckeditor";
+import ritchTextEditor from "grapesjs-plugin-ckeditor";
 import blocks from "grapesjs-blocks-basic";
-import grapesForm from "grapesjs-plugin-forms";
+import "grapesjs/dist/css/grapes.min.css";
 
 export default {
 	name: "Grapes",
@@ -41,43 +27,22 @@ export default {
 				width: "1100px",
 				storageManager: false,
 				showOffsets: 1,
-				panels: { defaults: [] },
-				plugins: [grapesForm, blocks, "gjs-plugin-ckeditor"],
-				pluginsOpts: {
-					"gjs-plugin-ckeditor": {
-						toolbar: [
-							{ name: "styles", items: ["Font", "FontSize"] },
-							{ name: "paragraph", items: ["NumberedList", "BulletedList"] },
-							{ name: "links", items: ["Link", "Unlink"] },
-							{ name: "colors", items: ["TextColor", "BGColor"] },
-						],
-						position: "center",
-					},
-				},
-
-				blockManager: {
-					appendTo: "#blocks",
-					blocks: [
+				plugins: [blocks],
+				pluginsOpts: { blocks: {} },
+			});
+			editor.value.BlockManager.add("#block", {
+				content: {
+					tagName: "div",
+					draggable: true,
+					attributes: { class: "block_1" },
+					components: [
 						{
-							id: "section",
-							label: "<b>Card</b>",
-							attributes: { class: "gjs-block-section" },
-							content: `<section>
-          <h1>This is a simple title</h1>
-          <div>This is just a Lorem text: Lorem ipsum dolor sit amet</div>
-        </section>`,
+							tagName: "span",
+							content: "<b>Some static content</b>",
 						},
 						{
-							id: "text",
-							label: "Text",
-							content: '<div data-gjs-type="text">Insert your text here</div>',
-						},
-						{
-							id: "image",
-							label: "Image",
-							select: true,
-							content: { type: "image" },
-							activate: true,
+							tagName: "div",
+							components: "<span>HTML at some point</span>",
 						},
 					],
 				},
@@ -85,8 +50,8 @@ export default {
 		};
 		onMounted(() => {
 			initGrapes();
-			console.log("CKEDITOR: ", CKEDITOR);
 			console.log("editor: ", editor.value);
+			console.log("ckeditor4: ", CKEDITOR);
 		});
 
 		return { editor, initGrapes };
@@ -96,29 +61,12 @@ export default {
 
 <style lang="sass">
 #gjs
-   border: 2px solid $primary
+
+
+
+.gjs-dashed body
+  background: #e0e0e0 !important
 
 .gjs-editor-cont
   margin: 45px 0 45px 45px
-
-.gjs-cv-canvas
-  top: 0
-  width: 100%
-  height: 100%
-
-.gjs-block
-  width: auto
-  height: auto
-  min-height: auto
-
-.panel__top
-  padding: 0
-  width: 100%
-  display: flex
-  position: initial
-  justify-content: center
-  justify-content: space-between
-
-.panel__basic-actions
-  position: initial
 </style>
