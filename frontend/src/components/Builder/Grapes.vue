@@ -16,8 +16,6 @@ import "grapesjs/dist/css/grapes.min.css";
 import grapesjs from "grapesjs";
 import "ckeditor4";
 import "grapesjs-plugin-ckeditor";
-// import "grapesjs-preset-webpage";
-// import "grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css";
 console.log("CKEDITOR: ", CKEDITOR);
 
 export default {
@@ -42,7 +40,7 @@ export default {
 							["Bold", "Italic", "Underline", "Strike"],
 							{ name: "paragraph", items: ["NumberedList", "BulletedList"] },
 							{ name: "links", items: ["Link", "Unlink"] },
-							//{ name: "colors", items: ["TextColor", "BGColor"] },
+							{ name: "colors", items: ["TextColor", "BGColor"] },
 						],
 						position: "center",
 					},
@@ -52,8 +50,8 @@ export default {
 					appendTo: "#blocks",
 					blocks: [
 						{
-							id: "section", // id is mandatory
-							label: "<b>Section</b>", // You can use HTML/SVG inside labels
+							id: "section",
+							label: "<b>Section</b>",
 							attributes: { class: "gjs-block-section" },
 							content: `<section>
           <h1>This is a simple title</h1>
@@ -68,13 +66,8 @@ export default {
 						{
 							id: "image",
 							label: "Image",
-							// Select the component once it's dropped
 							select: true,
-							// You can pass components as a JSON instead of a simple HTML string,
-							// in this case we also use a defined component type `image`
 							content: { type: "image" },
-							// This triggers `active` event on dropped components and the `image`
-							// reacts by opening the AssetManager
 							activate: true,
 						},
 					],
@@ -82,69 +75,6 @@ export default {
 			});
 
 			console.log("editor: ", editor);
-			// editor.BlockManager.add("#blocks", {
-			// 	content: {
-			// 		tagName: "div",
-			// 		draggable: false,
-			// 		attributes: { "some-attribute": "some-value" },
-			// 		components: [
-			// 			{
-			// 				tagName: "span",
-			// 				content: "<b>Some static content</b>",
-			// 			},
-			// 			{
-			// 				tagName: "div",
-			// 				// use `content` for static strings, `components` string will be parsed
-			// 				// and transformed in Components
-			// 				components: "<span>HTML at some point</span>",
-			// 			},
-			// 		],
-			// 	},
-			// });
-
-			// editor.setCustomRte({
-			// 	enable: function (el, rte) {
-			// 		// If already exists just focus
-			// 		if (rte) {
-			// 			this.focus(el, rte); // implemented later
-			// 			return rte;
-			// 		}
-
-			// 		// CKEditor initialization
-			// 		rte = CKEDITOR.inline(el, {
-			// 			// Your configurations...
-			// 			toolbar: [
-			// 				{ name: "styles", items: ["Font", "FontSize"] },
-			// 				["Bold", "Italic", "Underline", "Strike"],
-			// 				{ name: "paragraph", items: ["NumberedList", "BulletedList"] },
-			// 				{ name: "links", items: ["Link", "Unlink"] },
-			// 				{ name: "colors", items: ["TextColor", "BGColor"] },
-			// 			],
-			// 			//sharedSpaces: {
-			// 			//	top: editor.RichTextEditor.getToolbarEl(),
-			// 			//}
-			// 		});
-
-			// 		this.focus(el, rte); // implemented later
-			// 		return rte;
-			// 	},
-			// 	focus(el, rte) {
-			// 		// console.log(el)
-			// 		// console.log(editor.getWrapper().view)
-			// 		// Do nothing if already focused
-			// 		if (rte && rte.focusManager.hasFocus) {
-			// 			return;
-			// 		}
-			// 		el.contentEditable = true;
-			// 		// console.log(el)
-			// 		// console.log(editor.getWrapper().view)
-			// 		rte && rte.focus();
-			// 	},
-			// 	disable(el, rte) {
-			// 		el.contentEditable = false;
-			// 		if (rte && rte.focusManager) rte.focusManager.blur(true);
-			// 	},
-			// });
 		});
 
 		return {};
