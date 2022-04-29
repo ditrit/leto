@@ -1,7 +1,15 @@
 <template>
 	<div>
 		<section id="gjs">
-			<h1>Hello World Component!</h1>
+			<h1>Leto Component!</h1>
+			<q-card class="my-card">
+				<q-card-section>
+					Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reiciendis
+					expedita minus delectus magnam deleniti! Porro magni pariatur illum,
+					amet provident quam voluptatum! Perferendis dolorum libero pariatur
+					exercitationem, molestias est explicabo.
+				</q-card-section>
+			</q-card>
 		</section>
 		<section id="blocks"></section>
 		<div class="panel__top">
@@ -11,20 +19,22 @@
 </template>
 
 <script>
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import "grapesjs/dist/css/grapes.min.css";
 import grapesjs from "grapesjs";
 import "ckeditor4";
 import "grapesjs-plugin-ckeditor";
-console.log("CKEDITOR: ", CKEDITOR);
+import blocks from "grapesjs-blocks-basic";
+import grapesForm from "grapesjs-plugin-forms";
 
 export default {
 	name: "Grapes",
 	components: {},
 
 	setup() {
-		onMounted(() => {
-			const editor = grapesjs.init({
+		const editor = ref(null);
+		const initGrapes = () => {
+			editor.value = grapesjs.init({
 				container: "#gjs",
 				fromElement: true,
 				allowScripts: 1,
@@ -32,12 +42,11 @@ export default {
 				storageManager: false,
 				showOffsets: 1,
 				panels: { defaults: [] },
-				plugins: ["grapesjs-plugin-ckeditor"],
+				plugins: [grapesForm, blocks, "gjs-plugin-ckeditor"],
 				pluginsOpts: {
-					"grapesjs-plugin-ckeditor": {
+					"gjs-plugin-ckeditor": {
 						toolbar: [
 							{ name: "styles", items: ["Font", "FontSize"] },
-							["Bold", "Italic", "Underline", "Strike"],
 							{ name: "paragraph", items: ["NumberedList", "BulletedList"] },
 							{ name: "links", items: ["Link", "Unlink"] },
 							{ name: "colors", items: ["TextColor", "BGColor"] },
@@ -51,7 +60,7 @@ export default {
 					blocks: [
 						{
 							id: "section",
-							label: "<b>Section</b>",
+							label: "<b>Card</b>",
 							attributes: { class: "gjs-block-section" },
 							content: `<section>
           <h1>This is a simple title</h1>
@@ -73,11 +82,14 @@ export default {
 					],
 				},
 			});
-
-			console.log("editor: ", editor);
+		};
+		onMounted(() => {
+			initGrapes();
+			console.log("CKEDITOR: ", CKEDITOR);
+			console.log("editor: ", editor.value);
 		});
 
-		return {};
+		return { editor, initGrapes };
 	},
 };
 </script>
