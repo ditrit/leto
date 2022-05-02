@@ -137,7 +137,6 @@ export default function useEnvironmentsTabsData(props) {
 			name: environmentName.value,
 			shortDescription: environmentShortDescription.value,
 			description: environmentDescription.value,
-			environmentTypeID: props.id,
 			environmentTypeID: selectedParentData.value.id,
 			environmentTypeName: environmentTypeNameRef.value.name,
 		};
