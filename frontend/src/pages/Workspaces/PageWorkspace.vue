@@ -14,9 +14,7 @@
 				<AccountSettings />
 			</q-toolbar>
 		</q-header>
-
 		<AjaxBar />
-
 		<q-page-container class="bg-gray">
 			<q-page :style-fn="pageSizeTweak">
 				<PageContent
@@ -42,7 +40,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import ModalStepper from "components/UI/Dialogs/ModalStepper.vue";
@@ -52,7 +50,7 @@ import AjaxBar from "components/UI/Progress/AjaxBar";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
 
-export default defineComponent({
+export default {
 	name: "PageTeams",
 	components: {
 		AccountSettings,
@@ -63,26 +61,25 @@ export default defineComponent({
 	},
 	props: ["nodeID"],
 	setup() {
+		const router = useRouter();
+		const filter = ref("");
+		const filterRef = ref(null);
+		const chosenNodeID = ref("");
+		const oepnDialog = ref(false);
+		const store = useStore();
+		const menu = ref(null);
+		const drawer = ref(true);
 		const teamData = ref([
 			{
 				id: 1,
 				icon: "group",
 			},
 		]);
-		const router = useRouter();
-		const filter = ref("");
-		const filterRef = ref(null);
-		const chosenNodeID = ref("");
 		const goToID = (node) => {
 			chosenNodeID.value = node.id;
 			router.push(`/workspaces/${chosenNodeID.value}`);
 		};
 
-		const oepnDialog = ref(false);
-
-		const store = useStore();
-		const menu = ref(null);
-		const drawer = ref(true);
 		const getMenuData = async () => {
 			await store.dispatch("appDomain/fetchDomainesTree");
 			const allDomainTree = computed(
@@ -144,5 +141,5 @@ export default defineComponent({
 			pageSizeTweak,
 		};
 	},
-});
+};
 </script>

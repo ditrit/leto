@@ -57,16 +57,15 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-import PageContent from "../../components/Content/PageContent";
-import AjaxBar from "../../components/UI/Progress/AjaxBar";
-import Drawer from "../../components/UI/Drawers/Drawer.vue";
+import { ref } from "vue";
+import PageContent from "components/Content/PageContent";
+import AjaxBar from "components/UI/Progress/AjaxBar";
+import Drawer from "components/UI/Drawers/Drawer.vue";
 import { pageSizeTweak } from "../../common/index";
-import AccountSettings from "../../components/UI/Profil/AccountSettings";
-import { useStore } from "vuex";
-import HomeNav from "../../components/UI/Navigation/HomeNav.vue";
+import AccountSettings from "components/UI/Profil/AccountSettings";
+import HomeNav from "components/UI/Navigation/HomeNav.vue";
 
-export default defineComponent({
+export default {
 	name: "PageTeams",
 	components: {
 		AccountSettings,
@@ -77,8 +76,10 @@ export default defineComponent({
 	},
 
 	setup() {
-		const store = useStore();
 		const drawer = ref(false);
+		const filter = ref("");
+		const filterRef = ref(null);
+		const oepnDialog = ref(false);
 		const myProductsData = ref([
 			{
 				id: 2,
@@ -89,15 +90,6 @@ export default defineComponent({
 			},
 		]);
 
-		const filter = ref("");
-		const filterRef = ref(null);
-		const oepnDialog = ref(false);
-
-		const executeGit = async () => {
-			let exc = await store.dispatch("appGit/execute");
-			console.log("exc: ", exc);
-		};
-		executeGit();
 		return {
 			drawer,
 			myProductsData,
@@ -111,11 +103,9 @@ export default defineComponent({
 			pageSizeTweak,
 		};
 	},
-});
+};
 </script>
 <style lang="sass" scoped>
-
-
 .teams_buttons__container
 	display: flex
 	flex-direction: row
