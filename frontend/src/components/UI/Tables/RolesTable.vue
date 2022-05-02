@@ -21,8 +21,9 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img
-							:src="props.row.avatar ? props.row.avatar : globalAvatar"
+						<AvatarImg
+							:source="props.row.avatar"
+							:substitute="globalAvatar"
 							alt="role avatar"
 						/>
 					</q-avatar>
@@ -168,6 +169,7 @@ import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/userFileData";
 import FileUploader from "../Form/FileUploader.vue";
 import globalAvatar from "../../../assets/profil.png";
+import AvatarImg from "components/UI/Images/AvatarImg.vue";
 
 const columns = [
 	{
@@ -216,7 +218,7 @@ const columns = [
 ];
 
 export default {
-	components: { Modal, FileUploader },
+	components: { Modal, FileUploader, AvatarImg },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();

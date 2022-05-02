@@ -181,6 +181,7 @@ export default function useDomainData() {
 		goToID,
 		rigthData,
 		choosenNodeID,
+		getMenuData,
 		currentDomainDataContent,
 		progress,
 		domainTags,

@@ -40,9 +40,8 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { ref } from "vue";
+import useDomainData from "../../composables/WorkSpace/useDomainData.js";
 import ModalStepper from "components/UI/Dialogs/ModalStepper.vue";
 import PageContent from "components/Content/PageContent";
 import CreationFormStepper from "components/UI/Stepper/CreationFormStepper";
@@ -61,13 +60,13 @@ export default {
 	},
 	props: ["nodeID"],
 	setup() {
-		const router = useRouter();
+		let { menu, goToID, rigthData, getMenuData, choosenNodeID } =
+			useDomainData();
 		const filter = ref("");
 		const filterRef = ref(null);
-		const chosenNodeID = ref("");
+
 		const oepnDialog = ref(false);
-		const store = useStore();
-		const menu = ref(null);
+
 		const drawer = ref(true);
 		const teamData = ref([
 			{
@@ -75,54 +74,6 @@ export default {
 				icon: "group",
 			},
 		]);
-		const goToID = (node) => {
-			chosenNodeID.value = node.id;
-			router.push(`/workspaces/${chosenNodeID.value}`);
-		};
-
-		const getMenuData = async () => {
-			await store.dispatch("appDomain/fetchDomainesTree");
-			const allDomainTree = computed(
-				() => store.getters["appDomain/allDomainesTree"]
-			);
-			menu.value = [
-				{
-					id: allDomainTree?.value?.ID,
-					parentID: allDomainTree?.value?.ParentID,
-					label: allDomainTree?.value?.Name,
-					avatar: allDomainTree?.value?.Logo,
-					handler: (node) => goToID(node),
-					children: allDomainTree?.value?.Childs?.map((item) => {
-						return {
-							id: item?.ID,
-							parentID: item?.ParentID,
-							label: item?.Name,
-							avatar: item?.Logo,
-							handler: (node) => goToID(node),
-							children: item?.Childs?.map((subItem) => {
-								return {
-									id: subItem?.ID,
-									parentID: subItem?.ParentID,
-									label: subItem?.Name,
-									avatar: subItem?.Logo,
-									handler: (node) => goToID(node),
-									children: subItem?.Childs?.map((subLastItem) => {
-										return {
-											id: subLastItem?.ID,
-											parentID: subLastItem?.ParentID,
-											label: subLastItem?.Name,
-											avatar: subLastItem?.Logo,
-											handler: (node) => goToID(node),
-										};
-									}),
-								};
-							}),
-						};
-					}),
-				},
-			];
-		};
-		getMenuData();
 
 		return {
 			teamData,
@@ -132,8 +83,10 @@ export default {
 			oepnDialog,
 			filter,
 			filterRef,
-			chosenNodeID,
+			choosenNodeID,
 			goToID,
+			getMenuData,
+			rigthData,
 			resetFilter() {
 				filter.value = "";
 				filterRef.value.focus();
