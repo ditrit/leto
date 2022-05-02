@@ -220,12 +220,9 @@ export default {
 		const DeleteDomain = async (props) => {
 			emit("emitRemoveDomain", props);
 			try {
-				store.dispatch("appDomain/removeDomain", props.id).then(() => {
+				await store.dispatch("appDomain/removeDomain", props.id).then(() => {
 					route.push(`/workspaces`);
 				});
-				// .then(() => {
-				// 	refreshDomainData(props.parentID, props.data);
-				// });
 			} catch (error) {
 				console.log(error);
 			}
@@ -263,18 +260,16 @@ export default {
 				parentID: props.parentID,
 			};
 			try {
-				store.dispatch("appDomain/updateDomain", updatedDomain).then(() => {
-					refreshDomainData(props.id, props.data);
-					getMenuData();
-				});
+				await store
+					.dispatch("appDomain/updateDomain", updatedDomain)
+					.then(() => {
+						refreshDomainData(props.id, props.data);
+					});
 			} catch (error) {
 				console.log(error);
 			}
 		};
-		const onResetUpdate = async (props) => {
-			emit("emitResetDomain", props);
-			console.log(props);
-		};
+
 		const onFileUpload = (event) => {
 			console.log("file name", event.files[0].name);
 			console.log("file upload number", event.files[0].__uploaded);

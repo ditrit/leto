@@ -23,15 +23,13 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
+						<img
+							:src="props.row.avatar ? props.row.avatar : globalAvatar"
+							alt="user avatar"
+						/>
 					</q-avatar>
 				</q-td>
 			</template>
-			<!-- <template style="width: 100px">
-				<q-td key="password" :props="props" class="ellipsis">
-					{{ props.row.password }}
-				</q-td>
-			</template> -->
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
 					<q-btn
@@ -401,16 +399,15 @@ export default {
 			console.log("userData: ", userData);
 
 			try {
-				// userAvatar.value = userData.logo;
 				await store.dispatch("appUsers/addUser", userData);
 				await allUsers();
-				(userFirstName.value = ""),
-					(userLastName.value = ""),
-					(userEmail.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "User has been successfully created",
-					});
+				userFirstName.value = "";
+				userLastName.value = "";
+				userEmail.value = "";
+				$q.notify({
+					type: "positive",
+					message: "User has been successfully created",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
