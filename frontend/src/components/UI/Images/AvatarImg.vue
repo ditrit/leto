@@ -1,5 +1,7 @@
 <template>
-	<img :src="source ? source : substitute" :alt="alt" />
+	<q-avatar size="26px">
+		<img :src="source ? source : substitute" :alt="alt" />
+	</q-avatar>
 </template>
 
 <script>
