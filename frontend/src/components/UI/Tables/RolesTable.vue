@@ -20,13 +20,11 @@
 		>
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
-					<q-avatar size="26px">
-						<AvatarImg
-							:source="props.row.avatar"
-							:substitute="globalAvatar"
-							alt="role avatar"
-						/>
-					</q-avatar>
+					<AvatarImg
+						:source="props.row.avatar"
+						:substitute="globalAvatar"
+						alt="role avatar"
+					/>
 				</q-td>
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
