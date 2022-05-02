@@ -363,7 +363,7 @@
 								:description="env.Description"
 								:logo="env.Logo"
 								:environmentTypeName="env.EnvironmentType.Name"
-								@deleteAction="confirmDeleteEnvironment"
+								@deleteAction="confirmDeleteEnvironment(env.ID)"
 							/>
 						</div>
 						<div v-else>
@@ -375,7 +375,7 @@
 								:logo="env.logo"
 								:domainID="env.DomainID"
 								:environmentTypeName="env.EnvironmentType.Name"
-								@deleteAction="confirmDeleteEnvironment"
+								@deleteAction="confirmDeleteEnvironment(env.ID)"
 							/>
 						</div>
 						<!-- Environments Creation dialog -->
@@ -478,7 +478,7 @@
 							text-color="primary"
 							icon="add"
 							label="New Environnement"
-							@click.prevent="openEnvironmentCreationModal()"
+							@click.prevent="openEnvironmentCreationModal(env)"
 						/>
 					</div>
 				</q-tab-panel>
@@ -497,7 +497,6 @@ import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironme
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
 import useProductsTabData from "../../../composables/TabPanels/useProductsTabData";
 import useLibraryTabData from "../../../composables/TabPanels/useLibraryTabData";
-import useContentCardData from "../../../composables/WorkSpace/useContentCardData";
 import Modal from "../Dialogs/Modal.vue";
 import FileUploader from "../Form/FileUploader.vue";
 import useFileData from "../../../composables/Forms/userFileData";
@@ -650,7 +649,6 @@ export default {
 			environmentShortDescription,
 			environmentDescription,
 			confirmDeleteEnvironment,
-			updateEnvironement,
 			getAllEnviTypes,
 			optionsSelections,
 			addNewAuthorization,
@@ -660,7 +658,6 @@ export default {
 		let {
 			productTeam,
 			productName,
-			productLogo,
 			productShortDescription,
 			productDescription,
 			productProductRepositoryURL,
@@ -691,7 +688,6 @@ export default {
 		} = useAuthorizationsTabsData(props);
 		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
-		let { refreshDomainData } = useContentCardData();
 		const isEnvironmentsCreationOpened = ref(false);
 		const isAuthorCreationOpened = ref(false);
 		const isCreationProductsOpened = ref(false);
@@ -711,27 +707,27 @@ export default {
 			emit("openNewItemModal", props);
 		};
 
-		const openCreationProductModal = (props) => {
+		const openCreationProductModal = () => {
 			isCreationProductsOpened.value = true;
 			emit("openNewItemModal", props);
 		};
-		const openCreationLibraryModal = (props) => {
+		const openCreationLibraryModal = () => {
 			isCreationLibraryOpened.value = true;
 			emit("openNewItemModal", props);
 		};
 
-		const openAuthorizsationCreationModal = (props) => {
+		const openAuthorizsationCreationModal = () => {
 			isAuthorCreationOpened.value = true;
 			getDominListTab();
 		};
 
 		// Modifications
-		const openModificationProductModal = (props) => {
+		const openModificationProductModal = () => {
 			isModificationProductsOpened.value = true;
 			emit("openNewItemModal", props);
 		};
 
-		const openModificationEnvironmentModal = (props) => {
+		const openModificationEnvironmentModal = () => {
 			isEnvironmentsModificationOpened.value = true;
 			emit("updateAction", props);
 		};
@@ -760,7 +756,7 @@ export default {
 			let choosenDomain = data.value.find(
 				(domain) => domain.ID === domainID.value
 			);
-			return (authorizationDomainObj.value = choosenDomain.Authorizations);
+			authorizationDomainObj.value = choosenDomain.Authorizations;
 		};
 
 		const onSubmitAuthorization = async () => {
@@ -805,7 +801,6 @@ export default {
 			confirmDeleteProduct,
 			addNewProduct,
 			updateProduct,
-			refreshDomainData,
 			environmentTeam,
 			addNewAuthorization,
 			getAllEnviTypes,
@@ -829,7 +824,6 @@ export default {
 			addNewEnvironment,
 			openEnvironmentCreationModal,
 			openAuthorizsationCreationModal,
-			updateEnvironement,
 			deleteEnvironement,
 			optionsSelections,
 			selectedParentData,

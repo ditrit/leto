@@ -359,10 +359,9 @@ export default {
 				});
 		};
 		const allUsers = async () => {
-			// fetch All Users
 			await store.dispatch("appUsers/fetchUsers");
 			const getUsers = computed(() => store.getters["appUsers/allUsers"]);
-			return (rowsData.value = Object.values(
+			rowsData.value = Object.values(
 				getUsers.value.map((item) => {
 					return {
 						id: item.ID,
@@ -374,7 +373,7 @@ export default {
 						description: item.Description,
 					};
 				})
-			));
+			);
 		};
 		allUsers();
 
@@ -396,7 +395,6 @@ export default {
 				password: userPassword.value,
 				description: userDescription.value,
 			};
-			console.log("userData: ", userData);
 
 			try {
 				await store.dispatch("appUsers/addUser", userData);
@@ -441,10 +439,10 @@ export default {
 			}
 		};
 		const onResetUpdate = () => {
-			return (openAddUserDialog.value = false);
+			openAddUserDialog.value = false;
 		};
 		const onResetAdd = () => {
-			return (openAddUserDialog.value = false);
+			openAddUserDialog.value = false;
 		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;

@@ -216,23 +216,19 @@ export default {
 		const environmentTypeNameRef = ref(props.environmentTypeName);
 		const isOpened = ref(false);
 
-		let {
-			selectedParentData,
-			optionsSelections,
-			getAllEnviTypes,
-			updateEnvironement,
-		} = useEnvironmentsTabsData(props);
+		let { selectedParentData, optionsSelections, getAllEnviTypes } =
+			useEnvironmentsTabsData(props);
 
-		const openEditionModal = (props) => {
+		const openEditionModal = (item) => {
 			isOpened.value = true;
-			emit("openEditModal", props);
+			emit("openEditModal", item);
 		};
 
 		const updateItem = () => {
-			emit("updateAction", props);
+			emit("updateAction", item);
 		};
-		const delteItem = () => {
-			emit("deleteAction", props);
+		const delteItem = (item) => {
+			emit("deleteAction", item);
 		};
 
 		const refreshEnvironment = async (id, updatesData) => {
@@ -311,7 +307,6 @@ export default {
 			selectedParentData,
 			optionsSelections,
 			getAllEnviTypes,
-			updateEnvironement,
 			environmentTypeNameRef,
 		};
 	},

@@ -247,10 +247,9 @@ export default {
 		};
 
 		const allRoles = async () => {
-			// fetch All Users
 			await store.dispatch("appRoles/fetchAllRoles");
 			const getRoles = computed(() => store.getters["appRoles/allRoles"]);
-			return (rowsData.value = Object.values(
+			rowsData.value = Object.values(
 				getRoles.value.map((item) => {
 					return {
 						id: item.ID,
@@ -260,7 +259,7 @@ export default {
 						description: item.Description,
 					};
 				})
-			));
+			);
 		};
 		allRoles();
 
@@ -319,10 +318,10 @@ export default {
 			}
 		};
 		const onResetUpdate = () => {
-			return (openAddRoleDialog.value = false);
+			openAddRoleDialog.value = false;
 		};
 		const onResetAdd = () => {
-			return (openAddRoleDialog.value = false);
+			openAddRoleDialog.value = false;
 		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;

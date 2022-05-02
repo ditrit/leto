@@ -203,14 +203,13 @@ export default {
 		const isOpened = ref(false);
 		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
-		const openCard = (props) => {
-			console.log("props: ", props);
-			route.push(`/product/${props}`);
+		const openCard = (item) => {
+			route.push(`/product/${item}`);
 		};
 
-		const openEditionModal = (props) => {
+		const openEditionModal = (item) => {
 			isOpened.value = true;
-			emit("openProductEditModal", props);
+			emit("openProductEditModal", item);
 		};
 
 		const updateItem = () => {

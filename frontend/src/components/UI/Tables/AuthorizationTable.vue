@@ -236,17 +236,18 @@ export default {
 				.onOk(() => {
 					deleteRow(item.id);
 				})
-				.onCancel(() => {});
+				.onCancel(() => {
+					console.log("Cancel");
+				});
 		};
 
 		const allAuthorizations = async () => {
-			// fetch All Users
 			await store.dispatch("appAuthorization/fetchAllAuthorization");
 			const getAuth = computed(
 				() => store.getters["appAuthorization/allAuthorizations"]
 			);
 
-			return (rowsData.value = Object.values(
+			rowsData.value = Object.values(
 				getAuth.value.map((item) => {
 					return {
 						id: item.ID,
@@ -259,7 +260,7 @@ export default {
 						user: item.User.FirstName + " " + item.User.LastName,
 					};
 				})
-			));
+			);
 		};
 		allAuthorizations();
 
@@ -324,7 +325,7 @@ export default {
 			}
 		};
 		const onResetUpdate = () => {
-			return (openAddAuthorizationDialog.value = false);
+			openAddAuthorizationDialog.value = false;
 		};
 		const onResetAdd = () => {
 			return (openAddAuthorizationDialog.value = false);
@@ -367,7 +368,7 @@ export default {
 				};
 			});
 
-			return (authorizsationDomain.value = choosenDomain);
+			authorizsationDomain.value = choosenDomain;
 		};
 
 		getDominListTable();

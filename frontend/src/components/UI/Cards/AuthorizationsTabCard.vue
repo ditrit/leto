@@ -75,7 +75,6 @@
 											authorizationDomainNameRef,
 										])
 									"
-									@reset="onResetUpdate"
 									class="q-gutter-sm q-pa-md"
 								>
 									<div class="col-md-12 q-gutter-md">
@@ -191,7 +190,7 @@ export default {
 				authorizationDomainIDRef.value
 			);
 			let data = store.getters["appDomain/allDomaines"];
-			return (authorizationDomainNameRef.value = data[0].Name);
+			authorizationDomainNameRef.value = data[0].Name;
 		};
 
 		const openEditionModal = (currentItem) => {
@@ -200,8 +199,8 @@ export default {
 			getDominListTable();
 		};
 
-		const delteItem = async (props) => {
-			emit("deleteAuthorizationAction", props);
+		const delteItem = async (id) => {
+			emit("deleteAuthorizationAction", id);
 		};
 
 		const refreshAuthorization = async (id) => {
@@ -235,10 +234,6 @@ export default {
 				});
 		};
 
-		const onResetUpdate = () => {};
-
-		const onFileUpload = (event) => {};
-
 		const onRejected = (rejectedEntries) => {
 			$q.notify({
 				type: "negative",
@@ -255,8 +250,6 @@ export default {
 			openEditionModal,
 			delteItem,
 			onSubmitUpdate,
-			onResetUpdate,
-			onFileUpload,
 			onRejected,
 			confirmDeleteAuthorization,
 			authorizationIdRef,

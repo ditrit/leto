@@ -263,7 +263,7 @@ export default {
 				() => store.getters["appEnviType/allEnviTypes"]
 			);
 
-			return (rowsData.value = Object.values(
+			rowsData.value = Object.values(
 				getEnviTypes.value.map((item) => {
 					return {
 						id: item.ID,
@@ -273,7 +273,7 @@ export default {
 						description: item.Description,
 					};
 				})
-			));
+			);
 		};
 		allEnviTypes();
 
@@ -330,10 +330,10 @@ export default {
 			}
 		};
 		const onResetUpdate = () => {
-			return (openAddEnviTypeDialog.value = false);
+			openAddEnviTypeDialog.value = false;
 		};
 		const onResetAdd = () => {
-			return (openAddEnviTypeDialog.value = false);
+			openAddEnviTypeDialog.value = false;
 		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
