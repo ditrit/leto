@@ -1,10 +1,8 @@
-import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
-import API from "../../services/index";
 
-export default function useRequirementsTabData(props) {
+export default function useRequirementsTabData() {
 	const store = useStore();
 	const route = useRouter();
 	const $q = useQuasar();

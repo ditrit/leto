@@ -97,7 +97,7 @@ export default function useDomainData() {
 	const refreshDomainTag = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", id);
 		let data = computed(() => store.getters["appDomain/allDomaines"]);
-		return (domainTags.value = await data.value[0].Tags);
+		domainTags.value = await data.value[0].Tags;
 	};
 
 	const addTagtoDomain = async (tag) => {
