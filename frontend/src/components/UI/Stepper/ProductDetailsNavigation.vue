@@ -125,7 +125,7 @@
 import { ref } from "vue";
 import ProductContent from "../Cards/ProductContent.vue";
 import useProductDetails from "../../../composables/Products/useProductDetails";
-import useDomainData from "../../../composables/WorkSpace/useDomain";
+import useDomainData from "../../../composables/WorkSpace/useDomainData";
 import Modelization from "../../2DModel/Modelization.vue";
 import Monaco from "../../Monaco/Monaco.vue";
 

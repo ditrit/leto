@@ -64,7 +64,7 @@ import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
 import useProductDetails from "../../composables/Products/useProductDetails";
-import useDomainData from "../../composables/WorkSpace/useDomain";
+import useDomainData from "../../composables/WorkSpace/useDomainData";
 import ProductDetailsNavigation from "components/UI/Stepper/ProductDetailsNavigation.vue";
 
 export default defineComponent({
