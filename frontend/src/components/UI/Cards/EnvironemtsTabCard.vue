@@ -176,7 +176,7 @@
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
-import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
+import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentsTabsData";
 import Modal from "../Dialogs/Modal.vue";
 
 export default {

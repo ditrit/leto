@@ -121,7 +121,7 @@ import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import Tabs from "../TabPanels/Tabs";
 import FileUploader from "../Form/FileUploader.vue";
-import useFileData from "../../../composables/Forms/useFile";
+import useFileData from "../../../composables/Forms/userFileData";
 
 export default {
 	components: { Tabs, FileUploader },

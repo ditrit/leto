@@ -131,7 +131,7 @@
 </template>
 <script>
 import { ref, computed } from "vue";
-import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
+import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
 import Modal from "../Dialogs/Modal.vue";
 import globalAvatar from "../../../assets/profil.png";
 

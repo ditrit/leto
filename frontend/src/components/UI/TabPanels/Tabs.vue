@@ -493,14 +493,14 @@ import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
 import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
 import ProductsTabCard from "../Cards/ProductsTabCard.vue";
 import RequirementsTabCard from "../Cards/RequirementsTabCard.vue";
-import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentTabs";
-import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabs";
-import useProductsTabData from "../../../composables/TabPanels/useProductsTab";
-import useLibraryTabData from "../../../composables/TabPanels/useLibraryTab";
-import useContentCardData from "../../../composables/WorkSpace/useContentCard";
+import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentsTabsData";
+import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
+import useProductsTabData from "../../../composables/TabPanels/useProductsTabData";
+import useLibraryTabData from "../../../composables/TabPanels/useLibraryTabData";
+import useContentCardData from "../../../composables/WorkSpace/useContentCardData";
 import Modal from "../Dialogs/Modal.vue";
 import FileUploader from "../Form/FileUploader.vue";
-import useFileData from "../../../composables/Forms/useFile";
+import useFileData from "../../../composables/Forms/userFileData";
 
 export default {
 	components: {

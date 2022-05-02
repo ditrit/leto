@@ -170,12 +170,12 @@
 
 <script>
 import { ref, computed } from "vue";
-import useContentCardData from "../../../composables/WorkSpace/useContentCard";
-import useDomainData from "../../../composables/WorkSpace/useContentCard";
+import useContentCardData from "../../../composables/WorkSpace/useContentCardData";
+import useDomainData from "../../../composables/WorkSpace/useContentCardData";
 import Tabs from "../../UI/TabPanels/Tabs.vue";
 import Modal from "../Dialogs/Modal.vue";
 import FileUploader from "../Form/FileUploader.vue";
-import useFileData from "../../../composables/Forms/useFile";
+import useFileData from "../../../composables/Forms/userFileData";
 
 export default {
 	name: "ContentCard",
