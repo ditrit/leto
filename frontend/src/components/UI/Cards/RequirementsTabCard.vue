@@ -94,7 +94,7 @@
 </template>
 <script>
 import { ref } from "vue";
-import useRequirementsTab from "../../../composables/TabPanels/useRequirementsTab";
+import useRequirementsTab from "../../../composables/TabPanels/useRequirementsTabData";
 import Range from "../Inputs/Ranges/Range.vue";
 import TextInput from "../Inputs/Texts/TextInput.vue";
 import DropDown from "../Inputs/DropDowns/DropDown.vue";

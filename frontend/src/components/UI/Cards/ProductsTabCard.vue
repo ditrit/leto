@@ -165,7 +165,7 @@ import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Modal from "../Dialogs/Modal.vue";
-import useFileData from "../../../composables/Forms/useFile";
+import useFileData from "../../../composables/Forms/userFileData";
 import FileUploader from "../Form/FileUploader.vue";
 import globalAvatar from "../../../assets/profil.png";
 

@@ -42,7 +42,7 @@
 </template>
 <script>
 import Headline6 from "../Headlines/Headline6";
-import useLoginData from "../../../composables/Forms/useLogin";
+import useLoginData from "../../../composables/Forms/useLoginbData";
 
 export default {
 	components: { Headline6 },
