@@ -93,7 +93,6 @@ import AjaxBar from "../../components/UI/Progress/AjaxBar.vue";
 import Drawer from "../../components/UI/Drawers/Drawer.vue";
 import { pageSizeTweak } from "../../common/index";
 import AccountSettings from "../../components/UI/Profil/AccountSettings";
-import { useStore } from "vuex";
 import HomeNav from "../../components/UI/Navigation/HomeNav.vue";
 import ProductsCarousel from "../../components/UI/Carousel/ProductsCarousel.vue";
 import WorkspacesCarousel from "../../components/UI/Carousel/WorkspacesCarousel.vue";
@@ -112,7 +111,6 @@ export default defineComponent({
 	},
 
 	setup() {
-		const store = useStore();
 		const drawer = ref(false);
 		const homeData = ref([
 			{

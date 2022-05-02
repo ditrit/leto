@@ -242,16 +242,16 @@ export default {
 				});
 		};
 
-		const onSubmitUpdate = async (props) => {
-			emit("emitUpdateDomain", props);
+		const onSubmitUpdate = async (item) => {
+			emit("emitUpdateDomain", item);
 			let updatedDomain = {
-				id: props.id,
+				id: item.id,
 				logo: avatarUrl.value,
-				name: props.name,
-				shortDescription: props.shortDescription,
-				description: props.description,
-				gitUrl: props.gitURL,
-				parentID: props.parentID,
+				name: item.name,
+				shortDescription: item.shortDescription,
+				description: item.description,
+				gitUrl: item.gitURL,
+				parentID: item.parentID,
 			};
 			try {
 				await store.dispatch("appDomain/updateDomain", updatedDomain);

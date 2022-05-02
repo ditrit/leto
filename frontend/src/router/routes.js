@@ -10,7 +10,6 @@ import PageHomeWorkspaces from "pages/Home/PageHomeWorkspaces.vue";
 import PageWorkspace from "pages/Workspaces/PageWorkspace.vue";
 import PageWorkspaceChild from "pages/Workspaces/PageWorkspaceChild.vue";
 import PageLibraries from "pages/Libraries/PageLibraries.vue";
-import PageSettings from "pages/Settings/PageSettingsUsers.vue";
 import PageSettingsUsers from "pages/Settings/PageSettingsUsers.vue";
 import PageSettingsRoles from "pages/Settings/PageSettingsRoles.vue";
 import PageSettingsAuthorizations from "pages/Settings/PageSettingsAuthorizations.vue";
@@ -64,7 +63,7 @@ const routes = [
 			},
 			{
 				path: "settings",
-				component: () => PageSettings,
+				component: () => PageSettingsUsers,
 				meta: { requiresAuth: true },
 			},
 			{

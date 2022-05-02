@@ -328,7 +328,7 @@ export default {
 			openAddAuthorizationDialog.value = false;
 		};
 		const onResetAdd = () => {
-			return (openAddAuthorizationDialog.value = false);
+			openAddAuthorizationDialog.value = false;
 		};
 		const editAuthorizationRow = (currentTarget) => {
 			opendEditAuthorizationDialog.value = true;

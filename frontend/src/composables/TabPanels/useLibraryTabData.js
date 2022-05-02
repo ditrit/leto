@@ -41,18 +41,16 @@ export default function useLibraryTabData(props) {
 			return store.getters["appDomain/allDomaines"];
 		});
 
-		return (libraryTeam.value = data.value[0].Libraries);
+		libraryTeam.value = data.value[0].Libraries;
 	};
 
-	const deleteLibrary = async (libraryId) => {
-		API.delete(`/domain/${domainID.value}/library/${libraryId}`)
-			// TODO : Add vuex action
-			// await store
-			// 	.dispatch("appDomain/removeDomainLibrary", domainID.value, libraryId)
-			.then(() => refreshData());
+	const deleteLibrary = async (id) => {
+		API.delete(`/domain/${domainID.value}/library/${id}`).then(() =>
+			refreshData()
+		);
 	};
 
-	const confirmDeleteLibrary = (props) => {
+	const confirmDeleteLibrary = (item) => {
 		$q.dialog({
 			title: "Confirm",
 			message: "Are you sure to delete this item?",
@@ -60,7 +58,7 @@ export default function useLibraryTabData(props) {
 			persistent: true,
 		})
 			.onOk(() => {
-				deleteLibrary(props);
+				deleteLibrary(item);
 			})
 			.onCancel(() => {
 				console.log("Canceled");
