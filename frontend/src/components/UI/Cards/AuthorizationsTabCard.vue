@@ -218,9 +218,9 @@ export default {
 				userID: currentData[4].id,
 			};
 
-			(authorizationNameRef.value = currentData[4].label),
-				(authorizationRoleNameRef.value = currentData[2].name),
-				emit("updateAuthorizationAction", updates);
+			authorizationNameRef.value = currentData[4].label;
+			authorizationRoleNameRef.value = currentData[2].name;
+			emit("updateAuthorizationAction", updates);
 
 			await store
 				.dispatch("appAuthorization/updateAuthorization", updates)

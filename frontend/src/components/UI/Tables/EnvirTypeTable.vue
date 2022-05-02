@@ -21,7 +21,10 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
+						<img
+							:src="props.row.avatar ? props.row.avatar : globalAvatar"
+							alt="EnviType avatar"
+						/>
 					</q-avatar>
 				</q-td>
 			</template>
@@ -288,13 +291,13 @@ export default {
 			try {
 				await store.dispatch("appEnviType/addEnviType", enviTypeData);
 				await allEnviTypes();
-				(enviTypeName.value = ""),
-					(enviTypeShortDescription.value = ""),
-					(enviTypeDescription.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "Environment Type has been successfully created",
-					});
+				enviTypeName.value = "";
+				enviTypeShortDescription.value = "";
+				enviTypeDescription.value = "";
+				$q.notify({
+					type: "positive",
+					message: "Environment Type has been successfully created",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",

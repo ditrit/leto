@@ -21,7 +21,10 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
+						<img
+							:src="props.row.avatar ? props.row.avatar : globalAvatar"
+							alt="role avatar"
+						/>
 					</q-avatar>
 				</q-td>
 			</template>
@@ -276,13 +279,13 @@ export default {
 			try {
 				await store.dispatch("appRoles/addRole", roleData);
 				await allRoles();
-				(roleName.value = ""),
-					(roleShortDescription.value = ""),
-					(roleDescription.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "Role has been successfully created",
-					});
+				roleName.value = "";
+				roleShortDescription.value = "";
+				roleDescription.value = "";
+				$q.notify({
+					type: "positive",
+					message: "Role has been successfully created",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",

@@ -20,7 +20,10 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img :src="props.row.avatar ? props.row.avatar : globalAvatar" />
+						<img
+							:src="props.row.avatar ? props.row.avatar : globalAvatar"
+							alt="authorization avatar"
+						/>
 					</q-avatar>
 				</q-td>
 			</template>
@@ -276,13 +279,13 @@ export default {
 					authorizationData
 				);
 				await allAuthorizations();
-				(authorizsationDomain.value = ""),
-					(authorisationUser.value = ""),
-					(authorizationRole.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "Authorizsation has been successfully created",
-					});
+				authorizsationDomain.value = "";
+				authorisationUser.value = "";
+				authorizationRole.value = "";
+				$q.notify({
+					type: "positive",
+					message: "Authorizsation has been successfully created",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -304,10 +307,10 @@ export default {
 					"appAuthorization/updateAuthorization",
 					authorizationData
 				);
-				(authorizsationDomain.value = ""),
-					(authorisationUser.value = ""),
-					(authorizationRole.value = ""),
-					await allAuthorizations();
+				authorizsationDomain.value = "";
+				authorisationUser.value = "";
+				authorizationRole.value = "";
+				await allAuthorizations();
 
 				$q.notify({
 					type: "positive",
@@ -334,13 +337,13 @@ export default {
 			try {
 				await store.dispatch("appAuthorization/removeAuthorization", id);
 				await allAuthorizations();
-				(authorizsationDomain.value = ""),
-					(authorisationUser.value = ""),
-					(authorizationRole.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "Authorization has been successfully deleted",
-					});
+				authorizsationDomain.value = "";
+				authorisationUser.value = "";
+				authorizationRole.value = "";
+				$q.notify({
+					type: "positive",
+					message: "Authorization has been successfully deleted",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
