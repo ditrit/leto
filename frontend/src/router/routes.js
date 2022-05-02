@@ -20,7 +20,6 @@ import PageSettingsEnviType from "pages/Settings/PageSettingsEnviType.vue";
 import PageSettingsDashboard from "pages/Settings/PageSettingsDashboard.vue";
 import PageProductChild from "pages/Products/PageProductChild.vue";
 
-console.log("MainLayout: ", MainLayout);
 const routes = [
 	{
 		path: "/",

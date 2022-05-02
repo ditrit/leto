@@ -72,12 +72,12 @@ export default function useEnvironmentsTabsData(props) {
 		environmentTeam.value = data.value[0].Environments;
 	};
 
-	const deleteEnvironement = async (evironment) => {
-		await store.dispatch("appEnvironment/removeEnvironment", evironment.id);
+	const deleteEnvironement = async (id) => {
+		await store.dispatch("appEnvironment/removeEnvironment", id);
 		refreshData();
 	};
 
-	const confirmDeleteEnvironment = (props) => {
+	const confirmDeleteEnvironment = (item) => {
 		$q.dialog({
 			title: "Confirm",
 			message: "Are you sure to delete this item?",
@@ -85,7 +85,7 @@ export default function useEnvironmentsTabsData(props) {
 			persistent: true,
 		})
 			.onOk(() => {
-				deleteEnvironement(props);
+				deleteEnvironement(item);
 			})
 			.onCancel(() => {
 				console.log("Cancel");
@@ -127,31 +127,6 @@ export default function useEnvironmentsTabsData(props) {
 		environmentName.value = "";
 		environmentShortDescription.value = "";
 		environmentDescription.value = "";
-	};
-
-	const updateEnvironement = async (props) => {
-		console.log("updateEnvironement props: ", props);
-		let updatedEnvironment = {
-			id: props.id,
-			domainID: props.domainID,
-			name: environmentName.value,
-			shortDescription: environmentShortDescription.value,
-			description: environmentDescription.value,
-			environmentTypeID: selectedParentData.value.id,
-			environmentTypeName: environmentTypeNameRef.value.name,
-		};
-
-		await store
-			.dispatch("appEnvironment/updateEnvironment", updatedEnvironment)
-			.then(() => {
-				refreshData();
-			})
-			.then(() => {
-				$q.notify({
-					type: "positive",
-					message: `${environmentName.value} environment was succefuly updated`,
-				});
-			});
 	};
 
 	const getAllEnviTypes = async () => {
@@ -211,7 +186,6 @@ export default function useEnvironmentsTabsData(props) {
 		deleteEnvironement,
 		confirmDeleteEnvironment,
 		addNewEnvironment,
-		updateEnvironement,
 		getAllEnviTypes,
 		addNewAuthorization,
 	};

@@ -170,8 +170,8 @@
 
 <script>
 import { ref, computed } from "vue";
-import useContentCardData from "../../../composables/WorkSpace/useContentCardData";
-import useDomainData from "../../../composables/WorkSpace/useContentCardData";
+import useUtils from "../../../composables/Utils/useUtils";
+import useDomainData from "../../../composables/WorkSpace/useDomainData";
 import Tabs from "../../UI/TabPanels/Tabs.vue";
 import Modal from "../Dialogs/Modal.vue";
 import FileUploader from "../Form/FileUploader.vue";
@@ -196,7 +196,7 @@ export default {
 		"emitAddFavorite",
 	],
 	setup(props, { emit }) {
-		let { store, route, $q, refreshDomainData } = useContentCardData();
+		let { store, route, $q } = useUtils();
 		let { getMenuData } = useDomainData();
 		let { imagesUID, avatarUrl, uploadFile } = useFileData();
 
@@ -217,17 +217,17 @@ export default {
 			console.log("Add to favorite");
 		};
 
-		const DeleteDomain = async (props) => {
-			emit("emitRemoveDomain", props);
+		const DeleteDomain = async (item) => {
+			emit("emitRemoveDomain", item);
 			try {
-				await store.dispatch("appDomain/removeDomain", props.id).then(() => {
+				await store.dispatch("appDomain/removeDomain", item.id).then(() => {
 					route.push(`/workspaces`);
 				});
 			} catch (error) {
 				console.log(error);
 			}
 		};
-		const confirm = (props) => {
+		const confirm = (item) => {
 			$q.dialog({
 				title: "Confirm",
 				message: "Are you sure to delete this item?",
@@ -235,7 +235,7 @@ export default {
 				persistent: true,
 			})
 				.onOk(() => {
-					DeleteDomain(props);
+					DeleteDomain(item);
 				})
 				.onCancel(() => {
 					console.log("Cancel");
@@ -244,14 +244,8 @@ export default {
 
 		const onSubmitUpdate = async (props) => {
 			emit("emitUpdateDomain", props);
-			console.log("props: ", props);
-			let domain = Object.values(props);
 			let updatedDomain = {
 				id: props.id,
-				/**
-				 * TODO: Add a computed to get the new upoade logo
-				 */
-
 				logo: avatarUrl.value,
 				name: props.name,
 				shortDescription: props.shortDescription,
@@ -260,11 +254,7 @@ export default {
 				parentID: props.parentID,
 			};
 			try {
-				await store
-					.dispatch("appDomain/updateDomain", updatedDomain)
-					.then(() => {
-						refreshDomainData(props.id, props.data);
-					});
+				await store.dispatch("appDomain/updateDomain", updatedDomain);
 			} catch (error) {
 				console.log(error);
 			}
@@ -285,7 +275,6 @@ export default {
 
 		return {
 			store,
-			refreshDomainData,
 			getMenuData,
 			route,
 			$q,
