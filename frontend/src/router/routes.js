@@ -1,117 +1,139 @@
+import MainLayout from "layouts/MainLayout.vue";
+import LoginLayout from "layouts/LoginLayout.vue";
+import LoginPage from "pages/Auth/Login.vue";
+import RegisterPage from "pages/Auth/Register.vue";
+import PageHome from "pages/Home/PageHome.vue";
+import Page404 from "pages/Error404.vue";
+import PageHomeProfile from "pages/Home/PageHomeProfile.vue";
+import PageHomeProducts from "pages/Home/PageHomeProducts.vue";
+import PageHomeWorkspaces from "pages/Home/PageHomeWorkspaces.vue";
+import PageWorkspace from "pages/Workspaces/PageWorkspace.vue";
+import PageWorkspaceChild from "pages/Workspaces/PageWorkspaceChild.vue";
+import PageLibraries from "pages/Libraries/PageLibraries.vue";
+import PageSettings from "pages/Settings/PageSettingsUsers.vue";
+import PageSettingsUsers from "pages/Settings/PageSettingsUsers.vue";
+import PageSettingsRoles from "pages/Settings/PageSettingsRoles.vue";
+import PageSettingsAuthorizations from "pages/Settings/PageSettingsAuthorizations.vue";
+import PageSettingsRequirements from "pages/Settings/PageSettingsRequirements.vue";
+import PageSettingsTags from "pages/Settings/PageSettingsTags.vue";
+import PageSettingsEnviType from "pages/Settings/PageSettingsEnviType.vue";
+import PageSettingsDashboard from "pages/Settings/PageSettingsDashboard.vue";
+import PageProductChild from "pages/Products/PageProductChild.vue";
+
+console.log("MainLayout: ", MainLayout);
 const routes = [
 	{
 		path: "/",
-		component: () => import("layouts/MainLayout.vue"),
-
+		component: () => MainLayout,
 		children: [
-			{ path: "", redirect: "/login" },
-			{
-				path: "workspaces",
-				component: () => import("pages/Workspaces/PageWorkspace.vue"),
-				meta: { requiresAuth: true },
-			},
-			{
-				path: "workspaces/:id",
-				component: () => import("pages/Workspaces/PageWorkspaceChild.vue"),
-				props: true,
-				meta: { requiresAuth: true },
-			},
-			{
-				path: "product",
-				component: () => import("pages/Products/PageProductChild.vue"),
-				meta: { requiresAuth: false },
-			},
-			{
-				path: "product/:id",
-				component: () => import("pages/Products/PageProductChild.vue"),
-				props: true,
-				meta: { requiresAuth: false },
-			},
 			{
 				path: "home",
-				component: () => import("pages/Home/PageHome.vue"),
+				component: () => PageHome,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/profile",
-				component: () => import("pages/Home/PageHomeProfile.vue"),
+				component: () => PageHomeProfile,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/products",
-				component: () => import("pages/Home/PageHomeProducts.vue"),
+				component: () => PageHomeProducts,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/workspaces",
-				component: () => import("pages/Home/PageHomeWorkspaces.vue"),
+				component: () => PageHomeWorkspaces,
 				meta: { requiresAuth: true },
 			},
 			{
+				path: "workspaces",
+				component: () => PageWorkspace,
+				meta: { requiresAuth: true },
+			},
+			{
+				path: "workspaces/:id",
+				component: () => PageWorkspaceChild,
+				props: true,
+				meta: { requiresAuth: true },
+			},
+
+			{
 				path: "libraries",
-				component: () => import("pages/Libraries/PageLibraries.vue"),
+				component: () => PageLibraries,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings",
-				component: () => import("pages/Settings/PageSettingsUsers.vue"),
+				component: () => PageSettings,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/users",
-				component: () => import("pages/Settings/PageSettingsUsers.vue"),
+				component: () => PageSettingsUsers,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/roles",
-				component: () => import("pages/Settings/PageSettingsRoles.vue"),
+				component: () => PageSettingsRoles,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/authorizations",
-				component: () =>
-					import("pages/Settings/PageSettingsAuthorizations.vue"),
+				component: () => PageSettingsAuthorizations,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/requirements",
-				component: () => import("pages/Settings/PageSettingsRequirements.vue"),
+				component: () => PageSettingsRequirements,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/tags",
-				component: () => import("pages/Settings/PageSettingsTags.vue"),
+				component: () => PageSettingsTags,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/environmentstypes",
-				component: () => import("pages/Settings/PageSettingsEnviType.vue"),
+				component: () => PageSettingsEnviType,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/dashboard",
-				component: () => import("pages/Settings/PageSettingsDashboard"),
+				component: () => PageSettingsDashboard,
 				meta: { requiresAuth: true },
+			},
+			{
+				path: "product",
+				component: () => PageProductChild,
+				meta: { requiresAuth: false },
+			},
+			{
+				path: "product/:id",
+				component: () => PageProductChild,
+				props: true,
+				meta: { requiresAuth: false },
 			},
 		],
 	},
 	{
 		path: "/login",
-		component: () => import("layouts/LoginLayout.vue"),
+		component: () => LoginLayout,
 		children: [
 			{
 				path: "/login",
-				component: () => import("pages/Auth/Login.vue"),
+				component: () => LoginPage,
 			},
 			{
 				path: "/register",
-				component: () => import("pages/Auth/Register.vue"),
+				component: () => RegisterPage,
 			},
 		],
 	},
+	{ path: "", redirect: "/login" },
 	{
 		path: "/:catchAll(.*)*",
-		component: () => import("pages/Error404.vue"),
+		component: () => Page404,
 	},
 ];
 
