@@ -160,7 +160,7 @@ import ContentCard from "components/UI/Cards/ContentCard";
 import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import { pageSizeTweak } from "../../common/index";
-import useDomainData from "../../composables/WorkSpace/useDomain";
+import useDomainData from "../../composables/WorkSpace/useDomainData";
 
 export default defineComponent({
 	name: "PageDomainChild",
