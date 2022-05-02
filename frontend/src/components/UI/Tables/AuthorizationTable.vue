@@ -20,9 +20,10 @@
 			<template v-slot:body-cell-avatar="props">
 				<q-td :props="props">
 					<q-avatar size="26px">
-						<img
-							:src="props.row.avatar ? props.row.avatar : globalAvatar"
-							alt="authorization avatar"
+						<AvatarImg
+							:source="props.row.avatar"
+							:substitute="globalAvatar"
+							alt="Authorization avatar"
 						/>
 					</q-avatar>
 				</q-td>
@@ -151,6 +152,7 @@ import { useQuasar } from "quasar";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
 import Modal from "../Dialogs/Modal.vue";
 import globalAvatar from "../../../assets/profil.png";
+import AvatarImg from "components/UI/Images/AvatarImg.vue";
 
 const columns = [
 	{
@@ -199,7 +201,7 @@ const columns = [
 ];
 
 export default {
-	components: { Modal },
+	components: { Modal, AvatarImg },
 	setup(props) {
 		const store = useStore();
 		const $q = useQuasar();
