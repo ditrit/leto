@@ -227,7 +227,7 @@ const columns = [
 ];
 
 export default {
-	components: { Modal, FileUploader, AvatarImg, AvatarImg },
+	components: { Modal, FileUploader, AvatarImg },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
