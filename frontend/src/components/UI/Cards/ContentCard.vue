@@ -14,7 +14,7 @@
 							</div>
 							<div class="flex items-center text-subtitle3 q-py-sm">
 								<q-icon name="link" size="30px" class="q-mr-sm" /> Repository:
-								<a :href="item.gitURL" class="q-pl-sm"> {{ item.gitURL }}</a>
+								<span class="q-pl-sm"> {{ item.gitURL }}</span>
 							</div>
 							<div class="content_wrapper q-mt-sm">
 								<img :src="item.logo ? item.logo : logo" alt="domain logo" />
