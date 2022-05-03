@@ -1,4 +1,4 @@
-const enviTypeColumns = [
+export const columns = [
 	{
 		name: "avatar",
 		required: true,
@@ -44,4 +44,4 @@ const enviTypeColumns = [
 		classes: "tr_width__actions70",
 	},
 ];
-export default enviTypeColumns;
+export default columns;

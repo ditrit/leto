@@ -161,52 +161,7 @@ import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/userFileData";
 import FileUploader from "../Form/FileUploader.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
-
-const columns = [
-	{
-		name: "avatar",
-		required: true,
-		label: "Avatar",
-		align: "left",
-		field: (row) => row.name,
-		format: (val) => `${val}`,
-		sortable: true,
-		classes: "tr_width__avatar",
-	},
-
-	{
-		name: "name",
-		label: "Name",
-		align: "left",
-		field: "name",
-		sortable: true,
-		classes: "tr_width__name ellipsis",
-	},
-	{
-		name: "shortDescription",
-		label: "Short Description",
-		align: "left",
-		field: "shortDescription",
-		sortable: true,
-		classes: "tr_width__shortdesc ellipsis",
-	},
-	{
-		name: "description",
-		label: "Description",
-		align: "left",
-		field: "description",
-		sortable: true,
-		classes: "tr_width__descr ellipsis",
-	},
-	{
-		name: "actionsButtons",
-		label: "",
-		align: "left",
-		field: "actionsButtons",
-		sortable: false,
-		classes: "tr_width__actions",
-	},
-];
+import columns from "./colums/enviTypeRoleColumns";
 
 export default {
 	components: { Modal, FileUploader, AvatarImg },

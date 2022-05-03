@@ -141,10 +141,10 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
+import authorizationColumns from "./colums/authorizationColumns";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
 import Modal from "../Dialogs/Modal.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
-import authorizationColumns from "./colums/authorizationColumns";
 
 export default {
 	components: { Modal, AvatarImg },
