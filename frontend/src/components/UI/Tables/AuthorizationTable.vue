@@ -12,7 +12,7 @@
 		<q-table
 			title=""
 			:rows="rowsData"
-			:columns="columns"
+			:columns="authorizationColumns"
 			row-key="name"
 			field
 			table-header-class="table_header"
@@ -144,52 +144,7 @@ import { useQuasar } from "quasar";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
 import Modal from "../Dialogs/Modal.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
-
-const columns = [
-	{
-		name: "avatar",
-		required: true,
-		label: "Avatar",
-		align: "left",
-		field: (row) => row.name,
-		format: (val) => `${val}`,
-		sortable: true,
-		classes: "tr_width__actions30",
-	},
-
-	{
-		name: "user",
-		label: "User",
-		align: "left",
-		field: "user",
-		sortable: true,
-		classes: "tr_width ellipsis",
-	},
-	{
-		name: "role",
-		label: "Role",
-		align: "left",
-		field: "role",
-		sortable: true,
-		classes: "tr_width ellipsis",
-	},
-	{
-		name: "domain",
-		label: "Domain",
-		align: "left",
-		field: "domain",
-		sortable: true,
-		classes: "tr_width ellipsis",
-	},
-	{
-		name: "actionsButtons",
-		label: "",
-		align: "left",
-		field: "actionsButtons",
-		sortable: false,
-		classes: "tr_width__actions40",
-	},
-];
+import authorizationColumns from "./colums/authorizationColumns";
 
 export default {
 	components: { Modal, AvatarImg },
@@ -368,7 +323,7 @@ export default {
 
 		return {
 			confirm,
-			columns,
+			authorizationColumns,
 			rowsData,
 			authorizationObj,
 			addNewAuthorization,

@@ -13,7 +13,7 @@
 			:key="updateKey"
 			title=""
 			:rows="rowsData"
-			:columns="columns"
+			:columns="userColumns"
 			:fullscreen="fullscreen"
 			:grid="$q.screen.xs"
 			row-key="name"
@@ -254,69 +254,7 @@ import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/userFileData";
 import FileUploader from "../Form/FileUploader.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
-
-const columns = [
-	{
-		name: "avatar",
-		required: true,
-		label: "Avatar",
-		align: "left",
-		field: (row) => row.name,
-		format: (val) => `${val}`,
-		sortable: true,
-		classes: "tr_width__avatar",
-	},
-
-	{
-		name: "firstName",
-		label: "First Name",
-		align: "left",
-		field: "firstName",
-		sortable: true,
-		classes: "tr_width__name ellipsis",
-	},
-	{
-		name: "lastName",
-		label: "Last Name",
-		align: "left",
-		field: "lastName",
-		sortable: true,
-		classes: "tr_width__name ellipsis",
-	},
-	{
-		name: "email",
-		label: "Email",
-		align: "left",
-		field: "email",
-		sortable: true,
-		classes: "tr_width__email ellipsis",
-	},
-	{
-		name: "password",
-		label: "Password",
-		align: "left",
-		field: "password",
-		sortable: false,
-		classes: "tr_width ellipsis",
-	},
-	{
-		name: "description",
-		label: "Description",
-		align: "left",
-		field: "description",
-		sortable: false,
-		classes: "tr_width__descr ellipsis",
-	},
-
-	{
-		name: "actionsButtons",
-		label: "",
-		align: "left",
-		field: "actionsButtons",
-		sortable: false,
-		classes: "tr_width__actions",
-	},
-];
+import userColumns from "./colums/userColumns";
 
 export default {
 	components: { Modal, FileUploader, AvatarImg },
@@ -462,7 +400,7 @@ export default {
 			isPwd,
 			confirm,
 			editedIndex,
-			columns,
+			userColumns,
 			rowsData,
 			userObj,
 			AddUser,
