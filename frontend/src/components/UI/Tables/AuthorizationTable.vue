@@ -18,11 +18,7 @@
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
-				<AvatarImg
-					:source="props.row.avatar"
-					:substitute="globalAvatar"
-					alt="Authorization avatar"
-				/>
+				<AvatarImg :source="props.row.avatar" />
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
