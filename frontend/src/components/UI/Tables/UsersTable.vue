@@ -21,13 +21,11 @@
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
-				<q-td :props="props">
-					<AvatarImg
-						:source="props.row.avatar"
-						:substitute="globalAvatar"
-						alt="user avatar"
-					/>
-				</q-td>
+				<AvatarImg
+					:source="props.row.avatar"
+					:substitute="globalAvatar"
+					alt="user avatar"
+				/>
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
