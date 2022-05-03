@@ -169,7 +169,6 @@ import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/userFileData";
 import FileUploader from "../Form/FileUploader.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
-import globalAvatar from "../../../assets/profil.png";
 
 const columns = [
 	{
@@ -369,7 +368,6 @@ export default {
 			onResetAdd,
 			opendDialog,
 			openAddEnviTypeDialog,
-			globalAvatar,
 			imagesUID,
 			avatarUrl,
 			uploadFile,

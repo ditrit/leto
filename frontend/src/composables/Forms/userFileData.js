@@ -12,9 +12,6 @@ export default function userFileData() {
 		formData.append("id", imagesUID);
 		formData.append("file", file[0], file[0].name);
 		await API.post(`/file/${imagesUID}`, formData).then((res) => {
-			console.log("res.data", res.data);
-			console.log("res", res);
-			console.log("url", res.config.url);
 			console.log("responseURL", res.request.responseURL);
 		});
 		getFile();

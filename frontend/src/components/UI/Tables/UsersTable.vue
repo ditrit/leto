@@ -253,7 +253,6 @@ import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/userFileData";
 import FileUploader from "../Form/FileUploader.vue";
-import globalAvatar from "../../../assets/profil.png";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
 
 const columns = [
@@ -484,7 +483,6 @@ export default {
 			imagesUID,
 			avatarUrl,
 			uploadFile,
-			globalAvatar,
 			password: ref(""),
 		};
 	},
