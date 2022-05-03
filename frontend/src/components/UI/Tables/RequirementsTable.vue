@@ -22,11 +22,7 @@
 			table-header-class="table_header"
 		>
 			<template v-slot:body-cell-avatar="props">
-				<q-td :props="props">
-					<q-avatar size="26px">
-						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-					</q-avatar>
-				</q-td>
+				<AvatarImg :source="props.row.avatar" />
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
@@ -301,9 +297,9 @@
 
 <script>
 import { ref } from "vue";
-import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
+import AvatarImg from "../Images/AvatarImg.vue";
 
 const columns = [
 	{
@@ -392,9 +388,8 @@ const columns = [
 ];
 
 export default {
-	components: { Modal },
+	components: { Modal, AvatarImg },
 	setup() {
-		const store = useStore();
 		const $q = useQuasar();
 		const isOpened = ref(false);
 		const opendDialog = ref(false);
@@ -434,13 +429,7 @@ export default {
 				max_value: 20,
 			},
 		]);
-		// const optionsWidget = ref([
-		// 	"Range",
-		// 	"Text Input",
-		// 	"Dropdown",
-		// 	"Radio button",
-		// 	"Checkbox",
-		// ]);
+
 		const optionsWidget = ref([
 			"Range",
 			"Text Input",
@@ -481,9 +470,6 @@ export default {
 		const deleteRow = async (currentTarget) => {
 			try {
 				console.log("Delete this element", currentTarget);
-				// const userID = Object.values(currentTarget)[0];
-				// await store.dispatch("appUsers/removeUser", userID);
-				// await allUsers();
 				$q.notify({
 					type: "positive",
 					message: "User has been successfully deleted",
