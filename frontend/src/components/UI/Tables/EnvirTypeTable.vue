@@ -13,7 +13,7 @@
 			:key="updateKey"
 			title=""
 			:rows="rowsData"
-			:columns="enviTypeColumns"
+			:columns="columns"
 			row-key="name"
 			field
 			table-header-class="table_header"
@@ -169,7 +169,7 @@ import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/userFileData";
 import FileUploader from "../Form/FileUploader.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
-import enviTypeColumns from "./colums/enviTypeColumns";
+import columns from "./colums/enviTypeRoleColumns";
 
 export default {
 	components: { Modal, FileUploader, AvatarImg },
@@ -306,7 +306,7 @@ export default {
 		return {
 			confirm,
 			editedIndex,
-			enviTypeColumns,
+			columns,
 			rowsData,
 			enviTypeObj,
 			AddEnviType,
