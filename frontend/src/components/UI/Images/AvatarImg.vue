@@ -1,7 +1,9 @@
 <template>
-	<q-avatar size="26px">
-		<img :src="source ? source : substitute" :alt="alt" />
-	</q-avatar>
+	<q-td :props="props">
+		<q-avatar size="26px">
+			<img :src="source ? source : substitute" :alt="alt" />
+		</q-avatar>
+	</q-td>
 </template>
 
 <script>
