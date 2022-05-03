@@ -2,7 +2,6 @@ export const GET_USERS = (state, theUsers) => (state.theUsers = theUsers);
 export const NEW_USER = (state, user) => state.theUsers.unshift(user);
 
 export const UPDATE_USER = (state, updatedUser) => {
-	console.log("updatedUser: ", updatedUser);
 	const index = state.theUsers.findIndex((user) => user.id === updatedUser.ID);
 	state.theUsers[index] = updatedUser;
 };
