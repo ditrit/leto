@@ -45,8 +45,6 @@ export default {
 		};
 		onMounted(() => {
 			initGrapes();
-			console.log("editor: ", editor.value);
-			console.log("ckeditor4: ", CKEDITOR);
 		});
 
 		return { editor, initGrapes };
