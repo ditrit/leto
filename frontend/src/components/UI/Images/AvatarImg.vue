@@ -1,5 +1,5 @@
 <template>
-	<q-td :props="props">
+	<q-td :props="props" class="tr_width__actions30">
 		<q-avatar size="26px">
 			<img :src="source ? source : globalAvatar" alt="avatar" />
 		</q-avatar>

@@ -143,7 +143,6 @@ import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
 import Modal from "../Dialogs/Modal.vue";
-import globalAvatar from "../../../assets/profil.png";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
 
 const columns = [
@@ -398,7 +397,6 @@ export default {
 			authorizationRoleNameRef,
 			authorizationRoleIDRef,
 			authorizationUserIDRef,
-			globalAvatar,
 		};
 	},
 };
