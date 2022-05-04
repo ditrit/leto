@@ -686,7 +686,7 @@ export default {
 			confirmDeleteAuthorization,
 			authorizationDomainObj,
 		} = useAuthorizationsTabsData(props);
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const isEnvironmentsCreationOpened = ref(false);
 		const isAuthorCreationOpened = ref(false);
@@ -793,7 +793,7 @@ export default {
 			$q,
 			productTeam,
 			productName,
-			productLogo: avatarUrl.value,
+			productLogo: logoUrl.value,
 			productShortDescription,
 			productDescription,
 			productProductRepositoryURL,
@@ -850,7 +850,7 @@ export default {
 			librariesList,
 			domainNameRef,
 			imagesUID,
-			avatarUrl,
+			logoUrl,
 			uploadFile,
 			model: ref(null),
 			options: ["BDDF", "GIMS", "SGCIB", "BHUFM", "GTS"],

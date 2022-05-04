@@ -10,8 +10,6 @@
 			/>
 		</div>
 		<q-table
-			:key="updateKey"
-			title=""
 			:rows="rowsData"
 			:columns="columns"
 			row-key="name"
@@ -176,7 +174,7 @@ export default {
 		const roleName = ref("");
 		const roleShortDescription = ref("");
 		const roleDescription = ref("");
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const confirm = (item) => {
 			console.log("item: ", item);
@@ -219,7 +217,7 @@ export default {
 				name: roleName.value,
 				shortDescription: roleShortDescription.value,
 				description: roleDescription.value,
-				logo: avatarUrl.value,
+				logo: logoUrl.value,
 			};
 			console.log("roleData", roleData);
 
@@ -247,7 +245,7 @@ export default {
 				name: roleObj.value[2],
 				shortDescription: roleObj.value[3],
 				description: roleObj.value[4],
-				logo: avatarUrl.value,
+				logo: logoUrl.value,
 			};
 			console.log("roleObj: ", roleObj.value);
 
@@ -311,7 +309,7 @@ export default {
 			opendDialog,
 			openAddRoleDialog,
 			imagesUID,
-			avatarUrl,
+			logoUrl,
 			uploadFile,
 			password: ref(""),
 			isPwd: ref(true),

@@ -10,7 +10,6 @@
 			/>
 		</div>
 		<q-table
-			title=""
 			:rows="rowsData"
 			:columns="authorizationColumns"
 			row-key="name"

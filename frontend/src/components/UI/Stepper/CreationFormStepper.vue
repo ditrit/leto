@@ -140,7 +140,7 @@ export default {
 		const SelectedDomain = ref([]);
 		const $q = useQuasar();
 
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const getAllDomains = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
@@ -185,7 +185,7 @@ export default {
 			teamParent,
 			shortDescription,
 			description,
-			avatarUrl,
+			logoUrl,
 			imagesUID,
 			uploadFile,
 
@@ -197,7 +197,7 @@ export default {
 						teamParent: selectedParentData.value.parentName,
 						shortDescription: shortDescription.value,
 						description: description.value,
-						logo: avatarUrl.value,
+						logo: logoUrl.value,
 					};
 					if (newDomain.name.length && newDomain.teamParent.length) {
 						store.dispatch("appDomain/addDomain", newDomain);

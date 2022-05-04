@@ -9,7 +9,7 @@ export const addUser = async ({ commit }, user) => {
 	commit("NEW_USER", response.data);
 };
 export const updateUser = async ({ commit }, user) => {
-	let response = await API.put(`/user/${user.id}`, user);
+	let response = await API.put(`/user/${user.ID}`, user);
 	commit("UPDATE_USER", response.data);
 };
 export const removeUser = async ({ commit }, id) => {

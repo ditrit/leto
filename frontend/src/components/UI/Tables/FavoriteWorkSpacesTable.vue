@@ -10,17 +10,14 @@
 			/>
 		</div>
 		<q-table
-			:key="updateKey"
-			title=""
 			:rows="rowsData"
 			:columns="columns"
-			:fullscreen="fullscreen"
 			:grid="$q.screen.xs"
 			row-key="name"
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-avatar="props">
+			<template v-slot:body-cell-Logo="props">
 				<!-- Modification Dialog -->
 				<Modal class="modalGlobal" v-model="opendDialog">
 					<template v-slot:ModalTitle>
@@ -114,18 +111,8 @@
 						</q-form>
 					</template>
 				</Modal>
-
-				<q-td :props="props">
-					<q-avatar size="26px">
-						<img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-					</q-avatar>
-				</q-td>
+				<AvatarImg :source="props.row.Logo" />
 			</template>
-			<!-- <template style="width: 100px">
-				<q-td key="password" :props="props" class="ellipsis">
-					{{ props.row.password }}
-				</q-td>
-			</template> -->
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
 					<q-btn
@@ -240,6 +227,7 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
+import AvatarImg from "../Images/AvatarImg.vue";
 
 const columns = [
 	{
@@ -305,7 +293,7 @@ const columns = [
 ];
 
 export default {
-	components: { Modal },
+	components: { Modal, AvatarImg },
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
@@ -337,12 +325,11 @@ export default {
 			// fetch All Users
 			await store.dispatch("appUsers/fetchUsers");
 			const getUsers = computed(() => store.getters["appUsers/allUsers"]);
-			return (rowsData.value = Object.values(
+			rowsData.value = Object.values(
 				getUsers.value.map((item) => {
 					return {
 						id: item.ID,
-						avatar:
-							"https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+						Logo: "",
 						firstName: item.FirstName,
 						lastName: item.LastName,
 						email: item.Email,
@@ -350,7 +337,7 @@ export default {
 						description: item.Description,
 					};
 				})
-			));
+			);
 		};
 		allUsers();
 
@@ -374,13 +361,13 @@ export default {
 			try {
 				await store.dispatch("appUsers/addUser", userData);
 				await allUsers();
-				(userFirstName.value = ""),
-					(userLastName.value = ""),
-					(userEmail.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "User has been successfully created",
-					});
+				userFirstName.value = "";
+				userLastName.value = "";
+				userEmail.value = "";
+				$q.notify({
+					type: "positive",
+					message: "User has been successfully created",
+				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
@@ -414,10 +401,10 @@ export default {
 			}
 		};
 		const onResetUpdate = () => {
-			return (openAddUserDialog.value = false);
+			openAddUserDialog.value = false;
 		};
 		const onResetAdd = () => {
-			return (openAddUserDialog.value = false);
+			openAddUserDialog.value = false;
 		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;

@@ -1,17 +1,17 @@
 <template>
 	<q-td :props="props" class="tr_width__actions30">
 		<q-avatar size="26px">
-			<img :src="source ? source : globalAvatar" alt="avatar" />
+			<img :src="source ? source : globalLogo" alt="avatar" />
 		</q-avatar>
 	</q-td>
 </template>
 
 <script>
-import globalAvatar from "../../../assets/profil.png";
+import globalLogo from "assets/profil.png";
 export default {
 	setup() {
 		return {
-			globalAvatar,
+			globalLogo,
 		};
 	},
 

@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -21,7 +21,8 @@ export default function useProductDetails() {
 	const menu = ref([
 		{
 			label: "ENV ONE",
-			avatar: "https://cdn.quasar.dev/img/boy-avatar.png",
+			avatar:
+				"http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/9c19cc0d-bbb7-47c6-bfeb-83059f397ea8?Authorization=Bearer+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI5MGQ0ODFhMy05NDlkLTRkODQtYThlMC0yNjg4NzZkNzRlNGEiLCJOYW1lIjoiIiwiRW1haWwiOiJicmFoaW1AZ21haWwuY29tIiwiVGVuYW50IjoiIiwiZXhwIjoxNjQ4ODAyMDU1fQ.v4aCTTJlDRuxaaQozubfLJjTkF_z2cw0y1VfVNit5eo",
 			children: [
 				{
 					label: "Model 1",
@@ -62,11 +63,6 @@ export default function useProductDetails() {
 				gitURL: item.RepositoryURL,
 			};
 		});
-		// productName.value = updatesData.name;
-		// productLogo.value = avatarUrl.value;
-		// productShortDescription.value = updatesData.shortDescription;
-		// productProductRepositoryURL.value = updatesData.repositoryURL;
-		// productDescription.value = updatesData.description;
 	};
 	return { store, route, $q, currentProductContent, menu, openProject };
 }

@@ -10,18 +10,15 @@
 			/>
 		</div>
 		<q-table
-			:key="updateKey"
-			title=""
 			:rows="rowsData"
 			:columns="userColumns"
-			:fullscreen="fullscreen"
 			:grid="$q.screen.xs"
 			row-key="name"
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-avatar="props">
-				<AvatarImg :source="props.row.avatar" />
+			<template v-slot:body-cell-Logo="props">
+				<AvatarImg :source="props.row.Logo" />
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
@@ -125,7 +122,7 @@
 								class="full-height"
 								filled
 								type="textarea"
-								label="Descripiton *"
+								label="Description *"
 								lazy-rules
 								:rules="[
 									(val) => (val && val.length > 0) || 'Please type something',
@@ -149,8 +146,8 @@
 		<!-- Modification Dialog -->
 		<Modal
 			class="modalGlobal"
-			v-show="opendDialog"
-			v-model="opendDialog"
+			v-show="openDialog"
+			v-model="openDialog"
 			persistent
 			position="bottom"
 		>
@@ -247,7 +244,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
@@ -261,7 +258,7 @@ export default {
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
-		const opendDialog = ref(false);
+		const openDialog = ref(false);
 		const isPwd = ref(true);
 		const openAddUserDialog = ref(false);
 		const userObj = ref(null);
@@ -272,8 +269,8 @@ export default {
 		const userEmail = ref("");
 		const userPassword = ref("");
 		const userDescription = ref("");
-		const userAvatar = ref("");
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+		const userLogo = ref("");
+		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const confirm = (item) => {
 			$q.dialog({
@@ -291,17 +288,17 @@ export default {
 		};
 		const allUsers = async () => {
 			await store.dispatch("appUsers/fetchUsers");
-			const getUsers = computed(() => store.getters["appUsers/allUsers"]);
+			const getUsers = store.getters["appUsers/allUsers"];
 			rowsData.value = Object.values(
-				getUsers.value.map((item) => {
+				getUsers.map((item) => {
 					return {
-						id: item.ID,
-						avatar: item.Logo,
-						firstName: item.FirstName,
-						lastName: item.LastName,
-						email: item.Email,
-						password: item.Password,
-						description: item.Description,
+						ID: item.ID,
+						Logo: item.Logo,
+						FirstName: item.FirstName,
+						LastName: item.LastName,
+						Email: item.Email,
+						Password: item.Password,
+						Description: item.Description,
 					};
 				})
 			);
@@ -309,22 +306,22 @@ export default {
 		allUsers();
 
 		const AddUser = () => {
-			openAddUserDialog.value = "";
+			openAddUserDialog.value = true;
 			userFirstName.value = "";
 			userLastName.value = "";
-			userAvatar.value = "";
+			userLogo.value = "";
 			userEmail.value = "";
 			userPassword.value = "";
 			userDescription.value = "";
 		};
 		const onSubmitAdd = async () => {
 			const userData = {
-				firstName: userFirstName.value,
-				lastName: userLastName.value,
-				logo: avatarUrl.value,
-				email: userEmail.value,
-				password: userPassword.value,
-				description: userDescription.value,
+				FirstName: userFirstName.value,
+				LastName: userLastName.value,
+				Logo: logoUrl.value,
+				Email: userEmail.value,
+				Password: userPassword.value,
+				Description: userDescription.value,
 			};
 
 			try {
@@ -346,13 +343,13 @@ export default {
 		};
 		const onSubmitUpdate = async () => {
 			const userData = {
-				id: userObj.value[0],
-				firstName: userObj.value[2],
-				lastName: userObj.value[3],
-				logo: avatarUrl.value,
-				email: userObj.value[4],
-				password: userObj.value[5],
-				description: userObj.value[6],
+				ID: userObj.value[0],
+				FirstName: userObj.value[2],
+				LastName: userObj.value[3],
+				Logo: logoUrl.value,
+				Email: userObj.value[4],
+				Password: userObj.value[5],
+				Description: userObj.value[6],
 			};
 
 			try {
@@ -376,7 +373,7 @@ export default {
 			openAddUserDialog.value = false;
 		};
 		const editRow = (currentTarget) => {
-			opendDialog.value = true;
+			openDialog.value = true;
 			userObj.value = Object.values(currentTarget);
 		};
 		const deleteRow = async (currentTarget) => {
@@ -406,7 +403,7 @@ export default {
 			AddUser,
 			userFirstName,
 			userLastName,
-			userAvatar,
+			userLogo,
 			userEmail,
 			editRow,
 			deleteRow,
@@ -414,12 +411,12 @@ export default {
 			onSubmitUpdate,
 			onResetUpdate,
 			onResetAdd,
-			opendDialog,
+			openDialog,
 			openAddUserDialog,
 			userPassword,
 			userDescription,
 			imagesUID,
-			avatarUrl,
+			logoUrl,
 			uploadFile,
 			password: ref(""),
 		};

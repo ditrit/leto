@@ -5,7 +5,7 @@
 				<div class="row items-center no-wrap">
 					<div>
 						<q-img
-							:src="avatarUrl ? avatarUrl : globalAvatar"
+							:src="logoUrl ? logoUrl : globalAvatar"
 							alt=""
 							style="
 								height: 38px;
@@ -201,7 +201,7 @@ export default {
 		const productProductRepositoryURL = ref(props.repositoryURL);
 		const productDomainID = ref(props.domainID);
 		const isOpened = ref(false);
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const openCard = (item) => {
 			route.push(`/product/${item}`);
@@ -230,7 +230,7 @@ export default {
 				return store.getters["appProducts/fetchAllProducts"];
 			});
 			productName.value = updatesData.name;
-			productLogo.value = avatarUrl.value;
+			productLogo.value = logoUrl.value;
 			productShortDescription.value = updatesData.shortDescription;
 			productProductRepositoryURL.value = updatesData.repositoryURL;
 			productDescription.value = updatesData.description;
@@ -242,7 +242,7 @@ export default {
 				id: props.id,
 				domainID: props.domainID,
 				name: productName.value,
-				logo: avatarUrl.value,
+				logo: logoUrl.value,
 				productName: productName.value,
 				shortDescription: productShortDescription.value,
 				repositoryURL: productProductRepositoryURL.value,
@@ -287,7 +287,7 @@ export default {
 			productDescription,
 			productProductRepositoryURL,
 			imagesUID,
-			avatarUrl,
+			logoUrl,
 			uploadFile,
 			globalAvatar,
 			openCard,
