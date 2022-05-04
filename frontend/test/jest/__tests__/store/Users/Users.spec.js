@@ -36,4 +36,62 @@ describe("Store: Users", () => {
 			expect(commit).toBeCalledWith("DELETE_USER", 1);
 		});
 	});
+
+	describe("Test: getters", () => {
+		const mockState = {
+			theUsers: "test theUsers",
+		};
+
+		it("Test methods: allUsers", () => {
+			expect(store.getters.allUsers(mockState)).toBe("test theUsers");
+		});
+	});
+
+	describe("Test: state", () => {
+		it("Test initialization", () => {
+			expect(store.state).toEqual({ theUsers: [] });
+		});
+	});
+
+	describe("Test: mutations", () => {
+		it("Test method: GET_USERS", () => {
+			const state = { theUsers: null };
+
+			store.mutations.GET_USERS(state, []);
+
+			expect(state.theUsers).toEqual([]);
+		});
+
+		it("Test method: NEW_USER", () => {
+			const state = { theUsers: [] };
+
+			store.mutations.NEW_USER(state, 2);
+			store.mutations.NEW_USER(state, 1);
+
+			expect(state.theUsers).toEqual([1, 2]);
+		});
+
+		it("Test method: UPDATE_USER", () => {
+			const state = { theUsers: [{ ID: 1 }, { ID: 2 }] };
+
+			store.mutations.UPDATE_USER(state, { ID: 1, name: "test 1" });
+			expect(state.theUsers).toEqual([{ ID: 1, name: "test 1" }, { ID: 2 }]);
+
+			store.mutations.UPDATE_USER(state, { ID: 3, name: "test 2" });
+			expect(state.theUsers).toEqual([{ ID: 1, name: "test 1" }, { ID: 2 }]);
+		});
+
+		it("Test method: DELETE_USER", () => {
+			const state = { theUsers: [{ ID: 1 }, { ID: 2 }] };
+
+			store.mutations.DELETE_USER(state, 1);
+			expect(state.theUsers).toEqual([{ ID: 2 }]);
+
+			store.mutations.DELETE_USER(state, 2);
+			expect(state.theUsers).toEqual([]);
+
+			store.mutations.DELETE_USER(state, 3);
+			expect(state.theUsers).toEqual([]);
+		});
+	});
 });
