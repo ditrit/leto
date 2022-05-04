@@ -63,7 +63,7 @@ export default function useProductDetails() {
 			};
 		});
 		// productName.value = updatesData.name;
-		// productLogo.value = avatarUrl.value;
+		// productLogo.value = logoUrl.value;
 		// productShortDescription.value = updatesData.shortDescription;
 		// productProductRepositoryURL.value = updatesData.repositoryURL;
 		// productDescription.value = updatesData.description;

@@ -343,7 +343,7 @@ export default {
 		const submitPassword = () => {
 			const userUpdate = {
 				id: user.value.ID,
-				logo: avatarUrl.value,
+				logo: logoUrl.value,
 				firstName: user.value.FirstName,
 				lastName: user.value.LastName,
 				email: user.value.Email,

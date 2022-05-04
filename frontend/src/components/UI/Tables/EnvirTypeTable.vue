@@ -185,7 +185,7 @@ export default {
 		const enviTypeName = ref("");
 		const enviTypeShortDescription = ref("");
 		const enviTypeDescription = ref("");
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const confirm = (item) => {
 			console.log("item: ", item);
@@ -232,7 +232,7 @@ export default {
 				name: enviTypeName.value,
 				shortDescription: enviTypeShortDescription.value,
 				description: enviTypeDescription.value,
-				logo: avatarUrl.value,
+				logo: logoUrl.value,
 			};
 
 			try {
@@ -259,7 +259,7 @@ export default {
 				name: enviTypeObj.value[2],
 				shortDescription: enviTypeObj.value[3],
 				description: enviTypeObj.value[4],
-				logo: avatarUrl.value,
+				logo: logoUrl.value,
 			};
 
 			try {
@@ -323,7 +323,7 @@ export default {
 			opendDialog,
 			openAddEnviTypeDialog,
 			imagesUID,
-			avatarUrl,
+			logoUrl,
 			uploadFile,
 			password: ref(""),
 			isPwd: ref(true),

@@ -198,7 +198,7 @@ export default {
 	setup(props, { emit }) {
 		let { store, route, $q } = useUtils();
 		let { getMenuData } = useDomainData();
-		let { imagesUID, avatarUrl, uploadFile } = useFileData();
+		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const search = ref("");
 		const parentID = ref("");
@@ -246,7 +246,7 @@ export default {
 			emit("emitUpdateDomain", item);
 			let updatedDomain = {
 				id: item.id,
-				logo: avatarUrl.value,
+				logo: logoUrl.value,
 				name: item.name,
 				shortDescription: item.shortDescription,
 				description: item.description,
@@ -289,7 +289,7 @@ export default {
 			confirm,
 			addFavorite,
 			imagesUID,
-			avatarUrl,
+			logoUrl,
 			uploadFile,
 		};
 	},

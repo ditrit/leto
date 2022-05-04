@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 export default function userFileData() {
 	const store = useStore();
 	const imagesUID = uuidv4();
-	const avatarUrl = ref("");
+	const logoUrl = ref("");
 	const uploadFile = async (file) => {
 		const formData = new FormData();
 		formData.append("id", imagesUID);
@@ -19,8 +19,8 @@ export default function userFileData() {
 	const getFile = async () => {
 		await store.dispatch("appFiles/downloadFile", imagesUID);
 		const response = store.getters["appFiles/getFiles"];
-		avatarUrl.value = response[0].request.responseURL;
+		logoUrl.value = response[0].request.responseURL;
 	};
 
-	return { imagesUID, avatarUrl, uploadFile };
+	return { imagesUID, logoUrl, uploadFile };
 }
