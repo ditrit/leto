@@ -351,7 +351,6 @@ export default {
 				Password: userObj.value[5],
 				Description: userObj.value[6],
 			};
-			console.log("userData: ", userData);
 
 			try {
 				await store.dispatch("appUsers/updateUser", userData);
