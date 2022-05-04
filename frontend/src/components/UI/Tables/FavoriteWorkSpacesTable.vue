@@ -325,11 +325,11 @@ export default {
 			// fetch All Users
 			await store.dispatch("appUsers/fetchUsers");
 			const getUsers = computed(() => store.getters["appUsers/allUsers"]);
-			return (rowsData.value = Object.values(
+			rowsData.value = Object.values(
 				getUsers.value.map((item) => {
 					return {
 						id: item.ID,
-						Logo: "https://images.unsplash.com/photo-1637637498892-6b9801f4e5bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+						Logo: "",
 						firstName: item.FirstName,
 						lastName: item.LastName,
 						email: item.Email,
@@ -337,7 +337,7 @@ export default {
 						description: item.Description,
 					};
 				})
-			));
+			);
 		};
 		allUsers();
 
@@ -401,10 +401,10 @@ export default {
 			}
 		};
 		const onResetUpdate = () => {
-			return (openAddUserDialog.value = false);
+			openAddUserDialog.value = false;
 		};
 		const onResetAdd = () => {
-			return (openAddUserDialog.value = false);
+			openAddUserDialog.value = false;
 		};
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
