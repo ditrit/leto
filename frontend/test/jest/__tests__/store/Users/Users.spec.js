@@ -74,11 +74,11 @@ describe("Store: Users", () => {
 		it("Test method: UPDATE_USER", () => {
 			const state = { theUsers: [{ ID: 1 }, { ID: 2 }] };
 
-			store.mutations.UPDATE_USER(state, { ID: 1, name: "test 1" });
-			expect(state.theUsers).toEqual([{ ID: 1, name: "test 1" }, { ID: 2 }]);
+			store.mutations.UPDATE_USER(state, { ID: 1 });
+			expect(state.theUsers).toEqual([{ ID: 1 }, { ID: 2 }]);
 
-			store.mutations.UPDATE_USER(state, { ID: 3, name: "test 2" });
-			expect(state.theUsers).toEqual([{ ID: 1, name: "test 1" }, { ID: 2 }]);
+			store.mutations.UPDATE_USER(state, { ID: 2 });
+			expect(state.theUsers).toEqual([{ ID: 1 }, { ID: 2 }]);
 		});
 
 		it("Test method: DELETE_USER", () => {
