@@ -10,11 +10,8 @@
 			/>
 		</div>
 		<q-table
-			:key="updateKey"
-			title=""
 			:rows="rowsData"
 			:columns="userColumns"
-			:fullscreen="fullscreen"
 			:grid="$q.screen.xs"
 			row-key="name"
 			field

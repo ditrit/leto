@@ -10,8 +10,6 @@
 			/>
 		</div>
 		<q-table
-			:key="updateKey"
-			title=""
 			:rows="rowsData"
 			:columns="columns"
 			row-key="name"
