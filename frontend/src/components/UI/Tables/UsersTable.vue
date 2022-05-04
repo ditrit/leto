@@ -125,7 +125,7 @@
 								class="full-height"
 								filled
 								type="textarea"
-								label="Descripiton *"
+								label="Description *"
 								lazy-rules
 								:rules="[
 									(val) => (val && val.length > 0) || 'Please type something',
@@ -149,8 +149,8 @@
 		<!-- Modification Dialog -->
 		<Modal
 			class="modalGlobal"
-			v-show="opendDialog"
-			v-model="opendDialog"
+			v-show="openDialog"
+			v-model="openDialog"
 			persistent
 			position="bottom"
 		>
@@ -261,7 +261,7 @@ export default {
 	setup() {
 		const store = useStore();
 		const $q = useQuasar();
-		const opendDialog = ref(false);
+		const openDialog = ref(false);
 		const isPwd = ref(true);
 		const openAddUserDialog = ref(false);
 		const userObj = ref(null);
@@ -309,7 +309,7 @@ export default {
 		allUsers();
 
 		const AddUser = () => {
-			openAddUserDialog.value = "";
+			openAddUserDialog.value = true;
 			userFirstName.value = "";
 			userLastName.value = "";
 			userLogo.value = "";
@@ -377,7 +377,7 @@ export default {
 			openAddUserDialog.value = false;
 		};
 		const editRow = (currentTarget) => {
-			opendDialog.value = true;
+			openDialog.value = true;
 			userObj.value = Object.values(currentTarget);
 		};
 		const deleteRow = async (currentTarget) => {
@@ -415,7 +415,7 @@ export default {
 			onSubmitUpdate,
 			onResetUpdate,
 			onResetAdd,
-			opendDialog,
+			openDialog,
 			openAddUserDialog,
 			userPassword,
 			userDescription,
