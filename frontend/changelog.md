@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - User store testing unit
+- EnviType store unit testing
 
 ### Fixed
 
@@ -28,3 +29,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unused properties in table.
 - Console and comment in UserTable.
 - Useless packages.
+
+[unreleased]: https://github.com/ditrit/leto/blob/dev/frontend/changelog.md#unreleased---2022-05-04
