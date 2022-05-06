@@ -10,9 +10,9 @@ export const NEW_ENVITYPE = (state, enviType) =>
 
 export const UPDATE_ENVITYPE = (state, updatedEnviType) => {
 	const index = state.enviTypes.findIndex(
-		(enviType) => enviType.id === updatedEnviType
+		(enviType) => enviType.ID === updatedEnviType.ID
 	);
-	state.enviTypes.splice(index, 1, updatedEnviType);
+	state.enviTypes[index] = updatedEnviType;
 };
 export const DELETE_ENVITYPE = (state, enviTypeId) =>
 	(state.enviTypes = state.enviTypes.filter(
