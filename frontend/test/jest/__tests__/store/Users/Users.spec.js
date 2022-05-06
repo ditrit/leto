@@ -64,32 +64,25 @@ describe("Store: Users", () => {
 
 		it("Test method: NEW_USER", () => {
 			const state = { theUsers: [] };
-
 			store.mutations.NEW_USER(state, 2);
 			store.mutations.NEW_USER(state, 1);
-
 			expect(state.theUsers).toEqual([1, 2]);
 		});
 
 		it("Test method: UPDATE_USER", () => {
 			const state = { theUsers: [{ ID: 1 }, { ID: 2 }] };
-
 			store.mutations.UPDATE_USER(state, { ID: 1 });
 			expect(state.theUsers).toEqual([{ ID: 1 }, { ID: 2 }]);
-
 			store.mutations.UPDATE_USER(state, { ID: 2 });
 			expect(state.theUsers).toEqual([{ ID: 1 }, { ID: 2 }]);
 		});
 
 		it("Test method: DELETE_USER", () => {
 			const state = { theUsers: [{ ID: 1 }, { ID: 2 }] };
-
 			store.mutations.DELETE_USER(state, 1);
 			expect(state.theUsers).toEqual([{ ID: 2 }]);
-
 			store.mutations.DELETE_USER(state, 2);
 			expect(state.theUsers).toEqual([]);
-
 			store.mutations.DELETE_USER(state, 3);
 			expect(state.theUsers).toEqual([]);
 		});
