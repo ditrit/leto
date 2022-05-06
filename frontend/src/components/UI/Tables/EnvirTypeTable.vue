@@ -160,7 +160,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
@@ -203,9 +203,7 @@ export default {
 		const allEnviTypes = async () => {
 			// fetch All Users
 			await store.dispatch("appEnviType/fetchAllEnviTypes");
-			const getEnviTypes = computed(
-				() => store.getters["appEnviType/allEnviTypes"]
-			);
+			const getEnviTypes = store.getters["appEnviType/allEnviTypes"];
 
 			rowsData.value = Object.values(
 				getEnviTypes.map((item) => {
