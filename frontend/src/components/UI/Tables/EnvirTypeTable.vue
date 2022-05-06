@@ -16,8 +16,8 @@
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-avatar="props">
-				<AvatarImg :source="props.row.avatar" />
+			<template v-slot:body-cell-Logo="props">
+				<AvatarImg :source="props.row.Logo" />
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
@@ -186,7 +186,6 @@ export default {
 		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const confirm = (item) => {
-			console.log("item: ", item);
 			$q.dialog({
 				title: "Confirm",
 				message: "Are you sure to delete this item?",
@@ -209,13 +208,13 @@ export default {
 			);
 
 			rowsData.value = Object.values(
-				getEnviTypes.value.map((item) => {
+				getEnviTypes.map((item) => {
 					return {
-						id: item.ID,
-						avatar: item.Logo,
-						name: item.Name,
-						shortDescription: item.ShortDescription,
-						description: item.Description,
+						ID: item.ID,
+						Logo: item.Logo,
+						Name: item.Name,
+						ShortDescription: item.ShortDescription,
+						Description: item.Description,
 					};
 				})
 			);
@@ -227,12 +226,11 @@ export default {
 		};
 		const onSubmitAdd = async () => {
 			const enviTypeData = {
-				name: enviTypeName.value,
-				shortDescription: enviTypeShortDescription.value,
-				description: enviTypeDescription.value,
-				logo: logoUrl.value,
+				Name: enviTypeName.value,
+				ShortDescription: enviTypeShortDescription.value,
+				Description: enviTypeDescription.value,
+				Logo: logoUrl.value,
 			};
-
 			try {
 				await store.dispatch("appEnviType/addEnviType", enviTypeData);
 				await allEnviTypes();
@@ -253,11 +251,11 @@ export default {
 
 		const onSubmitUpdate = async () => {
 			const enviTypeData = {
-				id: enviTypeObj.value[0],
-				name: enviTypeObj.value[2],
-				shortDescription: enviTypeObj.value[3],
-				description: enviTypeObj.value[4],
-				logo: logoUrl.value,
+				ID: enviTypeObj.value[0],
+				Name: enviTypeObj.value[2],
+				ShortDescription: enviTypeObj.value[3],
+				Description: enviTypeObj.value[4],
+				Logo: logoUrl.value,
 			};
 
 			try {
