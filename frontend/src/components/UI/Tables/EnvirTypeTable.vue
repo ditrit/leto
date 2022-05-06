@@ -191,33 +191,17 @@ export default {
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					deleteRow(item);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+			}).onOk(() => {
+				deleteRow(item);
+			});
 		};
 
-		const allEnviTypes = async () => {
+		const updateTableData = () => {
 			// fetch All Users
-			await store.dispatch("appEnviType/fetchAllEnviTypes");
-			const getEnviTypes = store.getters["appEnviType/allEnviTypes"];
-
-			rowsData.value = Object.values(
-				getEnviTypes.map((item) => {
-					return {
-						ID: item.ID,
-						Logo: item.Logo,
-						Name: item.Name,
-						ShortDescription: item.ShortDescription,
-						Description: item.Description,
-					};
-				})
-			);
+			store.dispatch("appEnviType/fetchAllEnviType");
+			rowsData.value = store.getters["appEnviType/allEnviTypes"];
 		};
-		allEnviTypes();
+		updateTableData();
 
 		const AddEnviType = () => {
 			openAddEnviTypeDialog.value = true;
@@ -231,7 +215,7 @@ export default {
 			};
 			try {
 				await store.dispatch("appEnviType/addEnviType", enviTypeData);
-				await allEnviTypes();
+				await updateTableData();
 				enviTypeName.value = "";
 				enviTypeShortDescription.value = "";
 				enviTypeDescription.value = "";
@@ -258,7 +242,7 @@ export default {
 
 			try {
 				await store.dispatch("appEnviType/updateEnviType", enviTypeData);
-				await allEnviTypes();
+				await updateTableData();
 				$q.notify({
 					type: "positive",
 					message: "Environment Type has been successfully updated",
@@ -284,7 +268,7 @@ export default {
 			try {
 				const tagID = Object.values(currentTarget)[0];
 				await store.dispatch("appEnviType/removeEnviType", tagID);
-				await allEnviTypes();
+				await updateTableData();
 				$q.notify({
 					type: "positive",
 					message: "Environment Type has been successfully deleted",
