@@ -13,18 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Update Changelog
+- Remove useless computed from EnviTypeTable.
+- EnviType store unit testing
+- Remove useless computed from userTable.
 - User store testing unit
 
 ### Fixed
 
-- Fix User API calls naming convention + remove useless computed.
-- Fix typo.
-- Test method: UPDATE_USER.
-- Fix alt + assignment bugs.
-- Fix code smell issues.
+- EnviType API calls naming convention
+- Code smell issues.
+- Alt + assignment bugs.
+- Typo in usersTable.
+- User API calls naming convention.
 
 ### Removed
 
 - Unused properties in table.
-- Console and comment in UserTable.
+- Partial clean
+- .DS_Store
 - Useless packages.
+
+[unreleased]: https://github.com/ditrit/leto/blob/dev/frontend/changelog.md#unreleased---2022-05-04
