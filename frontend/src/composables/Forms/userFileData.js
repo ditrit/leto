@@ -11,16 +11,14 @@ export default function userFileData() {
 		const formData = new FormData();
 		formData.append("id", imagesUID);
 		formData.append("file", file[0], file[0].name);
-		await API.post(`/file/${imagesUID}`, formData).then((res) => {
-			console.log("responseURL", res.request.responseURL);
-		});
+		await API.post(`/file/${imagesUID}`, formData);
 		getFile();
 	};
+
 	const getFile = async () => {
 		await store.dispatch("appFiles/downloadFile", imagesUID);
-		const response = store.getters["appFiles/getFiles"];
-		logoUrl.value = response[0].request.responseURL;
+		const response = await store.getters["appFiles/getFiles"];
+		logoUrl.value = await response[0].request.responseURL;
 	};
-
 	return { imagesUID, logoUrl, uploadFile };
 }
