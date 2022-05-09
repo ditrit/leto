@@ -111,7 +111,7 @@
 					<div class="col">
 						<q-input
 							filled
-							v-model="enviTypeObj[2]"
+							v-model="enviTypeObj[4]"
 							label="Name *"
 							lazy-rules
 							:rules="[
@@ -122,7 +122,7 @@
 					<div class="col">
 						<q-input
 							filled
-							v-model="enviTypeObj[3]"
+							v-model="enviTypeObj[5]"
 							label="Short Description *"
 							lazy-rules
 							:rules="[
@@ -135,7 +135,7 @@
 							<q-input
 								filled
 								type="textarea"
-								v-model="enviTypeObj[4]"
+								v-model="enviTypeObj[6]"
 								label="Description *"
 								lazy-rules
 								:rules="[
@@ -250,9 +250,9 @@ export default {
 		const onSubmitUpdate = async () => {
 			const enviTypeData = {
 				ID: enviTypeObj.value[0],
-				Name: enviTypeObj.value[2],
-				ShortDescription: enviTypeObj.value[3],
-				Description: enviTypeObj.value[4],
+				Name: enviTypeObj.value[4],
+				ShortDescription: enviTypeObj.value[5],
+				Description: enviTypeObj.value[6],
 				Logo: logoUrl.value,
 			};
 
