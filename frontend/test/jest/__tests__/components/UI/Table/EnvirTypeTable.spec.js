@@ -1,6 +1,6 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest";
 import { beforeEach, describe, expect, it } from "@jest/globals";
-import { shallowMount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import component from "components/UI/Tables/EnvirTypeTable.vue";
 import { createStore } from "vuex";
 
@@ -10,7 +10,7 @@ describe("Component: EnvirTypeTable", () => {
 	beforeEach(() => {
 		mockStore = createStore({});
 		jest.spyOn(mockStore, "dispatch").mockImplementation();
-		wrapper = shallowMount(component, {
+		wrapper = mount(component, {
 			global: {
 				plugins: [[mockStore]],
 			},
@@ -18,11 +18,15 @@ describe("Component: EnvirTypeTable", () => {
 	});
 	it("Test: refs", () => {
 		expect(wrapper.vm.opendDialog).toBeFalsy();
-	});
-	describe("Test: methods", () => {
-		it("Test method: allEnviTypes", () => {
-			console.log("wrapper: ", wrapper.vm.rowsData.value);
-			expect(wrapper.vm.rowsData.value).toEqual([]);
-		});
+		expect(wrapper.vm.openAddEnviTypeDialog).toBeFalsy();
+		expect(wrapper.vm.enviTypeObj).toBeNull();
+		expect(wrapper.vm.rowsData).toBe();
+		expect(wrapper.vm.editedIndex).toBeNull();
+		expect(wrapper.vm.parentID).toBe("");
+		expect(wrapper.vm.enviTypeName).toBe("");
+		expect(wrapper.vm.enviTypeShortDescription).toBe("");
+		expect(wrapper.vm.enviTypeDescription).toBe("");
+		expect(wrapper.vm.imagesUID).toHaveLength(36);
+		expect(wrapper.vm.logoUrl).toBe("");
 	});
 });
