@@ -15,7 +15,7 @@ import appFiles from "./Files/index";
 import appGit from "./Git/index";
 
 export default store(function () {
-	const Store = createStore({
+	return createStore({
 		modules: {
 			auth,
 			appUsers,
@@ -32,6 +32,4 @@ export default store(function () {
 		},
 		strict: process.env.DEBUGGING,
 	});
-
-	return Store;
 });
