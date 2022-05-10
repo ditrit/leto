@@ -1,7 +1,6 @@
 import { store } from "quasar/wrappers";
 import { createStore } from "vuex";
 
-// import createPersistedState from "vuex-persistedstate";
 import auth from "./Auth/index";
 import appUsers from "./Users/index";
 import appDomain from "./Domains/index";
@@ -15,16 +14,7 @@ import appAuthorization from "./Authorization/index";
 import appFiles from "./Files/index";
 import appGit from "./Git/index";
 
-/*
- * If not building with SSR mode, you can
- * directly export the Store instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Store instance.
- */
-
-export default store(function (/* { ssrContext } */) {
+export default store(function () {
 	const Store = createStore({
 		modules: {
 			auth,
