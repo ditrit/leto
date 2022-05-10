@@ -1,6 +1,6 @@
 export const columns = [
 	{
-		name: "avatar",
+		name: "Logo",
 		required: true,
 		label: "Avatar",
 		align: "left",
@@ -11,27 +11,27 @@ export const columns = [
 	},
 
 	{
-		name: "name",
+		name: "Name",
 		label: "Name",
 		align: "left",
-		field: "name",
+		field: "Name",
 		sortable: true,
 		classes: "tr_width__name ellipsis",
 	},
 
 	{
-		name: "shortDescription",
+		name: "ShortDescription",
 		label: "Short Description",
 		align: "left",
-		field: "shortDescription",
+		field: "ShortDescription",
 		sortable: true,
 		classes: "tr_width__shortdesc ellipsis",
 	},
 	{
-		name: "description",
+		name: "Description",
 		label: "Description",
 		align: "left",
-		field: "description",
+		field: "Description",
 		sortable: true,
 		classes: "tr_width__descr ellipsis",
 	},
