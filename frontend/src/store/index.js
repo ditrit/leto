@@ -6,7 +6,7 @@ import appUsers from "./Users/index";
 import appDomain from "./Domains/index";
 import appTags from "./Tags/index";
 import appRoles from "./Roles/index";
-import appEnviType from "./EnviType/index";
+import appEnviType from "./EnviTypes/index";
 import appEnvironment from "./Environment/index";
 import appProducts from "./Products/index";
 import appLibraries from "./Libraries/index";
