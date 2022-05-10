@@ -2,7 +2,7 @@ import API from "../../services/index";
 
 export const fetchAllEnviTypes = async ({ commit }) => {
 	let response = await API.get("/environmentType");
-	commit("GET_ENVITYPE", response.data);
+	commit("GET_ENVITYPES", response.data);
 };
 
 export const fetchEnviTypeyId = async ({ commit }, enviType) => {
