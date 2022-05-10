@@ -1,4 +1,4 @@
-export const GET_ENVITYPE = (state, enviType) => (state.enviTypes = enviType);
+export const GET_ENVITYPES = (state, enviType) => (state.enviTypes = enviType);
 
 export const GET_ENVITYPE_BY_ID = (state, id) => {
 	const index = state.enviTypes.findIndex((enviType) => enviType.id === id);
@@ -16,5 +16,5 @@ export const UPDATE_ENVITYPE = (state, updatedEnviType) => {
 };
 export const DELETE_ENVITYPE = (state, enviTypeId) =>
 	(state.enviTypes = state.enviTypes.filter(
-		(enviType) => enviType.id !== enviTypeId
+		(enviType) => enviType.ID !== enviTypeId
 	));
