@@ -194,18 +194,7 @@ export default {
 
 		const allRoles = async () => {
 			await store.dispatch("appRoles/fetchAllRoles");
-			const getRoles = computed(() => store.getters["appRoles/allRoles"]);
-			rowsData.value = Object.values(
-				getRoles.value.map((item) => {
-					return {
-						ID: item.ID,
-						Logo: item.Logo,
-						Name: item.Name,
-						ShortDescription: item.ShortDescription,
-						Description: item.Description,
-					};
-				})
-			);
+			rowsData.value = await store.getters["appRoles/allRoles"];
 		};
 		allRoles();
 
