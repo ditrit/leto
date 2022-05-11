@@ -106,7 +106,7 @@
 				>
 					<q-input
 						filled
-						v-model="roleObj[2]"
+						v-model="roleObj[4]"
 						label="Name *"
 						lazy-rules
 						:rules="[
@@ -115,7 +115,7 @@
 					/>
 					<q-input
 						filled
-						v-model="roleObj[3]"
+						v-model="roleObj[5]"
 						label="Short Description *"
 						lazy-rules
 						:rules="[
@@ -127,7 +127,7 @@
 							<q-input
 								filled
 								type="textarea"
-								v-model="roleObj[4]"
+								v-model="roleObj[6]"
 								label="Description *"
 								lazy-rules
 								:rules="[
@@ -224,9 +224,9 @@ export default {
 		const onSubmitUpdate = async () => {
 			const roleData = {
 				ID: roleObj.value[0],
-				Name: roleObj.value[2],
-				ShortDescription: roleObj.value[3],
-				Description: roleObj.value[4],
+				Name: roleObj.value[4],
+				ShortDescription: roleObj.value[5],
+				Description: roleObj.value[6],
 				Logo: logoUrl.value,
 			};
 			try {
