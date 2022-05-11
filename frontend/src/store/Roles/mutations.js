@@ -1,4 +1,4 @@
-export const GET_ROLE = (state, role) => (state.roles = role);
+export const GET_ROLES = (state, role) => (state.roles = role);
 
 export const GET_ROLE_BY_ID = (state, id) => {
 	const index = state.roles.findIndex((role) => role.ID === id);

@@ -2,7 +2,7 @@ import API from "../../services/index";
 
 export const fetchAllRoles = async ({ commit }) => {
 	let response = await API.get("/role");
-	commit("GET_ROLE", response.data);
+	commit("GET_ROLES", response.data);
 };
 
 export const fetchRoleyId = async ({ commit }, role) => {
