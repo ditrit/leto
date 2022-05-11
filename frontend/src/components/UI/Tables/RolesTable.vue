@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
@@ -177,19 +177,14 @@ export default {
 		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const confirm = (item) => {
-			console.log("item: ", item);
 			$q.dialog({
 				title: "Confirm",
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					deleteRow(item);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+			}).onOk(() => {
+				deleteRow(item);
+			});
 		};
 
 		const allRoles = async () => {
@@ -219,8 +214,6 @@ export default {
 				Description: roleDescription.value,
 				Logo: logoUrl.value,
 			};
-			console.log("roleData", roleData);
-
 			try {
 				await store.dispatch("appRoles/addRole", roleData);
 				await allRoles();
@@ -247,8 +240,6 @@ export default {
 				Description: roleObj.value[4],
 				Logo: logoUrl.value,
 			};
-			console.log("roleObj: ", roleObj.value);
-
 			try {
 				await store.dispatch("appRoles/updateRole", roleData);
 				await allRoles();
