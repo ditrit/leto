@@ -16,8 +16,8 @@
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-avatar="props">
-				<AvatarImg :source="props.row.avatar" />
+			<template v-slot:body-cell-Logo="props">
+				<AvatarImg :source="props.row.Logo" />
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
@@ -198,11 +198,11 @@ export default {
 			rowsData.value = Object.values(
 				getRoles.value.map((item) => {
 					return {
-						id: item.ID,
-						avatar: item.Logo,
-						name: item.Name,
-						shortDescription: item.ShortDescription,
-						description: item.Description,
+						ID: item.ID,
+						Logo: item.Logo,
+						Name: item.Name,
+						ShortDescription: item.ShortDescription,
+						Description: item.Description,
 					};
 				})
 			);
@@ -214,10 +214,10 @@ export default {
 		};
 		const onSubmitAdd = async () => {
 			const roleData = {
-				name: roleName.value,
-				shortDescription: roleShortDescription.value,
-				description: roleDescription.value,
-				logo: logoUrl.value,
+				Name: roleName.value,
+				ShortDescription: roleShortDescription.value,
+				Description: roleDescription.value,
+				Logo: logoUrl.value,
 			};
 			console.log("roleData", roleData);
 
@@ -241,11 +241,11 @@ export default {
 
 		const onSubmitUpdate = async () => {
 			const roleData = {
-				id: roleObj.value[0],
-				name: roleObj.value[2],
-				shortDescription: roleObj.value[3],
-				description: roleObj.value[4],
-				logo: logoUrl.value,
+				ID: roleObj.value[0],
+				Name: roleObj.value[2],
+				ShortDescription: roleObj.value[3],
+				Description: roleObj.value[4],
+				Logo: logoUrl.value,
 			};
 			console.log("roleObj: ", roleObj.value);
 
