@@ -9,7 +9,7 @@ export const NEW_ROLE = (state, role) => state.roles.unshift(role);
 
 export const UPDATE_ROLE = (state, updatedRole) => {
 	const index = state.roles.findIndex((role) => role.ID === updatedRole.ID);
-	state.roles.splice(index, 1, updatedRole);
+	state.roles[index] = updatedRole;
 };
 export const DELETE_ROLE = (state, roleId) =>
-	(state.roles = state.roles.filter((role) => role.id !== roleId));
+	(state.roles = state.roles.filter((role) => role.ID !== roleId));
