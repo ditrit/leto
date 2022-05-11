@@ -13,18 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Remove useless computed from EnviTypeTable.
-- Remove useless computed from userTable.
-- Improve store testing unit (Users, EnviType).
+- Remove useless computed from (UsersTable, EnviTypesTable, RolesTable).
+- Improve store testing unit (Users, EnviType, Roles).
 
 ### Fixed
 
 - UserFileData function.
-- EnviType API calls naming convention.
+- API calls naming convention (Users, EnviTypes, Roles).
 - Code smell issues.
 - Alt + assignment bugs.
 - Typo in usersTable.
-- User API calls naming convention.
 
 ### Removed
 
