@@ -16,8 +16,8 @@
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-avatar="props">
-				<AvatarImg :source="props.row.avatar" />
+			<template v-slot:body-cell-Logo="props">
+				<AvatarImg :source="props.row.Logo" />
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
@@ -181,7 +181,7 @@ export default {
 				persistent: true,
 			})
 				.onOk(() => {
-					deleteRow(item.id);
+					deleteRow(item.ID);
 				})
 		};
 
@@ -194,14 +194,14 @@ export default {
 			rowsData.value = Object.values(
 				getAuth.value.map((item) => {
 					return {
-						id: item.ID,
-						avatar: item.User.Logo,
+						ID: item.ID,
+						Logo: item.User.Logo,
 						domainID: item.Domain.ID,
-						domain: item.Domain.Name,
-						roleID: item.RoleID,
-						role: item.Role.Name,
-						userID: item.UserID,
-						user: item.User.FirstName + " " + item.User.LastName,
+						Domain: item.Domain.Name,
+						RoleID: item.RoleID,
+						Role: item.Role.Name,
+						UserID: item.UserID,
+						User: item.User.FirstName + " " + item.User.LastName,
 					};
 				})
 			);
@@ -213,9 +213,9 @@ export default {
 		};
 		const onSubmitAdd = async () => {
 			const authorizationData = {
-				domainID: authorizsationDomain.value.id,
-				userID: authorisationUser.value.id,
-				roleID: authorizationRole.value.id,
+				DomainID: authorizsationDomain.value.ID,
+				UserID: authorisationUser.value.ID,
+				RoleID: authorizationRole.value.ID,
 			};
 
 			try {
@@ -241,11 +241,13 @@ export default {
 
 		const onSubmitUpdate = async () => {
 			const authorizationData = {
-				id: authorizationObj.value[0],
-				domainID: authorizationObj.value[3].id,
-				roleID: authorizationObj.value[5].id,
-				userID: authorizationObj.value[7].id,
+				ID: authorizationObj.value[0],
+				DomainID: authorizationObj.value[3].ID,
+				RoleID: authorizationObj.value[5].ID,
+				UserID: authorizationObj.value[7].ID,
 			};
+
+			console.log("authorizationData: ", authorizationData);
 
 			try {
 				await store.dispatch(
@@ -305,8 +307,8 @@ export default {
 			);
 			domainList.value = data.value.map((domain) => {
 				return {
-					id: domain.ID,
-					name: domain.Name,
+					ID: domain.ID,
+					Name: domain.Name,
 					value: domain.Name,
 					label: domain.Name,
 				};

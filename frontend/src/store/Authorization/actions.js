@@ -15,7 +15,7 @@ export const addAuthorization = async ({ commit }, teamMember) => {
 	commit("NEW_AUTHORIZATION", response.data);
 };
 export const updateAuthorization = async ({ commit }, updates) => {
-	let response = await API.put(`/authorization/${updates.id}`, updates);
+	let response = await API.put(`/authorization/${updates.ID}`, updates);
 	commit("UPDATE_AUTHORIZATION", response.data);
 };
 
