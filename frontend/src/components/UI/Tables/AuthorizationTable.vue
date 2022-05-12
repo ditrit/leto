@@ -179,13 +179,9 @@ export default {
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					deleteRow(item.ID);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+			}).onOk(() => {
+				deleteRow(item.ID);
+			});
 		};
 
 		const allAuthorizations = async () => {
@@ -249,8 +245,6 @@ export default {
 				RoleID: authorizationObj.value[5].ID,
 				UserID: authorizationObj.value[7].ID,
 			};
-
-			console.log("authorizationData: ", authorizationData);
 
 			try {
 				await store.dispatch(
