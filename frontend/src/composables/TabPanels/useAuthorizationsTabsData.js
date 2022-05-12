@@ -30,14 +30,14 @@ export default function useAuthorizationsTabsData(props) {
 		const list = computed(() => store.getters["appUsers/allUsers"]);
 		usersList.value = list.value.map((user) => {
 			return {
-				id: user.ID,
-				firstName: user.FirstName,
-				lastName: user.LastName,
-				email: user.Email,
+				ID: user.ID,
+				FirstName: user.FirstName,
+				LastName: user.LastName,
+				Email: user.Email,
 				label: user.FirstName + " " + user.LastName,
 				value: user.FirstName + " " + user.LastName,
-				logo: user.Logo,
-				description: user.Description,
+				Logo: user.Logo,
+				Description: user.Description,
 			};
 		});
 	};
@@ -49,13 +49,13 @@ export default function useAuthorizationsTabsData(props) {
 
 		roleList.value = roles.value.map((role) => {
 			return {
-				id: role.ID,
-				name: role.Name,
+				ID: role.ID,
+				Name: role.Name,
 				label: role.Name,
 				value: role.Name,
-				logo: role.Logo,
-				shortDescription: role.ShortDescription,
-				description: role.Description,
+				Logo: role.Logo,
+				ShortDescription: role.ShortDescription,
+				Description: role.Description,
 			};
 		});
 	};
