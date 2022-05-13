@@ -68,7 +68,7 @@ import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import SettingsNav from "components/UI/Navigation/SettingsNav";
 import { pageSizeTweak } from "../../common/index";
-import AuthorizationTable from "components/UI/Tables/AuthorizationTable.vue";
+import AuthorizationTable from "components/UI/Tables/AuthorizationsTable.vue";
 export default {
 	components: {
 		AjaxBar,
