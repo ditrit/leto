@@ -1,0 +1,39 @@
+
+<svg id="1" version="1.1" viewBox="0 0 N{{width+50}} N{{rels_height+container_height+150}}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <g id="T{{id}}" class="model">
+ <rect class="main" x="10" y="30"
+ 			 width="N{{width}}" height="N{{31+width/10+rels_height+width/10+container_height+width/10}}"
+			 style="fill:none;stroke:none"/>
+ <g id="info">
+   <g>
+   <rect class="top" x="10" y="30" width="N{{width}}" height="N{{31+width/10}}" style="fill:T{{primary_color}};stroke-width:1.2;stroke:#000"/>
+   <path class="top_path" d="M10 30 A  25 5 0 0,1 N{{width+10}} 30" style="fill:T{{secondary_color}};stroke-linejoin:round;stroke-miterlimit:43.5;stroke-width:1.2;stroke:#000"/>
+   <path d="M10 30 A  25 5 0 0,0 N{{width+10}} 30" style="fill:T{{secondary_color}};stroke-linejoin:round;stroke-miterlimit:43.5;stroke-width:1.2;stroke:#000"/>
+   <rect class="info_limits" x="10" y="N{{30+width/10}}" width="N{{width}}" height="30" style="fill:none;stroke:none"/>
+   </g>
+   <g>
+   <rect class="logo_frame" x="15" y="N{{35+width/10}}" width="20" height="20" fill="#fff" fill-rule="evenodd" stroke="#000" stroke-linecap="round" stroke-linejoin="round" style="paint-order:stroke fill markers"/>
+	 <image class="logo" x="15" y="N{{35+width/10}}" width="20" height="20" xlink:href="T{{logo}}" />
+   <text class="instance_name" text-align="center" style="font-family:Alef;font-size:7px;font-style:italic" xml:space="preserve"><tspan x="40" y="N{{40+width/10}}">T{{instance_name}}</tspan></text>
+   <text class="type_name" text-align="center" style="font-family:Alef;font-size:7px;font-weight:bold" xml:space="preserve"><tspan x="40" y="N{{50+width/10}}">T{{type_name}}</tspan></text>
+   </g>
+ </g>
+ <g id="rels">
+   <g>
+    <rect class="middle" x="10" y="N{{61+width/10}}" width="N{{width}}" height="N{{rels_height+width/10}}" style="fill:T{{primary_color}};stroke-width:1.2;stroke:#000"/>
+    <path d="M10 N{{60+width/10}} A 25 5 0 0,0 N{{width+10}} N{{60+width/10}}" style="fill:T{{primary_color}};stroke-linejoin:round;stroke-miterlimit:43.5;stroke-width:1.2;stroke:#000"/>
+    <rect class="rels_limit" x="10" y="N{{60+2*width/10}}" width="N{{width}}" height="N{{rels_height}}" style="fill:none;stroke:none"/>S
+  </g>
+	<g id="arrows">
+	</g>
+ </g>
+ <g id="subs">
+  <g>
+   <rect class="bottom" x="10" y="N{{61+2*width/10+rels_height}}" width="N{{width}}" height="N{{container_height+width/10}}" style="fill:T{{primary_color}};stroke-width:1.2;stroke:#000"/>
+   <path d="M10 N{{60+2*width/10+rels_height}} A 25 5 0 0,0 N{{width+10}} N{{60+2*width/10+rels_height}}" style="fill:T{{primary_color}};stroke-linejoin:round;stroke-miterlimit:43.5;stroke-width:1.2;stroke:#000"/>
+   <rect class="subs_limits" x="10" y="N{{60+3*width/10+rels_height}}" width="N{{width}}" height="N{{container_height}}" style="fill:none;stroke:none"/>
+   <path class="bottom_path" d="M10 N{{60+3*width/10+rels_height+container_height}} A 25 5 0 0,0 N{{width+10}} N{{60+3*width/10+rels_height+container_height}}" style="fill:T{{primary_color}};stroke-linejoin:round;stroke-miterlimit:43.5;stroke-width:1.5;stroke:#000"/>
+  </g>
+</g>
+</g>
+ </svg>

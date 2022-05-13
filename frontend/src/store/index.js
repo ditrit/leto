@@ -13,6 +13,7 @@ import appLibraries from "./Libraries/index";
 import appAuthorization from "./Authorization/index";
 import appFiles from "./Files/index";
 import appGit from "./Git/index";
+import appSVGs from "./SVGs/index";
 
 export default store(function () {
 	return createStore({
@@ -29,6 +30,7 @@ export default store(function () {
 			appProducts,
 			appLibraries,
 			appGit,
+			appSVGs
 		},
 		strict: process.env.DEBUGGING,
 	});
