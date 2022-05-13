@@ -15,6 +15,19 @@
 			</q-toolbar>
 		</q-header>
 		<AjaxBar />
+		<q-drawer
+
+			side="right"
+			show-if-above
+      bordered
+      :width="250"
+      :breakpoint="500"
+			class="bg-grey-3"
+		>
+		<h6>Object Details</h6>
+		<div id="detailsContainer"></div>
+
+</q-drawer>
 		<Drawer v-model="drawer">
 			<template v-slot:drawerFilter>
 				<div class="search_container">
@@ -34,7 +47,7 @@
 							/>
 						</template>
 					</q-input>
-					<div></div>
+					<div id="drawerContent"></div>
 				</div>
 			</template>
 			<template v-slot:drawerMenu>
@@ -49,6 +62,7 @@
 				</div>
 			</template>
 		</Drawer>
+
 		<q-page-container class="q-pa-lg">
 			<q-page :style-fn="pageSizeTweak" class="q-mt-lg">
 				<ProductDetailsNavigation />
