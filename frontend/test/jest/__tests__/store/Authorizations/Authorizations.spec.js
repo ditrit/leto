@@ -1,18 +1,18 @@
 import { describe, expect, it } from "@jest/globals";
 import API from "src/services/index";
-import store from "src/store/Authorization/index";
+import store from "src/store/Authorizations/index";
 
 describe("Store: Authorizations", () => {
 	describe("Test: actions", () => {
-		it("Test methods: fetchAllAuthorization", async () => {
+		it("Test methods: fetchAllAuthorizations", async () => {
 			jest
 				.spyOn(API, "get")
-				.mockResolvedValue({ data: "test fetchAllAuthorization" });
+				.mockResolvedValue({ data: "test fetchAllAuthorizations" });
 			const commit = jest.fn(() => {});
-			await store.actions.fetchAllAuthorization({ commit }, {});
+			await store.actions.fetchAllAuthorizations({ commit }, {});
 			expect(commit).toBeCalledWith(
-				"GET_AUTHORIZATION",
-				"test fetchAllAuthorization"
+				"GET_AUTHORIZATIONS",
+				"test fetchAllAuthorizations"
 			);
 		});
 
@@ -67,9 +67,9 @@ describe("Store: Authorizations", () => {
 	});
 
 	describe("Test: mutations", () => {
-		it("Test method: GET_AUTHORIZATION", () => {
+		it("Test method: GET_AUTHORIZATIONS", () => {
 			const state = { authorizations: null };
-			store.mutations.GET_AUTHORIZATION(state, []);
+			store.mutations.GET_AUTHORIZATIONS(state, []);
 			expect(state.authorizations).toEqual([]);
 		});
 

@@ -185,7 +185,7 @@ export default {
 		};
 
 		const allAuthorizations = async () => {
-			await store.dispatch("appAuthorization/fetchAllAuthorization");
+			await store.dispatch("appAuthorization/fetchAllAuthorizations");
 			const getAuth = store.getters["appAuthorization/allAuthorizations"];
 			rowsData.value = Object.values(
 				getAuth.map((item) => {
