@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -27,8 +27,8 @@ export default function useAuthorizationsTabsData(props) {
 
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
-		const list = computed(() => store.getters["appUsers/allUsers"]);
-		usersList.value = list.value.map((user) => {
+		const list = store.getters["appUsers/allUsers"];
+		usersList.value = list.map((user) => {
 			return {
 				ID: user.ID,
 				FirstName: user.FirstName,
@@ -45,9 +45,9 @@ export default function useAuthorizationsTabsData(props) {
 
 	const getRolesList = async () => {
 		await store.dispatch("appRoles/fetchAllRoles");
-		const roles = computed(() => store.getters["appRoles/allRoles"]);
+		const roles = store.getters["appRoles/allRoles"];
 
-		roleList.value = roles.value.map((role) => {
+		roleList.value = roles.map((role) => {
 			return {
 				ID: role.ID,
 				Name: role.Name,

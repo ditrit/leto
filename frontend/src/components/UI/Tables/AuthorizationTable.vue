@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import authorizationColumns from "./colums/authorizationColumns";
@@ -186,12 +186,9 @@ export default {
 
 		const allAuthorizations = async () => {
 			await store.dispatch("appAuthorization/fetchAllAuthorization");
-			const getAuth = computed(
-				() => store.getters["appAuthorization/allAuthorizations"]
-			);
-
+			const getAuth = store.getters["appAuthorization/allAuthorizations"];
 			rowsData.value = Object.values(
-				getAuth.value.map((item) => {
+				getAuth.map((item) => {
 					return {
 						ID: item.ID,
 						Logo: item.User.Logo,
@@ -298,11 +295,11 @@ export default {
 
 		const getDominListTable = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
-			let data = computed(() => store.getters["appDomain/allDomaines"]);
-			let choosenDomain = data.value.find(
+			let data = store.getters["appDomain/allDomaines"];
+			let choosenDomain = data.find(
 				(domain) => domain.ID === authorizationDomainIDRef.value
 			);
-			domainList.value = data.value.map((domain) => {
+			domainList.value = data.map((domain) => {
 				return {
 					ID: domain.ID,
 					Name: domain.Name,
