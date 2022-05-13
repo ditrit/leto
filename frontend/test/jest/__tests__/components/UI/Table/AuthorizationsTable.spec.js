@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest";
 import { beforeEach, describe, expect, it } from "@jest/globals";
 import { mount } from "@vue/test-utils";
-import component from "components/UI/Tables/AuthorizationTable";
+import component from "components/UI/Tables/AuthorizationsTable";
 import { createStore } from "vuex";
 import { useRouter } from "vue-router";
 
