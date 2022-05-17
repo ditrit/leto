@@ -1,4 +1,10 @@
-const esModules = ["quasar", "quasar/lang", "lodash-es"].join("|");
+const esModules = [
+	"quasar",
+	"quasar/lang",
+	"lodash-es",
+	"grapesjs",
+	"monaco",
+].join("|");
 
 module.exports = {
 	globals: {
@@ -35,7 +41,9 @@ module.exports = {
 		"^pages/(.*)$": "<rootDir>/src/pages/$1",
 		"^assets/(.*)$": "<rootDir>/src/assets/$1",
 		"^boot/(.*)$": "<rootDir>/src/boot/$1",
-		".*css$": "@quasar/quasar-app-extension-testing-unit-jest/stub.css",
+		//".*css$": "@quasar/quasar-app-extension-testing-unit-jest/stub.css",
+		"^d3": "<rootDir>/node_modules/d3/dist/d3.min.js",
+		grapesjscss: "<rootDir>/node_modules/grapesjs/dist/grapesjs.min.css",
 	},
 	transform: {
 		".*\\.vue$": "vue-jest",

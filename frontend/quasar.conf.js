@@ -159,8 +159,8 @@ module.exports = configure(function (ctx) {
 			},
 
 			manifest: {
-				name: `Quasar App`,
-				short_name: `Quasar App`,
+				name: `Leto APP`,
+				short_name: `Leto App`,
 				description: `User interface for the Leto project based on Vuejs/Quasar`,
 				display: "standalone",
 				orientation: "portrait",
