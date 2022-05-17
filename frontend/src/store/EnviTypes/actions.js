@@ -2,7 +2,7 @@ import API from "../../services/index";
 
 export const fetchAllEnviTypes = async ({ commit }) => {
 	let response = await API.get("/environmentType");
-	commit("GET_ENVITYPE", response.data);
+	commit("GET_ENVITYPES", response.data);
 };
 
 export const fetchEnviTypeyId = async ({ commit }, enviType) => {
@@ -15,7 +15,7 @@ export const addEnviType = async ({ commit }, enviType) => {
 	commit("NEW_ENVITYPE", response.data);
 };
 export const updateEnviType = async ({ commit }, enviType) => {
-	let response = await API.put(`/environmentType/${enviType.id}`, enviType);
+	let response = await API.put(`/environmentType/${enviType.ID}`, enviType);
 	commit("UPDATE_ENVITYPE", response.data);
 };
 

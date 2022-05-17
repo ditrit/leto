@@ -16,8 +16,8 @@
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-avatar="props">
-				<AvatarImg :source="props.row.avatar" />
+			<template v-slot:body-cell-Logo="props">
+				<AvatarImg :source="props.row.Logo" />
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
@@ -111,7 +111,7 @@
 					<div class="col">
 						<q-input
 							filled
-							v-model="enviTypeObj[2]"
+							v-model="enviTypeObj[4]"
 							label="Name *"
 							lazy-rules
 							:rules="[
@@ -122,7 +122,7 @@
 					<div class="col">
 						<q-input
 							filled
-							v-model="enviTypeObj[3]"
+							v-model="enviTypeObj[5]"
 							label="Short Description *"
 							lazy-rules
 							:rules="[
@@ -135,7 +135,7 @@
 							<q-input
 								filled
 								type="textarea"
-								v-model="enviTypeObj[4]"
+								v-model="enviTypeObj[6]"
 								label="Description *"
 								lazy-rules
 								:rules="[
@@ -160,7 +160,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
@@ -186,56 +186,42 @@ export default {
 		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const confirm = (item) => {
-			console.log("item: ", item);
 			$q.dialog({
 				title: "Confirm",
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					deleteRow(item);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
+			}).onOk(() => {
+				deleteRow(item);
+			});
+		};
+
+		const updateTableData = async () => {
+			try {
+				await store.dispatch("appEnviType/fetchAllEnviTypes");
+				rowsData.value = await store.getters["appEnviType/allEnviTypes"];
+			} catch (error) {
+				$q.notify({
+					type: "negative",
+					message: "Data was not loaded",
 				});
+			}
 		};
-
-		const allEnviTypes = async () => {
-			// fetch All Users
-			await store.dispatch("appEnviType/fetchAllEnviTypes");
-			const getEnviTypes = computed(
-				() => store.getters["appEnviType/allEnviTypes"]
-			);
-
-			rowsData.value = Object.values(
-				getEnviTypes.value.map((item) => {
-					return {
-						id: item.ID,
-						avatar: item.Logo,
-						name: item.Name,
-						shortDescription: item.ShortDescription,
-						description: item.Description,
-					};
-				})
-			);
-		};
-		allEnviTypes();
+		updateTableData();
 
 		const AddEnviType = () => {
 			openAddEnviTypeDialog.value = true;
 		};
 		const onSubmitAdd = async () => {
 			const enviTypeData = {
-				name: enviTypeName.value,
-				shortDescription: enviTypeShortDescription.value,
-				description: enviTypeDescription.value,
-				logo: logoUrl.value,
+				Name: enviTypeName.value,
+				ShortDescription: enviTypeShortDescription.value,
+				Description: enviTypeDescription.value,
+				Logo: logoUrl.value,
 			};
-
 			try {
 				await store.dispatch("appEnviType/addEnviType", enviTypeData);
-				await allEnviTypes();
+				await updateTableData();
 				enviTypeName.value = "";
 				enviTypeShortDescription.value = "";
 				enviTypeDescription.value = "";
@@ -253,16 +239,16 @@ export default {
 
 		const onSubmitUpdate = async () => {
 			const enviTypeData = {
-				id: enviTypeObj.value[0],
-				name: enviTypeObj.value[2],
-				shortDescription: enviTypeObj.value[3],
-				description: enviTypeObj.value[4],
-				logo: logoUrl.value,
+				ID: enviTypeObj.value[0],
+				Name: enviTypeObj.value[4],
+				ShortDescription: enviTypeObj.value[5],
+				Description: enviTypeObj.value[6],
+				Logo: logoUrl.value,
 			};
 
 			try {
 				await store.dispatch("appEnviType/updateEnviType", enviTypeData);
-				await allEnviTypes();
+				await updateTableData();
 				$q.notify({
 					type: "positive",
 					message: "Environment Type has been successfully updated",
@@ -288,7 +274,7 @@ export default {
 			try {
 				const tagID = Object.values(currentTarget)[0];
 				await store.dispatch("appEnviType/removeEnviType", tagID);
-				await allEnviTypes();
+				await updateTableData();
 				$q.notify({
 					type: "positive",
 					message: "Environment Type has been successfully deleted",

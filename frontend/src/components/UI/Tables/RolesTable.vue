@@ -16,8 +16,8 @@
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-avatar="props">
-				<AvatarImg :source="props.row.avatar" />
+			<template v-slot:body-cell-Logo="props">
+				<AvatarImg :source="props.row.Logo" />
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
@@ -41,7 +41,6 @@
 			</template>
 		</q-table>
 
-		<!-- Create Dialog -->
 		<Modal class="modalGlobal" v-model="openAddRoleDialog" persistent>
 			<template v-slot:ModalTitle> {{ $t("create_role") }} </template>
 			<template v-slot:ModalContent>
@@ -95,7 +94,6 @@
 			</template>
 		</Modal>
 
-		<!-- Modification Dialog -->
 		<Modal class="modalGlobal" v-model="opendDialog">
 			<template v-slot:ModalTitle> {{ $t("edit_role") }} </template>
 			<template v-slot:ModalContent>
@@ -106,7 +104,7 @@
 				>
 					<q-input
 						filled
-						v-model="roleObj[2]"
+						v-model="roleObj[4]"
 						label="Name *"
 						lazy-rules
 						:rules="[
@@ -115,7 +113,7 @@
 					/>
 					<q-input
 						filled
-						v-model="roleObj[3]"
+						v-model="roleObj[5]"
 						label="Short Description *"
 						lazy-rules
 						:rules="[
@@ -127,7 +125,7 @@
 							<q-input
 								filled
 								type="textarea"
-								v-model="roleObj[4]"
+								v-model="roleObj[6]"
 								label="Description *"
 								lazy-rules
 								:rules="[
@@ -152,7 +150,7 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
@@ -177,35 +175,19 @@ export default {
 		let { imagesUID, logoUrl, uploadFile } = useFileData();
 
 		const confirm = (item) => {
-			console.log("item: ", item);
 			$q.dialog({
 				title: "Confirm",
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					deleteRow(item);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+			}).onOk(() => {
+				deleteRow(item);
+			});
 		};
 
 		const allRoles = async () => {
 			await store.dispatch("appRoles/fetchAllRoles");
-			const getRoles = computed(() => store.getters["appRoles/allRoles"]);
-			rowsData.value = Object.values(
-				getRoles.value.map((item) => {
-					return {
-						id: item.ID,
-						avatar: item.Logo,
-						name: item.Name,
-						shortDescription: item.ShortDescription,
-						description: item.Description,
-					};
-				})
-			);
+			rowsData.value = store.getters["appRoles/allRoles"];
 		};
 		allRoles();
 
@@ -214,13 +196,11 @@ export default {
 		};
 		const onSubmitAdd = async () => {
 			const roleData = {
-				name: roleName.value,
-				shortDescription: roleShortDescription.value,
-				description: roleDescription.value,
-				logo: logoUrl.value,
+				Name: roleName.value,
+				ShortDescription: roleShortDescription.value,
+				Description: roleDescription.value,
+				Logo: logoUrl.value,
 			};
-			console.log("roleData", roleData);
-
 			try {
 				await store.dispatch("appRoles/addRole", roleData);
 				await allRoles();
@@ -241,14 +221,12 @@ export default {
 
 		const onSubmitUpdate = async () => {
 			const roleData = {
-				id: roleObj.value[0],
-				name: roleObj.value[2],
-				shortDescription: roleObj.value[3],
-				description: roleObj.value[4],
-				logo: logoUrl.value,
+				ID: roleObj.value[0],
+				Name: roleObj.value[4],
+				ShortDescription: roleObj.value[5],
+				Description: roleObj.value[6],
+				Logo: logoUrl.value,
 			};
-			console.log("roleObj: ", roleObj.value);
-
 			try {
 				await store.dispatch("appRoles/updateRole", roleData);
 				await allRoles();
