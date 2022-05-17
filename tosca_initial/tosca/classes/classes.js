@@ -20,7 +20,7 @@ const MixinTRoot = Base => class extends Base {
 
 class TRoot extends MixinTRoot(Object) {
     constructor(args, info) {
-        super()
+        
         super.initRoot(args, info)
     }
  

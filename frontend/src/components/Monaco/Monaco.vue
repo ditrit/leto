@@ -1,42 +1,91 @@
 <template>
-	<div class="monaco" ref="monacoContainer"></div>
+	<div>
+		<div class="monaco" ref="monacoContainer"></div>
+		<button :onClick="consoleClick" class="Button">
+			<slot>Button</slot>
+		</button>
+	</div>	
 </template>
 
 <script>
-
 import * as monaco from "monaco-editor";
+import {hclTokensProvider} from './hclTokensProvider.js';
+import Button from '../UI/Buttons/BtnAddNew.vue'
+
 export default {
 	data() {
 		return {
-			monacoEditor: {},
+			monacoEditor: {},			
+    		'button': Button
 		};
 	},
 
-	mounted() {
+	mounted() {		
+		this.worker = new Worker("dist/bundle.js");
+		this.worker.onmessage = function (event) {
+			console.log("message post in the worker");
+			console.log(event);
+		}
 		// Initialize the editor, make sure the dom has been rendered, and the dialog should be written in opened
-		this.monacoEditor = monaco.editor.create(this.$refs.monacoContainer, {
-			value: "json:- rigid - better for data interchange",
-			readOnly: false,
-			language: "yaml",
-			theme: "vs-dark",
+		monaco.languages.register({ id: 'hcl' });
+		monaco.languages.setTokensProvider('hcl', hclTokensProvider.prototype);
+		let string = 'BF2937';
+		let identifier = '131DB4';
+		let symbolsFg = '000000';
+		let object = '4FA786';
+		let errorFg = 'ff0000';
+		let comment = '07812C';
+		let boolean = '105FEE';
+		this.valueEditor = "";
+
+		monaco.editor.defineTheme('terraformTheme', {
+			base: 'vs',
+			inherit: false,
+			rules: [
+				{ token: 'output.hcl',   foreground: object },
+				{ token: 'variable.hcl',   foreground: object },
+				{ token: 'module.hcl',   foreground: object },
+				{ token: 'terraform.hcl',   foreground: object },
+				{ token: 'provider.hcl',   foreground: object },
+				{ token: 'resource.hcl',   foreground: object },
+				{ token: 'string.hcl',   foreground: string },
+				{ token: 'type.hcl',           foreground: symbolsFg },
+				{ token: 'boolean.hcl',       foreground: boolean,  fontStyle: 'bold' },
+				{ token: 'booleanop.hcl',       foreground: symbolsFg },
+				{ token: 'index.hcl',        foreground: symbolsFg },
+				{ token: 'identifier.hcl',          foreground: identifier },
+				{ token: 'number.hcl',          foreground: symbolsFg },
+				{ token: 'comment.hcl',     foreground: comment,  fontStyle: 'bold' },
+				{ token: 'line_comment.hcl',    foreground: comment,  fontStyle: 'bold' },
+				{ token: 'has_comment.hcl',    foreground: comment,  fontStyle: 'bold' },
+				{ token: 'error.hcl', foreground: errorFg }
+			],
+			colors :{
+				'editor.foreground': '#000000'
+			}
+		}); 
+		let editor = monaco.editor.create(this.$refs.monacoContainer, {         
+			language: 'hcl',
+			theme: 'terraformTheme'		
+		});
+		this.monacoEditor= editor
+		this.monacoEditor.getModel().onDidChangeContent((event) => {
+			this.onChange(editor.getValue())
 		});
 	},
 	methods: {
-		changeEditor() {
-			// change editor content
-			this.monacoEditor.setValue(result.data);
-			this.monacoEditor.getAction("editor.action.formatDocument")._run();
+		consoleClick() {
+			this.worker.postMessage(this.valueEditor);
 		},
-		destroyEditor() {
-			// Destroy the editor
-			this.monacoEditor.dispose();
-		},
+		onChange(value) {
+			this.valueEditor = value
+		}
 	},
 };
 </script>
 <style lang="sass" scoped>
 .monaco
-  width: 1400px
+  width: 1200px
   height: 1000px !important
   overflow-y: hidden
 
