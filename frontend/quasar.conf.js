@@ -60,6 +60,7 @@ module.exports = configure(function (ctx) {
 			// analyze: true,
 
 			// Options below are automatically set depending on the env, set them if you want to override
+			env: { BASEURL: "http://127.0.0.1:9203/ditrit/Gandalf/1.0.0" },
 			// extractCSS: false,
 
 			// https://v2.quasar.dev/quasar-cli/handling-webpack
