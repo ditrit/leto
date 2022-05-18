@@ -1,8 +1,5 @@
 <template>
-	<div  id="myDataViz">
-
-
-	</div>
+	<div  id="myDataViz"></div>
 </template>
 
 <script>
@@ -10,7 +7,7 @@ import { defineComponent, computed, onMounted, ref, onBeforeMount } from "vue";
 const d3 = require("d3");
 import axios from "axios";
 import { date } from "quasar";
-import drawLink from "./utils";
+import {drawLink,getContent} from "./utils";
 import SVGinstanciate from "./svgvar"
 import Parse from "parse";
 import { useStore } from "vuex";
@@ -136,50 +133,12 @@ export default {
 			data: [],
 		});
 
-
-		function getContent(model,object){
-				model.childNodes.forEach(element=>{
-					if (element.tagName == "g"){
-					if (element.className.baseVal=="model"){
-						var panelObj;
-
-      			for (const prop in panel.value) {
-        			if (
-          			panel.value[prop].type_name ==
-          			element.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, '')
-        				)
-							{
-          			panelObj = panel.value[prop];
-        			}
-      			}
-				var contentObj={
-					type_name: element.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, ''),
-        			instance_name: element.getElementsByClassName("instance_name")[0].textContent.replace(/\s+/g, ''),
-        			class: element.getAttribute("class"),
-        			id: parseInt(element.getAttribute("id")),
-					width: element.getElementsByClassName("main")[0].getBoundingClientRect().width,
-        			logo: d3.select(element).select(".logo").attr("xlink:href"),
-        			primary_color: element.getElementsByClassName("top")[0].style.fill,
-        			secondary_color: element.getElementsByClassName("top_path")[0].style.fill,
-        			level: object.level+1,
-        			container_height: element.getElementsByClassName("subs_limits")[0].getAttribute("height"),
-        			content: [],
-        			requirements: panelObj.requirements,
-        			capabilities: panelObj.capabilities,
-						}
-						object.content.push(contentObj);
-						getContent(element,contentObj)
-					}}
-				})
-			}
-
 		function replaceComponents(group) {
       var i = 0;
       var height =
       	parseFloat(group.getElementsByClassName("top")[0].getAttribute("height") *1.1)
         +
         parseFloat(group.getElementsByClassName("middle")[0].getAttribute("height"))
-
 
 
         for (const prop in group.childNodes) {
@@ -203,30 +162,22 @@ export default {
                         (parseFloat(group.getElementsByClassName("main")[0].getAttribute("width"))+parseFloat(group.getElementsByClassName("main")[0].getAttribute("x")) -
                           parseFloat(group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("width"))-parseFloat(group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("x"))) /
                           2
-                          ,
-                        height+parseFloat(group.childNodes[prop]
-                    .getElementsByClassName("top")[0]
-                    .getAttribute("height"))
-										+
-										parseFloat(group
-                    .getElementsByClassName("main")[0]
-                    .getAttribute("y"))
-										-
-										parseFloat(group.childNodes[prop]
-                    .getElementsByClassName("top")[0]
-                    .getAttribute("y")) ,
-                      ] +
-                      ")"
+                          , height+parseFloat(group.childNodes[prop].getElementsByClassName("top")[0].getAttribute("height"))
+														+
+														parseFloat(group.getElementsByClassName("main")[0].getAttribute("y"))
+														-
+														parseFloat(group.childNodes[prop].getElementsByClassName("top")[0].getAttribute("y")) ,
+                      ] +")"
                   );
 
                 height +=
                   parseFloat(group.childNodes[prop]
                     .getElementsByClassName("top")[0]
                     .getAttribute("height"))
-										+
-                    parseFloat(group.childNodes[prop]
-                      .getElementsByClassName("main")[0]
-                      .getAttribute("height"))
+									+
+                  parseFloat(group.childNodes[prop]
+                    .getElementsByClassName("main")[0]
+                    .getAttribute("height"))
 
               }
             }
@@ -291,11 +242,8 @@ export default {
 						object.requirements.forEach(element => {
 							d3.select(model).select("#rels").select("#arrows")
 								.append("path")
-								.attr("class","input")
 								.attr("d","m"+[x-4]+" "+[height+7*i]+" 4 3.22-4 3.4h10l2.5-2.12c1.45-1.08.735-1.8-.0234-2.52l-2.47-2z")
-								.attr("style","fill-rule:evenodd;fill:#12ed00;paint-order:stroke fill markers;stroke-linecap:round;stroke-linejoin:round;stroke-width:.259;stroke:#000")
-								.attr("cursor", "pointer")
-								.on("click",clickArrow);
+								.attr("style","fill-rule:evenodd;fill:#12ed00;paint-order:stroke fill markers;stroke-linecap:round;stroke-linejoin:round;stroke-width:.259;stroke:#000");
 							txt=d3.select(model).select("#rels").select("#arrows")
 								.append("text").attr("style","text-align:right;font-family:Alef;font-size:5px;")
 								.attr("xml:space","preserve");
@@ -304,17 +252,16 @@ export default {
       					 .attr("y", height+3 + i * 7)
       					 .attr("style", "stroke-width:.265")
       					 .text(object.requirements[i].name);
+							d3.select(model).append("rect").attr("x",x-4).attr("y",height+7*i).attr("width",12).attr("height",6.75).attr("fill","#12ed00").attr("style","opacity:0.0").attr("class","input").attr("cursor", "pointer").on("click",clickArrow);
+
 							i++
 						});
 
 						object.capabilities.forEach(element => {
 							d3.select(model).select("#rels").select("#arrows")
 								.append("path")
-								.attr("class","output")
 								.attr("d","m"+[parseFloat(x)-4+parseFloat(width)-5]+" "+[height+7*j]+" 4 3.22-4 3.4h10l2.5-2.12c1.45-1.08.735-1.8-.0233-2.52l-2.47-2z")
-								.attr("style","fill-rule:evenodd;fill:#12ed00;paint-order:stroke fill markers;stroke-linecap:round;stroke-linejoin:round;stroke-width:.259;stroke:#000")
-								.attr("cursor", "pointer")
-								.on("click",clickArrow);
+								.attr("style","fill-rule:evenodd;fill:#12ed00;paint-order:stroke fill markers;stroke-linecap:round;stroke-linejoin:round;stroke-width:.259;stroke:#000");
 							txt=d3.select(model).select("#rels").select("#arrows")
 								.append("text").attr("style","text-align:right;font-family:Alef;font-size:5px;")
 								.attr("xml:space","preserve");
@@ -323,6 +270,9 @@ export default {
       					 .attr("y", height+3 + j * 7)
       					 .attr("style", "stroke-width:.265")
       					 .text(object.capabilities[j].name);
+
+							d3.select(model).append("rect").attr("x",parseFloat(x)-4+parseFloat(width)-5).attr("y",height+7*j).attr("width",12).attr("height",6.75).attr("fill","#12ed00").attr("style","opacity:0.0").attr("class","output").attr("cursor", "pointer").on("click",clickArrow);
+
 							j++
 						});
 
@@ -420,6 +370,22 @@ export default {
                 el2.content.splice(el2.content.indexOf(el3), 1);
                 break;
               }
+							for (let el4 of el3.content) {
+              	if (el4.id === currentID) {
+                	currentLevel = 4;
+
+                	el3.content.splice(el3.content.indexOf(el4), 1);
+                	break;
+              	}
+								for (let el4 of el5.content) {
+              		if (el5.id === currentID) {
+                		currentLevel = 5;
+
+                		el4.content.splice(el4.content.indexOf(el5), 1);
+                		break;
+              		}
+            		}
+            	}
             }
           }
         }
@@ -454,7 +420,7 @@ export default {
         			requirements: panelObj.requirements,
         			capabilities: panelObj.capabilities,
 				}
-				getContent(currentModel,currentObj)
+				getContent(currentModel,currentObj,panel.value)
 
 				parent.removeChild(currentModel);
 				document.getElementById("svg0").appendChild(currentModel);
@@ -495,7 +461,7 @@ export default {
         				requirements: panelObj.requirements,
         				capabilities: panelObj.capabilities,
 					}
-					getContent(group,obj)
+					getContent(group,obj,panel.value)
 					obj.content.forEach(element => {
 						if (element.id==currentObj.id){
 							obj.content.splice(obj.content.indexOf(element))
@@ -558,7 +524,12 @@ export default {
               ")"
           );
       }
-      var groups = d3.selectAll(".model");
+
+			d3.selectAll(".link").remove();
+			links.value.forEach(element=>{
+				drawLink(element.target,element.source,"svg0",zoom,translateX,translateY,links.value);
+			})
+      /*var groups = d3.selectAll(".model");
       groups.each(function (groups, i) {
         if (this.getAttribute("id") != "svg0") {
           var groupRect =
@@ -574,7 +545,7 @@ export default {
           } else {
           }
         }
-      });
+      });*/
     }
     function dragended(event, d) {
       var currentGroup = this.parentNode;
@@ -666,7 +637,7 @@ export default {
             }
           }
         }
-			getContent(currentGroup,currentObj);
+			getContent(currentGroup,currentObj,panel.value);
 
 
 
@@ -709,7 +680,7 @@ function redrawStack(group,addedComponent){
         	requirements: panelObj.requirements,
         	capabilities: panelObj.capabilities,
 		}
-		getContent(group,obj)
+		getContent(group,obj,panel.value)
 		let parentId = group.parentNode.id;
 		var transform = group.getAttribute("transform")
 
@@ -760,7 +731,7 @@ redrawStack(minGroup,cloneComponent);
 			}
         console.log("on svg");
 				currentObj.width=230;
-				getContent(currentGroup,currentObj);
+				getContent(currentGroup,currentObj,panel.value);
 				component.parentNode.removeChild(component);
 				var cloneComponent = drawSvg(svgData,currentObj,document.getElementById("svg0"));
 
@@ -778,7 +749,9 @@ redrawStack(minGroup,cloneComponent);
 
         modelArea.value.data.push(currentObj);
       }
+			d3.selectAll(".link").raise();
       console.log(modelArea.value.data);
+
     }
 			//End of drag and drop functions -------------------------------------------
 			//Click event
@@ -801,7 +774,7 @@ redrawStack(minGroup,cloneComponent);
         			for (let el1 of el0.content) {
           				if (el1.id === currentID) {
             				currentLevel = 1;
-							break;
+									break;
           				}
           				for (let el2 of el1.content) {
             				if (el2.id === currentID) {
@@ -813,6 +786,18 @@ redrawStack(minGroup,cloneComponent);
                 					currentLevel = 3;
                 					break;
               					}
+												for (let el4 of el3.content) {
+              						if (el4.id === currentID) {
+                						currentLevel = 4;
+                						break;
+              						}
+													for (let el5 of el4.content) {
+              							if (el5.id === currentID) {
+                						currentLevel = 5;
+                						break;
+              							}
+            							}
+            						}
             				}
           				}
         			}
@@ -834,13 +819,13 @@ redrawStack(minGroup,cloneComponent);
 					type_name: currentModel.getElementsByClassName("type_name")[0].textContent,
         			instance_name: currentModel.getElementsByClassName("instance_name")[0].textContent,
         			id: parseInt(currentModel.getAttribute("id")),
-					//width: currentModel.getElementsByClassName("main")[0].getAttribute("width"),
+							//width: currentModel.getElementsByClassName("main")[0].getAttribute("width"),
         			//logo: d3.select(currentModel).select(".logo").attr("xlink:href"),
         			//primary_color: currentModel.getElementsByClassName("top")[0].style.fill,
         			//secondary_color: currentModel.getElementsByClassName("top_path")[0].style.fill,
         			level: currentLevel,
         			//container_height:
-					//parseFloat((currentModel).getElementsByClassName("subs_limits")[0].getAttribute("height")),
+							//parseFloat((currentModel).getElementsByClassName("subs_limits")[0].getAttribute("height")),
         			//content: [],
         			requirements: panelObj.requirements,
         			capabilities: panelObj.capabilities,
@@ -897,7 +882,7 @@ redrawStack(minGroup,cloneComponent);
 					if((lastArrow.className.baseVal=="input"&&this.className.baseVal=="output")
 						||(lastArrow.className.baseVal=="output"&&this.className.baseVal=="input"))
 						{
-							let linkID=drawLink(lastArrow,this,"svg0",zoom);
+							let linkID=drawLink(lastArrow,this,"svg0",zoom,translateX,translateY,links.value);
 
 							let source,target;
 							if(lastArrow.className=="input"){
@@ -959,12 +944,6 @@ redrawStack(minGroup,cloneComponent);
 				defaulty = drawnModel.getBoundingClientRect().y;
 
 
-				d3.select(drawnModel)
-
-					//.call(drag)
-					;
-
-
 				modelArea.value.data.push(currentObj);
 				console.log(modelArea.value.data);
 			}
@@ -1007,39 +986,9 @@ redrawStack(minGroup,cloneComponent);
 
 				var drawnModel = drawSvg(svgData, panelObj,document.getElementById("svg1"));
 
-				d3.select(drawnModel).on("click", click_model);
-
-				d3.select(drawnModel).attr("transform","translate("+[140-drawnModel.getBoundingClientRect().x,100*i-drawnModel.getBoundingClientRect().y]+")");
-
-
-				/*var group =
-				d3.select("#svg1")
-					.append("g")
-					.attr("class", "container0")
-					.on("click", click_model);
-				var box = group
-					.append("rect")
-					.attr("x",20)
-					.attr("y",110*i+20)
-					.attr("width", 100)
-					.attr("height", 100)
-					.style("stroke", "black")
-					.attr("fill", element.primary_color);
-				var title = group
-					.append("text")
-					.attr("x",40)
-					.attr("y",110*i+25)
-					.attr("dominant-baseline", "hanging")
-					.text(element.type_name);
-				group
-					.append("svg:image")
-					.attr("class", "logo")
-					.attr("x",30)
-					.attr("y",110*i+ 60)
-					.attr("width", 50)
-					.attr("height", 50)
-					.attr("xlink:href", element.logo)
-					;*/
+				d3.select(drawnModel)
+				.attr("transform","translate("+[140-drawnModel.getBoundingClientRect().x,100*i-drawnModel.getBoundingClientRect().y]+")")
+				.on("click", click_model);
 
 			});
 
@@ -1055,10 +1004,5 @@ redrawStack(minGroup,cloneComponent);
 			links,
 			getSVGS,
 			replaceComponents,
-			getContent
-		};
-	},
-};
-</script>
-
-<style></style>
+		}}}
+	</script>

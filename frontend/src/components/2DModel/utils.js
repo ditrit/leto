@@ -1,20 +1,61 @@
 const d3 = require("d3");
 
 
-export default function drawLink(lastArrow,thisArrow,rootID,zoom){
+export function getContent(model,object,panel){
+	model.childNodes.forEach(element=>{
+		if (element.tagName == "g"){
+		if (element.className.baseVal=="model"){
+			var panelObj;
+
+			for (const prop in panel) {
+				if (
+					panel[prop].type_name ==
+					element.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, '')
+					)
+				{
+					panelObj = panel[prop];
+				}
+			}
+	var contentObj={
+		type_name: element.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, ''),
+				instance_name: element.getElementsByClassName("instance_name")[0].textContent.replace(/\s+/g, ''),
+				class: element.getAttribute("class"),
+				id: parseInt(element.getAttribute("id")),
+		width: element.getElementsByClassName("main")[0].getBoundingClientRect().width,
+				logo: d3.select(element).select(".logo").attr("xlink:href"),
+				primary_color: element.getElementsByClassName("top")[0].style.fill,
+				secondary_color: element.getElementsByClassName("top_path")[0].style.fill,
+				level: object.level+1,
+				container_height: element.getElementsByClassName("subs_limits")[0].getAttribute("height"),
+				content: [],
+				requirements: panelObj.requirements,
+				capabilities: panelObj.capabilities,
+			}
+			object.content.push(contentObj);
+			getContent(element,contentObj,panel)
+		}}
+	})
+}
+
+
+
+export function drawLink(lastArrow,thisArrow,rootID,zoom,translateX,translateY,links){
 	let id = Date.now();
 	d3.select("#"+rootID).append("line")
 							.attr("id",id)
-							.attr("x1",(lastArrow.getBoundingClientRect().x-document.getElementById(rootID).getBoundingClientRect().x)/zoom)
-							.attr("y1",(lastArrow.getBoundingClientRect().y-document.getElementById(rootID).getBoundingClientRect().y)/zoom)
-							.attr("x2",(thisArrow.getBoundingClientRect().x-document.getElementById(rootID).getBoundingClientRect().x)/zoom)
-							.attr("y2",(thisArrow.getBoundingClientRect().y-document.getElementById(rootID).getBoundingClientRect().y)/zoom)
+							.attr("class","link")
+							.attr("x1",((parseFloat(lastArrow.getBoundingClientRect().x))-parseFloat(document.getElementById(rootID).getBoundingClientRect().x))/zoom)
+							.attr("y1",((parseFloat(lastArrow.getBoundingClientRect().y))-parseFloat(document.getElementById(rootID).getBoundingClientRect().y))/zoom)
+							.attr("x2",((parseFloat(thisArrow.getBoundingClientRect().x))-parseFloat(document.getElementById(rootID).getBoundingClientRect().x))/zoom)
+							.attr("y2",((parseFloat(thisArrow.getBoundingClientRect().y))-parseFloat(document.getElementById(rootID).getBoundingClientRect().y))/zoom)
 							.attr("cursor", "pointer")
 							.style("stroke", "black")
 							.style("stroke-width",3)
 							.on("click",function(d)
 								{
-									thisArrow.remove();
+									this.remove();
+									links.splice(links.indexOf(this));
 								});
 	return id;
+
 }
