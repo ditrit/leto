@@ -1,17 +1,13 @@
 import API from "../../services/index";
 
-export const register = ({ commit }, credentials) => {
-	API.post("/user/register", credentials)
-		.then(({ data }) => {
-			commit("SET_USER_DATA", data);
-		})
-		.catch((err) => console.log(err));
+export const register = async ({ commit }, credentials) => {
+	const response = await API.post("/user/register", credentials);
+	commit("SET_USER_DATA", response.data);
 };
 
 export const login = async ({ commit }, credentials) => {
-	return API.post("/user/login", credentials).then(({ data }) => {
-		commit("SET_USER_DATA", data);
-	});
+	const response = await API.post("/user/login", credentials);
+	commit("SET_USER_DATA", response.data);
 };
 
 export const currentUser = ({ commit }, user) => {
