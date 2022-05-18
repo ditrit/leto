@@ -4,43 +4,27 @@ const API = axios.create({
 	baseURL: process.env.BASEURL,
 });
 
-localStorage.getItem("user") &&
+if (localStorage.getItem("user")) {
+	const { accessToken } = JSON.parse(localStorage.getItem("user"));
 	API.interceptors.request.use(
-		(config) => {
-			const { accessToken } = localStorage.getItem("user")
-				? JSON.parse(localStorage.getItem("user"))
-				: null;
-			if (!config.headers.Authorization) {
-				axios.defaults.headers.common[
-					"Authorization"
-				] = `Bearer ${accessToken}`;
-				config.headers.Authorization = `Bearer ${accessToken}`;
-			}
+		async (config) => {
+			config.headers.Authorization = await `Bearer ${accessToken}`;
 			return config;
 		},
-		function (error) {
+		(error) => {
 			return Promise.reject(error);
 		}
 	);
 
-localStorage.getItem("user") &&
 	API.interceptors.response.use(
-		(config) => {
-			const { accessToken } = localStorage.getItem("user")
-				? JSON.parse(localStorage.getItem("user"))
-				: null;
-
-			if (!config.headers.Authorization) {
-				axios.defaults.headers.common[
-					"Authorization"
-				] = `Bearer ${accessToken}`;
-				config.headers.Authorization = `Bearer ${accessToken}`;
-			}
+		async (config) => {
+			config.headers.Authorization = await `Bearer ${accessToken}`;
 			return config;
 		},
-		function (error) {
+		(error) => {
 			return Promise.reject(error);
 		}
 	);
+}
 
 export default API;
