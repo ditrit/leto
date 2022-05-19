@@ -38,7 +38,7 @@
 					transition-prev="jump-up"
 					transition-next="jump-up"
 				>
-					<q-tab-panel :name="tagDatalabel" v-if="tagData">
+					<q-tab-panel :name="tagDataLabel" v-if="tagData">
 						<div class="btn_actions">
 							<q-btn color="grey-7" round flat icon="more_vert">
 								<q-menu cover auto-close>
@@ -55,7 +55,7 @@
 												Edit</q-item-section
 											>
 										</q-item>
-										<q-item clickable @click.prevent="confirm(tagData)">
+										<q-item clickable @click.prevent="confirm(tagData.ID)">
 											<q-item-section class="btn_actions__item">
 												<q-icon name="delete" size="1.5em" class="q-mr-sm" />
 												Delete</q-item-section
@@ -69,12 +69,10 @@
 						<div class="text-h4 q-mb-md" v-if="tagData">
 							<p v-if="tagData.label">{{ tagData.label }}</p>
 						</div>
-						<span class="text-subtitle2 text-grey-8">Short description:</span>
-						<p>{{ tagData.shortDescription }}</p>
+						<span class="text-subtitle2 text-grey-8">Short Description:</span>
+						<p>{{ tagData.ShortDescription }}</p>
 						<span class="text-subtitle2 text-grey-8">Description:</span>
-						<p>{{ tagData.description }}</p>
-
-						<!-- Create Dialog -->
+						<p>{{ tagData.Description }}</p>
 						<Modal class="modalGlobal" v-model="openAddTagDialog">
 							<template v-slot:ModalTitle>
 								{{ $t("create_tag") }}
@@ -145,7 +143,6 @@
 								</q-form>
 							</template>
 						</Modal>
-						<!-- Modification Dialog -->
 						<Modal class="modalGlobal" v-model="openEditDialog">
 							<template v-slot:ModalTitle>
 								{{ $t("edit_tag") }}
@@ -180,8 +177,8 @@
 									</div>
 									<q-input
 										filled
-										v-model="tagData.shortDescription"
-										label="Short description *"
+										v-model="tagData.ShortDescription"
+										label="Short Description *"
 										lazy-rules
 										:rules="[
 											(val) =>
@@ -191,7 +188,7 @@
 									<q-input
 										filled
 										type="textarea"
-										v-model="tagData.description"
+										v-model="tagData.Description"
 										label="Description *"
 										lazy-rules
 										:rules="[
@@ -221,7 +218,7 @@
 	</div>
 </template>
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
@@ -232,7 +229,7 @@ export default {
 		const store = useStore();
 		const $q = useQuasar();
 		const tagData = ref(null);
-		const tagDatalabel = ref(null);
+		const tagDataLabel = ref(null);
 		const parentTag = ref(null);
 		const tagsTree = ref([]);
 		const tagName = ref("");
@@ -248,9 +245,7 @@ export default {
 		const openEditDialog = ref(false);
 
 		const EditTag = (tag) => {
-			console.log("Edit tag");
 			openEditDialog.value = true;
-			console.log("tag: ", tag);
 			selectedParentData.value = tag;
 		};
 
@@ -260,83 +255,73 @@ export default {
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					DeleteTag(props);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+			}).onOk(() => {
+				DeleteTag(props);
+			});
 		};
 
 		const DeleteTag = async (item) => {
-			await store.dispatch("appTags/removeTag", item.id);
+			await store.dispatch("appTags/removeTag", item);
 			getTagsTreeData();
-			tagDatalabel.value = "";
+			tagDataLabel.value = "";
 		};
 		const showTagData = async (tag) => {
 			tagData.value = tag;
-			tagDatalabel.value = tag.label;
-			console.log("showtagData: ", tag);
+			tagDataLabel.value = tag?.label;
 		};
 
-		// Get Data
 		const getTagsTreeData = async () => {
 			await store.dispatch("appTags/fetchAllTagsTree");
-			const tagsArray = computed(() => store.getters["appTags/allTagsTree"]);
-			let tagsArr = Object.values(tagsArray.value);
-			console.log("tagsArr: ", tagsArr);
-			console.log("tagsArray: ", tagsArray.value);
-
-			return (tagsTree.value = [
+			const tagsArray = store.getters["appTags/allTagsTree"];
+			tagsTree.value = [
 				{
-					id: tagsArray?.value?.ID,
-					parentID: tagsArray?.value?.ParentID,
-					label: tagsArray?.value?.Name,
-					avatar: tagsArray?.value?.Logo,
-					shortDescription: tagsArray?.value?.ShortDescription,
-					description: tagsArray?.value?.Description,
-					handler: (tagsArray) => showTagData(tagsArray),
+					ID: tagsArray?.ID,
+					ParentID: tagsArray?.ParentID,
+					label: tagsArray?.Name,
+					Logo: tagsArray?.Logo,
+					ShortDescription: tagsArray?.ShortDescription,
+					Description: tagsArray?.Description,
+					handler: (node) => showTagData(node),
 					icon: "sell",
-					children: tagsArray?.value?.Childs?.map((item) => {
+					children: tagsArray?.Childs?.map((item) => {
 						return {
-							id: item?.ID,
-							parentID: item?.ParentID,
+							ID: item?.ID,
+							ParentID: item?.ParentID,
 							label: item?.Name,
-							avatar: item?.Logo,
-							shortDescription: item?.ShortDescription,
-							description: item?.Description,
-							handler: (item) => showTagData(item),
+							Logo: item?.Logo,
+							ShortDescription: item?.ShortDescription,
+							Description: item?.Description,
+							handler: (node) => showTagData(node),
 							icon: "sell",
 							children: item?.Childs?.map((subItem) => {
 								return {
-									id: subItem?.ID,
-									parentID: subItem?.ParentID,
+									ID: subItem?.ID,
+									ParentID: subItem?.ParentID,
 									label: subItem?.Name,
-									avatar: subItem?.Logo,
-									shortDescription: subItem?.ShortDescription,
-									description: subItem?.Description,
-									handler: (subItem) => showTagData(subItem),
+									Logo: subItem?.Logo,
+									ShortDescription: subItem?.ShortDescription,
+									Description: subItem?.Description,
+									handler: (node) => showTagData(node),
 									icon: "sell",
 									children: subItem?.Childs?.map((subLastItem) => {
 										return {
-											id: subLastItem?.ID,
-											parentID: subLastItem?.ParentID,
+											ID: subLastItem?.ID,
+											ParentID: subLastItem?.ParentID,
 											label: subLastItem?.Name,
-											avatar: subLastItem?.Logo,
-											shortDescription: subLastItem?.ShortDescription,
-											description: subLastItem?.Description,
-											handler: (subLastItem) => showTagData(subLastItem),
+											Logo: subLastItem?.Logo,
+											ShortDescription: subLastItem?.ShortDescription,
+											Description: subLastItem?.Description,
+											handler: (node) => showTagData(node),
 											icon: "sell",
 											children: subLastItem?.Childs?.map((subMoreItem) => {
 												return {
-													id: subMoreItem?.ID,
-													parentID: subMoreItem?.ParentID,
+													ID: subMoreItem?.ID,
+													ParentID: subMoreItem?.ParentID,
 													label: subMoreItem?.Name,
-													avatar: subMoreItem?.Logo,
-													shortDescription: subMoreItem?.ShortDescription,
-													description: subMoreItem?.Description,
-													handler: (subMoreItem) => showTagData(subMoreItem),
+													Logo: subMoreItem?.Logo,
+													ShortDescription: subMoreItem?.ShortDescription,
+													Description: subMoreItem?.Description,
+													handler: (node) => showTagData(node),
 													icon: "sell",
 												};
 											}),
@@ -347,7 +332,7 @@ export default {
 						};
 					}),
 				},
-			]);
+			];
 		};
 		getTagsTreeData();
 
@@ -355,14 +340,14 @@ export default {
 			selectedParentData.value = await tag;
 			openAddTagDialog.value = true;
 			await store.dispatch("appTags/fetchAllTags");
-			const tagsList = computed(() => store.getters["appTags/allTags"]);
-			let data = tagsList.value.map((item) => {
+			const tagsList = store.getters["appTags/allTags"];
+			let data = tagsList.map((item) => {
 				return {
-					id: item.ID,
+					ID: item.ID,
 					label: item.Name,
 					value: item.Name,
-					parentId: item.ParentID,
-					logo: item.Logo,
+					ParentId: item.ParentID,
+					Logo: item.Logo,
 				};
 			});
 			optionsSelections.value = [...new Set(data)].filter(
@@ -371,23 +356,22 @@ export default {
 		};
 		const onSubmitAdd = async () => {
 			const tagToAdd = {
-				pid: selectedParentData.value.id,
-				name: tagName.value,
+				pid: selectedParentData.value.ID,
+				Name: tagName.value,
 				label: tagName.value,
-				shortDescription: tagShortDescription.value,
-				description: tagDescription.value,
+				ShortDescription: tagShortDescription.value,
+				Description: tagDescription.value,
 			};
-			console.log("tagToAdd", tagToAdd);
 
 			try {
 				await store.dispatch("appTags/addTag", tagToAdd);
-				(tagName.value = ""),
-					(tagShortDescription.value = ""),
-					(tagDescription.value = ""),
-					$q.notify({
-						type: "positive",
-						message: "Tag has been successfully created",
-					});
+				tagName.value = "";
+				tagShortDescription.value = "";
+				tagDescription.value = "";
+				$q.notify({
+					type: "positive",
+					message: "Tag has been successfully created",
+				});
 				getTagsTreeData();
 				showTagData();
 			} catch (error) {
@@ -399,23 +383,23 @@ export default {
 		};
 		const onSubmitUpdate = async () => {
 			const updateTag = {
-				id: tagData.value.id,
-				name: tagData.value.label,
-				shortDescription: tagData.value.shortDescription,
-				description: tagData.value.description,
-				parentID: tagData.value.parentID,
+				ID: tagData.value.ID,
+				Name: tagData.value.label,
+				label: tagData?.value.label,
+				ShortDescription: tagData.value.ShortDescription,
+				Description: tagData.value.Description,
+				ParentID: tagData.value.ParentID,
 			};
-			console.log("updateTag", updateTag);
 
 			try {
 				await store.dispatch("appTags/updateTag", updateTag);
-				(tagData.value.label = ""),
-					(tagData.value.shortDescription = ""),
-					(tagData.value.description = ""),
-					$q.notify({
-						type: "positive",
-						message: "Tag has been successfully created",
-					});
+				tagData.value.label = "";
+				tagData.value.ShortDescription = "";
+				tagData.value.Description = "";
+				$q.notify({
+					type: "positive",
+					message: "Tag has been successfully created",
+				});
 				getTagsTreeData();
 				showTagData();
 			} catch (error) {
@@ -435,7 +419,7 @@ export default {
 			DeleteTag,
 			tagsTree,
 			tagData,
-			tagDatalabel,
+			tagDataLabel,
 			openAddTagDialog,
 			openEditDialog,
 			tagName,
