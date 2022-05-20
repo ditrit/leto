@@ -1,26 +1,40 @@
 <template>
-	<div  id="myDataViz"></div>
+	<div id="myDataViz">
+
+	</div>
 </template>
 
 <script>
 import { defineComponent, computed, onMounted, ref, onBeforeMount } from "vue";
 const d3 = require("d3");
-import axios from "axios";
-import { date } from "quasar";
+//import axios from "axios";
+//import { date } from "quasar";
 import {drawLink,getContent} from "./utils";
 import SVGinstanciate from "./svgvar"
-import Parse from "parse";
+import ToscaTypeNode from "./ToscaTypeNode"
+//import Parse from "parse";
 import { useStore } from "vuex";
 import SettingsNav from '../UI/Navigation/SettingsNav.vue';
 import { clone } from 'mathjs';
 export default {
+	/*data(){
+		return{
+			tosca: false,
+			terraform: false
+		}
+	},*/
 	setup() {
+		const tosca=ref(false);
+		const terraform=ref(false);
+
 		const store = useStore();
 		const loading = ref(true);
 		const svgs = ref({});
 		const links = ref([]);
 		const panel = ref({
+
 			server: {
+				svg:"server",
 				//name: "Apache",
 				width: 120,
 				rels_height: 30,
@@ -66,6 +80,7 @@ export default {
 				],
 			},
 			database: {
+				svg:"database",
 				//name: "Apache",
 				width: 120,
 				rels_height: 30,
@@ -126,6 +141,7 @@ export default {
 					},
 				],
 			},
+
 		});
 		const modelArea = ref({
 			levels: [2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5],
@@ -136,23 +152,27 @@ export default {
 		function replaceComponents(group) {
       var i = 0;
       var height =
-      	parseFloat(group.getElementsByClassName("top")[0].getAttribute("height") *1.1)
+      	parseFloat(group.getElementsByClassName("top")[0].getAttribute("height") *2)
         +
         parseFloat(group.getElementsByClassName("middle")[0].getAttribute("height"))
 
 
         for (const prop in group.childNodes) {
-          if (group.childNodes[prop].tagName == "g") {
+          if (group.childNodes[prop].tagName == "svg") {
             if (
               group.childNodes[prop].className.baseVal == "model" &&
               group.childNodes[prop].getAttribute("id") != "svg0"
               )
 							{
                 i++;
-                var currentScale =
-                  group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("width")/group.getElementsByClassName("main")[0].getAttribute("width");
 
-                d3.select(group.childNodes[prop])
+								d3.select(group.childNodes[prop])
+								.attr("x",(parseFloat(group.getElementsByClassName("main")[0].getAttribute("width"))-parseFloat(group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("width"))) /2)
+								.attr("y",height)
+                //var currentScale =
+                //  group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("width")/group.getElementsByClassName("main")[0].getAttribute("width");
+
+                /*d3.select(group.childNodes[prop])
                   .attr(
                     "transform",
                     "scale(" +
@@ -168,7 +188,7 @@ export default {
 														-
 														parseFloat(group.childNodes[prop].getElementsByClassName("top")[0].getAttribute("y")) ,
                       ] +")"
-                  );
+                  );*/
 
                 height +=
                   parseFloat(group.childNodes[prop]
@@ -195,6 +215,8 @@ export default {
 			(svgs.value = await store.getters["appSVGs/allSvgs"]);
 			loading.value = await store.getters["appSVGs/loading"]
 
+			//res.value=await axios.get("public/svgs/resource.svg");
+
 
 			return svgs.value;
 		};
@@ -210,10 +232,11 @@ export default {
 			function drawSvg(svgData, object,parent) {
 				if (!loading.value) {
 					object.type_name=object.type_name.replace(/\s+/g, '')
-
+				if(object.instance_name!=null){
           let nCapa = object.capabilities.length;
           let nReq = object.requirements.length;
           object.rels_height=Math.max(nCapa,nReq)*10;
+					}
           object.width = modelArea.value.widthLevel[object.level]
 					const svgDom = SVGinstanciate(svgs.value[object.type_name], object);
 					//const svgDom = domParser.parseFromString(svgTxt, "image/svg+xml");
@@ -221,14 +244,14 @@ export default {
           var model = document.getElementById(object.id)
 
 
-					document
+					/*document
 						.getElementById(parent.id)
-						.appendChild(model);
+						.appendChild(model);*/
 
-					document.getElementById("1").remove()
+					//document.getElementById("1").remove()
 
 
-
+				if(object.instance_name!=null){
           // Draw the arrows
           let i=0;
 					let j=0;
@@ -252,7 +275,15 @@ export default {
       					 .attr("y", height+3 + i * 7)
       					 .attr("style", "stroke-width:.265")
       					 .text(object.requirements[i].name);
-							d3.select(model).append("rect").attr("x",x-4).attr("y",height+7*i).attr("width",12).attr("height",6.75).attr("fill","#12ed00").attr("style","opacity:0.0").attr("class","input").attr("cursor", "pointer").on("click",clickArrow);
+							d3.select(model)
+								 .append("rect")
+								 .attr("x",x-4).attr("y",height+7*i)
+								 .attr("width",12).attr("height",6.75)
+								 .attr("fill","#12ed00").attr("style","opacity:0.0")
+								 .attr("class","input")
+								 .attr("id",i.toString())
+								 .attr("cursor", "pointer")
+								 .on("click",clickArrow);
 
 							i++
 						});
@@ -271,7 +302,16 @@ export default {
       					 .attr("style", "stroke-width:.265")
       					 .text(object.capabilities[j].name);
 
-							d3.select(model).append("rect").attr("x",parseFloat(x)-4+parseFloat(width)-5).attr("y",height+7*j).attr("width",12).attr("height",6.75).attr("fill","#12ed00").attr("style","opacity:0.0").attr("class","output").attr("cursor", "pointer").on("click",clickArrow);
+							d3.select(model)
+								.append("rect")
+								.attr("x",parseFloat(x)-4+parseFloat(width)-5)
+								.attr("y",height+7*j).attr("width",12)
+								.attr("height",6.75)
+								.attr("fill","#12ed00").attr("style","opacity:0.0")
+								.attr("class","output")
+								.attr("id",j.toString())
+								.attr("cursor", "pointer")
+								.on("click",clickArrow);
 
 							j++
 						});
@@ -301,7 +341,7 @@ export default {
 					}
 					else {
 						console.log("wait for loading");
-					}
+					}}
 			}
 
 			var zoom = 1;
@@ -468,8 +508,9 @@ export default {
 						}
 					});
 					let parentId = group.parentNode.id;
-					var transform = group.getAttribute("transform");
-					console.log("group transform",transform)
+					let xGroup = group.getAttribute("x");
+					let yGroup = group.getAttribute("y");
+
 					group.parentNode.removeChild(group);
 
 					var cloneParent = drawSvg(svgData,obj,document.getElementById(parentId));
@@ -479,7 +520,7 @@ export default {
 						redrawStack(cloneParent.parentNode,removedComponent);
 					}
 					else{
-						d3.select(cloneParent).attr("transform",transform);
+						d3.select(cloneParent).attr("x",xGroup).attr("y",yGroup);
 					}
 
 				}
@@ -508,7 +549,11 @@ export default {
 	  var rooty = document.getElementById("root").getBoundingClientRect().y;
 
 
-      if (
+			d3.select(this.parentNode)
+			.attr("x",coord[0]/zoom-rootx/zoom-parseFloat(this.getAttribute("x"))-parseFloat(this.getAttribute("width")/2) - translateX/zoom)
+			.attr("y",coord[1]/zoom-rooty/zoom-parseFloat(this.getAttribute("y"))-parseFloat(this.getAttribute("height")/2) - translateY/zoom);
+			console.log(this.parentNode.getAttribute("x"))
+      /*if (
         currentGroup.className.baseVal == "model" &&
         currentGroup.getAttribute("id") != "svg0"
       ) {
@@ -523,11 +568,28 @@ export default {
               ] +
               ")"
           );
-      }
+      }*/
 
-			d3.selectAll(".link").remove();
+			//d3.selectAll(".link").remove();
 			links.value.forEach(element=>{
-				drawLink(element.target,element.source,"svg0",zoom,translateX,translateY,links.value);
+
+				if(element.sourceID==this.parentNode.id)
+				{
+					let currentLink = document.getElementById(element.id.toString());
+					console.log("source moved");
+					d3.select(currentLink)
+					.attr("x1",parseFloat(document.getElementById(element.sourceID).getAttribute("x"))+parseFloat(this.parentNode.getAttribute("x")))
+					.attr("y1",parseFloat(document.getElementById(element.sourceID).getAttribute("y"))+parseFloat(this.parentNode.getAttribute("y")))
+					//drawLink(element.target,element.source,"svg0",zoom,translateX,translateY,links.value);
+				}
+				else if(element.targetID==this.parentNode.id){
+					let currentLink = document.getElementById(element.id.toString());
+					console.log("target moved");
+					d3.select(currentLink)
+					.attr("x2",parseFloat(document.getElementById(element.sourceID).getAttribute("x"))+parseFloat(this.parentNode.getAttribute("x")))
+					.attr("y2",parseFloat(document.getElementById(element.sourceID).getAttribute("y"))+parseFloat(this.parentNode.getAttribute("y")))
+
+				}
 			})
       /*var groups = d3.selectAll(".model");
       groups.each(function (groups, i) {
@@ -549,6 +611,7 @@ export default {
     }
     function dragended(event, d) {
       var currentGroup = this.parentNode;
+
       var panelObject;
 
 			for (const prop in panel.value) {
@@ -642,8 +705,10 @@ export default {
 
 
 			component.parentNode.removeChild(component);
-			var cloneComponent = drawSvg(svgData,currentObj,document
+			let cloneComponent = drawSvg(svgData,currentObj,document
         .getElementById(minGroup.getAttribute("id")));
+			console.log(currentObj.id)
+			console.log(cloneComponent)
 
 
 function redrawStack(group,addedComponent){
@@ -682,8 +747,8 @@ function redrawStack(group,addedComponent){
 		}
 		getContent(group,obj,panel.value)
 		let parentId = group.parentNode.id;
-		var transform = group.getAttribute("transform")
-
+		let xGroup = group.getAttribute("x");
+		let yGroup = group.getAttribute("y");
 		group.parentNode.removeChild(group);
 			var cloneParent = drawSvg(svgData,obj,document
         .getElementById(parentId));
@@ -692,14 +757,15 @@ function redrawStack(group,addedComponent){
 		redrawStack(cloneParent.parentNode,addedComponent);
 	}
 	else{
-		d3.select(cloneParent).attr("transform",transform);
+		d3.select(cloneParent).attr("x",xGroup).attr("y",yGroup);
 	}
 }
 
 redrawStack(minGroup,cloneComponent);
-
-
+console.log(cloneComponent)
+console.log(document.getElementById(currentObj.id))
         replaceComponents(document.getElementById(currentObj.id));
+
 
         reDrawn = true;
       }
@@ -733,9 +799,13 @@ redrawStack(minGroup,cloneComponent);
 				currentObj.width=230;
 				getContent(currentGroup,currentObj,panel.value);
 				component.parentNode.removeChild(component);
-				var cloneComponent = drawSvg(svgData,currentObj,document.getElementById("svg0"));
+				let xComponent = component.getAttribute("x");
+				let yComponent = component.getAttribute("y");
+				let cloneComponent = drawSvg(svgData,currentObj,document.getElementById("svg0"));
 
-				d3.select(cloneComponent)
+				d3.select(cloneComponent).attr("x",xComponent).attr("y",yComponent);
+
+				/*d3.select(cloneComponent)
           .raise()
           .attr(
             "transform",
@@ -745,7 +815,7 @@ redrawStack(minGroup,cloneComponent);
                 (coord[1] -rooty-(parseFloat(this.getAttribute("y"))+parseFloat(this.getAttribute("height"))/2)*zoom-translateY)/zoom,
               ] +
               ")"
-          );
+          );*/
 
         modelArea.value.data.push(currentObj);
       }
@@ -884,18 +954,24 @@ redrawStack(minGroup,cloneComponent);
 						{
 							let linkID=drawLink(lastArrow,this,"svg0",zoom,translateX,translateY,links.value);
 
-							let source,target;
+							let sourceID,targetID,sourceArrow,targetArrow;
 							if(lastArrow.className=="input"){
-								source=this;
-								target=lastArrow;
+								sourceID=this.parentNode.id;
+								sourceArrow=this.id;
+								targetID=lastArrow.parentNode.id;
+								targetArrow=lastArrow.id;
 							}
 							else{
-								source=lastArrow;
-								target=this;
+								sourceID=lastArrow.parentNode.id;
+								sourceArrow=lastArrow.id;
+								targetID=this.parentNode.id;
+								targetArrow=this.id;
 							}
 							links.value.push({
-								source: source,
-								target: target,
+								sourceID: sourceID,
+								sourceArrow: sourceArrow,
+								targetID: targetID,
+								targetArrow: targetArrow,
 								id: linkID
 							})
 						}
@@ -938,10 +1014,11 @@ redrawStack(minGroup,cloneComponent);
 					capabilities: panelObject.capabilities,
 				};
 
-				var drawnModel = drawSvg(svgData, currentObj,document.getElementById("svg0"));
+				let drawnModel = drawSvg(svgData, currentObj,document.getElementById("svg0"));
 
-				defaultx = drawnModel.getBoundingClientRect().x;
-				defaulty = drawnModel.getBoundingClientRect().y;
+
+
+				d3.select(drawnModel).attr("x",0).attr("y",0);
 
 
 				modelArea.value.data.push(currentObj);
@@ -953,11 +1030,33 @@ redrawStack(minGroup,cloneComponent);
 				.on("drag", dragged)
 				.on("end", dragended);
 			// Draw some svg items in the drawer -------------------------------------------------------
+
+			var drawerItem = d3
+					.select("#drawerContent")
+					.append("svg")
+					.attr("id", "svg1")
+					.attr("width", 250)
+					.attr("height", 2000);
+
+			//let dataTf = { id: Date.now(), logopath: "https://img.icons8.com/ios/50/000000/database.png",  width: 0, height: 0, name: "srv1", type: "aws_instance",type_name: "dbtf" };
+
+			//let modeltf=drawSvg(svgData, dataTf,document.getElementById("svg1"));
+
+
+
 			let i =0;
 			Object.values(panel.value).forEach((element) => {
-				i++;
 
-				var panelObj = {
+
+
+					let toscaPanelNode =
+					new ToscaTypeNode(element.logo,element.type_name,element.primary_color,element.secondary_color,element.svg);
+
+					let toscaPanelComponent = toscaPanelNode.drawInPanel(50,50+i*150,document.getElementById("svg1"),svgs.value);
+					d3.select(toscaPanelComponent).on("click", click_model);
+					i++;
+
+				/*let panelObj = {
 					type_name: element.type_name,
 					instance_name: element.instance_name,
 					//class: this.getAttribute("class"),
@@ -977,18 +1076,18 @@ redrawStack(minGroup,cloneComponent);
 				}
 
 
-				var drawerItem = d3
-					.select("#drawerContent")
-					.append("svg")
-					.attr("id", "svg1")
-					.attr("width", 250)
-					.attr("height", 2000);
+
 
 				var drawnModel = drawSvg(svgData, panelObj,document.getElementById("svg1"));
 
 				d3.select(drawnModel)
-				.attr("transform","translate("+[140-drawnModel.getBoundingClientRect().x,100*i-drawnModel.getBoundingClientRect().y]+")")
+				.attr("x",50)
+				.attr("y",i*100)
+				//.attr("transform","translate("+[140-drawnModel.getBoundingClientRect().x,100*i-drawnModel.getBoundingClientRect().y]+")")
 				.on("click", click_model);
+				*/
+
+
 
 			});
 
@@ -1004,5 +1103,8 @@ redrawStack(minGroup,cloneComponent);
 			links,
 			getSVGS,
 			replaceComponents,
+			tosca,
+			terraform,
+
 		}}}
 	</script>
