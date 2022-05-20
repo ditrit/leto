@@ -15,16 +15,17 @@ import Button from '../UI/Buttons/BtnAddNew.vue'
 export default {
 	data() {
 		return {
-			monacoEditor: {},			
+			monacoEditor: {},
+			iactorDatas : {},			
     		'button': Button
 		};
 	},
-
-	mounted() {		
+	mounted() {	
 		this.worker = new Worker("dist/bundle.js");
 		this.worker.onmessage = function (event) {
 			console.log("message post in the worker");
-			console.log(event);
+			console.log(event.data);
+			this.iactorDatas = event.data
 		}
 		// Initialize the editor, make sure the dom has been rendered, and the dialog should be written in opened
 		monaco.languages.register({ id: 'hcl' });
@@ -36,7 +37,7 @@ export default {
 		let errorFg = 'ff0000';
 		let comment = '07812C';
 		let boolean = '105FEE';
-		this.valueEditor = "";
+		this.valueEditor = '';
 
 		monaco.editor.defineTheme('terraformTheme', {
 			base: 'vs',
@@ -79,6 +80,12 @@ export default {
 		},
 		onChange(value) {
 			this.valueEditor = value
+		},
+		sendDatas(value) {
+			console.log(value)
+			if(value != null) {
+				this.$emit('parse_datas', value)
+			}			
 		}
 	},
 };
