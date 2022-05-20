@@ -11,6 +11,7 @@
 import * as monaco from "monaco-editor";
 import { hclTokensProvider } from "./hclTokensProvider.js";
 import Button from "../UI/Buttons/BtnAddNew.vue";
+import { mapActions } from "vuex";
 
 export default {
 	data() {
@@ -20,13 +21,16 @@ export default {
 			button: Button,
 		};
 	},
-	mounted() {
+	created() {
 		this.worker = new Worker("dist/bundle.js");
 		this.worker.onmessage = function (event) {
-			console.log("message post in the worker");
 			this.iactorDatas = event.data;
-			console.log("this.iactorDatas: ", this.iactorDatas);
 		};
+		this.worker.addEventListener("message", (event) => {
+			window.localStorage.setItem("monacoSource", JSON.stringify(event.data));
+		});
+	},
+	mounted() {
 		// Initialize the editor, make sure the dom has been rendered, and the dialog should be written in opened
 		monaco.languages.register({ id: "hcl" });
 		monaco.languages.setTokensProvider("hcl", hclTokensProvider.prototype);
@@ -74,9 +78,15 @@ export default {
 			this.onChange(editor.getValue());
 		});
 	},
+
 	methods: {
+		...mapActions({ getMonacoSource: "appMonaco/getMonacoSource" }),
 		consoleClick() {
 			this.worker.postMessage(this.valueEditor);
+			this.getSource();
+		},
+		getSource() {
+			return this.getMonacoSource();
 		},
 		onChange(value) {
 			this.valueEditor = value;

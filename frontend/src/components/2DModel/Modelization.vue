@@ -1,5 +1,6 @@
 <template>
-	<img src="../../../../iactor/svg/out.svg" />
+	<pre>{{ monacoSourceData }}</pre>
+	<!-- <img src="../../../../iactor/svg/out.svg" /> -->
 </template>
 
 <script>
@@ -7,11 +8,17 @@
 //import { calcul_attributes_objects } from './terraform/graphisme/calcul_attributes_objects.js';
 import { SVGinstanciate } from "./svgvar.js";
 import * as d3 from "d3";
-import { onMounted } from '@vue/runtime-core';
+import { ref } from "vue";
+import { useStore } from "vuex";
 
 export default {
 	setup() {
-	/*
+		const store = useStore();
+		const monacoSourceData = ref({});
+		return {
+			monacoSourceData: store.getters["appMonaco/allMonacoSource"],
+		};
+		/*
 		//let arg = process.argv.slice(2).toString();
 		const datas = get_datas('../tests/tf');
 		let resources = calcul_attributes_objects(datas)
@@ -145,7 +152,7 @@ export default {
 				.attr('d', "M2,2 L10,6 L2,10 L6,6 L2,2")
 				.attr('stroke', 'black');
 		})*/
-	},	
+	},
 };
 </script>
 
