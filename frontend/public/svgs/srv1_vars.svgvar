@@ -1,5 +1,5 @@
-<svg id="1" version="1.1" viewBox="0 0 N{{width+50}} N{{rels_height+container_height+70}}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="T{{id}}" class="model">
+<svg id="T{{id}}" class="model" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!--<g id="T{{id}}" class="model">-->
 	<rect
      x="5"
      y="14"
@@ -35,5 +35,5 @@
 			<rect class="bottom_path" x="6" y="N{{rels_height+56}}+N{{container_height}}" width="N{{width}}" height="0" style="fill:none;stroke-width:0;stroke:none"/>
     </g>
   </g>
-	</g>
+	<!--</g>-->
 </svg>
