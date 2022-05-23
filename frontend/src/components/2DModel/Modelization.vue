@@ -1287,4 +1287,5 @@ console.log(document.getElementById(currentObj.id))
 
 </script>
 
-<style></style>
+		}}}
+	</script>
