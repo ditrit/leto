@@ -14,6 +14,7 @@ import appAuthorization from "./Authorization/index";
 import appFiles from "./Files/index";
 import appGit from "./Git/index";
 import appMonaco from "./Monaco/index";
+import appSVGs from "./SVGs/index";
 
 export default store(function () {
 	return createStore({
@@ -31,6 +32,7 @@ export default store(function () {
 			appLibraries,
 			appGit,
 			appMonaco,
+			appSVGs
 		},
 		strict: process.env.DEBUGGING,
 	});

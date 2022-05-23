@@ -1,0 +1,139 @@
+<svg id="2" version="1.1" viewBox="0 0 N{{width,+50}} N{{rels_height,container_height,55}}" xmlns="http://www.w3.org/2000/svg">
+<g id="T{{id}}" class="model" >
+  <rect
+     x="5"
+     y="12"
+     class="mainRect"
+     width="N{{width}}"
+     height="N{{rels_height,container_height,35}}"
+     ry="3.19"
+     style="fill:#000000;stroke-linejoin:round;stroke-width:.503;stroke:#000"/>
+  <g id="infos">
+    <path
+    class="topTrapeze"
+       d="M 6,13 26,2 N{{width,-20,4}},2 N{{width,4}},13 Z"
+       style="fill:T{{secondary_color}};stroke:#000000;stroke-width:1"/>
+    <rect
+    class="topRect"
+       x="6"
+       y="14"
+       width="N{{width,-2}}"
+       height="30"
+       ry="2.33"
+       style="fill:T{{primary_color}};stroke-width:.5;stroke:#000"/>
+
+
+       <!-- Logo -->
+    <rect
+       x="10"
+       y="19"
+       width="20"
+       height="20"
+       fill="#fff"
+       fill-rule="evenodd"
+       stroke="#000"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       style="paint-order:stroke fill markers"/>
+
+      <!-- Instance name-->
+    <text
+       text-align="center"
+       style="font-family:Alef;font-size:7px;font-style:italic"
+       xml:space="preserve"
+       id="text12"><tspan
+         x="35"
+         y="25">T{{instance_name}}</tspan></text>
+
+       <!-- Type Name-->
+    <text
+       text-align="center"
+       style="font-family:Alef;font-size:7px;font-weight:bold"
+       xml:space="preserve"
+       id="text16"><tspan
+         x="35"
+         y="37">T{{type_name}}</tspan></text>
+  </g>
+  <g id="rels">
+    <rect
+    class="middleRect"
+       x="6"
+       y="45"
+       width="N{{width,-2}}"
+       height="N{{rels_height}}"
+       ry="2.17"
+       style="fill:T{{primary_color}};stroke-width:.5;stroke:#000"/>
+    <g id="arrows">
+
+    <!-- Input Arrows-->
+      <path
+         d="m1 50 4 3.22-4 3.4h10l2.5-2.12c1.45-1.08.735-1.8-.0234-2.52l-2.47-2z"
+         style="fill-rule:evenodd;fill:#12ed00;paint-order:stroke fill markers;stroke-linecap:round;stroke-linejoin:round;stroke-width:.259;stroke:#000"/>
+      <text
+         text-align="left"
+         style="font-family:Alef;font-size:5px;"
+         xml:space="preserve"
+         id="text30"><tspan
+           x="17"
+           y="55">Input 1</tspan></text>
+      <path
+         d="m1 57 4 3.22-4 3.4h10l2.5-2.12c1.45-1.08.735-1.8-.0234-2.52l-2.47-2z"
+         style="fill-rule:evenodd;fill:#12ed00;paint-order:stroke fill markers;stroke-linecap:round;stroke-linejoin:round;stroke-width:.259;stroke:#000"/>
+      <text
+         text-align="left"
+         style="font-family:Alef;font-size:5px;"
+         xml:space="preserve"
+         id="text36"><tspan
+           x="17"
+           y="62">Input 2</tspan></text>
+      <path
+         d="m1 64 4 3.22-4 3.4h10l2.5-2.12c1.45-1.08.735-1.8-.0234-2.52l-2.47-2z"
+         style="fill-rule:evenodd;fill:#12ed00;paint-order:stroke fill markers;stroke-linecap:round;stroke-linejoin:round;stroke-width:.259;stroke:#000"/>
+      <text
+         text-align="left"
+         style="font-family:Alef;font-size:5px;"
+         xml:space="preserve"
+         id="text42"><tspan
+           x="17"
+           y="69">Input deded 3</tspan></text>
+
+        <!-- Output Arrows -->
+      <path
+         d="mN{{width,-5}} 50 4 3.22-4 3.4h10l2.5-2.12c1.45-1.08.735-1.8-.0233-2.52l-2.47-2z"
+         style="fill-rule:evenodd;fill:#12ed00;paint-order:stroke fill markers;stroke-linecap:round;stroke-linejoin:round;stroke-width:.259;stroke:#000"/>
+      <text
+         text-align="right"
+         style="font-family:Alef;font-size:5px;"
+         xml:space="preserve"
+         id="text48"><tspan
+           x="N{{width,-40}}"
+           y="55"
+           stroke-width=".265">Output 1</tspan></text>
+      <path
+         d="mN{{width,-5}} 57 4 3.22-4 3.4h10l2.5-2.12c1.45-1.08.735-1.8-.0233-2.52l-2.47-2z"
+         style="fill-rule:evenodd;fill:#12ed00;paint-order:stroke fill markers;stroke-linecap:round;stroke-linejoin:round;stroke-width:.259;stroke:#000"/>
+      <text
+         text-align="right"
+         style="font-family:Alef;font-size:5px;"
+         xml:space="preserve"
+         id="text54"><tspan
+           x="N{{width,-40}}"
+           y="62"
+           stroke-width=".265">Output deded</tspan></text>
+    </g>
+    </g>
+
+    <g id="container">
+      <rect
+      class="bottomRect"
+         x="6"
+         y="N{{rels_height,45}}"
+         width="N{{width,-2}}"
+         height="N{{container_height}}"
+         ry="2.16"
+         style="fill:T{{primary_color}};stroke-linejoin:round;stroke-miterlimit:43.5;stroke-width:.5;stroke:#000"/>
+    </g>
+
+
+  </g>
+</svg>
