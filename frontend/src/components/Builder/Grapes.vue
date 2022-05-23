@@ -7,7 +7,6 @@
 <script>
 import { ref, onMounted } from "vue";
 import grapesjs from "grapesjs";
-import "ckeditor4";
 import blocks from "grapesjs-blocks-basic";
 import "grapesjs/dist/css/grapes.min.css";
 
@@ -51,13 +50,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="sass">
-#gjs
-
-.gjs-dashed body
-  background: #e0e0e0 !important
-
-.gjs-editor-cont
-  margin: 45px 0 45px 45px
-</style>

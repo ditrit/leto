@@ -1,29 +1,31 @@
 <template>
-	<img src="../../../../iactor/svg/out.svg" />
+	<div id="myDataViz">
+
+	</div>
 </template>
 
 <script>
-//import get_datas from './terraform/launcher-terraform.js'
-//import { calcul_attributes_objects } from './terraform/graphisme/calcul_attributes_objects.js';
-import { SVGinstanciate } from "./svgvar.js";
+import SVGinstanciate from "./svgvar.js";
+import { onMounted } from "vue";
 import * as d3 from "d3";
-import { onMounted } from '@vue/runtime-core';
+import { ref } from "vue";
+import { useStore } from "vuex";
 
 export default {
 	setup() {
-	/*
-		//let arg = process.argv.slice(2).toString();
-		const datas = get_datas('../tests/tf');
-		let resources = calcul_attributes_objects(datas)
-
-		//const res = fs.readFileSync('../svg/resource.svg').toString()
+		const store = useStore();
+		const monacoSourceData = ref({});
+		const svgs = ref({});
+		const loading = ref(true);
+		let svg;
 
 		function drawSVG(datas, parentDatas, svgParent, parentName, content) {
 			datas.forEach( d => {
-				let data = { logopath: 'logos/' + d.icon,  width: d.width, height: d.height, name: d.name, type: d.type, id : d.name + "_" + d.type };
-				const svgDom = SVGinstanciate(res, data, dom);
-				body.select("#"+parentName).node().append(svgDom.documentElement)
-				var model = dom.window.document.getElementById(d.name + "_" + d.type)
+				console.log(d.icon)
+				let data = { /*logopath: 'logos/' + d.icon,*/  width: d.width, height: d.height, name: d.name, type: d.type, id : d.name + "_" + d.type };
+				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
+				d3.select("#"+parentName).node().append(svgDom.documentElement)
+				var model = document.getElementById(d.name + "_" + d.type)
 				if(content) {
 					svgParent.querySelector("g").appendChild(model)
 					model.setAttribute('x', d.x)
@@ -31,7 +33,7 @@ export default {
 					d.x = parentDatas.x + d.x
 					d.y = parentDatas.y + d.y
 				} else {
-					dom.window.document.getElementById(parentName).querySelector("g").appendChild(model)
+					// document.getElementById(parentName).querySelector("g").appendChild(model)
 					model.setAttribute('x', d.x)
 					model.setAttribute('y', d.y)
 				}
@@ -120,32 +122,47 @@ export default {
 			}) 
 		}
 
-		onMounted( async => {
-			var svg = d3.select("#myDataViz")
+		const getDatas = async () => {
+			monacoSourceData.value = await store.getters["appMonaco/allMonacoSource"];
+			return monacoSourceData.value;
+		}
+
+		const getSVGS = async () => {
+			await store.dispatch("appSVGs/loadPath");
+			svgs.value = await store.getters["appSVGs/allSvgs"];
+			loading.value = await store.getters["appSVGs/loading"]
+			return svgs.value;
+		};
+
+		onMounted( async () => {
+			await getDatas();
+			await getSVGS();
+
+			svg = d3.select("#myDataViz")
 						.append("svg")
-						.attr("id", "svg0")
 						.attr("width", 2000)
 						.attr("height", 2000)
 						.attr('xmlns',"http://www.w3.org/2000/svg")
 						.attr('xmlns:xlink', "http://www.w3.org/1999/xlink")
-						.append("g");
+						.append("g")
+							.attr("id", "svg0");
 
-		drawSVG(resources, [], svg, "svg0")
+			drawSVG(monacoSourceData.value["resources"], [], svg, "svg0")
 
-		svg.append('svg:defs')
-			.append('svg:marker')
-			.attr('id', 'arrow')
-			.attr('viewBox', [0, 0, 12, 12])
-			.attr('refX', 6)
-			.attr('refY', 6)
-			.attr('markerWidth', 12)
-			.attr('markerHeight', 12)
-			.attr('orient', 'auto-start-reverse')
-			.append('svg:path')
-				.attr('d', "M2,2 L10,6 L2,10 L6,6 L2,2")
-				.attr('stroke', 'black');
-		})*/
-	},	
+			svg.append('svg:defs')
+				.append('svg:marker')
+				.attr('id', 'arrow')
+				.attr('viewBox', [0, 0, 12, 12])
+				.attr('refX', 6)
+				.attr('refY', 6)
+				.attr('markerWidth', 12)
+				.attr('markerHeight', 12)
+				.attr('orient', 'auto-start-reverse')
+				.append('svg:path')
+					.attr('d', "M2,2 L10,6 L2,10 L6,6 L2,2")
+					.attr('stroke', 'black');
+		})
+	},
 };
 </script>
 

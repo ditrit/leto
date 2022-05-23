@@ -1,0 +1,1 @@
+export const GET_METADATAS = (state, metadatas) => state.awsMetadatas = state.awsMetadatas.push(metadatas);

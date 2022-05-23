@@ -13,8 +13,8 @@ function SVGmatch(text, data) {
     return text.replace(/([TN]){{([^}]*)}}/g, matchTxt);
 }
 
-export default function SVGinstanciate(svgVars, data, dom) {
-    const domParser = new dom.window.DOMParser();
+export default function SVGinstanciate(svgVars, data) {
+    const domParser = new DOMParser();
     const svgTxt = SVGmatch(svgVars, data);
     return domParser.parseFromString(svgTxt, "image/svg+xml");
 }
