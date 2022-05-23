@@ -751,16 +751,16 @@ export default {
 					let currentLink = document.getElementById(element.id.toString());
 					console.log("source moved");
 					d3.select(currentLink)
-					.attr("x1",parseFloat(document.getElementById(element.sourceID).getAttribute("x"))+parseFloat(this.parentNode.getAttribute("x")))
-					.attr("y1",parseFloat(document.getElementById(element.sourceID).getAttribute("y"))+parseFloat(this.parentNode.getAttribute("y")))
+					.attr("x1",(parseFloat(document.getElementById(element.sourceID).getAttribute("x")))+parseFloat(this.parentNode.getElementById(element.sourceArrow).getAttribute("x"))/zoom)
+					.attr("y1",(parseFloat(document.getElementById(element.sourceID).getAttribute("y")))+parseFloat(this.parentNode.getElementById(element.sourceArrow).getAttribute("y"))/zoom)
 					//drawLink(element.target,element.source,"svg0",zoom,translateX,translateY,links.value);
 				}
 				else if(element.targetID==this.parentNode.id){
 					let currentLink = document.getElementById(element.id.toString());
 					console.log("target moved");
 					d3.select(currentLink)
-					.attr("x2",parseFloat(document.getElementById(element.sourceID).getAttribute("x"))+parseFloat(this.parentNode.getAttribute("x")))
-					.attr("y2",parseFloat(document.getElementById(element.sourceID).getAttribute("y"))+parseFloat(this.parentNode.getAttribute("y")))
+					.attr("x2",parseFloat(document.getElementById(element.targetID).getAttribute("x"))+parseFloat(this.parentNode.getElementById(element.targetArrow).getAttribute("x"))/zoom)
+					.attr("y2",parseFloat(document.getElementById(element.targetID).getAttribute("y"))+parseFloat(this.parentNode.getElementById(element.targetArrow).getAttribute("y"))/zoom)
 
 				}
 			})
