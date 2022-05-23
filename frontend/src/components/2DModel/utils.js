@@ -3,7 +3,7 @@ const d3 = require("d3");
 
 export function getContent(model,object,panel){
 	model.childNodes.forEach(element=>{
-		if (element.tagName == "g"){
+		if (element.tagName == "svg"){
 		if (element.className.baseVal=="model"){
 			var panelObj;
 
@@ -40,14 +40,16 @@ export function getContent(model,object,panel){
 
 
 export function drawLink(lastArrow,thisArrow,rootID,zoom,translateX,translateY,links){
+
+
 	let id = Date.now();
 	d3.select("#"+rootID).append("line")
 							.attr("id",id)
 							.attr("class","link")
-							.attr("x1",((parseFloat(lastArrow.getBoundingClientRect().x))-parseFloat(document.getElementById(rootID).getBoundingClientRect().x))/zoom)
-							.attr("y1",((parseFloat(lastArrow.getBoundingClientRect().y))-parseFloat(document.getElementById(rootID).getBoundingClientRect().y))/zoom)
-							.attr("x2",((parseFloat(thisArrow.getBoundingClientRect().x))-parseFloat(document.getElementById(rootID).getBoundingClientRect().x))/zoom)
-							.attr("y2",((parseFloat(thisArrow.getBoundingClientRect().y))-parseFloat(document.getElementById(rootID).getBoundingClientRect().y))/zoom)
+							.attr("x1",parseFloat(lastArrow.getAttribute("x"))+parseFloat(lastArrow.parentNode.getAttribute("x")))
+							.attr("y1",parseFloat(lastArrow.getAttribute("y"))+parseFloat(lastArrow.parentNode.getAttribute("y")))
+							.attr("x2",parseFloat(thisArrow.getAttribute("x"))+parseFloat(thisArrow.parentNode.getAttribute("x")))
+							.attr("y2",parseFloat(thisArrow.getAttribute("y"))+parseFloat(thisArrow.parentNode.getAttribute("y")))
 							.attr("cursor", "pointer")
 							.style("stroke", "black")
 							.style("stroke-width",3)

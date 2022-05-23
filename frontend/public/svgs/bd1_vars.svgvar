@@ -1,6 +1,6 @@
 
-<svg id="1" version="1.1" viewBox="0 0 N{{width+50}} N{{rels_height+container_height+150}}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
- <g id="T{{id}}" class="model">
+<svg id="T{{id}}" class="model" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <!--<g id="T{{id}}" class="model">-->
  <rect class="main" x="10" y="30"
  			 width="N{{width}}" height="N{{31+width/10+rels_height+width/10+container_height+width/10}}"
 			 style="fill:none;stroke:none"/>
@@ -35,5 +35,5 @@
    <path class="bottom_path" d="M10 N{{60+3*width/10+rels_height+container_height}} A 25 5 0 0,0 N{{width+10}} N{{60+3*width/10+rels_height+container_height}}" style="fill:T{{primary_color}};stroke-linejoin:round;stroke-miterlimit:43.5;stroke-width:1.5;stroke:#000"/>
   </g>
 </g>
-</g>
+<!--</g>-->
  </svg>
