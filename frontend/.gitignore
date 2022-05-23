@@ -36,8 +36,5 @@ yarn-error.log*
 # Jest reports
 /reports/*
 
-<<<<<<< HEAD
 # Visual Studio Code Editor
 .vscode
-=======
->>>>>>> 41f8aee (add vscode folder in .gitignore)
