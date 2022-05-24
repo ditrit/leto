@@ -11,7 +11,7 @@
 		</div>
 		<q-table
 			:rows="rowsData"
-			:columns="authorizationColumns"
+			:columns="columns.colAuthorizations"
 			row-key="name"
 			field
 			table-header-class="table_header"
@@ -140,10 +140,10 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
-import authorizationColumns from "./colums/authorizationColumns";
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
 import Modal from "../Dialogs/Modal.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
+import columns from "./colums/index";
 
 export default {
 	components: { Modal, AvatarImg },
@@ -315,7 +315,7 @@ export default {
 
 		return {
 			confirm,
-			authorizationColumns,
+			columns,
 			rowsData,
 			authorizationObj,
 			addNewAuthorization,
