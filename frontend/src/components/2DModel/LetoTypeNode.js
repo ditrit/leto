@@ -13,7 +13,7 @@ export default class LetoTypeNode{
 	defaultPanel={}
 
 	drawInPanel(x,y,parent,svgs){
-
+		this.defaultPanel.id = Date.now();
 		const svgDom = SVGinstanciate(svgs[this.defaultPanel.svg], this.defaultPanel);
 		let newSvg = d3.select(parent).node().append(svgDom.documentElement);
 		let model = document.getElementById(this.defaultPanel.id);
