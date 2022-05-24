@@ -4,15 +4,19 @@
 		<button :onClick="consoleClick" class="Button">
 			<slot>Button</slot>
 		</button>
-	</div>	
+		<div>
+			<pre>{{ metadatas }}</pre>
+		</div>
+	</div>
 </template>
 
 <script>
 import * as monaco from "monaco-editor";
 import { hclTokensProvider } from "./hclTokensProvider.js";
 import Button from "../UI/Buttons/BtnAddNew.vue";
-import { calculAttributesObjects } from "./svg_maths.js"
-import { mapActions } from "vuex";
+import { calculAttributesObjects } from "./svg_maths.js";
+import meta from "../../../public/metadatas.json";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
 	data() {
@@ -20,14 +24,15 @@ export default {
 			monacoEditor: {},
 			iactorDatas: {},
 			button: Button,
-			metadatas: {}
+			metadatas: {},
 		};
 	},
 	created() {
 		this.worker = new Worker("dist/bundle.js");
 		this.worker.onmessage = function (event) {
 			this.iactorDatas = event.data;
-			this.iactorDatas = calculAttributesObjects(this.iactorDatas)
+			this.iactorDatas = calculAttributesObjects(this.iactorDatas);
+			console.log("data : ", event.data);
 		};
 		this.worker.addEventListener("message", (event) => {
 			window.localStorage.setItem("monacoSource", JSON.stringify(event.data));
@@ -81,24 +86,30 @@ export default {
 			this.onChange(editor.getValue());
 		});
 	},
-
+	computed: {
+		...mapGetters({ allMetadatas: "appMonaco/allMetadatas" }),
+	},
 	methods: {
-		...mapActions({ getMonacoSource: "appMonaco/getMonacoSource" }, { getMetadatas: "appMetadatas/getMetadatas" }),
+		...mapActions({
+			getMonacoSource: "appMonaco/getMonacoSource",
+			getMetaSource: "appMonaco/getMetadatas",
+		}),
 		consoleClick() {
 			this.worker.postMessage(this.valueEditor);
 			this.getSource();
-			this.metadatas = this.getMetadata();
-			console.log(this.metadatas)
+			this.getMetaDatas();
+			this.metadatas = this.allMetadatas;
 		},
 		getSource() {
 			return this.getMonacoSource();
 		},
-		getMetadata() {
-			return this.getMetadatas();
+		async getMetaDatas() {
+			await this.getMetaSource(meta);
 		},
+
 		onChange(value) {
 			this.valueEditor = value;
-		}
+		},
 	},
 };
 </script>
