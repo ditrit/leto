@@ -15,7 +15,6 @@ import appFiles from "./Files/index";
 import appGit from "./Git/index";
 import appMonaco from "./Monaco/index";
 import appSVGs from "./SVGs/index";
-import appMetadatas from "./Metadatas/index";
 
 export default store(function () {
 	return createStore({
@@ -34,7 +33,6 @@ export default store(function () {
 			appGit,
 			appMonaco,
 			appSVGs,
-			appMetadatas
 		},
 		strict: process.env.DEBUGGING,
 	});
