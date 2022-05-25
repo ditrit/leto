@@ -1,7 +1,5 @@
 <template>
-	<div id="myDataViz">
-
-	</div>
+	<svg id='svg0' />
 </template>
 
 <script>
@@ -19,94 +17,96 @@ export default {
 		const loading = ref(true);
 		let svg;
 
-		function drawSVG(datas, parentDatas, svgParent, parentName, content) {
+		function drawSVG(datas, svgParent, parentName, content) {
 			datas.forEach( d => {
-				console.log(d.icon)
-				let data = { /*logopath: 'logos/' + d.icon,*/  width: d.width, height: d.height, name: d.name, type: d.type, id : d.name + "_" + d.type };
+				let data = { logopath: 'logos/' + d.icon,  width: d.width, height: d.height, name: d.name, type: d.type, id : d.name + "_" + d.type };
 				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
-				d3.select("#"+parentName).node().append(svgDom.documentElement)
-				var model = document.getElementById(d.name + "_" + d.type)
+				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement)
+				const model = document.getElementById(`${d.name}_${d.type}`)
 				if(content) {
 					svgParent.querySelector("g").appendChild(model)
 					model.setAttribute('x', d.x)
 					model.setAttribute('y', d.y)
-					d.x = parentDatas.x + d.x
-					d.y = parentDatas.y + d.y
 				} else {
-					// document.getElementById(parentName).querySelector("g").appendChild(model)
+					document.getElementById(parentName).querySelector("g").appendChild(model)
 					model.setAttribute('x', d.x)
 					model.setAttribute('y', d.y)
 				}
 				if(d.contains) {
-					drawSVG(d.contains, d, model, d.name + "_" + d.type, true)  
+					drawSVG(d.contains, model, `${d.name}_${d.type}`, true)  
 				}       
 			})
 			datas.forEach( blockEnd => {
 				if(blockEnd.link) {
 					blockEnd.link.forEach( blockBegin => {
 						let xEnd, yEnd, xBegin, yBegin;
+						let endX1, endX2, endY1, endY2;
+						const blockEndX = (blockEnd.parentX) ? blockEnd.parentX : blockEnd.x
+						const blockEndY = (blockEnd.parentY) ? blockEnd.parentY : blockEnd.y
+						const blockBeginX = (blockBegin.parentX) ? blockBegin.parentX : blockBegin.x
+						const blockBeginY = (blockBegin.parentY) ? blockBegin.parentY : blockBegin.y
 						let blockEndWidth = ((blockEnd.width > 0) ? blockEnd.width + 30 : 160) 
 						let blockBeginWidth = ((blockBegin.width > 0) ? blockBegin.width + 30 : 160) 
 						let blockEndHeight = ((blockEnd.height > 0) ? blockEnd.height + 30 : 44) 
 						let blockBeginHeight = ((blockBegin.height > 0) ? blockBegin.height + 30 : 44) 
-						let endX1 = blockEnd.x + blockEndWidth
-						let endX2 = blockBegin.x + blockBeginWidth
-						let endY1 = blockEnd.y + blockEndHeight
-						let endY2 = blockBegin.y + blockBeginHeight
-						if(blockBegin.y == blockEnd.y && blockBeginHeight == blockEndHeight) {
-							yEnd = blockEnd.y + blockEndHeight/2
-							yBegin = blockBegin.y + blockBeginHeight/2
-							if(blockBegin.x > blockEnd.x) {
+						endX1 = blockEndX + blockEndWidth
+						endY1 = blockEndY + blockEndHeight
+						endX2 = blockBeginX + blockBeginWidth
+						endY2 = blockBeginY + blockBeginHeight
+						if(blockBeginY == blockEndY && blockBeginHeight == blockEndHeight) {
+							yEnd = blockEndY + blockEndHeight/2
+							yBegin = blockBeginY + blockBeginHeight/2
+							if(blockBeginX > blockEndX) {
 								yEnd+= 10
 								yBegin+= 10
 								xEnd = endX1 + 10
-								xBegin = blockBegin.x + 4
+								xBegin = blockBeginX + 4
 							} else {
 								yEnd-= 10
 								yBegin-= 10
-								xEnd = blockEnd.x
+								xEnd = blockEndX
 								xBegin = endX2 + 4
 							}
-						} else if(blockBegin.x == blockEnd.x && blockBeginWidth == blockEndWidth){
-							xEnd = blockEnd.x + blockEndWidth/2
-							xBegin = blockBegin.x + blockBeginWidth/2
-							if(blockBegin.y > blockEnd.y) {
+						} else if(blockBeginX == blockEndX && blockBeginWidth == blockEndWidth){
+							xEnd = blockEndX + blockEndWidth/2
+							xBegin = blockBeginX + blockBeginWidth/2
+							if(blockBeginY > blockEndY) {
 								xEnd+= 10
 								xBegin+= 10
 								yEnd = endY1 + 10
-								yBegin = blockBegin.y + 4
+								yBegin = blockBeginY + 4
 							} else {
 								xEnd-= 10
 								xBegin-= 10
-								yEnd = blockEnd.y
+								yEnd = blockEndY
 								yBegin = endY2 + 4
 							}
 						} else { 
-							if(blockEndWidth > blockBegin.x && blockEndWidth > endX2) {
-								xEnd = blockEnd.x + blockEndWidth/2 + 5 - 10
-								xBegin = blockBegin.x + blockBeginWidth/2 + 10
+							if(blockEndWidth > blockBeginX && blockEndWidth > endX2) {
+								xEnd = blockEndX + blockEndWidth/2 - 5
+								xBegin = blockBeginX + blockBeginWidth/2 + 10
 								yEnd = endY1 - 10
-								yBegin = blockBegin.y + 4
+								yBegin = blockBeginY + 4
 							} else if(endX2 > endX1 && endY2 > endY1) {
-								xEnd = endX1 + 8
-								xBegin = blockBegin.x + blockBeginWidth/2 - 10
-								yEnd = blockEnd.y + blockEndHeight/2 + 10
-								yBegin = blockBegin.y + 4
+								xEnd = blockEndX + blockEndWidth/2 - 10
+								xBegin = blockBeginX + blockBeginWidth/2 + 10
+								yEnd = endY1 + 8
+								yBegin = blockBeginY + 4
 							} else if(endX2 > endX1 && endY2 < endY1) {
 								xEnd = endX1 + 8
-								xBegin = blockBegin.x + blockBeginWidth/2 - 10
-								yEnd = blockEnd.y + blockEndHeight/2 - 10
+								xBegin = blockBeginX + blockBeginWidth/2 - 10
+								yEnd = blockEndY + blockEndHeight/2 - 10
 								yBegin = endY2 + 4
 							} else if(endX2 < endX1 && endY2 < endY1) {
-								xEnd = blockEnd.x + blockEndWidth/2 - 10
+								xEnd = blockEndX + blockEndWidth/2 - 10
 								xBegin = endX2 + 4
-								yEnd = blockEnd.y
-								yBegin = blockBegin.y + blockBeginHeight/2 - 10
+								yEnd = blockEndY
+								yBegin = blockBeginY + blockBeginHeight/2 - 10
 							} else {
-								xEnd = blockEnd.x
-								xBegin = blockBegin.x + blockBeginWidth/2 + 10
-								yEnd = blockEnd.y + blockEndHeight/2 + 10
-								yBegin = blockBegin.y + 4
+								xEnd = blockEndX + blockEndWidth/2 - 10
+								xBegin = blockBeginX + blockBeginWidth/2 + 10
+								yEnd = endY1 + 8
+								yBegin = blockBeginY + 4
 							}
 						}
 						svg.append("line")
@@ -138,16 +138,15 @@ export default {
 			await getDatas();
 			await getSVGS();
 
-			svg = d3.select("#myDataViz")
-						.append("svg")
-						.attr("width", 2000)
-						.attr("height", 2000)
-						.attr('xmlns',"http://www.w3.org/2000/svg")
-						.attr('xmlns:xlink', "http://www.w3.org/1999/xlink")
-						.append("g")
-							.attr("id", "svg0");
+			svg = d3.select("#svg0")
+					.attr("id", "svg0")
+					.attr("width", 2000)
+					.attr("height", 2000)
+					.attr('xmlns',"http://www.w3.org/2000/svg")
+					.attr('xmlns:xlink', "http://www.w3.org/1999/xlink")
+					.append("g");
 
-			drawSVG(monacoSourceData.value["resources"], [], svg, "svg0")
+			drawSVG(monacoSourceData.value["resources"], svg, "svg0")
 
 			svg.append('svg:defs')
 				.append('svg:marker')
