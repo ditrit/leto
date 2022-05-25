@@ -2,11 +2,8 @@
 	<div>
 		<div class="monaco" ref="monacoContainer"></div>
 		<button :onClick="consoleClick" class="Button">
-			<slot>Button</slot>
+			<slot>Compiler</slot>
 		</button>
-		<div>
-			<pre>{{ metadatas }}</pre>
-		</div>
 	</div>
 </template>
 
@@ -17,6 +14,7 @@ import Button from "../UI/Buttons/BtnAddNew.vue";
 import { calculAttributesObjects } from "./svg_maths.js";
 import meta from "../../../public/metadatas.json";
 import { mapActions, mapGetters } from "vuex";
+import { analyse_resources } from "../../../../iactor/src/parser/compiler/schema_parser.js";
 
 export default {
 	data() {
@@ -31,11 +29,13 @@ export default {
 		this.worker = new Worker("dist/bundle.js");
 		this.worker.onmessage = function (event) {
 			this.iactorDatas = event.data;
-			this.iactorDatas = calculAttributesObjects(this.iactorDatas);
-			console.log("data : ", event.data);
 		};
 		this.worker.addEventListener("message", (event) => {
-			window.localStorage.setItem("monacoSource", JSON.stringify(event.data));
+			let data = event.data;
+			data.provider[0].orderResources = (this.metadatas.provider.orderResources) ? this.metadatas.provider.orderResources : [];
+			analyse_resources(data.resources, this.metadatas.provider.resources);
+			data.resources = calculAttributesObjects(data);	
+			window.localStorage.setItem("monacoSource", JSON.stringify(data));
 		});
 	},
 	mounted() {
@@ -106,7 +106,6 @@ export default {
 		async getMetaDatas() {
 			await this.getMetaSource(meta);
 		},
-
 		onChange(value) {
 			this.valueEditor = value;
 		},

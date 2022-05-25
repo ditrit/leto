@@ -3,6 +3,5 @@ export const getMonacoSource = async ({ commit }, source) => {
 };
 
 export const getMetadatas = async ({ commit }, metadata) => {
-	console.log("metadata: ", metadata);
 	commit("GET_METADATAS", metadata);
 };
