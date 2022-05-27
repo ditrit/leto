@@ -143,7 +143,6 @@ export default {
 					},
 				],
 			},
-
 		});
 		const modelArea = ref({
 			levels: [2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5],

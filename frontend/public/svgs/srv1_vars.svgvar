@@ -35,5 +35,9 @@
 			<rect class="bottom_path" x="6" y="N{{rels_height+56}}+N{{container_height}}" width="N{{width}}" height="0" style="fill:none;stroke-width:0;stroke:none"/>
     </g>
   </g>
+<<<<<<< HEAD
 	<!--</g>-->
+=======
+	</g>
+>>>>>>> 0d4322cb (WIP: Modelization Workshop)
 </svg>
