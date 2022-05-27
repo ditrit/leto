@@ -1,5 +1,9 @@
 {
 	"server": "srv1_vars.svgvar",
+<<<<<<< HEAD
 	"database": "bd1_vars.svgvar",
 	"dbtf": "resource.svg"
+=======
+	"database": "bd1_vars.svgvar"
+>>>>>>> 5841a470 (WIP: Modelization Workshop)
 }
