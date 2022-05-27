@@ -141,6 +141,7 @@ export default {
 			},
 
 		});
+		const toscaPanelList = ref([]);
 		const modelArea = ref({
 			levels: [2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.75, 0.5],
       widthLevel : [230,200,170,140,110,80],
@@ -261,11 +262,13 @@ export default {
 		//Define all interaction functions ---------------------------------------------
 
 		function clickArrow(event,d){
-				console.log(lastArrow.value)
-				if(lastArrow.value==null){
+
+				if(lastArrow.value==null)
+				{
 					lastArrow.value=this;
 				}
-				else{
+				else
+				{
 					console.log("lastArrow:"+lastArrow.value.className.baseVal+" thisArrow:"+this.className.baseVal)
 					if((lastArrow.value.className.baseVal=="input"&&this.className.baseVal=="output")
 						||(lastArrow.value.className.baseVal=="output"&&this.className.baseVal=="input"))
@@ -273,13 +276,15 @@ export default {
 							let linkID=drawLink(lastArrow.value,this,"svg0",zoom.value,translateX.value,translateY.value,links.value);
 
 							let sourceID,targetID,sourceArrow,targetArrow;
-							if(lastArrow.value.className=="input"){
+							if(lastArrow.value.className=="input")
+							{
 								sourceID=this.parentNode.id;
 								sourceArrow=this.id;
 								targetID=lastArrow.value.parentNode.id;
 								targetArrow=lastArrow.value.id;
 							}
-							else{
+							else
+							{
 								sourceID=lastArrow.value.parentNode.id;
 								sourceArrow=lastArrow.value.id;
 								targetID=this.parentNode.id;
@@ -295,13 +300,13 @@ export default {
 						}
 						lastArrow.value=null;
 				}
-				console.log(links.value)
 		}
 
 		function click(event, d) {
-				console.log("click "+this.parentNode.parentNode.parentNode.getAttribute("id"))
+				console.log("click "+this.parentNode.parentNode.parentNode.getAttribute("id"));
 				let i=document.getElementById("detailsContainer").childNodes.length;
-				while(i>0){
+				while(i>0)
+				{
 					document.getElementById("detailsContainer").childNodes[i-1].remove();
 					i--;
 				}
@@ -309,71 +314,78 @@ export default {
 				let currentID = parseInt(this.parentNode.parentNode.parentNode.getAttribute("id"));
 				let currentLevel;
 				let currentModel = this.parentNode.parentNode.parentNode;
-				for (let el0 of modelArea.value.data) {
-        			if (el0.id === currentID) {
-          				currentLevel = 0;
-          				break;
-        			}
-        			for (let el1 of el0.content) {
-          				if (el1.id === currentID) {
-            				currentLevel = 1;
-									break;
-          				}
-          				for (let el2 of el1.content) {
-            				if (el2.id === currentID) {
-              					currentLevel = 2;
-                        		break;
-            				}
-            				for (let el3 of el2.content) {
-              					if (el3.id === currentID) {
-                					currentLevel = 3;
-                					break;
-              					}
-												for (let el4 of el3.content) {
-              						if (el4.id === currentID) {
-                						currentLevel = 4;
-                						break;
-              						}
-													for (let el5 of el4.content) {
-              							if (el5.id === currentID) {
-                						currentLevel = 5;
-                						break;
-              							}
-            							}
-            						}
-            				}
-          				}
-        			}
-     			}
-
-				var panelObj;
-
-      			for (const prop in panel.value) {
-        			if (
-          			panel.value[prop].type_name ==
-          			currentModel.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, '')
-        			)
+				for (let el0 of modelArea.value.data)
+				{
+        	if (el0.id === currentID)
+					{
+          	currentLevel = 0;
+          	break;
+        	}
+        	for (let el1 of el0.content)
+					{
+          	if (el1.id === currentID)
+						{
+            	currentLevel = 1;
+							break;
+          	}
+          	for (let el2 of el1.content)
+						{
+            	if (el2.id === currentID)
 							{
-          			panelObj = panel.value[prop];
-        			}
+              	currentLevel = 2;
+                break;
+          		}
+            	for (let el3 of el2.content)
+							{
+              	if (el3.id === currentID)
+								{
+                	currentLevel = 3;
+                	break;
+              	}
+								for (let el4 of el3.content)
+								{
+              		if (el4.id === currentID)
+									{
+                		currentLevel = 4;
+                		break;
+              		}
+									for (let el5 of el4.content)
+									{
+              			if (el5.id === currentID)
+										{
+                			currentLevel = 5;
+                			break;
+          					}
+  								}
+   							}
+            	}
       			}
+        	}
+     		}
+				var panelObj;
+      	for (const prop in panel.value)
+				{
+        	if (panel.value[prop].type_name ==currentModel.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, ''))
+					{
+        		panelObj = panel.value[prop];
+        	}
+      	}
 
 				var currentObj ={
 					type_name: currentModel.getElementsByClassName("type_name")[0].textContent,
-        			instance_name: currentModel.getElementsByClassName("instance_name")[0].textContent,
-        			id: parseInt(currentModel.getAttribute("id")),
-							//width: currentModel.getElementsByClassName("main")[0].getAttribute("width"),
-        			//logo: d3.select(currentModel).select(".logo").attr("xlink:href"),
-        			//primary_color: currentModel.getElementsByClassName("top")[0].style.fill,
-        			//secondary_color: currentModel.getElementsByClassName("top_path")[0].style.fill,
-        			level: currentLevel,
-        			//container_height:
-							//parseFloat((currentModel).getElementsByClassName("subs_limits")[0].getAttribute("height")),
-        			//content: [],
-        			requirements: panelObj.requirements,
-        			capabilities: panelObj.capabilities,
+        	instance_name: currentModel.getElementsByClassName("instance_name")[0].textContent,
+        	id: parseInt(currentModel.getAttribute("id")),
+					//width: currentModel.getElementsByClassName("main")[0].getAttribute("width"),
+        	//logo: d3.select(currentModel).select(".logo").attr("xlink:href"),
+        	//primary_color: currentModel.getElementsByClassName("top")[0].style.fill,
+        	//secondary_color: currentModel.getElementsByClassName("top_path")[0].style.fill,
+        	level: currentLevel,
+        	//container_height:
+					//parseFloat((currentModel).getElementsByClassName("subs_limits")[0].getAttribute("height")),
+        	//content: [],
+        	requirements: panelObj.requirements,
+        	capabilities: panelObj.capabilities,
 				}
-
 
 				let p=document.createElement("p");
 				p.appendChild(document.createTextNode("	Name :"+currentObj.instance_name));
@@ -417,27 +429,34 @@ export default {
 
 		function click_model(event, d) {
 				var clickedModel = this;
-				console.log("clicked");
 				d3.select(this).transition().attr("fill", "black");
 				var panelObject;
-				for (const prop in panel.value) {
+				console.log(toscaPanelList.value)
+				toscaPanelList.value.forEach(element=>{
 					if (
-						panel.value[prop].type_name ==
+						element.type_name ==
 						clickedModel.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, '')
 					) {
-						panelObject = panel.value[prop];
+						panelObject = element;
 					}
-				}
-				console.log(panelObject.type_name)
+				})
+				/*for (const prop in toscaPanelList.value) {
+					if (
+						toscaPanelList.value[prop].type_name ==
+						clickedModel.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, '')
+					) {
+						panelObject = toscaPanelList.value[prop];
+					}
+				}*/
 
-				var currentObj = {
+				/*var currentObj = {
 					type_name: panelObject.type_name,
-					instance_name: panelObject.instance_name,
+					instance_name: panelObject.defaultPalette.instance_name,
 					class: this.getAttribute("class"),
 					id: Date.now(),
-					width: panelObject.width,
-					rels_height: panelObject.rels_height,
-					container_height: panelObject.container_height,
+					width: panelObject.defaultPalette.width,
+					rels_height: panelObject.defaultPalette.rels_height,
+					container_height: panelObject.defaultPalette.container_height,
 
 					logo: panelObject.logo,
 					primary_color: panelObject.primary_color,
@@ -452,68 +471,82 @@ export default {
 				let drawnModel = drawSvg( currentObj,document.getElementById("svg0"));
 
 
-
+				*/
+				let drawnModel = panelObject.drawInWorkshop(document.getElementById("svg0"),svgs.value,modelArea.value,zoom.value,clickArrow,click,drag.value);
 				d3.select(drawnModel).attr("x",0).attr("y",0);
 
 
-				modelArea.value.data.push(currentObj);
+				modelArea.value.data.push(panelObject);
 				console.log(modelArea.value.data);
+				//console.log(toscaPanelList.value)
 		}
 
 		function dragstarted(event, d) {
-      let currentID = parseInt(this.parentNode.getAttribute("id"));
-      var currentModel = this.parentNode;
-      var currentLevel;
-      var parent = this.parentNode.parentNode;
+      		let currentID = parseInt(this.parentNode.getAttribute("id"));
+      		var currentModel = this.parentNode;
+      		var currentLevel;
+      		var parent = this.parentNode.parentNode;
 			//currentParent = this.parentNode.parentNode;
 
 
-      for (let el0 of modelArea.value.data) {
-        if (el0.id === currentID) {
-          currentLevel = 0;
+      		for (let el0 of modelArea.value.data)
+			  {
+        		if (el0.defaultWorkshop.id === currentID)
+				{
+         			currentLevel = 0;
 
-          modelArea.value.data.splice(modelArea.value.data.indexOf(el0), 1);
-          break;
-        }
-        for (let el1 of el0.content) {
-          if (el1.id === currentID) {
-            currentLevel = 1;
+          			modelArea.value.data.splice(modelArea.value.data.indexOf(el0), 1);
+          			break;
+        		}
+        		for (let el1 of el0.content)
+				{
+          			if (el1.defaultWorkshop.id === currentID)
+					{
+            			currentLevel = 1;
 
-            el0.content.splice(el0.content.indexOf(el1), 1);
-            break;
-          }
-          for (let el2 of el1.content) {
-            if (el2.id === currentID) {
-              currentLevel = 2;
+            			el0.content.splice(el0.content.indexOf(el1), 1);
+            			break;
+          			}
+          			for (let el2 of el1.content)
+					{
+            			if (el2.defaultWorkshop.id === currentID)
+						{
+              				currentLevel = 2;
 
-              el1.content.splice(el1.content.indexOf(el2), 1);
-              break;
-            }
-            for (let el3 of el2.content) {
-              if (el3.id === currentID) {
-                currentLevel = 3;
+              				el1.content.splice(el1.content.indexOf(el2), 1);
+              				break;
+            			}
+            			for (let el3 of el2.content)
+						{
+              				if (el3.defaultWorkshop.id === currentID)
+								{
+                					currentLevel = 3;
 
-                el2.content.splice(el2.content.indexOf(el3), 1);
-                break;
-              }
-							for (let el4 of el3.content) {
-              	if (el4.id === currentID) {
-                	currentLevel = 4;
+                					el2.content.splice(el2.content.indexOf(el3), 1);
+               						 break;
+              					}
+								for (let el4 of el3.content)
+								{
+              						if (el4.defaultWorkshop.id === currentID)
+										{
+                							currentLevel = 4;
 
-                	el3.content.splice(el3.content.indexOf(el4), 1);
-                	break;
-              	}
-								for (let el4 of el5.content) {
-              		if (el5.id === currentID) {
-                		currentLevel = 5;
+                							el3.content.splice(el3.content.indexOf(el4), 1);
+                							break;
+              							}
+										for (let el4 of el5.content)
+										{
+              								if (el5.defaultWorkshop.id === currentID)
+											  {
+                								currentLevel = 5;
 
-                		el4.content.splice(el4.content.indexOf(el5), 1);
-                		break;
-              		}
-            		}
-            	}
-            }
-          }
+                								el4.content.splice(el4.content.indexOf(el5), 1);
+                								break;
+              									}
+            							}
+            					}
+            			}
+          		}
         }
       }
       if (currentModel.parentNode.getAttribute("id") != "svg0") {
@@ -613,13 +646,7 @@ export default {
 
 				redrawStack(parent,currentModel);
 
-
-        //d3.select("#"+currentModel.id).call(drag).on("click", click);
-
-				//console.log("parent",document.getElementById(currentModel.id))
         replaceComponents(document.getElementById(parent.id));
-				//document.getElementById(parentId).removeChild(currentModel);
-
       }
 
       console.log(modelArea.value.data);
@@ -637,64 +664,27 @@ export default {
 
 
 			d3.select(this.parentNode)
+			.raise()
 			.attr("x",coord[0]/zoom.value-rootx/zoom.value-parseFloat(this.getAttribute("x"))-parseFloat(this.getAttribute("width")/2) - translateX.value/zoom.value)
 			.attr("y",coord[1]/zoom.value-rooty/zoom.value-parseFloat(this.getAttribute("y"))-parseFloat(this.getAttribute("height")/2) - translateY.value/zoom.value);
-			console.log(this.parentNode.getAttribute("x"))
-      /*if (
-        currentGroup.className.baseVal == "model" &&
-        currentGroup.getAttribute("id") != "svg0"
-      ) {
-        d3.select(currentGroup)
-          .raise()
-          .attr(
-            "transform",
-            "translate(" +
-              [
-                (coord[0]-rootx-(parseFloat(this.getAttribute("x"))+parseFloat(this.getAttribute("width"))/2)*zoom.value-translateX.value)/zoom.value,
-                (coord[1] -rooty-(parseFloat(this.getAttribute("y"))+parseFloat(this.getAttribute("height"))/2)*zoom.value-translateY.value)/zoom.value,
-              ] +
-              ")"
-          );
-      }*/
 
-			//d3.selectAll(".link").remove();
 			links.value.forEach(element=>{
 
 				if(element.sourceID==this.parentNode.id)
 				{
 					let currentLink = document.getElementById(element.id.toString());
-					console.log("source moved");
 					d3.select(currentLink)
 					.attr("x1",(parseFloat(document.getElementById(element.sourceID).getAttribute("x")))+parseFloat(this.parentNode.getElementById(element.sourceArrow).getAttribute("x")))
 					.attr("y1",(parseFloat(document.getElementById(element.sourceID).getAttribute("y")))+parseFloat(this.parentNode.getElementById(element.sourceArrow).getAttribute("y")))
-					//drawLink(element.target,element.source,"svg0",zoom.value,translateX.value,translateY.value,links.value);
 				}
 				else if(element.targetID==this.parentNode.id){
 					let currentLink = document.getElementById(element.id.toString());
-					console.log("target moved");
 					d3.select(currentLink)
 					.attr("x2",parseFloat(document.getElementById(element.targetID).getAttribute("x"))+parseFloat(this.parentNode.getElementById(element.targetArrow).getAttribute("x")))
 					.attr("y2",parseFloat(document.getElementById(element.targetID).getAttribute("y"))+parseFloat(this.parentNode.getElementById(element.targetArrow).getAttribute("y")))
 
 				}
 			})
-      /*var groups = d3.selectAll(".model");
-      groups.each(function (groups, i) {
-        if (this.getAttribute("id") != "svg0") {
-          var groupRect =
-            this.getElementsByClassName("main")[0].getBoundingClientRect();
-          if (
-            coord[0] > groupRect.x &&
-            coord[0] < groupRect.x + groupRect.width &&
-            coord[1] > groupRect.y &&
-            coord[1] < groupRect.y + groupRect.height &&
-            currentGroup != this
-          ) {
-            //console.log("dragover" + this.getAttribute("id"));
-          } else {
-          }
-        }
-      });*/
     }
 
 		function dragended(event, d) {
@@ -734,7 +724,6 @@ export default {
       var minWidth = 350;
       var minGroup;
       var groups = d3.selectAll(".model");
-      console.log(groups._groups[0]);
       groups.each(function (groups, i) {
         //For each group on the window but the main container
         if (this.getAttribute("id") != "svg0") {
@@ -749,7 +738,6 @@ export default {
             this != currentGroup
           ) {
             if (groupRect.width < minWidth) {
-              console.log(this.getAttribute("id") + " " + groupRect.width);
               minGroup = this;
             }
           }
@@ -760,7 +748,6 @@ export default {
 
 
         for (let el0 of modelArea.value.data) {
-          console.log(el0.id);
           if (el0.id == parseInt(minGroup.getAttribute("id"))) {
             currentObj.level = 1;
             el0.content.push(currentObj);
@@ -795,8 +782,6 @@ export default {
 			component.parentNode.removeChild(component);
 			let cloneComponent = drawSvg(currentObj,document
         .getElementById(minGroup.getAttribute("id")));
-			console.log(currentObj.id)
-			console.log(cloneComponent)
 
 
 function redrawStack(group,addedComponent){
@@ -838,7 +823,6 @@ function redrawStack(group,addedComponent){
 		let xGroup = group.getAttribute("x");
 		let yGroup = group.getAttribute("y");
 		group.parentNode.removeChild(group);
-		console.log(obj);
 			var cloneParent = drawSvg(obj,document
         .getElementById(parentId));
 
@@ -851,39 +835,13 @@ function redrawStack(group,addedComponent){
 }
 
 redrawStack(minGroup,cloneComponent);
-console.log(cloneComponent)
-console.log((currentObj.id))
         replaceComponents(document.getElementById(currentObj.id));
 
 
         reDrawn = true;
       }
       if (!reDrawn) {
-				var xParent;
-				var yParent;
 
-			var hasParent;
-			var rootx=document.getElementById("root").getBoundingClientRect().x;
-			var rooty = document.getElementById("root").getBoundingClientRect().y;
-
-			//if(currentParent.id != "svg0"){
-				/*xParent=//document.getElementById("root").getBoundingClientRect().x+
-				document.getElementById(currentParent.id).getBoundingClientRect().x;
-				yParent=//document.getElementById("root").getBoundingClientRect().y+
-				document.getElementById(currentParent.id).getBoundingClientRect().y;
-			  console.log("xParent",document.getElementById(currentParent.id).getBoundingClientRect().x)
-			  console.log("xroot",xParent)
-			  console.log("eventx",event.x)
-			  console.log("eventy",event.y)
-			  hasParent=1;*/
-
-			//}
-			/*else{
-				xParent=0;
-				yParent=0;
-				hasParent=0;
-
-			}*/
         console.log("on svg");
 				currentObj.width=230;
 				getContent(currentGroup,currentObj,panel.value);
@@ -894,19 +852,7 @@ console.log((currentObj.id))
 
 				d3.select(cloneComponent).attr("x",xComponent).attr("y",yComponent);
 
-				/*d3.select(cloneComponent)
-          .raise()
-          .attr(
-            "transform",
-            "translate(" +
-              [
-                (coord[0]-rootx-(parseFloat(this.getAttribute("x"))+parseFloat(this.getAttribute("width"))/2)*zoom.value-translateX.value)/zoom.value,
-                (coord[1] -rooty-(parseFloat(this.getAttribute("y"))+parseFloat(this.getAttribute("height"))/2)*zoom.value-translateY.value)/zoom.value,
-              ] +
-              ")"
-          );*/
-
-        modelArea.value.data.push(currentObj);
+        //modelArea.value.data.push(currentObj);
       }
 			d3.selectAll(".link").raise();
       console.log(modelArea.value.data);
@@ -930,14 +876,6 @@ console.log((currentObj.id))
 					//const svgDom = domParser.parseFromString(svgTxt, "image/svg+xml");
 					var newSvg = d3.select(parent).node().append(svgDom.documentElement);
           var model = document.getElementById(object.id)
-
-
-					/*document
-						.getElementById(parent.id)
-						.appendChild(model);*/
-
-					//document.getElementById("1").remove()
-
 
 				if(object.instance_name!=null){
           // Draw the arrows
@@ -1027,9 +965,10 @@ console.log((currentObj.id))
 						})
 						return document.getElementById(object.id);
 					}
+					}
 					else {
 						console.log("wait for loading");
-					}}
+					}
 		}
 
 	//End of drawing function definition
@@ -1093,7 +1032,6 @@ console.log((currentObj.id))
 						.zoom()
 						.scaleExtent([0.25, 2])
 						.on("zoom", function (event) {
-							console.log(event.transform);
 							zoom.value = event.transform.k;
 							translateX.value = event.transform.x;
 							translateY.value = event.transform.y;
@@ -1114,16 +1052,16 @@ console.log((currentObj.id))
 					.attr("height", 2000);
 
 			// Create a list of tosca object while we don't have the compiler to provide it
-			let toscaPanelList = []
+			//let toscaPanelList = []
 
 			Object.values(panel.value).forEach((element) => {
 
-					toscaPanelList.push(
-					new ToscaTypeNode(element.logo,element.type_name,element.primary_color,element.secondary_color,element.svg));
+					toscaPanelList.value.push(
+					new ToscaTypeNode(element.logo,element.type_name,element.primary_color,element.secondary_color,element.svg,element.requirements,element.capabilities,element.instance_name,0,[]));
 			});
 
 			// Create and draw the Palette with the object list (Tosca or Tf)
-			let palette = new Palette(toscaPanelList);
+			let palette = new Palette(toscaPanelList.value);
 
 			palette.drawPalette(svgs.value,panel.value,modelArea.value,click_model);
 
@@ -1148,7 +1086,8 @@ console.log((currentObj.id))
 			translateX,
 			translateY,
 			click,
-			drawSvg
+			drawSvg,
+			toscaPanelList
 		};
 	}
 }
