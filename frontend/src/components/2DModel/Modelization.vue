@@ -6,21 +6,15 @@
 </template>
 
 <script>
-import { defineComponent, computed, onMounted, ref, onBeforeMount } from "vue";
+import { onMounted, ref } from "vue";
 const d3 = require("d3");
 import Palette from "./Palette"
 import {drawLink,getContent,replaceComponents} from "./utils";
 import SVGinstanciate from "./svgvar"
 import ToscaTypeNode from "./ToscaTypeNode"
-//import Parse from "parse";
 import { useStore } from "vuex";
 export default {
-	/*data(){
-		return{
-			tosca: false,
-			terraform: false
-		}
-	},*/
+
 	setup() {
 		const monacoSourceData = ref({});
 		const lastArrow = ref(null);
@@ -154,6 +148,8 @@ export default {
 		});
 
 		/*
+		<<<<<<<<<< From iactormonaco
+
 		//let arg = process.argv.slice(2).toString();
 		const datas = get_datas('../tests/tf');
 		let resources = calcul_attributes_objects(datas)
@@ -262,6 +258,8 @@ export default {
 			})
 		}*/
 
+		//Define all interaction functions ---------------------------------------------
+
 		function clickArrow(event,d){
 				console.log(lastArrow.value)
 				if(lastArrow.value==null){
@@ -298,9 +296,9 @@ export default {
 						lastArrow.value=null;
 				}
 				console.log(links.value)
-			}
+		}
 
-			function click(event, d) {
+		function click(event, d) {
 				console.log("click "+this.parentNode.parentNode.parentNode.getAttribute("id"))
 				let i=document.getElementById("detailsContainer").childNodes.length;
 				while(i>0){
@@ -415,9 +413,9 @@ export default {
 				})
 				document.getElementById("detailsContainer").appendChild(p);
 
-			}
+		}
 
-function click_model(event, d) {
+		function click_model(event, d) {
 				var clickedModel = this;
 				console.log("clicked");
 				d3.select(this).transition().attr("fill", "black");
@@ -460,109 +458,9 @@ function click_model(event, d) {
 
 				modelArea.value.data.push(currentObj);
 				console.log(modelArea.value.data);
-			}
+		}
 
-		/*function getContent(model,object){
-				model.childNodes.forEach(element=>{
-					if (element.tagName == "svg"){
-					if (element.className.baseVal=="model"){
-						var panelObj;
-
-      			for (const prop in panel.value) {
-        			if (
-          			panel.value[prop].type_name ==
-          			element.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, '')
-        				)
-							{
-          			panelObj = panel.value[prop];
-        			}
-      			}
-				var contentObj={
-					type_name: element.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, ''),
-        			instance_name: element.getElementsByClassName("instance_name")[0].textContent.replace(/\s+/g, ''),
-        			class: element.getAttribute("class"),
-        			id: parseInt(element.getAttribute("id")),
-					width: element.getElementsByClassName("main")[0].getBoundingClientRect().width,
-        			logo: d3.select(element).select(".logo").attr("xlink:href"),
-        			primary_color: element.getElementsByClassName("top")[0].style.fill,
-        			secondary_color: element.getElementsByClassName("top_path")[0].style.fill,
-        			level: object.level+1,
-        			container_height: element.getElementsByClassName("subs_limits")[0].getAttribute("height"),
-        			content: [],
-        			requirements: panelObj.requirements,
-        			capabilities: panelObj.capabilities,
-						}
-						object.content.push(contentObj);
-						getContent(element,contentObj)
-					}}
-				})
-			}*/
-
-		/*function replaceComponents(group) {
-      var i = 0;
-      var height =
-      	parseFloat(group.getElementsByClassName("top")[0].getAttribute("height") *2)
-        +
-        parseFloat(group.getElementsByClassName("middle")[0].getAttribute("height"))
-
-
-        for (const prop in group.childNodes) {
-          if (group.childNodes[prop].tagName == "svg") {
-            if (
-              group.childNodes[prop].className.baseVal == "model" &&
-              group.childNodes[prop].getAttribute("id") != "svg0"
-              )
-							{
-                i++;
-
-								let width = parseFloat(group.getElementsByClassName("main")[0].getAttribute("width"))+parseFloat(group.getElementsByClassName("main")[0].getAttribute("x"));
-								let widthChild = parseFloat(group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("width"))+parseFloat(group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("x"));
-
-								d3.select(group.childNodes[prop])
-								.attr("x",(width-widthChild) /2)
-								.attr("y",height)
-                //var currentScale =
-                //  group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("width")/group.getElementsByClassName("main")[0].getAttribute("width");
-
-                /*d3.select(group.childNodes[prop])
-                  .attr(
-                    "transform",
-                    "scale(" +
-                     1+
-                      ")translate(" +
-                      [
-                        (parseFloat(group.getElementsByClassName("main")[0].getAttribute("width"))+parseFloat(group.getElementsByClassName("main")[0].getAttribute("x")) -
-                          parseFloat(group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("width"))-parseFloat(group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("x"))) /
-                          2
-                          , height+parseFloat(group.childNodes[prop].getElementsByClassName("top")[0].getAttribute("height"))
-														+
-														parseFloat(group.getElementsByClassName("main")[0].getAttribute("y"))
-														-
-														parseFloat(group.childNodes[prop].getElementsByClassName("top")[0].getAttribute("y")) ,
-                      ] +")"
-                  );
-
-                height +=
-                  parseFloat(group.childNodes[prop]
-                    .getElementsByClassName("top")[0]
-                    .getAttribute("height"))
-									+
-                  parseFloat(group.childNodes[prop]
-                    .getElementsByClassName("main")[0]
-                    .getAttribute("height"))
-
-              }
-            }
-          }
-          if (
-            group.parentNode.className.baseVal == "model" &&
-            group.parentNode.getAttribute("id") != "svg0"
-          ) {
-            replaceComponents(group.parentNode);
-          }
-        }*/
-
-				function dragstarted(event, d) {
+		function dragstarted(event, d) {
       let currentID = parseInt(this.parentNode.getAttribute("id"));
       var currentModel = this.parentNode;
       var currentLevel;
@@ -1015,7 +913,11 @@ console.log((currentObj.id))
 
     }
 
-				function drawSvg(object,parent) {
+	//End of interaction functions definition -------------------------------------------------
+
+	//Drawing function definition to be moved in ToscaTypeNode.js
+
+		function drawSvg(object,parent) {
 				if (!loading.value) {
 					object.type_name=object.type_name.replace(/\s+/g, '')
 				if(object.instance_name!=null){
@@ -1128,10 +1030,11 @@ console.log((currentObj.id))
 					else {
 						console.log("wait for loading");
 					}}
-			}
+		}
 
+	//End of drawing function definition
 
-
+	//Loading svgs function definition
 		const getSVGS = async () => {
 			await store.dispatch("appSVGs/loadPath");
 			(svgs.value = await store.getters["appSVGs/allSvgs"]);
@@ -1142,12 +1045,15 @@ console.log((currentObj.id))
 
 			return svgs.value;
 		};
+	//End of loading svgs definition
 
 
 		onMounted(async () => {
 
+			//Load the svgs
 			await getSVGS();
 		/*
+		<<<<<<<< From iactormonaco
 			var svg = d3.select("#myDataViz")
 						.append("svg")
 						.attr("id", "svg0")
@@ -1173,15 +1079,9 @@ console.log((currentObj.id))
 			.attr('stroke', 'black');
 		*/
 
-			const domParser = new DOMParser();
+			//const domParser = new DOMParser();
 
-
-
-
-			//var zoom.value = 1;
-			//var translateX = 0;
-			//var translateY = 0;
-			//Create SVG element on the center page
+			//Create the root node SVG element on the center area
 			var svg = d3
 				.select("#myDataViz")
 				.append("svg")
@@ -1204,16 +1104,7 @@ console.log((currentObj.id))
 				.attr("id", "svg0");
 
 
-
-			// Define drag and drop functions ----------------------------------------
-
-
-
-			//End of drag and drop functions -------------------------------------------
-			//Click event
-
-
-			// Draw some svg items in the drawer -------------------------------------------------------
+			// Draw the palette in the left drawer -------------------------------------------------------
 
 			var drawerItem = d3
 					.select("#drawerContent")
@@ -1222,8 +1113,7 @@ console.log((currentObj.id))
 					.attr("width", 250)
 					.attr("height", 2000);
 
-			// Create a list of tosca object while we don't have the compiler to provide it;
-
+			// Create a list of tosca object while we don't have the compiler to provide it
 			let toscaPanelList = []
 
 			Object.values(panel.value).forEach((element) => {
@@ -1235,7 +1125,7 @@ console.log((currentObj.id))
 			// Create and draw the Palette with the object list (Tosca or Tf)
 			let palette = new Palette(toscaPanelList);
 
-			palette.drawPalette(svgs.value,panel.value,modelArea.value);
+			palette.drawPalette(svgs.value,panel.value,modelArea.value,click_model);
 
 
 			//----------------------------------------------------------------------------
