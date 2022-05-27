@@ -1,10 +1,11 @@
 const d3 = require("d3");
 
 
-<<<<<<< HEAD
+
 export function getContent(model,object,panel){
 	model.childNodes.forEach(element=>{
 		if (element.tagName == "svg"){
+
 		if (element.className.baseVal=="model"){
 			var panelObj;
 
@@ -51,30 +52,15 @@ export function drawLink(lastArrow,thisArrow,rootID,zoom,translateX,translateY,l
 							.attr("y1",parseFloat(lastArrow.getAttribute("y"))+parseFloat(lastArrow.parentNode.getAttribute("y")))
 							.attr("x2",parseFloat(thisArrow.getAttribute("x"))+parseFloat(thisArrow.parentNode.getAttribute("x")))
 							.attr("y2",parseFloat(thisArrow.getAttribute("y"))+parseFloat(thisArrow.parentNode.getAttribute("y")))
-=======
-export default function drawLink(lastArrow,thisArrow,rootID,zoom){
-	let id = Date.now();
-	d3.select("#"+rootID).append("line")
-							.attr("id",id)
-							.attr("x1",(lastArrow.getBoundingClientRect().x-document.getElementById(rootID).getBoundingClientRect().x)/zoom)
-							.attr("y1",(lastArrow.getBoundingClientRect().y-document.getElementById(rootID).getBoundingClientRect().y)/zoom)
-							.attr("x2",(thisArrow.getBoundingClientRect().x-document.getElementById(rootID).getBoundingClientRect().x)/zoom)
-							.attr("y2",(thisArrow.getBoundingClientRect().y-document.getElementById(rootID).getBoundingClientRect().y)/zoom)
->>>>>>> 0d4322cb (WIP: Modelization Workshop)
 							.attr("cursor", "pointer")
 							.style("stroke", "black")
 							.style("stroke-width",3)
 							.on("click",function(d)
 								{
-<<<<<<< HEAD
+
 									this.remove();
 									links.splice(links.indexOf(this));
 								});
 	return id;
 
-=======
-									thisArrow.remove();
-								});
-	return id;
->>>>>>> 0d4322cb (WIP: Modelization Workshop)
 }
