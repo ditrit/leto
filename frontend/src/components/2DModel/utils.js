@@ -5,7 +5,6 @@ const d3 = require("d3");
 export function getContent(model,object,panel){
 	model.childNodes.forEach(element=>{
 		if (element.tagName == "svg"){
-
 		if (element.className.baseVal=="model"){
 			var panelObj;
 
