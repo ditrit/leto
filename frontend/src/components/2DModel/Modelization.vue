@@ -12,7 +12,9 @@ import Palette from "./Palette"
 import {drawLink,getContent,replaceComponents} from "./utils";
 import SVGinstanciate from "./svgvar"
 import ToscaTypeNode from "./ToscaTypeNode"
+import ToscaObjectNode from "./ToscaObjectNode";
 import { useStore } from "vuex";
+
 export default {
 
 	setup() {
@@ -474,11 +476,14 @@ export default {
 
 
 				*/
-				let drawnModel = panelObject.drawInWorkshop(document.getElementById("svg0"),svgs.value,modelArea.value,zoom.value,clickArrow,click,drag.value);
+				console.log(panelObject.requirements.length);
+				let toscaObject = new ToscaObjectNode(panelObject,"myToscaObjectNode",0);
+				console.log(toscaObject)
+				let drawnModel = toscaObject.drawInWorkshop(document.getElementById("svg0"),svgs.value,modelArea.value,zoom.value,clickArrow,click,drag.value);
 				d3.select(drawnModel).attr("x",0).attr("y",0);
 
 
-				modelArea.value.data.push(panelObject);
+				modelArea.value.data.push(toscaObject);
 				console.log(modelArea.value.data);
 				//console.log(toscaPanelList.value)
 		}
@@ -1057,13 +1062,13 @@ redrawStack(minGroup,cloneComponent);
 			Object.values(panel.value).forEach((element) => {
 
 					toscaPanelList.value.push(
-					new ToscaTypeNode(element.logo,element.type_name,element.primary_color,element.secondary_color,element.svg,element.requirements,element.capabilities,element.instance_name,0,[]));
+					new ToscaTypeNode(element.logo,element.type_name,element.primary_color,element.secondary_color,element.svg,element.requirements,element.capabilities));
 			});
 
 			// Create and draw the Palette with the object list (Tosca or Tf)
 			let palette = new Palette(toscaPanelList.value);
 
-			palette.drawPalette(svgs.value,panel.value,modelArea.value,click_model);
+			palette.drawPalette(svgs.value,click_model);
 
 
 			//----------------------------------------------------------------------------

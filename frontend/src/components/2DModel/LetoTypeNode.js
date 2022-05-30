@@ -3,14 +3,14 @@ import { replaceComponents } from "./utils";
 const d3 = require("d3");
 
 export default class LetoTypeNode{
-	constructor(logo_path, type_name, primary_color, secondary_color,svg,instance_name,level){
+	constructor(logo_path, type_name, primary_color, secondary_color,svg){
 		this.svg = svg;
 		this.logo_path=logo_path;
 		this.type_name=type_name;
 		this.primary_color=primary_color;
 		this.secondary_color=secondary_color;
-		this.instance_name=instance_name;
-		this.level=level;
+		//this.instance_name=instance_name;
+		//this.level=level;
 	}
 
 	defaultPalette={}
