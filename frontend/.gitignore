@@ -35,3 +35,6 @@ yarn-error.log*
 
 # Jest reports
 /reports/*
+
+# Visual Studio Code Editor
+.vscode

@@ -9,7 +9,7 @@
 		"lint": "eslint --ext .js,.vue ./",
 		"dev": "quasar dev",
 		"build": "quasar build",
-		"sonar": "sonar-scanner",
+		"sonar": "node_modules/sonar-scanner/bin/sonar-scanner",
 		"start": "quasar serve",
 		"build:pwa": "quasar build -m pwa",
 		"test:unit:ci": "jest --ci",
@@ -22,6 +22,7 @@
 	"dependencies": {
 		"@intlify/vue-i18n-loader": "^3.3.0",
 		"@quasar/extras": "^1.0.0",
+		"antlr4": "^4.10.1",
 		"axios": "^0.21.2",
 		"browserfs": "^1.4.3",
 		"ckeditor4": "^4.18.0",
@@ -31,12 +32,16 @@
 		"grapesjs-plugin-ckeditor": "0.0.10",
 		"grapesjs-preset-webpage": "^0.1.11",
 		"isomorphic-git": "^1.12.1",
-		"monaco-editor": "^0.25.2",
+		"mathjs": "^10.5.3",
+		"monaco-editor": "^0.31.0",
+		"monaco-editor-webpack-plugin": "^7.0.1",
+		"parse": "^3.4.1",
 		"quasar": "^2.0.4",
+		"three": "^0.130.1",
 		"uuid": "^8.3.2",
 		"vue": "^3.2.33",
 		"vue-i18n": "^9.2.0-beta.22",
-		"vue-router": "^4.0.14",
+		"vue-router": "^4.0.15",
 		"vuex": "^4.0.1",
 		"vuex-persistedstate": "^4.0.0",
 		"yaml-loader": "^0.6.0"
@@ -52,7 +57,8 @@
 		"eslint-plugin-vue": "^7.0.0",
 		"eslint-webpack-plugin": "^2.4.0",
 		"jest-sonar-reporter": "^2.0.0",
-		"json-server-auth": "^2.1.0"
+		"json-server-auth": "^2.1.0",
+		"sonar-scanner": "^3.1.0"
 	},
 	"browserslist": [
 		"last 10 Chrome versions",

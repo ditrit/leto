@@ -1,52 +1,30 @@
 import axios from "axios";
 
 const API = axios.create({
-	baseURL: "http://127.0.0.1:9203/ditrit/Gandalf/1.0.0",
+	baseURL: process.env.BASEURL,
 });
 
 if (localStorage.getItem("user")) {
+	const { accessToken } = JSON.parse(localStorage.getItem("user"));
 	API.interceptors.request.use(
-		(config) => {
-			let params = new URLSearchParams();
-			const { accessToken } = localStorage.getItem("user")
-				? JSON.parse(localStorage.getItem("user"))
-				: null;
-			if (!config.headers.Authorization) {
-				axios.defaults.headers.common[
-					"Authorization"
-				] = `Bearer ${accessToken}`;
-				config.headers.Authorization = `Bearer ${accessToken}`;
-				params.append("Authorization", `Bearer ${accessToken}`);
-				config.params = params;
-			}
+		async (config) => {
+			config.headers.Authorization = await `Bearer ${accessToken}`;
 			return config;
 		},
-		function (error) {
+		(error) => {
 			return Promise.reject(error);
 		}
 	);
-}
-if (localStorage.getItem("user")) {
-	API.interceptors.response.use(
-		(config) => {
-			let params = new URLSearchParams();
-			const { accessToken } = localStorage.getItem("user")
-				? JSON.parse(localStorage.getItem("user"))
-				: null;
 
-			if (!config.headers.Authorization) {
-				axios.defaults.headers.common[
-					"Authorization"
-				] = `Bearer ${accessToken}`;
-				config.headers.Authorization = `Bearer ${accessToken}`;
-				params.append("Authorization", `Bearer ${accessToken}`);
-			}
-			config.params = params;
+	API.interceptors.response.use(
+		async (config) => {
+			config.headers.Authorization = await `Bearer ${accessToken}`;
 			return config;
 		},
-		function (error) {
+		(error) => {
 			return Promise.reject(error);
 		}
 	);
 }
+
 export default API;

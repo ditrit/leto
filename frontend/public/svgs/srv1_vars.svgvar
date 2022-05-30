@@ -1,0 +1,39 @@
+<svg id="T{{id}}" class="model" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!--<g id="T{{id}}" class="model">-->
+	<rect
+     x="5"
+     y="14"
+		 class="main"
+     width="N{{width}}"
+     height="N{{rels_height+6+container_height+6+36}}"
+     style="fill:none;stroke:none"/>
+  <g id="info">
+    <g>
+      <path class="top_path" d="M 8,14 26,2 N{{width-20+4}},2 N{{width+2}},14 Z"  style="fill:T{{secondary_color}};stroke:#000000;stroke-width:1.5"/>
+      <rect class="top" x="6" y="14" width="N{{width-2}}" height="36" ry="2.33" style="fill:T{{primary_color}};stroke-width:1.5;stroke:#000"/>
+      <rect class="info_limits" x="10" y="17" width="N{{width}}" height="30" style="fill:none;stroke:none"/>
+    </g>
+    <g>
+      <rect class="logo_frame" x="10" y="19" width="20" height="20" fill="#fff" fill-rule="evenodd" stroke="#000" stroke-linecap="round" stroke-linejoin="round" style="paint-order:stroke fill markers"/>
+			<image class="logo" x="10" y="19" width="20" height="20" xlink:href="T{{logo}}"/>
+      <text class="instance_name" text-align="center" style="font-family:Alef;font-size:7px;font-style:italic" xml:space="preserve"> <tspan x="35" y="25">T{{instance_name}}</tspan></text>
+      <text class="type_name" text-align="center" style="font-family:Alef;font-size:7px;font-weight:bold" xml:space="preserve"> <tspan x="35" y="37">T{{type_name}}</tspan></text>
+    </g>
+  </g>
+  <g id="rels">
+    <g>
+      <rect class="middle" x="6" y="50" width="N{{width-2}}" height="N{{rels_height+6}}" ry="2.17" style="fill:T{{primary_color}};stroke-width:1.5;stroke:#000"/>
+      <rect class="rels_limit" x="10" y="53" width="N{{width}}" height="N{{rels_height}}" style="fill:none;stroke:none"/>
+    </g>
+		<g id="arrows">
+	</g>
+  </g>
+  <g id="subs">
+    <g>
+      <rect class="bottom" x="6" y="N{{rels_height+56}}" width="N{{width-2}}" height="N{{container_height+6}}" ry="2.16" style="fill:T{{primary_color}};stroke-linejoin:round;stroke-miterlimit:43.5;stroke-width:1.5;stroke:#000"/>
+      <rect class="subs_limits" x="10" y="N{{rels_height+59}}" width="N{{width}}" height="N{{container_height}}" style="fill:none;stroke:none"/>
+			<rect class="bottom_path" x="6" y="N{{rels_height+56}}+N{{container_height}}" width="N{{width}}" height="0" style="fill:none;stroke-width:0;stroke:none"/>
+    </g>
+  </g>
+	<!--</g>-->
+</svg>
