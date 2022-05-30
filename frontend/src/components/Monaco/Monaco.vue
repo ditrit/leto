@@ -12,9 +12,9 @@ import * as monaco from "monaco-editor";
 import { hclTokensProvider } from "./hclTokensProvider.js";
 import Button from "../UI/Buttons/BtnAddNew.vue";
 import { calculAttributesObjects } from "./svg_maths.js";
-import meta from "../../../public/metadatas.json";
 import { mapActions, mapGetters } from "vuex";
 import { analyse_resources } from "../../../../iactor/src/parser/compiler/schema_parser.js";
+import plugins from '../../../../iactor/src/plugins/terraform/plugins'
 
 export default {
 	data() {
@@ -31,7 +31,7 @@ export default {
 			this.iactorDatas = event.data;
 		};
 		this.worker.addEventListener("message", (event) => {
-			let data = event.data;
+			const data = event.data;
 			data.provider[0].orderResources = (this.metadatas.provider.orderResources) ? this.metadatas.provider.orderResources : [];
 			analyse_resources(data.resources, this.metadatas.provider.resources);
 			data.resources = calculAttributesObjects(data);	
@@ -104,6 +104,9 @@ export default {
 			return this.getMonacoSource();
 		},
 		async getMetaDatas() {
+			const provider = JSON.parse(window.localStorage.getItem("monacoSource")).provider[0].name;
+			const plugin = plugins[provider]
+			const meta = require(`../../../../iactor/src/plugins/terraform/${plugin}/metadatas.json`)
 			await this.getMetaSource(meta);
 		},
 		onChange(value) {

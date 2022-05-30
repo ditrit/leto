@@ -4,10 +4,13 @@
 
 <script>
 import SVGinstanciate from "./svgvar.js";
+import Palette from "./Palette"
+import TerraformTypeNode from "./TerraformTypeNode"
 import { onMounted } from "vue";
 import * as d3 from "d3";
 import { ref } from "vue";
 import { useStore } from "vuex";
+import plugins from '../../../../iactor/src/plugins/terraform/plugins'
 
 export default {
 	setup() {
@@ -17,9 +20,9 @@ export default {
 		const loading = ref(true);
 		let svg;
 
-		function drawSVG(datas, svgParent, parentName, content) {
+		function drawSVG(datas, svgParent, parentName, content, provider) {
 			datas.forEach( d => {
-				let data = { logopath: 'logos/' + d.icon,  width: d.width, height: d.height, name: d.name, type: d.type, id : d.name + "_" + d.type };
+				let data = { logopath: `logos/${d.icon}`,  width: d.width, height: d.height, name: d.name, type: d.type, id : d.name + "_" + d.type };
 				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
 				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement)
 				const model = document.getElementById(`${d.name}_${d.type}`)
@@ -33,7 +36,7 @@ export default {
 					model.setAttribute('y', d.y)
 				}
 				if(d.contains) {
-					drawSVG(d.contains, model, `${d.name}_${d.type}`, true)  
+					drawSVG(d.contains, model, `${d.name}_${d.type}`, true, provider)  
 				}       
 			})
 			datas.forEach( blockEnd => {
@@ -138,6 +141,11 @@ export default {
 			await getDatas();
 			await getSVGS();
 
+			const provider = monacoSourceData.value["provider"][0].name;
+			const plugin = plugins[provider]
+			const meta = require(`../../../../iactor/src/plugins/terraform/${plugin}/metadatas.json`)
+			console.log(meta)
+
 			svg = d3.select("#svg0")
 					.attr("id", "svg0")
 					.attr("width", 2000)
@@ -146,7 +154,7 @@ export default {
 					.attr('xmlns:xlink', "http://www.w3.org/1999/xlink")
 					.append("g");
 
-			drawSVG(monacoSourceData.value["resources"], svg, "svg0")
+			drawSVG(monacoSourceData.value["resources"], svg, "svg0", false, plugin)
 
 			svg.append('svg:defs')
 				.append('svg:marker')
@@ -160,7 +168,7 @@ export default {
 				.append('svg:path')
 					.attr('d', "M2,2 L10,6 L2,10 L6,6 L2,2")
 					.attr('stroke', 'black');
-		})
+		});
 	},
 };
 </script>
