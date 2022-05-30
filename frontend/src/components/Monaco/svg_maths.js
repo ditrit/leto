@@ -5,7 +5,6 @@ export function calculAttributesObjects(datas) {
   const heightMin = 40;
   const windowWidthMax = 2000;
   const recourceWidthMax = 1000;
-  let recourceHeightMax = 0;
   let xCurrent = 10;
   let yCurrent = 10;
   const containers = [];
@@ -109,13 +108,9 @@ export function calculAttributesObjects(datas) {
     let find = false;
     if (r.representation != 'container') {
       containers.forEach((c) => {
-        if (c.contains.includes(r)) {
+        if (c.contains.includes(r) || c.containers.includes(r) || (c.attributes && c.attributes.includes(r))) {
           find = true;
-        } else if (c.containers.includes(r)) {
-          find = true;
-        } else if (c.attributes && c.attributes.includes(r)) {
-          find = true;
-        }
+        } 
       });
       if (!find && !blocks.includes(r)) {
         for (let i = 0; i < orderResources.length; i++) {
@@ -141,11 +136,7 @@ export function calculAttributesObjects(datas) {
     let find = false;
     if (r.representation != 'container') {
       containers.forEach((c) => {
-        if (c.contains.includes(r)) {
-          find = true;
-        } else if (c.containers.includes(r)) {
-          find = true;
-        } else if (c.link && c.link.includes(r)) {
+        if (c.contains.includes(r) || c.containers.includes(r) || (c.link && c.link.includes(r))) {
           find = true;
         }
       });
@@ -172,8 +163,8 @@ export function calculAttributesObjects(datas) {
         if (a.link) {
           let find = false;
           a.link.forEach((l) => {
-            c.attributes.forEach((a) => {
-              if (a.name == l.name && a.type == l.type) {
+            c.attributes.forEach((attribute) => {
+              if (attribute.name == l.name && attribute.type == l.type) {
                 find = true;
               }
             });
@@ -231,7 +222,6 @@ export function calculAttributesObjects(datas) {
       c.width = dimensions.width + 20;
       c.height = dimensions.height + 20;
     }
-    recourceHeightMax = dimensions.recourceHeightMax;
   });
 
   const resources = [];
@@ -373,7 +363,7 @@ function calcul_dimension_container(container, widthMax, heightMin) {
       }
     }
   }
-  return { width, height, height };
+  return { width, height };
 }
 
 function calcul_xy(object, x, y, container, recourceHeightMax) {
@@ -404,7 +394,7 @@ function calcul_xy_container(container, x, y, content, recourceHeightMax, parent
   let newY = -1;
   const heightMin = 40;
   if (!container.inContainer || content) {
-    const xy = calcul_xy(container, x, y, true, recourceHeightMax);
+    let xy = calcul_xy(container, x, y, true, recourceHeightMax);
     newX = xy.x;
     newY = xy.y;
     if (content) {
@@ -420,7 +410,7 @@ function calcul_xy_container(container, x, y, content, recourceHeightMax, parent
       let coy = 60;
 
       for (let i = 0; i < container.contains.length; i++) {
-        const xy = calcul_xy_container(container.contains[i], cox, coy, true, recourceHeightMax, container);
+        xy = calcul_xy_container(container.contains[i], cox, coy, true, recourceHeightMax, container);
         cox = xy.x;
         coy = xy.y;
         if (i + 1 < container.contains.length && container.contains[i + 1].order != container.contains[i].order) {
@@ -433,7 +423,7 @@ function calcul_xy_container(container, x, y, content, recourceHeightMax, parent
       let coy = 60;
 
       container.contains.forEach((co) => {
-        const xy = calcul_xy_container(co, cox, coy, true, recourceHeightMax, container);
+        xy = calcul_xy_container(co, cox, coy, true, recourceHeightMax, container);
         cox = xy.x;
         coy = xy.y;
         recourceHeightMax = xy.recourceHeightMax;

@@ -2,23 +2,23 @@
 import {createLexer, createParserFromLexer} from './ParserFacade.js'
 import antlr4 from 'antlr4'
 
-export class hclState {
+export class HclState {
     clone() {
-        return new hclState();
+        return new HclState();
     }
 
-    equals(other) {
+    equals(_other) {
         return true;
     }
 
 }
 
-export class hclTokensProvider {
+export class HclTokensProvider {
     getInitialState() {
-        return new hclState();
+        return new HclState();
     }
 
-    tokenize(line, state) {
+    tokenize(line, _state) {
         return tokensForLine(line);
     }
 
@@ -26,7 +26,7 @@ export class hclTokensProvider {
 
 const EOF = -1;
 
-class hclToken {
+class HclToken {
     scopes;
     startIndex;
 
@@ -36,12 +36,12 @@ class hclToken {
     }
 }
 
-class hclLineTokens {
+class HclLineTokens {
     endState;
     tokens;
 
     constructor(tokens) {
-        this.endState = new hclState();
+        this.endState = new HclState();
         this.tokens = tokens;
     }
 }
@@ -50,7 +50,7 @@ export function tokensForLine(input) {
     var errorStartingPoints = []
 
     class ErrorCollectorListener extends antlr4.error.ErrorListener {
-        syntaxError(recognizer, offendingSymbol, line, column, msg, e) {
+        syntaxError(_recognizer, _offendingSymbol, _line, column, _msg, _e) {
             errorStartingPoints.push(column)
         }
     }
@@ -71,7 +71,7 @@ export function tokensForLine(input) {
                 done=true
             } else {
                 let tokenTypeName = parser.symbolicNames[token.type];
-                let myToken = new hclToken(tokenTypeName, token.column);
+                let myToken = new HclToken(tokenTypeName, token.column);
                 myTokens.push(myToken);
             }
         }
@@ -79,9 +79,9 @@ export function tokensForLine(input) {
 
     // Add all errors
     for (let e of errorStartingPoints) {
-        myTokens.push(new hclToken("error.hcl", e));
+        myTokens.push(new HclToken("error.hcl", e));
     }
     myTokens.sort((a, b) => (a.startIndex > b.startIndex) ? 1 : -1)
 
-    return new hclLineTokens(myTokens);
+    return new HclLineTokens(myTokens);
 }

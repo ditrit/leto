@@ -9,7 +9,7 @@
 
 <script>
 import * as monaco from "monaco-editor";
-import { hclTokensProvider } from "./hclTokensProvider.js";
+import { HclTokensProvider } from "./hclTokensProvider.js";
 import Button from "../UI/Buttons/BtnAddNew.vue";
 import { calculAttributesObjects } from "./svg_maths.js";
 import { mapActions, mapGetters } from "vuex";
@@ -41,7 +41,7 @@ export default {
 	mounted() {
 		// Initialize the editor, make sure the dom has been rendered, and the dialog should be written in opened
 		monaco.languages.register({ id: "hcl" });
-		monaco.languages.setTokensProvider("hcl", hclTokensProvider.prototype);
+		monaco.languages.setTokensProvider("hcl", HclTokensProvider.prototype);
 		let string = "BF2937";
 		let identifier = "131DB4";
 		let symbolsFg = "000000";
@@ -82,7 +82,7 @@ export default {
 			theme: "terraformTheme",
 		});
 		this.monacoEditor = editor;
-		this.monacoEditor.getModel().onDidChangeContent((event) => {
+		this.monacoEditor.getModel().onDidChangeContent((_event) => {
 			this.onChange(editor.getValue());
 		});
 	},

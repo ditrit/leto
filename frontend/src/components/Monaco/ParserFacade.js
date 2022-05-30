@@ -5,15 +5,14 @@ import hclLexer from './schemas_terraform/hclLexer.js';
 import hclParser from "./schemas_terraform/hclParser.js";
 
 class MyErrorListener extends antlr4.error.ErrorListener {    
-    syntaxError(recognizer, offendingSymbol, line, column, msg, e) {
+    syntaxError(_recognizer, _offendingSymbol, _line, _column, msg, _e) {
         console.log("ERROR " + msg);
     }
 }
 
 export function createLexer(input) {
     const chars = new antlr4.InputStream(input);
-    const lexer = new hclLexer(chars);
-    return lexer;
+    return new hclLexer(chars);
 }
 
 export function getTokens(input) {
@@ -63,14 +62,12 @@ export class Error {
 }
 
 class CollectorErrorListener extends antlr4.error.ErrorListener {
-    errors  = []
-
     constructor(errors) {
-        
+        super()
         this.errors = errors
     }
 
-    syntaxError(recognizer, offendingSymbol, line, column, msg, e) {
+    syntaxError(_recognizer, offendingSymbol, line, column, msg, _e) {
         var endColumn = column + 1;
         if (offendingSymbol._text !== null) {
             endColumn = column + offendingSymbol._text.length;
@@ -89,21 +86,29 @@ export function validate(input) {
     const parser = createParserFromLexer(lexer);
     parser.removeErrorListeners();
     parser.addErrorListener(new CollectorErrorListener(errors));
-    parser._errHandler = new hclErrorStrategy();
+    parser._errHandler = new HclErrorStrategy();
 
     return errors;
 }
 
-class hclErrorStrategy extends antlr4.error.DefaultErrorStrategy {
+class HclErrorStrategy extends antlr4.error.DefaultErrorStrategy {
     constructor() {
-        
+        super()
     }
 
     reportUnwantedToken(recognizer) {
         return super.reportUnwantedToken(recognizer);
     }
 
-   singleTokenDeletion(recognizer) {
+    getExpectedTokens = function(recognizer) {
+       return recognizer.getExpectedTokens();
+    };
+   
+    reportMatch = function(recognizer) {
+       this.endErrorCondition(recognizer);
+    };
+
+    singleTokenDeletion(recognizer) {
        var nextTokenType = recognizer.getTokenStream().LA(2);
        if (recognizer.getTokenStream().LA(1) == hclParser.NL) {
            return null;
@@ -118,13 +123,5 @@ class hclErrorStrategy extends antlr4.error.DefaultErrorStrategy {
        } else {
            return null;
        }
-   }
-   getExpectedTokens = function(recognizer) {
-       return recognizer.getExpectedTokens();
-   };
-
-   reportMatch = function(recognizer) {
-       this.endErrorCondition(recognizer);
-   };
-
+    }
 }

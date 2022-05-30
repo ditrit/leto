@@ -1,7 +1,7 @@
 import { evaluate } from "mathjs";
 
 function SVGmatch(text, data) {
-    function matchTxt(m, op, found, s) {
+    function matchTxt(_m, op, found, _s) {
       return op == "N"
         ? evaluate(found, data)
         : found

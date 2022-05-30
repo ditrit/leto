@@ -3,7 +3,6 @@ import hclLexer from "./hclLexer.js";
 import antlr4 from 'antlr4';
 
 export function parse(src) {
-	// var input = fs.readFileSync(src.file, 'UTF-8')
 	var input = src.src_data
 	var chars = new antlr4.InputStream(input)
 	var lexer = new hclLexer(chars)
