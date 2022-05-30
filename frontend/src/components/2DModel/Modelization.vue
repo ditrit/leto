@@ -841,7 +841,6 @@ redrawStack(minGroup,cloneComponent);
         reDrawn = true;
       }
       if (!reDrawn) {
-
         console.log("on svg");
 				currentObj.width=230;
 				getContent(currentGroup,currentObj,panel.value);
@@ -1092,5 +1091,3 @@ redrawStack(minGroup,cloneComponent);
 	}
 }
 </script>
-
-<style></style>
