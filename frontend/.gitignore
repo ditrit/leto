@@ -35,3 +35,6 @@ yarn-error.log*
 
 # Jest reports
 /reports/*
+
+# ANTLR generated files
+src/components/Monaco/schemas_terraform
