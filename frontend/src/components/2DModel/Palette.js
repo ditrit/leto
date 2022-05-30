@@ -5,7 +5,7 @@ export default class Palette {
 		this.letoTypeNodeList = letoTypeNodeList;
 	}
 
-	drawPalette(svgs,panel,modelArea,click_model) {
+	drawPalette(svgs,click_model) {
 		for (let i=0; i < this.letoTypeNodeList.length; i++){
 			let model = this.letoTypeNodeList[i].drawInPanel(50,50+i*150,document.getElementById("svg1"),svgs);
 			//WIP: click_model function and all interactions behaviors

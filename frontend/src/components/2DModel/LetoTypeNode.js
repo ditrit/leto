@@ -20,7 +20,7 @@ export default class LetoTypeNode{
 	drawInPanel(x,y,parent,svgs){
 		this.defaultPalette.id = Date.now();
 		const svgDom = SVGinstanciate(svgs[this.defaultPalette.svg], this.defaultPalette);
-		let newSvg = d3.select(parent).node().append(svgDom.documentElement);
+		d3.select(parent).node().append(svgDom.documentElement);
 		let model = document.getElementById(this.defaultPalette.id);
 
 		model.setAttribute("x",x);

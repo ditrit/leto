@@ -2,7 +2,7 @@ import axios from "axios";
 import { evaluate } from "mathjs";
 
 function SVGmatch(text, data) {
-  function matchTxt(m, op, found, s) {
+  function matchTxt(op, found) {
     return op == "N"
       ? evaluate(found, data)
       : found

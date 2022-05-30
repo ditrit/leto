@@ -40,16 +40,16 @@ export function getContent(model,object,panel){
 }
 
 
-export function drawLink(lastArrow,thisArrow,rootID,zoom,translateX,translateY,links){
+export function drawLink(lastArrow,thisArrow,rootID,links){
 
 	function getPos(arrow){
 		let pos = [parseFloat(arrow.getAttribute("x")),parseFloat(arrow.getAttribute("y"))];
 
-			function addParentPos(parent,pos){
-				console.log(pos)
+			function addParentPos(parent,position){
+				console.log(position)
 				pos[0]+=parseFloat(parent.getAttribute("x"));
 				pos[1]+=parseFloat(parent.getAttribute("y"));
-				console.log(pos)
+				console.log(position)
 				if (parent.parentNode.id!="svg0")
 				{
 					addParentPos(parent.parentNode,pos)
@@ -73,7 +73,7 @@ export function drawLink(lastArrow,thisArrow,rootID,zoom,translateX,translateY,l
 							.attr("cursor", "pointer")
 							.style("stroke", "black")
 							.style("stroke-width",3)
-							.on("click",function(d)
+							.on("click",function()
 								{
 
 									this.remove();

@@ -16,7 +16,7 @@ import { useStore } from "vuex";
 export default {
 
 	setup() {
-		const monacoSourceData = ref({});
+		//const monacoSourceData = ref({});
 		const lastArrow = ref(null);
 		const zoom = ref(1);
 		const translateX = ref(0);
@@ -261,7 +261,7 @@ export default {
 
 		//Define all interaction functions ---------------------------------------------
 
-		function clickArrow(event,d){
+		function clickArrow(){
 
 				if(lastArrow.value==null)
 				{
@@ -302,14 +302,16 @@ export default {
 				}
 		}
 
-		function click(event, d) {
+		function click() {
 				console.log("click "+this.parentNode.parentNode.parentNode.getAttribute("id"));
-				let i=document.getElementById("detailsContainer").childNodes.length;
-				while(i>0)
+				let detailsContainer = document.getElementById("detailsContainer");
+				d3.select(detailsContainer.childNodes).remove();
+				//let i=document.getElementById("detailsContainer").childNodes.length;
+				/*while(i>0)
 				{
 					document.getElementById("detailsContainer").childNodes[i-1].remove();
 					i--;
-				}
+				}*/
 
 				let currentID = parseInt(this.parentNode.parentNode.parentNode.getAttribute("id"));
 				let currentLevel;
@@ -427,7 +429,7 @@ export default {
 
 		}
 
-		function click_model(event, d) {
+		function click_model() {
 				var clickedModel = this;
 				d3.select(this).transition().attr("fill", "black");
 				var panelObject;
@@ -481,7 +483,7 @@ export default {
 				//console.log(toscaPanelList.value)
 		}
 
-		function dragstarted(event, d) {
+		function dragstarted() {
       		let currentID = parseInt(this.parentNode.getAttribute("id"));
       		var currentModel = this.parentNode;
       		var currentLevel;
@@ -534,7 +536,7 @@ export default {
                 							el3.content.splice(el3.content.indexOf(el4), 1);
                 							break;
               							}
-										for (let el4 of el5.content)
+										for (let el5 of el4.content)
 										{
               								if (el5.defaultWorkshop.id === currentID)
 											  {
@@ -587,7 +589,7 @@ export default {
 
 
 				function redrawStack(group,removedComponent){
-					var panelObj;
+					let panelObj;
 
       				for (const prop in panel.value) {
         				if (
@@ -653,9 +655,9 @@ export default {
 
     }
 
-		function dragged(event, d) {
+		function dragged(event) {
 
-      var currentGroup = this.parentNode;
+      //var currentGroup = this.parentNode;
       var coord = d3.pointer(event);
 
 
@@ -687,7 +689,7 @@ export default {
 			})
     }
 
-		function dragended(event, d) {
+		function dragended(event) {
       var currentGroup = this.parentNode;
 
       var panelObject;
@@ -724,7 +726,7 @@ export default {
       var minWidth = 350;
       var minGroup;
       var groups = d3.selectAll(".model");
-      groups.each(function (groups, i) {
+      groups.each(function () {
         //For each group on the window but the main container
         if (this.getAttribute("id") != "svg0") {
           var groupRect =
@@ -873,7 +875,7 @@ redrawStack(minGroup,cloneComponent);
           object.width = modelArea.value.widthLevel[object.level]
 					const svgDom = SVGinstanciate(svgs.value[object.type_name], object);
 					//const svgDom = domParser.parseFromString(svgTxt, "image/svg+xml");
-					var newSvg = d3.select(parent).node().append(svgDom.documentElement);
+					d3.select(parent).node().append(svgDom.documentElement);
           var model = document.getElementById(object.id)
 
 				if(object.instance_name!=null){
@@ -887,7 +889,7 @@ redrawStack(minGroup,cloneComponent);
 											- model.getElementsByClassName("main")[0].getAttribute("y")
 											+ model.getElementsByClassName("top_path")[0].getBoundingClientRect().height/zoom.value
 											+7;
-						object.requirements.forEach(element => {
+						object.requirements.forEach(function(){
 							d3.select(model).select("#rels").select("#arrows")
 								.append("path")
 								.attr("d","m"+[x-4]+" "+[height+7*i]+" 4 3.22-4 3.4h10l2.5-2.12c1.45-1.08.735-1.8-.0234-2.52l-2.47-2z")
@@ -913,7 +915,7 @@ redrawStack(minGroup,cloneComponent);
 							i++
 						});
 
-						object.capabilities.forEach(element => {
+						object.capabilities.forEach(function() {
 							d3.select(model).select("#rels").select("#arrows")
 								.append("path")
 								.attr("d","m"+[parseFloat(x)-4+parseFloat(width)-5]+" "+[height+7*j]+" 4 3.22-4 3.4h10l2.5-2.12c1.45-1.08.735-1.8-.0233-2.52l-2.47-2z")
@@ -1043,8 +1045,7 @@ redrawStack(minGroup,cloneComponent);
 
 			// Draw the palette in the left drawer -------------------------------------------------------
 
-			var drawerItem = d3
-					.select("#drawerContent")
+			d3.select("#drawerContent")
 					.append("svg")
 					.attr("id", "svg1")
 					.attr("width", 250)
