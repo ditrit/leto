@@ -8,7 +8,7 @@ if (localStorage.getItem("user")) {
 	const { accessToken } = JSON.parse(localStorage.getItem("user"));
 	API.interceptors.request.use(
 		async (config) => {
-			config.headers.Authorization = await `Bearer ${accessToken}`;
+			config.headers.Authorization = `Bearer ${accessToken}`;
 			return config;
 		},
 		(error) => {
@@ -18,7 +18,7 @@ if (localStorage.getItem("user")) {
 
 	API.interceptors.response.use(
 		async (config) => {
-			config.headers.Authorization = await `Bearer ${accessToken}`;
+			config.headers.Authorization = `Bearer ${accessToken}`;
 			return config;
 		},
 		(error) => {
