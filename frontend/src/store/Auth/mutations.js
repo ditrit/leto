@@ -8,7 +8,7 @@ export const SET_USER_DATA = (state, userData) => {
 	] = `Bearer ${userData.accessToken}`;
 };
 
-export const CLEAR_USER_DATA = (state) => {
+export const CLEAR_USER_DATA = () => {
 	localStorage.removeItem("user");
 	location.reload();
 };
