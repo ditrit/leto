@@ -4,11 +4,8 @@
 
 <script>
 import SVGinstanciate from "./svgvar.js";
-import Palette from "./Palette"
-import TerraformTypeNode from "./TerraformTypeNode"
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import * as d3 from "d3";
-import { ref } from "vue";
 import { useStore } from "vuex";
 import plugins from '../../../../iactor/src/plugins/terraform/plugins'
 
@@ -20,30 +17,33 @@ export default {
 		const loading = ref(true);
 		let svg;
 
-		function drawSVG(datas, svgParent, parentName, content, provider) {
-			datas.forEach( d => {
-				let data = { logopath: `logos/${d.icon}`,  width: d.width, height: d.height, name: d.name, type: d.type, id : d.name + "_" + d.type };
+		function drawSVGs(datas, svgParent, parentName, content, provider) {		
+			datas.forEach( SVGData => {
+				let data = { logopath: `logos/${SVGData.icon}`,  width: SVGData.width, height: SVGData.height, name: SVGData.name, type: SVGData.type, id : SVGData.name + "_" + SVGData.type };
 				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
 				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement)
-				const model = document.getElementById(`${d.name}_${d.type}`)
+				const model = document.getElementById(`${SVGData.name}_${SVGData.type}`)
 				if(content) {
 					svgParent.querySelector("g").appendChild(model)
-					model.setAttribute('x', d.x)
-					model.setAttribute('y', d.y)
+					model.setAttribute('x', SVGData.x)
+					model.setAttribute('y', SVGData.y)
 				} else {
 					document.getElementById(parentName).querySelector("g").appendChild(model)
-					model.setAttribute('x', d.x)
-					model.setAttribute('y', d.y)
+					model.setAttribute('x', SVGData.x)
+					model.setAttribute('y', SVGData.y)
 				}
-				if(d.contains) {
-					drawSVG(d.contains, model, `${d.name}_${d.type}`, true, provider)  
-				}       
+				if(SVGData.contains) {
+					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, provider)  
+				}  
 			})
+			drawLines(datas)
+		}
+
+		function drawLines(datas) {
 			datas.forEach( blockEnd => {
 				if(blockEnd.link) {
 					blockEnd.link.forEach( blockBegin => {
 						let xEnd, yEnd, xBegin, yBegin;
-						let endX1, endX2, endY1, endY2;
 						const blockEndX = (blockEnd.parentX) ? blockEnd.parentX : blockEnd.x
 						const blockEndY = (blockEnd.parentY) ? blockEnd.parentY : blockEnd.y
 						const blockBeginX = (blockBegin.parentX) ? blockBegin.parentX : blockBegin.x
@@ -52,10 +52,10 @@ export default {
 						let blockBeginWidth = ((blockBegin.width > 0) ? blockBegin.width + 30 : 160) 
 						let blockEndHeight = ((blockEnd.height > 0) ? blockEnd.height + 30 : 44) 
 						let blockBeginHeight = ((blockBegin.height > 0) ? blockBegin.height + 30 : 44) 
-						endX1 = blockEndX + blockEndWidth
-						endY1 = blockEndY + blockEndHeight
-						endX2 = blockBeginX + blockBeginWidth
-						endY2 = blockBeginY + blockBeginHeight
+						let endX1 = blockEndX + blockEndWidth
+						let endY1 = blockEndY + blockEndHeight
+						let endX2 = blockBeginX + blockBeginWidth
+						let endY2 = blockBeginY + blockBeginHeight
 						if(blockBeginY == blockEndY && blockBeginHeight == blockEndHeight) {
 							yEnd = blockEndY + blockEndHeight/2
 							yBegin = blockBeginY + blockBeginHeight/2
@@ -90,16 +90,6 @@ export default {
 								xBegin = blockBeginX + blockBeginWidth/2 + 10
 								yEnd = endY1 - 10
 								yBegin = blockBeginY + 4
-							} else if(endX2 > endX1 && endY2 > endY1) {
-								xEnd = blockEndX + blockEndWidth/2 - 10
-								xBegin = blockBeginX + blockBeginWidth/2 + 10
-								yEnd = endY1 + 8
-								yBegin = blockBeginY + 4
-							} else if(endX2 > endX1 && endY2 < endY1) {
-								xEnd = endX1 + 8
-								xBegin = blockBeginX + blockBeginWidth/2 - 10
-								yEnd = blockEndY + blockEndHeight/2 - 10
-								yBegin = endY2 + 4
 							} else if(endX2 < endX1 && endY2 < endY1) {
 								xEnd = blockEndX + blockEndWidth/2 - 10
 								xBegin = endX2 + 4
@@ -154,7 +144,8 @@ export default {
 					.attr('xmlns:xlink', "http://www.w3.org/1999/xlink")
 					.append("g");
 
-			drawSVG(monacoSourceData.value["resources"], svg, "svg0", false, plugin)
+			drawSVGs(monacoSourceData.value["resources"], svg, "svg0", false, plugin)
+			drawLines(monacoSourceData.value["resources"])
 
 			svg.append('svg:defs')
 				.append('svg:marker')
