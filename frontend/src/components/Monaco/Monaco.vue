@@ -2,33 +2,28 @@
 	<div>
 		<div class="monaco" ref="monacoContainer"></div>
 		<button :onClick="consoleClick" class="Button">
-			<slot>Button</slot>
+			<slot>Compiler</slot>
 		</button>
 	</div>
 </template>
 
 <script>
-import * as monaco from "monaco-editor";
-import { hclTokensProvider } from "./hclTokensProvider.js";
-import Button from "../UI/Buttons/BtnAddNew.vue";
-import { mapActions } from "vuex";
+import * as monaco from 'monaco-editor';
+import { hclTokensProvider } from './hclTokensProvider.js';
+import Button from '../UI/Buttons/BtnAddNew.vue';
+import { calculAttributesObjects } from './svg_maths.js';
+import { mapActions } from 'vuex';
+import { analyse_resources } from 'hcl/src/parser/compiler/schema_parser.js';
+import plugins from 'hcl/src/plugins/terraform/plugins';
+import getDatas from 'hcl/src/plugins/terraform/index'
 
 export default {
 	data() {
 		return {
 			monacoEditor: {},
 			iactorDatas: {},
-			button: Button,
+			button: Button
 		};
-	},
-	created() {
-		this.worker = new Worker("dist/bundle.js");
-		this.worker.onmessage = function (event) {
-			this.iactorDatas = event.data;
-		};
-		this.worker.addEventListener("message", (event) => {
-			window.localStorage.setItem("monacoSource", JSON.stringify(event.data));
-		});
 	},
 	mounted() {
 		// Initialize the editor, make sure the dom has been rendered, and the dialog should be written in opened
@@ -42,7 +37,6 @@ export default {
 		let comment = "07812C";
 		let boolean = "105FEE";
 		this.valueEditor = "";
-
 		monaco.editor.defineTheme("terraformTheme", {
 			base: "vs",
 			inherit: false,
@@ -78,24 +72,26 @@ export default {
 			this.onChange(editor.getValue());
 		});
 	},
-
 	methods: {
-		...mapActions({ getMonacoSource: "appMonaco/getMonacoSource" }),
+		...mapActions({
+			getMonacoSource: "appMonaco/getMonacoSource",
+		}),
 		consoleClick() {
-			this.worker.postMessage(this.valueEditor);
+			const data = getDatas(this.valueEditor)
 			this.getSource();
+			const provider = data.provider[0].name;
+			const plugin = plugins[provider]
+			const metadatas = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`)
+			data.provider[0].orderResources = (metadatas.provider.orderResources) ? metadatas.provider.orderResources : [];
+			analyse_resources(data.resources, metadatas.provider.resources);
+			data.resources = calculAttributesObjects(data);	
+			window.localStorage.setItem("monacoSource", JSON.stringify(data));
 		},
 		getSource() {
 			return this.getMonacoSource();
 		},
 		onChange(value) {
 			this.valueEditor = value;
-		},
-		sendDatas(value) {
-			console.log(value);
-			if (value != null) {
-				this.$emit("parse_datas", value);
-			}
 		},
 	},
 };
@@ -105,7 +101,6 @@ export default {
   width: 1200px
   height: 1000px !important
   overflow-y: hidden
-
 .monaco-editor
   width: 100%
   height: 100% !important
