@@ -1,0 +1,14 @@
+<svg id="N{{id}}" version="1.1" width="N{{max(width,160)+30}}" height="N{{max(height,44)+30}}"
+    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g>
+        <rect id="content" x="10" y="18" width="N{{width}}" height="N{{height}}" ry="4" style="fill:none;stroke-width:1.2;stroke:#000"/>
+        <rect id="logo_frame" x="4" y="4" width="160" height="44" fill="#fff" fill-rule="evenodd" stroke="#000" stroke-linecap="round" stroke-linejoin="round" style="paint-order:stroke fill markers"/>
+        <image x="5" y="5" width="40" height="40" xlink:href="T{{logopath}}" />
+        <text id="name" text-align="center" style="font-family:Alef;font-size:12px;font-style:italic" xml:space="preserve">
+            <tspan x="48" y="12">T{{name}}</tspan>
+        </text>
+        <text id="type" text-align="center" style="font-family:Alef;font-size:11px;font-weight:bold" xml:space="preserve">
+            <tspan x="48" y="22">T{{type}}</tspan>
+        </text>
+    </g>
+</svg>
