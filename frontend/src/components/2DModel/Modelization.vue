@@ -8,6 +8,8 @@
 import SVGinstanciate from "./svgvar.js";
 import { onMounted, ref } from "vue";
 const d3 = require("d3");
+import Palette from './Palette'
+import TerraformTypeNode from './TerraformTypeNode'
 import {getObjectInTree} from "./utils"
 import { useStore } from "vuex";
 import plugins from 'hcl/src/plugins/terraform/plugins'
@@ -100,26 +102,39 @@ export default {
 		}
 
 
+		const terraformPanelList = ref([]);
 		const loading = ref(true);
 		let svg;
-		
-		function drawSVGs(datas, svgParent, parentName, content, provider) {		
+
+		function formatDatas(datas, level) {
+			let result = [`Name : ${datas.name}`, `Type : ${datas.type}`, `Level : ${level}`];
+
+			return result;
+		}
+
+		function drawSVGs(datas, svgParent, parentName, content, provider, level) {
 			datas.forEach( SVGData => {
 				let data = { logopath: `logos/${SVGData.icon}`,  width: SVGData.width, height: SVGData.height, name: SVGData.name, type: SVGData.type, id : SVGData.name + "_" + SVGData.type };
 				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
-				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement)
-				const model = document.getElementById(`${SVGData.name}_${SVGData.type}`)
+				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
+				const model = document.getElementById(`${SVGData.name}_${SVGData.type}`);
+				d3.select(`#${SVGData.name}_${SVGData.type}`).on("click", function() {
+					let detailsContainer = document.getElementById("detailsContainer");
+					d3.select(detailsContainer).html(formatDatas(SVGData, model.getAttribute('level')).join('<br/>'));
+				});
 				if(content) {
-					svgParent.querySelector("g").appendChild(model)
+					svgParent.querySelector("g").appendChild(model);
 					model.setAttribute('x', SVGData.x)
 					model.setAttribute('y', SVGData.y)
+					model.setAttribute('level', level)
 				} else {
 					document.getElementById(parentName).querySelector("g").appendChild(model)
 					model.setAttribute('x', SVGData.x)
 					model.setAttribute('y', SVGData.y)
+					model.setAttribute('level', level)
 				}   
 				if(SVGData.contains) {
-					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, provider)  
+					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, provider, level + 1)  
 				}  
 			})
 			drawLines(datas)
@@ -133,8 +148,8 @@ export default {
 						const blockEndY = (blockEnd.parentY) ? blockEnd.parentY : blockEnd.y
 						const blockBeginX = (blockBegin.parentX) ? blockBegin.parentX : blockBegin.x
 						const blockBeginY = (blockBegin.parentY) ? blockBegin.parentY : blockBegin.y
-						let blockEndWidth = ((blockEnd.width > 0) ? blockEnd.width + 30 : 160) 
-						let blockBeginWidth = ((blockBegin.width > 0) ? blockBegin.width + 30 : 160) 
+						let blockEndWidth = ((blockEnd.width > 0) ? blockEnd.width + 30 : 220) 
+						let blockBeginWidth = ((blockBegin.width > 0) ? blockBegin.width + 30 : 220) 
 						let blockEndHeight = ((blockEnd.height > 0) ? blockEnd.height + 30 : 44) 
 						let blockBeginHeight = ((blockBegin.height > 0) ? blockBegin.height + 30 : 44) 
 						let endX1 = blockEndX + blockEndWidth
@@ -253,7 +268,7 @@ export default {
 				.append("g")
 				.attr("id", "svg0");
 
-			drawSVGs(monacoSourceData.value["resources"], svg, "svg0", false, plugin);
+			drawSVGs(monacoSourceData.value["resources"], svg, "svg0", false, plugin, 0);
 			drawLines(monacoSourceData.value["resources"]);
 
 			svg.append('svg:defs')
@@ -269,14 +284,21 @@ export default {
 					.attr('d', "M2,2 L10,6 L2,10 L6,6 L2,2")
 					.attr('stroke', 'black');
 
-
 			d3.select("#drawerContent")
 					.append("svg")
 					.attr("id", "svg1")
 					.attr("width", 250)
 					.attr("height", 2000);
-
-
+			// Create a list of tosca object while we don't have the compiler to provide it
+			
+			const metadatas = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`);
+			metadatas.provider.resources.forEach((element) => {
+				terraformPanelList.value.push(
+					new TerraformTypeNode(`logos/${element.icon}`,element.resourceType, "","","dbtf"));
+			});
+			// Create and draw the Palette with the object list (Tosca or Tf)
+			let palette = new Palette(terraformPanelList.value);
+			palette.drawPalette(svgs.value);
 		});
 
 		return {
