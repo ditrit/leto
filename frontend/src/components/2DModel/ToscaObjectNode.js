@@ -8,9 +8,7 @@ export default class ToscaObjectNode extends LetoObjectNode {
 		this.rels_height = toscaTypeNode.rels_height;
 		this.container_height = toscaTypeNode.container_height;
 		this.content=[];
-		this.leftmostChild = null;
-		this.rightmostChild = null;
-		this.rightmostSibling=null;
+		this.rightSibling=null;
 		this.level=level;
 
 		this.drawingObject ={
@@ -27,8 +25,10 @@ export default class ToscaObjectNode extends LetoObjectNode {
 			instance_name:this.instance_name,
 			level:this.level
 		}
-
 	}
-
+	setContainer_height(height){
+		this.container_height=height;
+		this.drawingObject.container_height=height;
+	}
 
 }
