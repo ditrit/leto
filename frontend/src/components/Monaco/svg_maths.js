@@ -1,8 +1,8 @@
 import { isArray } from 'mathjs';
 export function calculAttributesObjects(datas) {
-  const widthMin = 200;
+  const widthMin = 250;
   const heightMin = 40;
-  const windowWidthMax = 2000;
+  const windowWidthMax = 800;
   const recourceWidthMax = 1000;
   let xCurrent = 10;
   let yCurrent = 10;
@@ -298,7 +298,7 @@ export function calculAttributesObjects(datas) {
 }
 
 function calcul_dimensions(container, width, widthMax) {
-  const widthMin = 190;
+  const widthMin = 250;
   const heightMin = 70;
   let height = heightMin + 20;
   if (container.attributes) {
@@ -370,10 +370,10 @@ function calcul_xy(object, x, y, container, recourceHeightMax) {
     object.height = 0;
   }
   let returnY = -1;
-  let xMax = x + ((object.width > 0) ? object.width : 160);
+  let xMax = x + ((object.width > 0) ? object.width : 220);
   if (xMax >= ((container) ? (container.width + container.x) : widthMax)) {
     x = ((container) ? container.x : 0);
-    xMax = x + ((object.width > 0) ? object.width : 160);
+    xMax = x + ((object.width > 0) ? object.width : 220);
     returnY = (!container) ? (y + recourceHeightMax + 50) : y;
     if (!container) {
       recourceHeightMax = returnY + recourceHeightMax;
