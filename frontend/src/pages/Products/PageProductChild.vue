@@ -34,19 +34,19 @@
 							/>
 						</template>
 					</q-input>
-					<div></div>
 				</div>
 			</template>
 			<template v-slot:drawerMenu>
-				<div class="q-pa-md q-gutter-sm" v-if="menu">
-					<q-tree
-						:nodes="menu"
-						node-key="label"
-						:filter="filter"
-						v-model:selected="selected"
-						default-expand-all
-					/>
-				</div>
+				<ul v-show="modelValue === 'Modal'">
+					<li>7</li>
+					<li>8</li>
+					<li>9</li>
+				</ul>
+				<ul v-show="modelValue === 'Source'">
+					<li>10</li>
+					<li>11</li>
+					<li>12</li>
+				</ul>
 			</template>
 		</Drawer>
 		<q-page-container class="q-pa-lg">
@@ -75,7 +75,10 @@ export default defineComponent({
 		AccountSettings,
 		ProductDetailsNavigation,
 	},
-	props: ["id"],
+	props: {
+		id: { type: String },
+		modelValue: { type: String, default: "Modal" },
+	},
 	setup(props) {
 		const drawer = ref(false);
 		const oepnDialog = ref(false);
