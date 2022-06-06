@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="monaco" ref="monacoContainer"></div>
+		<div class="monacoContainer" ref="monacoContainer"></div>
 		<button :onClick="consoleClick" class="Button">
 			<slot>Compiler</slot>
 		</button>
@@ -14,7 +14,7 @@ import Button from "../UI/Buttons/BtnAddNew.vue";
 import { calculAttributesObjects } from "./svg_maths.js";
 import { mapActions, mapGetters } from "vuex";
 import { analyse_resources } from "../../../../iactor/src/parser/compiler/schema_parser.js";
-import plugins from '../../../../iactor/src/plugins/terraform/plugins'
+import plugins from "../../../../iactor/src/plugins/terraform/plugins";
 
 export default {
 	data() {
@@ -32,9 +32,11 @@ export default {
 		};
 		this.worker.addEventListener("message", (event) => {
 			const data = event.data;
-			data.provider[0].orderResources = (this.metadatas.provider.orderResources) ? this.metadatas.provider.orderResources : [];
+			data.provider[0].orderResources = this.metadatas.provider.orderResources
+				? this.metadatas.provider.orderResources
+				: [];
 			analyse_resources(data.resources, this.metadatas.provider.resources);
-			data.resources = calculAttributesObjects(data);	
+			data.resources = calculAttributesObjects(data);
 			window.localStorage.setItem("monacoSource", JSON.stringify(data));
 		});
 	},
@@ -104,9 +106,10 @@ export default {
 			return this.getMonacoSource();
 		},
 		async getMetaDatas() {
-			const provider = JSON.parse(window.localStorage.getItem("monacoSource")).provider[0].name;
-			const plugin = plugins[provider]
-			const meta = require(`../../../../iactor/src/plugins/terraform/${plugin}/metadatas.json`)
+			const provider = JSON.parse(window.localStorage.getItem("monacoSource"))
+				.provider[0].name;
+			const plugin = plugins[provider];
+			const meta = require(`../../../../iactor/src/plugins/terraform/${plugin}/metadatas.json`);
 			await this.getMetaSource(meta);
 		},
 		onChange(value) {
@@ -115,14 +118,8 @@ export default {
 	},
 };
 </script>
-<style lang="sass" scoped>
-.monaco
-  width: 1200px
-  height: 1000px !important
-  overflow-y: hidden
-
-.monaco-editor
-  width: 100%
-  height: 100% !important
-  overflow-y: hidden
+<style lang="sass">
+.monacoContainer
+	width: 1400px
+	height: 900px
 </style>
