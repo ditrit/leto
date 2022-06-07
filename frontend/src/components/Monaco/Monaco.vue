@@ -14,7 +14,7 @@ import Button from '../UI/Buttons/BtnAddNew.vue';
 import { calculAttributesObjects } from './svg_maths.js';
 import { mapActions } from 'vuex';
 import { analyse_resources } from 'hcl/src/parser/compiler/schema_parser.js';
-import plugins from 'hcl/src/plugins/terraform/plugins';
+import plugins from '../../assets/plugins/terraform/plugins';
 import getDatas from 'hcl/src/plugins/terraform/index'
 
 export default {

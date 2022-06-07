@@ -1,3 +1,4 @@
 {
-    "aws" : "internal/aws"
+    "aws" : "internal/aws",
+    "cloudplatform" : "external/iactor-plugin-terraform-sginterne"
 }
