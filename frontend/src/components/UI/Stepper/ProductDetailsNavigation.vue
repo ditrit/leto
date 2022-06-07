@@ -134,9 +134,9 @@ export default {
 	components: { ProductContent, Modelization, Monaco },
 	setup(props) {
 		const step = ref(1);
-		const vOne = ref("Model mode");
-		const vTwo = ref("Source mode");
-		const modelValue = ref("Model mode");
+		const vOne = ref("Model");
+		const vTwo = ref("Source");
+		const modelValue = ref("Source");
 
 		let { store, router, $q, currentProductContent, menu } =
 			useProductDetails();
