@@ -1,39 +1,33 @@
 const d3 = require("d3");
+import ToscaObjectNode from "./ToscaObjectNode";
 
 
-
-export function getContent(model,object,panel){
+export function getContent(model,object,toscaPanelList){
 	model.childNodes.forEach(element=>{
 		if (element.tagName == "svg"){
 			if (element.className.baseVal=="model"){
-				var panelObj;
 
-				for (const prop in panel) {
+				let panelObject;
+
+				toscaPanelList.forEach(ele=>{
 					if (
-						panel[prop].type_name ==
+						ele.type_name ==
 						element.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, '')
-					)
-					{
-						panelObj = panel[prop];
+					) {
+						panelObject = ele;
 					}
+				})
+
+				let contentObj = new ToscaObjectNode(panelObject,element.getElementsByClassName("instance_name")[0].textContent.replace(/\s+/g, ''),0);
+				contentObj.setId(parseInt(element.getAttribute("id")));
+				contentObj.setContainer_height(element.getElementsByClassName("subs_limits")[0].getAttribute("height"))
+				contentObj.setLevel(object.level+1)
+				if (object.content.length!=0){
+					object.content[object.content.length-1].rightSibling = contentObj;
 				}
-				var contentObj={
-					type_name: element.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, ''),
-					instance_name: element.getElementsByClassName("instance_name")[0].textContent.replace(/\s+/g, ''),
-					class: element.getAttribute("class"),
-					id: parseInt(element.getAttribute("id")),
-					width: element.getElementsByClassName("main")[0].getBoundingClientRect().width,
-					logo: d3.select(element).select(".logo").attr("xlink:href"),
-					primary_color: element.getElementsByClassName("top")[0].style.fill,
-					secondary_color: element.getElementsByClassName("top_path")[0].style.fill,
-					level: object.level+1,
-					container_height: element.getElementsByClassName("subs_limits")[0].getAttribute("height"),
-					content: [],
-					requirements: panelObj.requirements,
-					capabilities: panelObj.capabilities,
-				}
+
 				object.content.push(contentObj);
-				getContent(element,contentObj,panel)
+				getContent(element,contentObj,toscaPanelList)
 			}
 		}
 	})
