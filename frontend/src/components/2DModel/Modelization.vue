@@ -10,9 +10,10 @@ import { onMounted, ref } from "vue";
 const d3 = require("d3");
 import Palette from './Palette'
 import TerraformTypeNode from './TerraformTypeNode'
+import TerraformObjectNode from './TerraformObjectNode'
 import {getObjectInTree} from "./utils"
 import { useStore } from "vuex";
-import plugins from 'hcl/src/plugins/terraform/plugins'
+import plugins from '../../assets/plugins/terraform/plugins'
 
 
 export default {
@@ -114,28 +115,9 @@ export default {
 
 		function drawSVGs(datas, svgParent, parentName, content, provider, level) {
 			datas.forEach( SVGData => {
-				let data = { logopath: `logos/${SVGData.icon}`,  width: SVGData.width, height: SVGData.height, name: SVGData.name, type: SVGData.type, id : SVGData.name + "_" + SVGData.type };
-				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
-				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
-				const model = document.getElementById(`${SVGData.name}_${SVGData.type}`);
-				d3.select(`#${SVGData.name}_${SVGData.type}`).on("click", function() {
-					let detailsContainer = document.getElementById("detailsContainer");
-					d3.select(detailsContainer).html(formatDatas(SVGData, model.getAttribute('level')).join('<br/>'));
-				});
-				if(content) {
-					svgParent.querySelector("g").appendChild(model);
-					model.setAttribute('x', SVGData.x)
-					model.setAttribute('y', SVGData.y)
-					model.setAttribute('level', level)
-				} else {
-					document.getElementById(parentName).querySelector("g").appendChild(model)
-					model.setAttribute('x', SVGData.x)
-					model.setAttribute('y', SVGData.y)
-					model.setAttribute('level', level)
-				}   
-				if(SVGData.contains) {
-					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, provider, level + 1)  
-				}  
+				let terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
+				let terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level) 
+				terraformObject.drawSVGs(svgParent, parentName, content, provider, level);
 			})
 			drawLines(datas)
 		}
