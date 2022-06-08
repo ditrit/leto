@@ -43,7 +43,7 @@ export default class LetoObjectNode{
 		let model = document.getElementById(this.drawingObject.id);
 
 		if(this.drawingObject.rels_height!=null){
-			// Draw the arrows if it is a ToscaObjectNode
+
 			let i=0;
 			let j=0;
 			let txt;

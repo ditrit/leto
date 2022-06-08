@@ -38,18 +38,11 @@ export default {
         	}
       	}
 
-				var currentObj ={
+				let currentObj ={
 					type_name: currentModel.getElementsByClassName("type_name")[0].textContent,
         	instance_name: currentModel.getElementsByClassName("instance_name")[0].textContent,
         	id: parseInt(currentModel.getAttribute("id")),
-					//width: currentModel.getElementsByClassName("main")[0].getAttribute("width"),
-        	//logo: d3.select(currentModel).select(".logo").attr("xlink:href"),
-        	//primary_color: currentModel.getElementsByClassName("top")[0].style.fill,
-        	//secondary_color: currentModel.getElementsByClassName("top_path")[0].style.fill,
         	level: currentLevel,
-        	//container_height:
-					//parseFloat((currentModel).getElementsByClassName("subs_limits")[0].getAttribute("height")),
-        	//content: [],
         	requirements: panelObj.requirements,
         	capabilities: panelObj.capabilities,
 				}
