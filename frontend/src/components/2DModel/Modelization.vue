@@ -7,27 +7,38 @@
 <script>
 import { onMounted, ref } from "vue";
 const d3 = require("d3");
+import {getObjectInTree} from "./utils"
 import { useStore } from "vuex";
+
 
 export default {
 
 	setup() {
+
+
 		const zoom = ref(1);
 		const translateX = ref(0);
 		const translateY = ref(0);
 		const store = useStore();
 		const loading = ref(true);
 		const svgs = ref({});
+		const rootTreeObject = ref ({
+			content: [],
+			drawingObject:{},
+			level:-1,
+			rightSibling:null,
+		})
 
 
+		function displayConfig() {
 
+				let detailsContainer = document.getElementById("detailsContainer");
+				d3.selectAll(detailsContainer.childNodes).remove();
 
+				let currentModel = this.parentNode.parentNode.parentNode;
 
-
-
-
-				}
-
+				let currentObject = getObjectInTree(rootTreeObject.value,currentModel);
+				let currentLevel = currentObject.level;
 
 				let panelObj;
       	for (const prop in panel.value)
@@ -140,6 +151,8 @@ export default {
 			zoom,
 			translateX,
 			translateY,
+			displayConfig,
+			rootTreeObject
 		};
 	}
 }

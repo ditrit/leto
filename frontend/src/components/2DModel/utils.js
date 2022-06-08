@@ -1,5 +1,17 @@
 const d3 = require("d3");
 
+export function getObjectInTree(node,currentModel){
+	if (node == null){
+		 return;
+	}
+
+	else if(node.drawingObject.id == parseInt(currentModel.getAttribute("id"))){
+		return node;
+	}
+	getObjectInTree(node.content[0],currentModel);
+	getObjectInTree(node.rightSibling,currentModel);
+}
+
 export function replaceComponents(group) {
 	var i = 0;
 	var height =
