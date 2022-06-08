@@ -13,8 +13,8 @@ export function getObjectInTree(node,currentModel){
 }
 
 export function replaceComponents(group) {
-	var i = 0;
-	var height =
+	let i = 0;
+	let height =
 		parseFloat(group.getElementsByClassName("top")[0].getAttribute("height") *2)
 		+
 		parseFloat(group.getElementsByClassName("middle")[0].getAttribute("height"))

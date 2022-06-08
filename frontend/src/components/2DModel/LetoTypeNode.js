@@ -27,5 +27,4 @@ export default class LetoTypeNode{
 
 		return model;
 	}
-
 }

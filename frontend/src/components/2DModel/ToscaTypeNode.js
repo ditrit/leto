@@ -20,11 +20,8 @@ export default class ToscaTypeNode extends LetoTypeNode {
 			primary_color: this.primary_color,
 			secondary_color: this.secondary_color,
 		}
-
-
 	}
-
-
-
-
 }
+
+
+
