@@ -6,24 +6,36 @@
 		</button>
 	</div>
 </template>
-
 <script>
 import * as monaco from 'monaco-editor';
 import { hclTokensProvider } from './hclTokensProvider.js';
 import Button from '../UI/Buttons/BtnAddNew.vue';
 import { calculAttributesObjects } from './svg_maths.js';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { analyse_resources } from 'hcl/src/parser/compiler/schema_parser.js';
 import plugins from '../../assets/plugins/terraform/plugins';
-import getDatas from 'hcl/src/plugins/terraform/index'
 
 export default {
 	data() {
 		return {
 			monacoEditor: {},
 			iactorDatas: {},
-			button: Button
+			button: Button,
+			metadatas: {}
 		};
+	},
+	created() {
+		this.worker = new Worker(new URL('./iactor.js', import.meta.url));
+		this.worker.onmessage = function (event) {
+			this.iactorDatas = event.data;
+		};
+		this.worker.addEventListener("message", (event) => {
+			const data = event.data;
+			data.provider[0].orderResources = (this.metadatas.provider.orderResources) ? this.metadatas.provider.orderResources : [];
+			analyse_resources(data.resources, this.metadatas.provider.resources);
+			data.resources = calculAttributesObjects(data);	
+			window.localStorage.setItem("monacoSource", JSON.stringify(data));
+		});
 	},
 	mounted() {
 		// Initialize the editor, make sure the dom has been rendered, and the dialog should be written in opened
@@ -72,23 +84,28 @@ export default {
 			this.onChange(editor.getValue());
 		});
 	},
+	computed: {
+		...mapGetters({ allMetadatas: "appMonaco/allMetadatas" }),
+	},
 	methods: {
 		...mapActions({
 			getMonacoSource: "appMonaco/getMonacoSource",
+			getMetaSource: "appMonaco/getMetadatas",
 		}),
 		consoleClick() {
-			const data = getDatas(this.valueEditor)
+			this.worker.postMessage(this.valueEditor);
 			this.getSource();
-			const provider = data.provider[0].name;
-			const plugin = plugins[provider]
-			const metadatas = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`)
-			data.provider[0].orderResources = (metadatas.provider.orderResources) ? metadatas.provider.orderResources : [];
-			analyse_resources(data.resources, metadatas.provider.resources);
-			data.resources = calculAttributesObjects(data);	
-			window.localStorage.setItem("monacoSource", JSON.stringify(data));
+			this.getMetaDatas();
+			this.metadatas = this.allMetadatas;
 		},
 		getSource() {
 			return this.getMonacoSource();
+		},
+		async getMetaDatas() {
+			const provider = JSON.parse(window.localStorage.getItem("monacoSource")).provider[0].name;
+			const plugin = plugins[provider]
+			const meta = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`)
+			await this.getMetaSource(meta);
 		},
 		onChange(value) {
 			this.valueEditor = value;
