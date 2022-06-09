@@ -115,12 +115,32 @@ export default {
 
 		function drawSVGs(datas, svgParent, parentName, content, provider, level) {
 			datas.forEach( SVGData => {
-				let terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
-				let terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level) 
-				terraformObject.drawSVGs(svgParent, parentName, content, provider, level);
+				let data = { logopath: `logos/${SVGData.icon}`,  width: SVGData.width, height: SVGData.height, name: SVGData.name, type: SVGData.type, id : SVGData.name + "_" + SVGData.type };
+				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
+				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
+				const model = document.getElementById(`${SVGData.name}_${SVGData.type}`);
+				d3.select(`#${SVGData.name}_${SVGData.type}`).on("click", function() {
+					let detailsContainer = document.getElementById("detailsContainer");
+					d3.select(detailsContainer).html(formatDatas(SVGData, model.getAttribute('level')).join('<br/>'));
+				});
+				if(content) {
+					svgParent.querySelector("g").appendChild(model);
+					model.setAttribute('x', SVGData.x)
+					model.setAttribute('y', SVGData.y)
+					model.setAttribute('level', level)
+				} else {
+					document.getElementById(parentName).querySelector("g").appendChild(model)
+					model.setAttribute('x', SVGData.x)
+					model.setAttribute('y', SVGData.y)
+					model.setAttribute('level', level)
+				}   
+				if(SVGData.contains) {
+					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, provider, level + 1)  
+				}  
 			})
 			drawLines(datas)
 		}
+		
 		function drawLines(datas) {
 			datas.forEach( blockEnd => {
 				if(blockEnd.link) {
@@ -194,7 +214,7 @@ export default {
 								yBegin = blockBeginY + 4
 							}
 						}
-						svg.append("line")
+						d3.select('#svg0').append("line")
 							.attr("x1",xEnd)  
 							.attr("y1",yEnd)  
 							.attr("x2",xBegin)  
@@ -228,17 +248,13 @@ export default {
 			const provider = monacoSourceData.value["provider"][0].name;
 			const plugin = plugins[provider];
 
-			let svg = d3
-				.select("#myDataViz")
+			d3.select("#myDataViz")
 				.append("svg")
 				.attr("id", "root")
 				.attr("width", 2000)
 				.attr("height", 2000)
-				.attr('xmlns',"http://www.w3.org/2000/svg")
-				.attr('xmlns:xlink', "http://www.w3.org/1999/xlink")
 				.call(
-					d3
-						.zoom()
+					d3.zoom()
 						.scaleExtent([0.25, 2])
 						.on("zoom", function (event) {
 							zoom.value = event.transform.k;
@@ -250,10 +266,13 @@ export default {
 				.append("g")
 				.attr("id", "svg0");
 
-			drawSVGs(monacoSourceData.value["resources"], svg, "svg0", false, plugin, 0);
+			let svg = d3.select('#root')
+
+			drawSVGs(monacoSourceData.value["resources"], svg, "root", false, plugin, 0);
 			drawLines(monacoSourceData.value["resources"]);
 
-			svg.append('svg:defs')
+			d3.select('#svg0')
+				.append('svg:defs')
 				.append('svg:marker')
 				.attr('id', 'arrow')
 				.attr('viewBox', [0, 0, 12, 12])
@@ -267,18 +286,17 @@ export default {
 					.attr('stroke', 'black');
 
 			d3.select("#drawerContent")
-					.append("svg")
-					.attr("id", "svg1")
-					.attr("width", 250)
-					.attr("height", 2000);
-			// Create a list of tosca object while we don't have the compiler to provide it
+				.append("svg")
+				.attr("id", "svg1")
+				.attr("width", 250)
+				.attr("height", 2000);
 			
 			const metadatas = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`);
 			metadatas.provider.resources.forEach((element) => {
 				terraformPanelList.value.push(
 					new TerraformTypeNode(`logos/${element.icon}`,element.resourceType, "","","dbtf"));
 			});
-			// Create and draw the Palette with the object list (Tosca or Tf)
+			
 			let palette = new Palette(terraformPanelList.value);
 			palette.drawPalette(svgs.value);
 		});
