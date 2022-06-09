@@ -105,7 +105,6 @@ export default {
 
 		const terraformPanelList = ref([]);
 		const loading = ref(true);
-		let svg;
 
 		function formatDatas(datas, level) {
 			let result = [`Name : ${datas.name}`, `Type : ${datas.type}`, `Level : ${level}`];
@@ -248,7 +247,7 @@ export default {
 			const provider = monacoSourceData.value["provider"][0].name;
 			const plugin = plugins[provider];
 
-			d3.select("#myDataViz")
+			let svg0 = d3.select("#myDataViz")
 				.append("svg")
 				.attr("id", "root")
 				.attr("width", 2000)
@@ -260,7 +259,7 @@ export default {
 							zoom.value = event.transform.k;
 							translateX.value = event.transform.x;
 							translateY.value = event.transform.y;
-							svg.attr("transform", event.transform);
+							svg0.attr("transform", event.transform);
 						})
 				)
 				.append("g")
