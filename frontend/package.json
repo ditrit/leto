@@ -31,6 +31,7 @@
 		"grapesjs": "^0.18.4",
 		"grapesjs-plugin-ckeditor": "0.0.10",
 		"grapesjs-preset-webpage": "^0.1.11",
+		"hcl": "github:ditrit/iactor#9a4cf90a5a309f2153df3f8a66f000f282e0b9da",
 		"isomorphic-git": "^1.12.1",
 		"monaco-editor": "^0.25.2",
 		"quasar": "^2.0.4",

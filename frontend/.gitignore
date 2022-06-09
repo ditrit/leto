@@ -38,3 +38,6 @@ yarn-error.log*
 
 # Visual Studio Code Editor
 .vscode
+
+# External repository git
+src/assets/plugins/terraform/external

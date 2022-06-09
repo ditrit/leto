@@ -108,7 +108,7 @@
 					/>
 				</div>
 				<Modelization v-if="modelValue === vOne" />
-				<Monaco v-if="modelValue === vTwo" @parse_datas="parseDatas"/>
+				<Monaco v-show="modelValue === vTwo" @parse_datas="parseDatas"/>
 			</q-step>
 
 			<q-step :name="3" title="Substurion" prefix="3">
@@ -134,9 +134,9 @@ export default {
 	components: { ProductContent, Modelization, Monaco },
 	setup(props) {
 		const step = ref(1);
-		const vOne = ref("Model mode");
-		const vTwo = ref("Source mode");
-		const modelValue = ref("Model mode");
+		const vOne = ref("Model");
+		const vTwo = ref("Source");
+		const modelValue = ref("Source");
 
 		let { store, router, $q, currentProductContent, menu } =
 			useProductDetails();
