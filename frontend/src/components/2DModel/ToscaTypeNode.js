@@ -8,10 +8,11 @@ export default class ToscaTypeNode extends LetoTypeNode {
 		this.rels_height=20;
 		this.container_height=20;
 
-		this.defaultPalette={
+
+		this.defaultPanel={
 			width:150,
-			rels_height:this.rels_height,
-			container_height:this.container_height,
+			rels_height:20,
+			container_height:20,
 			svg:this.svg,
 			type_name: this.type_name,
 			instance_name: this.type_name,
@@ -19,11 +20,8 @@ export default class ToscaTypeNode extends LetoTypeNode {
 			primary_color: this.primary_color,
 			secondary_color: this.secondary_color,
 		}
-
-
 	}
-
-
-
-
 }
+
+
+

@@ -9,8 +9,7 @@ export default class LetoTypeNode{
 		this.type_name=type_name;
 		this.primary_color=primary_color;
 		this.secondary_color=secondary_color;
-		//this.instance_name=instance_name;
-		//this.level=level;
+
 	}
 
 	defaultPalette={}
@@ -28,5 +27,4 @@ export default class LetoTypeNode{
 
 		return model;
 	}
-
 }

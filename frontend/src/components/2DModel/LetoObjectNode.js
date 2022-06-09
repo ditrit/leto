@@ -16,10 +16,21 @@ export default class LetoObjectNode{
 
 	drawingObject ={}
 
-	drawInWorkshop(parent,svgs,modelArea,zoom,clickArrow,click,drag){
-		this.drawingObject.id = Date.now();
+	setLevel(level){
+		this.level=level;
+		this.drawingObject.level=level;
+	}
 
-		console.log(this.drawingObject)
+	setId(id){
+		this.drawingObject.id=id;
+	}
+
+
+	drawInWorkshop(parent,svgs,modelArea,zoom,clickArrow,click,drag){
+		if(this.drawingObject.id==null){
+			this.drawingObject.id = Date.now();
+		}
+
 
 		let nCapa = this.drawingObject.capabilities.length;
     let nReq = this.drawingObject.requirements.length;
@@ -32,7 +43,7 @@ export default class LetoObjectNode{
 		let model = document.getElementById(this.drawingObject.id);
 
 		if(this.drawingObject.rels_height!=null){
-			// Draw the arrows if it is a ToscaObjectNode
+
 			let i=0;
 			let j=0;
 			let txt;
