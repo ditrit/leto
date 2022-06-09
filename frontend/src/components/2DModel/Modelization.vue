@@ -151,6 +151,17 @@ export default {
 				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
 				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
 				const model = document.getElementById(`${SVGData.name}_${SVGData.type}`);
+
+				d3.select(`#${SVGData.name}_${SVGData.type}`)
+					.append("svg:image")
+					.attr("cursor", "move")
+					.attr("x",model.getElementById("logo_frame").getAttribute("width")-30)
+					.attr("y",10)
+					.attr("width", 30)
+					.attr("height", 30)
+					.attr("xlink:href", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAqklEQVRIieWVQQ6DIBBFX1wYvFrRy9KF7eWwi0KkiDqSIWnTl8zK+L/OfBj4JwzgQhlt8R64A0uoJzC0Elc3sYAvGHjgpmGQEsXFdNpfIDEwwFihNSFIlwFm3v0tcdQiH97dNcnTctXgNF2ObVJqy0XR5kNO6fn8ixKSZw8O5tB0yKmJrTCwEvEzfuMk54ysl10kXnZ7rbxEnq70QKktntLCUd9qTVfm9/IC8+hUYHPjvWwAAAAASUVORK5CYII=")
+					.call(drag.value);
+
 				d3.select(`#${SVGData.name}_${SVGData.type}`).on("click", function() {
 					let detailsContainer = document.getElementById("detailsContainer");
 					d3.select(detailsContainer).html(formatDatas(SVGData, model.getAttribute('level')).join('<br/>'));
