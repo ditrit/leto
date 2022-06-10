@@ -7,7 +7,6 @@
 			:class="styles"
 			:color="color"
 			:icon="icon"
-			:href="link"
 		/>
 	</div>
 </template>
