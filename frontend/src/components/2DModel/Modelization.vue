@@ -32,106 +32,97 @@ export default {
 			rightSibling:null,
 		})
 		const drag = ref(d3.drag()
-											.on("start", dragstarted)
-											.on("drag", dragged)
-											.on("end", dragended));
+							.on("start", dragstarted)
+							.on("drag", dragged)
+							.on("end", dragended));
 
 		function dragstarted() {
+			let currentModel = this.parentNode;
+			let parent = this.parentNode.parentNode;
 
-      let currentModel = this.parentNode;
-      let parent = this.parentNode.parentNode;
-
-      if (currentModel.parentNode.getAttribute("id") != "svg0") {
+			if (currentModel.parentNode.getAttribute("id") != "svg0") {
 				parent.removeChild(currentModel);
 				document.getElementById("svg0").appendChild(currentModel);
-      }
-    }
+			}
+		}
 
 		function dragged(event) {
-
-      let coord = d3.pointer(event);
-
+			let coord = d3.pointer(event);
 			let rootx = document.getElementById("root").getBoundingClientRect().x;
-	  	let rooty = document.getElementById("root").getBoundingClientRect().y;
+			let rooty = document.getElementById("root").getBoundingClientRect().y;
 
 			d3.select(this.parentNode)
-			.raise()
-			.attr("x",coord[0]/zoom.value-rootx/zoom.value-parseFloat(this.getAttribute("x"))-parseFloat(this.getAttribute("width")/2) - translateX.value/zoom.value)
-			.attr("y",coord[1]/zoom.value-rooty/zoom.value-parseFloat(this.getAttribute("y"))-parseFloat(this.getAttribute("height")/2) - translateY.value/zoom.value);
+				.raise()
+				.attr("x",coord[0]/zoom.value-rootx/zoom.value-parseFloat(this.getAttribute("x"))-parseFloat(this.getAttribute("width")/2) - translateX.value/zoom.value)
+				.attr("y",coord[1]/zoom.value-rooty/zoom.value-parseFloat(this.getAttribute("y"))-parseFloat(this.getAttribute("height")/2) - translateY.value/zoom.value);
 
-    }
+		}
 
 		function dragended() {
 			return;
-    }
+		}
 
 
 		function displayConfig() {
+			let detailsContainer = document.getElementById("detailsContainer");
+			d3.selectAll(detailsContainer.childNodes).remove();
+			let currentModel = this.parentNode.parentNode.parentNode;
+			let currentObject = getObjectInTree(rootTreeObject.value,currentModel);
+			let currentLevel = currentObject.level;
+			let panelObj;
+			
+      		for (const prop in panel.value) {
+        		if (panel.value[prop].type_name ==currentModel.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, '')) {
+        			panelObj = panel.value[prop];
+        		}
+      		}
 
-				let detailsContainer = document.getElementById("detailsContainer");
-				d3.selectAll(detailsContainer.childNodes).remove();
+			let currentObj ={
+				type_name: currentModel.getElementsByClassName("type_name")[0].textContent,
+        		instance_name: currentModel.getElementsByClassName("instance_name")[0].textContent,
+        		id: parseInt(currentModel.getAttribute("id")),
+        		level: currentLevel,
+        		requirements: panelObj.requirements,
+        		capabilities: panelObj.capabilities,
+			}
 
-				let currentModel = this.parentNode.parentNode.parentNode;
+			let p=document.createElement("p");
+			p.appendChild(document.createTextNode("	Name :"+currentObj.instance_name));
+			document.getElementById("detailsContainer").appendChild(p);
 
-				let currentObject = getObjectInTree(rootTreeObject.value,currentModel);
-				let currentLevel = currentObject.level;
+			p=document.createElement("p");
+			p.appendChild(document.createTextNode("	Type :"+currentObj.type_name));
+			document.getElementById("detailsContainer").appendChild(p);
 
-				let panelObj;
-      	for (const prop in panel.value)
-				{
-        	if (panel.value[prop].type_name ==currentModel.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, ''))
-					{
-        		panelObj = panel.value[prop];
-        	}
-      	}
+			p=document.createElement("p");
+			p.appendChild(document.createTextNode("	Level :"+currentObj.level));
+			document.getElementById("detailsContainer").appendChild(p);
 
-				let currentObj ={
-					type_name: currentModel.getElementsByClassName("type_name")[0].textContent,
-        	instance_name: currentModel.getElementsByClassName("instance_name")[0].textContent,
-        	id: parseInt(currentModel.getAttribute("id")),
-        	level: currentLevel,
-        	requirements: panelObj.requirements,
-        	capabilities: panelObj.capabilities,
-				}
+			p=document.createElement("p");
+			p.appendChild(document.createTextNode("	ID :"+currentObj.id));
+			document.getElementById("detailsContainer").appendChild(p);
 
-				let p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Name :"+currentObj.instance_name));
-				document.getElementById("detailsContainer").appendChild(p);
+			p=document.createElement("p");
+			p.appendChild(document.createTextNode("	Capabilities :"));
+			document.getElementById("detailsContainer").appendChild(p);
 
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Type :"+currentObj.type_name));
-				document.getElementById("detailsContainer").appendChild(p);
+			p=document.createElement("ul");
+			currentObj.capabilities.forEach(el =>{
+				p.appendChild(document.createElement("li").appendChild(document.createTextNode("- "+el.name+" -> type: "+el.typeof)));
+				p.appendChild(document.createElement("br"))
+			})
+			document.getElementById("detailsContainer").appendChild(p);
 
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Level :"+currentObj.level));
-				document.getElementById("detailsContainer").appendChild(p);
+			p=document.createElement("p");
+			p.appendChild(document.createTextNode("	Requirements :"));
+			document.getElementById("detailsContainer").appendChild(p);
 
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	ID :"+currentObj.id));
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Capabilities :"));
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("ul");
-				currentObj.capabilities.forEach(el =>{
-					p.appendChild(document.createElement("li").appendChild(document.createTextNode("- "+el.name+" -> type: "+el.typeof)));
-					p.appendChild(document.createElement("br"))
-				})
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Requirements :"));
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("ul");
-				currentObj.requirements.forEach(el =>{
-					p.appendChild(document.createElement("li").appendChild(document.createTextNode("- "+el.name+" -> type: "+el.typeof)));
-					p.appendChild(document.createElement("br"))
-				})
-				document.getElementById("detailsContainer").appendChild(p);
-
+			p=document.createElement("ul");
+			currentObj.requirements.forEach(el =>{
+				p.appendChild(document.createElement("li").appendChild(document.createTextNode("- "+el.name+" -> type: "+el.typeof)));
+				p.appendChild(document.createElement("br"))
+			})
+			document.getElementById("detailsContainer").appendChild(p);
 		}
 
 
