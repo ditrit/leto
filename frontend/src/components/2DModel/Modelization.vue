@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import SVGinstanciate from "./svgvar.js";
 import { onMounted, ref } from "vue";
 const d3 = require("d3");
 import Palette from './Palette'
@@ -33,153 +32,53 @@ export default {
 			rightSibling:null,
 		})
 		const drag = ref(d3.drag()
-											.on("start", dragstarted)
-											.on("drag", dragged)
-											.on("end", dragended));
+							.on("start", dragstarted)
+							.on("drag", dragged)
+							.on("end", dragended));
 
 		function dragstarted() {
+			let currentModel = this.parentNode;
+			let parent = this.parentNode.parentNode;
 
-      let currentModel = this.parentNode;
-      let parent = this.parentNode.parentNode;
-
-      if (currentModel.parentNode.getAttribute("id") != "svg0") {
+			if (currentModel.parentNode.getAttribute("id") != "svg0") {
 				parent.removeChild(currentModel);
 				document.getElementById("svg0").appendChild(currentModel);
-      }
-    }
+			}
+		}
 
 		function dragged(event) {
-
-      let coord = d3.pointer(event);
-
+			let coord = d3.pointer(event);
 			let rootx = document.getElementById("root").getBoundingClientRect().x;
-	  	let rooty = document.getElementById("root").getBoundingClientRect().y;
+			let rooty = document.getElementById("root").getBoundingClientRect().y;
 
 			d3.select(this.parentNode)
-			.raise()
-			.attr("x",coord[0]/zoom.value-rootx/zoom.value-parseFloat(this.getAttribute("x"))-parseFloat(this.getAttribute("width")/2) - translateX.value/zoom.value)
-			.attr("y",coord[1]/zoom.value-rooty/zoom.value-parseFloat(this.getAttribute("y"))-parseFloat(this.getAttribute("height")/2) - translateY.value/zoom.value);
-
-    }
-
-		function dragended() {
-			return;
-    }
-
-
-		function displayConfig() {
-
-				let detailsContainer = document.getElementById("detailsContainer");
-				d3.selectAll(detailsContainer.childNodes).remove();
-
-				let currentModel = this.parentNode.parentNode.parentNode;
-
-				let currentObject = getObjectInTree(rootTreeObject.value,currentModel);
-				let currentLevel = currentObject.level;
-
-				let panelObj;
-      	for (const prop in panel.value)
-				{
-        	if (panel.value[prop].type_name ==currentModel.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, ''))
-					{
-        		panelObj = panel.value[prop];
-        	}
-      	}
-
-				let currentObj ={
-					type_name: currentModel.getElementsByClassName("type_name")[0].textContent,
-        	instance_name: currentModel.getElementsByClassName("instance_name")[0].textContent,
-        	id: parseInt(currentModel.getAttribute("id")),
-        	level: currentLevel,
-        	requirements: panelObj.requirements,
-        	capabilities: panelObj.capabilities,
-				}
-
-				let p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Name :"+currentObj.instance_name));
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Type :"+currentObj.type_name));
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Level :"+currentObj.level));
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	ID :"+currentObj.id));
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Capabilities :"));
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("ul");
-				currentObj.capabilities.forEach(el =>{
-					p.appendChild(document.createElement("li").appendChild(document.createTextNode("- "+el.name+" -> type: "+el.typeof)));
-					p.appendChild(document.createElement("br"))
-				})
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("p");
-				p.appendChild(document.createTextNode("	Requirements :"));
-				document.getElementById("detailsContainer").appendChild(p);
-
-				p=document.createElement("ul");
-				currentObj.requirements.forEach(el =>{
-					p.appendChild(document.createElement("li").appendChild(document.createTextNode("- "+el.name+" -> type: "+el.typeof)));
-					p.appendChild(document.createElement("br"))
-				})
-				document.getElementById("detailsContainer").appendChild(p);
+				.raise()
+				.attr("x",coord[0]/zoom.value-rootx/zoom.value-parseFloat(this.getAttribute("x"))-parseFloat(this.getAttribute("width")/2) - translateX.value/zoom.value)
+				.attr("y",coord[1]/zoom.value-rooty/zoom.value-parseFloat(this.getAttribute("y"))-parseFloat(this.getAttribute("height")/2) - translateY.value/zoom.value);
 
 		}
 
+		function dragended() {
+			return;
+		}
 
 		const terraformPanelList = ref([]);
 		const loading = ref(true);
 
-		function formatDatas(datas, level) {
-			let result = [`Name : ${datas.name}`, `Type : ${datas.type}`, `Level : ${level}`];
-
-			return result;
-		}
-
-		function drawSVGs(datas, svgParent, parentName, content, provider, level) {
+		function drawSVGs(datas, svgParent, parentName, content, level) {
 			datas.forEach( SVGData => {
-				let data = { logopath: `logos/${SVGData.icon}`,  width: SVGData.width, height: SVGData.height, name: SVGData.name, type: SVGData.type, id : SVGData.name + "_" + SVGData.type };
-				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
-				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
-				const model = document.getElementById(`${SVGData.name}_${SVGData.type}`);
-
-				d3.select(`#${SVGData.name}_${SVGData.type}`)
-					.append("svg:image")
-					.attr("cursor", "move")
-					.attr("x",model.getElementById("logo_frame").getAttribute("width")-30)
-					.attr("y",10)
-					.attr("width", 30)
-					.attr("height", 30)
-					.attr("xlink:href", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAqklEQVRIieWVQQ6DIBBFX1wYvFrRy9KF7eWwi0KkiDqSIWnTl8zK+L/OfBj4JwzgQhlt8R64A0uoJzC0Elc3sYAvGHjgpmGQEsXFdNpfIDEwwFihNSFIlwFm3v0tcdQiH97dNcnTctXgNF2ObVJqy0XR5kNO6fn8ixKSZw8O5tB0yKmJrTCwEvEzfuMk54ysl10kXnZ7rbxEnq70QKktntLCUd9qTVfm9/IC8+hUYHPjvWwAAAAASUVORK5CYII=")
-					.call(drag.value);
-
-				d3.select(`#${SVGData.name}_${SVGData.type}`).on("click", function() {
-					let detailsContainer = document.getElementById("detailsContainer");
-					d3.select(detailsContainer).html(formatDatas(SVGData, model.getAttribute('level')).join('<br/>'));
-				});
-				if(content) {
-					svgParent.querySelector("g").appendChild(model);
-					model.setAttribute('x', SVGData.x)
-					model.setAttribute('y', SVGData.y)
-					model.setAttribute('level', level)
-				} else {
-					document.getElementById(parentName).querySelector("g").appendChild(model)
-					model.setAttribute('x', SVGData.x)
-					model.setAttribute('y', SVGData.y)
-					model.setAttribute('level', level)
-				}
+				const terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
+				const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level);
+				terraformObject.setHeight(SVGData.height);
+				terraformObject.setWidth(SVGData.width);
+				terraformObject.setX(SVGData.x);
+				terraformObject.setY(SVGData.y);
+				terraformObject.drawSVG(svgs, svgParent, parentName, content, level, drag);
+				
 				if(SVGData.contains) {
-					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, provider, level + 1)
-				}
+        			const model = document.getElementById(`${SVGData.name}_${SVGData.type}`);
+					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, level + 1)  
+				}  
 			})
 			drawLines(datas)
 		}
@@ -311,7 +210,7 @@ export default {
 
 			let svg = d3.select('#root')
 
-			drawSVGs(monacoSourceData.value["resources"], svg, "root", false, plugin, 0);
+			drawSVGs(monacoSourceData.value["resources"], svg, "root", false, 0);
 			drawLines(monacoSourceData.value["resources"]);
 
 			d3.select('#svg0')
