@@ -52,7 +52,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
             model.setAttribute('level', level)
         }   
 
-        return document.getElementById(this.drawingObject.id);
+        return document.getElementById(`${this.drawingObject.name}_${this.drawingObject.type}`);
     }
 
     setHeight(height) {

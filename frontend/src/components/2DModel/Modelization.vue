@@ -25,6 +25,8 @@ export default {
 		const store = useStore();
 		const monacoSourceData = ref({});
 		const svgs = ref({});
+		const terraformPanelList = ref([]);
+		const loading = ref(true);
 		const rootTreeObject = ref ({
 			content: [],
 			drawingObject:{},
@@ -62,8 +64,31 @@ export default {
 			return;
 		}
 
-		const terraformPanelList = ref([]);
-		const loading = ref(true);
+		function clickOnPalette() {
+			var clickedOnPalette = this;
+			var panelObject;
+			let svg = d3.select('#root')
+
+			d3.select(this).transition().attr("fill", "black");
+			terraformPanelList.value.forEach(element=>{
+				if (
+					element.type_name ==
+					clickedOnPalette.getElementById("type").textContent.replace(/\s+/g, '')
+				) {
+					panelObject = element;
+				}
+			})
+			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0);
+			
+			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, drag);
+			d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
+
+			if (rootTreeObject.value.content.length!=0){
+				rootTreeObject.value.content[rootTreeObject.value.content.length-1].rightSibling = terraformObject;
+			}
+			rootTreeObject.value.content.push(terraformObject);
+		}
+
 
 		function drawSVGs(datas, svgParent, parentName, content, level) {
 			datas.forEach( SVGData => {
@@ -240,7 +265,7 @@ export default {
 			});
 
 			let palette = new Palette(terraformPanelList.value);
-			palette.drawPalette(svgs.value);
+			palette.drawPalette(svgs.value, clickOnPalette);
 		});
 
 		return {
@@ -248,6 +273,7 @@ export default {
 			loading,
 			store,
 			getSVGS,
+			clickOnPalette,
 			monacoSourceData: store.getters["appMonaco/allMonacoSource"],
 			zoom,
 			translateX,
