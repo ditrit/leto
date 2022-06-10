@@ -252,7 +252,6 @@ export default {
 			zoom,
 			translateX,
 			translateY,
-			displayConfig,
 			rootTreeObject
 		};
 	}
