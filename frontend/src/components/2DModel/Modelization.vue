@@ -65,8 +65,8 @@ export default {
 		}
 
 		function clickOnPalette() {
-			var clickedOnPalette = this;
-			var panelObject;
+			let clickedOnPalette = this;
+			let panelObject;
 			let svg = d3.select('#root')
 
 			d3.select(this).transition().attr("fill", "black");
