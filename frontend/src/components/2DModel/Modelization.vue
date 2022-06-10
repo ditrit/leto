@@ -62,78 +62,8 @@ export default {
 			return;
 		}
 
-
-		function displayConfig() {
-			let detailsContainer = document.getElementById("detailsContainer");
-			d3.selectAll(detailsContainer.childNodes).remove();
-			let currentModel = this.parentNode.parentNode.parentNode;
-			let currentObject = getObjectInTree(rootTreeObject.value,currentModel);
-			let currentLevel = currentObject.level;
-			let panelObj;
-			
-      		for (const prop in panel.value) {
-        		if (panel.value[prop].type_name ==currentModel.getElementsByClassName("type_name")[0].textContent.replace(/\s+/g, '')) {
-        			panelObj = panel.value[prop];
-        		}
-      		}
-
-			let currentObj ={
-				type_name: currentModel.getElementsByClassName("type_name")[0].textContent,
-        		instance_name: currentModel.getElementsByClassName("instance_name")[0].textContent,
-        		id: parseInt(currentModel.getAttribute("id")),
-        		level: currentLevel,
-        		requirements: panelObj.requirements,
-        		capabilities: panelObj.capabilities,
-			}
-
-			let p=document.createElement("p");
-			p.appendChild(document.createTextNode("	Name :"+currentObj.instance_name));
-			document.getElementById("detailsContainer").appendChild(p);
-
-			p=document.createElement("p");
-			p.appendChild(document.createTextNode("	Type :"+currentObj.type_name));
-			document.getElementById("detailsContainer").appendChild(p);
-
-			p=document.createElement("p");
-			p.appendChild(document.createTextNode("	Level :"+currentObj.level));
-			document.getElementById("detailsContainer").appendChild(p);
-
-			p=document.createElement("p");
-			p.appendChild(document.createTextNode("	ID :"+currentObj.id));
-			document.getElementById("detailsContainer").appendChild(p);
-
-			p=document.createElement("p");
-			p.appendChild(document.createTextNode("	Capabilities :"));
-			document.getElementById("detailsContainer").appendChild(p);
-
-			p=document.createElement("ul");
-			currentObj.capabilities.forEach(el =>{
-				p.appendChild(document.createElement("li").appendChild(document.createTextNode("- "+el.name+" -> type: "+el.typeof)));
-				p.appendChild(document.createElement("br"))
-			})
-			document.getElementById("detailsContainer").appendChild(p);
-
-			p=document.createElement("p");
-			p.appendChild(document.createTextNode("	Requirements :"));
-			document.getElementById("detailsContainer").appendChild(p);
-
-			p=document.createElement("ul");
-			currentObj.requirements.forEach(el =>{
-				p.appendChild(document.createElement("li").appendChild(document.createTextNode("- "+el.name+" -> type: "+el.typeof)));
-				p.appendChild(document.createElement("br"))
-			})
-			document.getElementById("detailsContainer").appendChild(p);
-		}
-
-
 		const terraformPanelList = ref([]);
 		const loading = ref(true);
-
-		function formatDatas(datas, level) {
-			let result = [`Name : ${datas.name}`, `Type : ${datas.type}`, `Level : ${level}`];
-
-			return result;
-		}
 
 		function drawSVGs(datas, svgParent, parentName, content, level) {
 			datas.forEach( SVGData => {

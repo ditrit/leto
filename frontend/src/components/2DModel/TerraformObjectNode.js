@@ -40,11 +40,6 @@ export default class TerraformObjectNode extends LetoObjectNode {
 					.attr("xlink:href", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAqklEQVRIieWVQQ6DIBBFX1wYvFrRy9KF7eWwi0KkiDqSIWnTl8zK+L/OfBj4JwzgQhlt8R64A0uoJzC0Elc3sYAvGHjgpmGQEsXFdNpfIDEwwFihNSFIlwFm3v0tcdQiH97dNcnTctXgNF2ObVJqy0XR5kNO6fn8ixKSZw8O5tB0yKmJrTCwEvEzfuMk54ysl10kXnZ7rbxEnq70QKktntLCUd9qTVfm9/IC8+hUYHPjvWwAAAAASUVORK5CYII=")
 					.call(drag.value);
 
-        d3.select(`#${this.drawingObject.name}_${this.drawingObject.type}`).on("click", function() {
-            let detailsContainer = document.getElementById("detailsContainer");
-            d3.select(detailsContainer).html(formatDatas(this.drawingObject, model.getAttribute('level')).join('<br/>'));
-        });
-
         if(content) {
             svgParent.querySelector("g").appendChild(model);
             model.setAttribute('x', this.drawingObject.x)
