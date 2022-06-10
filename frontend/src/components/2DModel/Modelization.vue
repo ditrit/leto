@@ -32,6 +32,39 @@ export default {
 			level:-1,
 			rightSibling:null,
 		})
+		const drag = ref(d3.drag()
+											.on("start", dragstarted)
+											.on("drag", dragged)
+											.on("end", dragended));
+
+		function dragstarted() {
+
+      let currentModel = this.parentNode;
+      let parent = this.parentNode.parentNode;
+
+      if (currentModel.parentNode.getAttribute("id") != "svg0") {
+				parent.removeChild(currentModel);
+				document.getElementById("svg0").appendChild(currentModel);
+      }
+    }
+
+		function dragged(event) {
+
+      let coord = d3.pointer(event);
+
+			let rootx = document.getElementById("root").getBoundingClientRect().x;
+	  	let rooty = document.getElementById("root").getBoundingClientRect().y;
+
+			d3.select(this.parentNode)
+			.raise()
+			.attr("x",coord[0]/zoom.value-rootx/zoom.value-parseFloat(this.getAttribute("x"))-parseFloat(this.getAttribute("width")/2) - translateX.value/zoom.value)
+			.attr("y",coord[1]/zoom.value-rooty/zoom.value-parseFloat(this.getAttribute("y"))-parseFloat(this.getAttribute("height")/2) - translateY.value/zoom.value);
+
+    }
+
+		function dragended() {
+			return;
+    }
 
 
 		function displayConfig() {
@@ -118,6 +151,17 @@ export default {
 				const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
 				d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
 				const model = document.getElementById(`${SVGData.name}_${SVGData.type}`);
+
+				d3.select(`#${SVGData.name}_${SVGData.type}`)
+					.append("svg:image")
+					.attr("cursor", "move")
+					.attr("x",model.getElementById("logo_frame").getAttribute("width")-30)
+					.attr("y",10)
+					.attr("width", 30)
+					.attr("height", 30)
+					.attr("xlink:href", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAqklEQVRIieWVQQ6DIBBFX1wYvFrRy9KF7eWwi0KkiDqSIWnTl8zK+L/OfBj4JwzgQhlt8R64A0uoJzC0Elc3sYAvGHjgpmGQEsXFdNpfIDEwwFihNSFIlwFm3v0tcdQiH97dNcnTctXgNF2ObVJqy0XR5kNO6fn8ixKSZw8O5tB0yKmJrTCwEvEzfuMk54ysl10kXnZ7rbxEnq70QKktntLCUd9qTVfm9/IC8+hUYHPjvWwAAAAASUVORK5CYII=")
+					.call(drag.value);
+
 				d3.select(`#${SVGData.name}_${SVGData.type}`).on("click", function() {
 					let detailsContainer = document.getElementById("detailsContainer");
 					d3.select(detailsContainer).html(formatDatas(SVGData, model.getAttribute('level')).join('<br/>'));
@@ -132,14 +176,14 @@ export default {
 					model.setAttribute('x', SVGData.x)
 					model.setAttribute('y', SVGData.y)
 					model.setAttribute('level', level)
-				}   
+				}
 				if(SVGData.contains) {
-					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, provider, level + 1)  
-				}  
+					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, provider, level + 1)
+				}
 			})
 			drawLines(datas)
 		}
-		
+
 		function drawLines(datas) {
 			datas.forEach( blockEnd => {
 				if(blockEnd.link) {
@@ -149,10 +193,10 @@ export default {
 						const blockEndY = (blockEnd.parentY) ? blockEnd.parentY : blockEnd.y
 						const blockBeginX = (blockBegin.parentX) ? blockBegin.parentX : blockBegin.x
 						const blockBeginY = (blockBegin.parentY) ? blockBegin.parentY : blockBegin.y
-						let blockEndWidth = ((blockEnd.width > 0) ? blockEnd.width + 30 : 220) 
-						let blockBeginWidth = ((blockBegin.width > 0) ? blockBegin.width + 30 : 220) 
-						let blockEndHeight = ((blockEnd.height > 0) ? blockEnd.height + 30 : 44) 
-						let blockBeginHeight = ((blockBegin.height > 0) ? blockBegin.height + 30 : 44) 
+						let blockEndWidth = ((blockEnd.width > 0) ? blockEnd.width + 30 : 220)
+						let blockBeginWidth = ((blockBegin.width > 0) ? blockBegin.width + 30 : 220)
+						let blockEndHeight = ((blockEnd.height > 0) ? blockEnd.height + 30 : 44)
+						let blockBeginHeight = ((blockBegin.height > 0) ? blockBegin.height + 30 : 44)
 						let endX1 = blockEndX + blockEndWidth
 						let endY1 = blockEndY + blockEndHeight
 						let endX2 = blockBeginX + blockBeginWidth
@@ -185,7 +229,7 @@ export default {
 								yEnd = blockEndY
 								yBegin = endY2 + 4
 							}
-						} else { 
+						} else {
 							if(blockEndWidth > blockBeginX && blockEndWidth > endX2) {
 								xEnd = blockEndX + blockEndWidth/2 - 5
 								xBegin = blockBeginX + blockBeginWidth/2 + 10
@@ -214,16 +258,16 @@ export default {
 							}
 						}
 						d3.select('#svg0').append("line")
-							.attr("x1",xEnd)  
-							.attr("y1",yEnd)  
-							.attr("x2",xBegin)  
-							.attr("y2",yBegin)  
-							.attr("stroke","black")  
-							.attr("stroke-width",1)  
+							.attr("x1",xEnd)
+							.attr("y1",yEnd)
+							.attr("x2",xBegin)
+							.attr("y2",yBegin)
+							.attr("stroke","black")
+							.attr("stroke-width",1)
 							.attr("marker-start","url(#arrow)");
 					})
-				}    
-			}) 
+				}
+			})
 		}
 		const getDatas = async () => {
 			monacoSourceData.value = await store.getters["appMonaco/allMonacoSource"];
@@ -243,7 +287,7 @@ export default {
 
 			await getDatas();
 			await getSVGS();
-			
+
 			const provider = monacoSourceData.value["provider"][0].name;
 			const plugin = plugins[provider];
 
@@ -289,13 +333,13 @@ export default {
 				.attr("id", "svg1")
 				.attr("width", 250)
 				.attr("height", 2000);
-			
+
 			const metadatas = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`);
 			metadatas.provider.resources.forEach((element) => {
 				terraformPanelList.value.push(
 					new TerraformTypeNode(`logos/${element.icon}`,element.resourceType, "","","dbtf"));
 			});
-			
+
 			let palette = new Palette(terraformPanelList.value);
 			palette.drawPalette(svgs.value);
 		});
