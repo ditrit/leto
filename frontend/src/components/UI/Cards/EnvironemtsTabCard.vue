@@ -172,7 +172,7 @@
 	</div>
 </template>
 <script>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useQuasar } from "quasar";
 import { useStore } from "vuex";
 import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentsTabsData";
@@ -232,9 +232,7 @@ export default {
 
 		const refreshEnvironment = async (id, updatesData) => {
 			await store.dispatch("appEnvironment/fetchEnvironmentyId", id);
-			let data = computed(() => {
-				return store.getters["appEnvironment/allEnvironments"];
-			});
+			await store.getters["appEnvironment/allEnvironments"];
 			environmentName.value = updatesData.name;
 			environmentLogo.value = updatesData.logo;
 			environmentShortDescription.value = updatesData.shortDescription;

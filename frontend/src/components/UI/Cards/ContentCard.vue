@@ -235,9 +235,6 @@ export default {
 				.onOk(() => {
 					DeleteDomain(item);
 				})
-				.onCancel(() => {
-					
-				});
 		};
 
 		const onSubmitUpdate = async (item) => {
@@ -251,17 +248,11 @@ export default {
 				gitUrl: item.gitURL,
 				parentID: item.parentID,
 			};
-			try {
 				await store.dispatch("appDomain/updateDomain", updatedDomain);
-			} catch (error) {
-				
-			}
 		};
 
 		const onFileUpload = (event) => {
 			return event
-			
-			
 		};
 
 		const onRejected = (rejectedEntries) => {

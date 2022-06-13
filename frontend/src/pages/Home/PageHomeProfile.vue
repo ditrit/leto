@@ -323,8 +323,7 @@ export default {
 			const formData = new FormData();
 			formData.append("id", imagesUID);
 			formData.append("file", file[0], file[0].name);
-			await API.post(`/file/${imagesUID}`, formData).then((res) => {
-			});
+			await API.post(`/file/${imagesUID}`, formData);
 			showSubmitBtn.value = false;
 			getAvatar();
 		};

@@ -364,26 +364,25 @@ export default {
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					deleteRow(item);
-				})
+			}).onOk(() => {
+				deleteRow(item);
+			});
 		};
 
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
 			userObj.value = Object.values(currentTarget);
 		};
-		const deleteRow = async (currentTarget) => {
+		const deleteRow = async (curentRow) => {
 			try {
 				$q.notify({
 					type: "positive",
-					message: "User has been successfully deleted",
+					message: `${curentRow.name} has been successfully deleted`,
 				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, user has not been deleted",
+					message: `Sorry, ${curentRow.name} has not been deleted`,
 				});
 			}
 		};

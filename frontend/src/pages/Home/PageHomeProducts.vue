@@ -94,7 +94,7 @@ export default defineComponent({
 		const oepnDialog = ref(false);
 
 		const executeGit = async () => {
-			 await store.dispatch("appGit/execute");
+			await store.dispatch("appGit/execute");
 		};
 		executeGit();
 		return {

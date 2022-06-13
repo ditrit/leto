@@ -17,7 +17,7 @@ const httpCommands = [
 	"listServerRefs",
 ];
 
-export const execute = ({ getters }, command) => {
+export const execute = (command) => {
 	const defaultCommandOption = {
 		fs: BrowserFS.BFSRequire("fs"),
 		dir: command.product.ID,
