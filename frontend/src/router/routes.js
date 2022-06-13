@@ -27,44 +27,44 @@ const routes = [
 			{
 				path: "home",
 				component: () => PageHome,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/profile",
 				component: () => PageHomeProfile,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/products",
 				component: () => PageHomeProducts,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/workspaces",
 				component: () => PageHomeWorkspaces,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "workspaces",
 				component: () => PageWorkspace,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "workspaces/:id",
 				component: () => PageWorkspaceChild,
 				props: true,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 
 			{
 				path: "libraries",
 				component: () => PageLibraries,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings",
 				component: () => PageSettingsUsers,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/users",
@@ -74,32 +74,32 @@ const routes = [
 			{
 				path: "settings/roles",
 				component: () => PageSettingsRoles,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/authorizations",
 				component: () => PageSettingsAuthorizations,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/requirements",
 				component: () => PageSettingsRequirements,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/tags",
 				component: () => PageSettingsTags,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/environmentstypes",
 				component: () => PageSettingsEnviType,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/dashboard",
 				component: () => PageSettingsDashboard,
-				meta: { requiresAuth: false },
+				meta: { requiresAuth: true },
 			},
 			{
 				path: "product",
