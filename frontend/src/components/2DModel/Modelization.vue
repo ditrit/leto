@@ -93,7 +93,7 @@ export default {
 		function drawSVGs(datas, svgParent, parentName, content, level) {
 			datas.forEach( SVGData => {
 				const terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
-				const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level);
+				const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level, SVGData.id);
 				terraformObject.setHeight(SVGData.height);
 				terraformObject.setWidth(SVGData.width);
 				terraformObject.setX(SVGData.x);
@@ -101,8 +101,8 @@ export default {
 				terraformObject.drawSVG(svgs, svgParent, parentName, content, level, drag);
 				
 				if(SVGData.contains) {
-        			const model = document.getElementById(`${SVGData.name}_${SVGData.type}`);
-					drawSVGs(SVGData.contains, model, `${SVGData.name}_${SVGData.type}`, true, level + 1)  
+                    const model = document.getElementById(`${SVGData.id}`);
+                    drawSVGs(SVGData.contains, model, `${SVGData.id}`, true, level + 1)  
 				}  
 			})
 			drawLines(datas)
