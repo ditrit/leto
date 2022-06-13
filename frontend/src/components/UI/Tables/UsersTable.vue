@@ -282,9 +282,6 @@ export default {
 				.onOk(() => {
 					deleteRow(item);
 				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
 		};
 		const allUsers = async () => {
 			await store.dispatch("appUsers/fetchUsers");

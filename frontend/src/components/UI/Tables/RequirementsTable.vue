@@ -354,7 +354,6 @@ export default {
 		const optionsWidgetSelected = ref(null);
 
 		const AddRequirement = () => {
-			console.log("opend");
 			isOpened.value = true;
 		};
 		const editedIndex = ref(null);
@@ -365,31 +364,25 @@ export default {
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					deleteRow(item);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+			}).onOk(() => {
+				deleteRow(item);
+			});
 		};
 
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
 			userObj.value = Object.values(currentTarget);
-			console.log("Edit this row");
 		};
-		const deleteRow = async (currentTarget) => {
+		const deleteRow = async (curentRow) => {
 			try {
-				console.log("Delete this element", currentTarget);
 				$q.notify({
 					type: "positive",
-					message: "User has been successfully deleted",
+					message: `${curentRow.name} has been successfully deleted`,
 				});
 			} catch (error) {
 				$q.notify({
 					type: "negative",
-					message: "Sorry, user has not been deleted",
+					message: `Sorry, ${curentRow.name} has not been deleted`,
 				});
 			}
 		};

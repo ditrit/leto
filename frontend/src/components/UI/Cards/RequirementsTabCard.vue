@@ -94,7 +94,6 @@
 </template>
 <script>
 import { ref } from "vue";
-import useRequirementsTab from "../../../composables/TabPanels/useRequirementsTabData";
 import Range from "../Inputs/Ranges/Range.vue";
 import TextInput from "../Inputs/Texts/TextInput.vue";
 import DropDown from "../Inputs/DropDowns/DropDown.vue";
@@ -133,8 +132,6 @@ export default {
 		const groupNameThree = ref(props.cardTitle3);
 		const dataValue = ref({ min: 300, max: 700 });
 		const textValue = ref("https://github.com/ditrit/leto.git");
-		let { Test } = useRequirementsTab();
-		Test();
 		return {
 			isOpened,
 			Test,

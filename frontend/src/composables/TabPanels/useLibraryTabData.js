@@ -60,9 +60,6 @@ export default function useLibraryTabData(props) {
 			.onOk(() => {
 				deleteLibrary(item);
 			})
-			.onCancel(() => {
-				console.log("Canceled");
-			});
 	};
 
 	const addNewLibrary = async () => {

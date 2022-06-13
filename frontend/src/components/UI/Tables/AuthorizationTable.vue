@@ -183,9 +183,6 @@ export default {
 				.onOk(() => {
 					deleteRow(item.id);
 				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
 		};
 
 		const allAuthorizations = async () => {

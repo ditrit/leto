@@ -307,11 +307,9 @@ export default {
 			let response = await store.getters["auth/currentUser"];
 			logoID.value = imagesUID;
 			user.value = response.user;
-			console.log("user.value : ", user.value);
 			await store.dispatch("appFiles/downloadFile", `${logoID.value}`);
 		};
 		currentUser();
-		console.log("	download avatar : ", avatar.value);
 
 		const OnEdit = () => {
 			opendDialog.value = true;
@@ -325,19 +323,13 @@ export default {
 			const formData = new FormData();
 			formData.append("id", imagesUID);
 			formData.append("file", file[0], file[0].name);
-			await API.post(`/file/${imagesUID}`, formData).then((res) => {
-				console.log("res.data", res.data);
-				console.log("res", res);
-				console.log("url", res.config.url);
-				console.log("responseURL", res.request.responseURL);
-			});
+			await API.post(`/file/${imagesUID}`, formData);
 			showSubmitBtn.value = false;
 			getAvatar();
 		};
 
 		const getAvatar = async () => {
-			const response = await API.get(`/file/${logoID.value}`);
-			console.log("response image: ", response);
+			await API.get(`/file/${logoID.value}`);
 		};
 
 		const submitPassword = () => {
@@ -350,10 +342,8 @@ export default {
 				password: password.value,
 				description: user.value.Description,
 			};
-			console.log(userUpdate);
 
 			if (password.value === confirmPassword.value) {
-				console.log("Password do match: ", password.value);
 				store.dispatch("appUsers/updateUser", userUpdate);
 				$q.notify({
 					type: "positive",

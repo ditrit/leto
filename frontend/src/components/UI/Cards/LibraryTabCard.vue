@@ -60,14 +60,9 @@ export default {
 			emit("deleteAction", props);
 		};
 
-		const onResetUpdate = () => {
-			console.log("event: ", props.id);
-		};
-
 		return {
 			isOpened,
 			delteItem,
-			onResetUpdate,
 		};
 	},
 };

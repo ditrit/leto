@@ -174,7 +174,7 @@ export default {
 	},
 	methods: {
 		parseDatas(e) {
-			console.log(e)
+			return e
 		}
 	},
 };
