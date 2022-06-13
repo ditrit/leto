@@ -11,6 +11,7 @@ export function calculAttributesObjects(datas) {
   const noRelations = [];
   const orderResources = (datas.provider.length > 0) ? datas.provider[0].orderResources : [];
   datas.resources.forEach((r) => {
+		r.id = r.name + "_" + r.type;
     if (r.representation == 'container') {
       r.contains = [];
       r.link = [];

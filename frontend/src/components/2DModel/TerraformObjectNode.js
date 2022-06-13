@@ -3,10 +3,11 @@ import SVGinstanciate from "./svgvar.js";
 const d3 = require("d3");
 
 export default class TerraformObjectNode extends LetoObjectNode {
-	constructor(terraformTypeNode,instance_name,level){
+	constructor(terraformTypeNode,instance_name,level,id){
 		super(terraformTypeNode,instance_name,level);
 		this.contains=[];
 		this.level=level;
+		this.id=id;
 
 		this.drawingObject ={
 			width:0,
@@ -25,12 +26,12 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
     drawSVG(svgs, svgParent, parentName, content, level, drag) {
 		this.drawingObject.id = Date.now();
-        let data = { logopath: this.drawingObject.logopath,  width: this.drawingObject.width, height: this.drawingObject.height, name: this.drawingObject.name, type: this.drawingObject.type, id : this.drawingObject.name + "_" + this.drawingObject.type };
+        let data = { logopath: this.drawingObject.logopath,  width: this.drawingObject.width, height: this.drawingObject.height, name: this.drawingObject.name, type: this.drawingObject.type, id : this.id };
         const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
         d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
-        const model = document.getElementById(`${this.drawingObject.name}_${this.drawingObject.type}`);
+        const model = document.getElementById(`${this.id}`);
 
-        d3.select(`#${this.drawingObject.name}_${this.drawingObject.type}`)
+        d3.select(`#${this.id}`)
 					.append("svg:image")
 					.attr("cursor", "move")
 					.attr("x",model.getElementById("logo_frame").getAttribute("width")-30)
@@ -50,7 +51,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
             model.setAttribute('x', this.drawingObject.x)
             model.setAttribute('y', this.drawingObject.y)
             model.setAttribute('level', level)
-        }   
+        }
 
         return document.getElementById(`${this.drawingObject.name}_${this.drawingObject.type}`);
     }
@@ -58,7 +59,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
     setHeight(height) {
         this.drawingObject.height = height;
     }
-    
+
     setWidth(width) {
         this.drawingObject.width = width;
     }
