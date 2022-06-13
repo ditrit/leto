@@ -41,6 +41,22 @@ export default class TerraformObjectNode extends LetoObjectNode {
 					.attr("xlink:href", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAqklEQVRIieWVQQ6DIBBFX1wYvFrRy9KF7eWwi0KkiDqSIWnTl8zK+L/OfBj4JwzgQhlt8R64A0uoJzC0Elc3sYAvGHjgpmGQEsXFdNpfIDEwwFihNSFIlwFm3v0tcdQiH97dNcnTctXgNF2ObVJqy0XR5kNO6fn8ixKSZw8O5tB0yKmJrTCwEvEzfuMk54ysl10kXnZ7rbxEnq70QKktntLCUd9qTVfm9/IC8+hUYHPjvWwAAAAASUVORK5CYII=")
 					.call(drag.value);
 
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id","input_anchor")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width"))
+					.attr("cy",8)
+					.attr("r",7)
+					.attr("style","stroke:black; stroke-width:1; fill:red");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id","output_anchor")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width"))
+					.attr("cy",44)
+					.attr("r",7)
+					.attr("style","stroke:black; stroke-width:1; fill:blue");
+
         if(content) {
             svgParent.querySelector("g").appendChild(model);
             model.setAttribute('x', this.drawingObject.x)
