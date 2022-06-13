@@ -145,7 +145,6 @@ export default {
 		const getAllDomains = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
 			const getDomaies = computed(() => store.getters["appDomain/allDomaines"]);
-			console.log("getDomaies: ", getDomaies.value);
 			let dataReturned = getDomaies.value.map((payload) => {
 				return {
 					id: payload.ID,
@@ -160,7 +159,6 @@ export default {
 					environments: payload?.Environments,
 				};
 			});
-			console.log("dataReturned from stepper: ", [...dataReturned]);
 			optionsSelections.value = [...new Set(dataReturned)].filter(
 				(item) => item != null
 			);

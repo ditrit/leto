@@ -92,7 +92,6 @@ export default {
 			this.valueEditor = value;
 		},
 		sendDatas(value) {
-			console.log(value);
 			if (value != null) {
 				this.$emit("parse_datas", value);
 			}

@@ -61,7 +61,6 @@
 							<template v-slot:ModalContent>
 								<q-form
 									@submit.prevent="onSubmitUpdate(item)"
-									@reset="onResetUpdate"
 									class="q-gutter-sm q-pa-md"
 								>
 									<div class="row col-md-12 q-gutter-md">
@@ -236,7 +235,6 @@ export default {
 			let data = computed(() => {
 				return store.getters["appEnvironment/allEnvironments"];
 			});
-			console.log("data: ", data.value);
 			environmentName.value = updatesData.name;
 			environmentLogo.value = updatesData.logo;
 			environmentShortDescription.value = updatesData.shortDescription;
@@ -257,7 +255,7 @@ export default {
 			};
 			environmentTypeNameRef.value = updates.environmentTypeName;
 			emit("updateAction", updates);
-			console.log("updates: ", updates);
+
 			await store
 				.dispatch("appEnvironment/updateEnvironment", updates)
 				.then(() => {
@@ -271,14 +269,8 @@ export default {
 				});
 		};
 
-		const onResetUpdate = () => {
-			console.log("event: ", props.id);
-		};
-
 		const onFileUpload = (event) => {
-			console.log("file name", event.files[0].name);
-			console.log("file upload number", event.files[0].__uploaded);
-			console.log("file Id", event.files[0].xhr.response);
+			return event.files[0].name;
 		};
 
 		const onRejected = (rejectedEntries) => {
@@ -293,7 +285,6 @@ export default {
 			updateItem,
 			delteItem,
 			onSubmitUpdate,
-			onResetUpdate,
 			onFileUpload,
 			onRejected,
 			environmentTypeIDRef,

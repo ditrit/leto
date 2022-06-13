@@ -7,14 +7,11 @@ export default function useRequirementsTabData() {
 	const route = useRouter();
 	const $q = useQuasar();
 
-	const Test = () => {
-		console.log("This is from useRequirmentsTabData");
-	};
+
 
 	return {
 		store,
 		route,
 		$q,
-		Test,
 	};
 }
