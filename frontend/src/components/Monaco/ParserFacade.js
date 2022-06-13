@@ -6,7 +6,7 @@ import hclParser from "./schemas_terraform/hclParser.js";
 
 class MyErrorListener extends antlr4.error.ErrorListener {    
     syntaxError(recognizer, offendingSymbol, line, column, msg, e) {
-        console.log("ERROR " + msg);
+        return {recognizer, offendingSymbol, line, column, msg, e};
     }
 }
 
