@@ -42,7 +42,7 @@ if (localStorage.getItem("user")) {
 			return config;
 		}
 		},
-		 (error) => {
+		(error) => {
 			return Promise.reject(error);
 		}
 	);
