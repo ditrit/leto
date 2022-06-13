@@ -28,13 +28,21 @@ export default {
 		this.worker = new Worker(new URL('./iactor.js', import.meta.url));
 		this.worker.onmessage = function (event) {
 			this.iactorDatas = event.data;
+			const provider = {
+				provider: this.iactorDatas.provider,
+			}
+			window.localStorage.setItem("monacoSource", JSON.stringify(provider));
 		};
 		this.worker.addEventListener("message", (event) => {
+			this.getSource();
+			this.getMetaDatas();
+			this.metadatas = this.allMetadatas;
 			const data = event.data;
 			data.provider[0].orderResources = (this.metadatas.provider.orderResources) ? this.metadatas.provider.orderResources : [];
 			analyse_resources(data.resources, this.metadatas.provider.resources);
 			data.resources = calculAttributesObjects(data);	
 			window.localStorage.setItem("monacoSource", JSON.stringify(data));
+			this.getSource();
 		});
 	},
 	mounted() {
@@ -95,8 +103,6 @@ export default {
 		consoleClick() {
 			this.worker.postMessage(this.valueEditor);
 			this.getSource();
-			this.getMetaDatas();
-			this.metadatas = this.allMetadatas;
 		},
 		getSource() {
 			return this.getMonacoSource();
