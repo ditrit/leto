@@ -57,7 +57,8 @@
 		"eslint-webpack-plugin": "^2.4.0",
 		"jest-sonar-reporter": "^2.0.0",
 		"json-server-auth": "^2.1.0",
-		"sonar-scanner": "^3.1.0"
+		"sonar-scanner": "^3.1.0",
+		"vue-router-mock": "^0.1.7"
 	},
 	"browserslist": [
 		"last 10 Chrome versions",
