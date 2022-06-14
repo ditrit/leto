@@ -80,6 +80,11 @@ export default {
 		}
 
 		function dragended() {
+			const id = this.parentNode.getAttribute('id');
+			const x = this.parentNode.getAttribute('x');
+			const y = this.parentNode.getAttribute('y');
+			store.commit('appMonaco/SET_COORD', {id : id, x : x, y : y});
+
 			return;
 		}
 

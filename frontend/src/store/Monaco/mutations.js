@@ -29,18 +29,22 @@ function removeContent(datas, ids) {
 	return removeResource;
 }
 
-function getContainer(datas, ids) {
+function getContainer(datas, id) {
 	let container = null;
 	datas.forEach(resource => {
-		if(resource.name + '_' + resource.type === ids[0]) {
+		if(resource.name + '_' + resource.type === id) {
 			container = resource;		
 		} 
+		if(resource.contains) {
+			const object = getContainer(resource.contains, id);
+			if(object !== null) container = object;
+		}
 	});
 	return container;
 }
 
 export const SET_DATAS_DRAWING = (state, ids) => { 
-	const container = getContainer(state.monacoSource["resources"], ids);
+	const container = getContainer(state.monacoSource["resources"], ids[0]);
 	const index = state.monacoSource["resources"].indexOf(container);
 	const dimensions = calcul_dimensions(container, 0, 1000, true);
 	if(container != null && container.inContainer) container.inContainer = false;
@@ -50,6 +54,8 @@ export const SET_DATAS_DRAWING = (state, ids) => {
 };
 
 export const SET_COORD = (state, resource) => { 
-	state.monacoSource["resources"][resource.index].x = resource.x;
-	state.monacoSource["resources"][resource.index].y = resource.y;
+	const container = getContainer(state.monacoSource["resources"], resource.id);
+	const index = state.monacoSource["resources"].indexOf(container);
+	state.monacoSource["resources"][index].x = resource.x;
+	state.monacoSource["resources"][index].y = resource.y;
 };
