@@ -52,7 +52,7 @@ export default {
 				d3.select('#'+ids[0]).remove()
 				document.getElementById("svg0").appendChild(currentModel);
 				const resource = getResource(monacoSourceData.value["resources"], ids)
-				createTerraformObject(resource, svg, "root", false, 0, false);
+				createTerraformObject(resource, svg, "root", false, 0);
 			}
 		}
 

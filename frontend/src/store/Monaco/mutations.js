@@ -13,7 +13,7 @@ export const UPDATE_SOURCE = (state, ids) => {
 };
 
 function removeContent(datas, ids) {
-	let removeResource;
+	let removeResource = [];
 	datas.forEach(resource => {
 		if(resource.name + '_' + resource.type === ids[0]) {
 			if(ids.length > 1) {
@@ -30,7 +30,7 @@ function removeContent(datas, ids) {
 }
 
 function getContainer(datas, ids) {
-	let container;
+	let container = null;
 	datas.forEach(resource => {
 		if(resource.name + '_' + resource.type === ids[0]) {
 			container = resource;		
@@ -43,7 +43,7 @@ export const SET_DATAS_DRAWING = (state, ids) => {
 	const container = getContainer(state.monacoSource["resources"], ids);
 	const index = state.monacoSource["resources"].indexOf(container);
 	const dimensions = calcul_dimensions(container, 0, 1000, true);
-	if(container.inContainer) container.inContainer = false;
+	if(container != null && container.inContainer) container.inContainer = false;
 	calcul_xy_container(container, container.x, container.y);
 	state.monacoSource["resources"][index].height = dimensions.height + 20;
 	state.monacoSource["resources"][index].width = dimensions.width;
