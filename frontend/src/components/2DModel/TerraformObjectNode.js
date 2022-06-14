@@ -35,7 +35,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
         d3.select(`#${this.id}`)
 					.append("svg:image")
 					.attr("cursor", "move")
-					.attr("x",model.getElementById("logo_frame").getAttribute("width")-30)
+					.attr("x",model.getElementById("logo_frame").getAttribute("width")-35)
 					.attr("y",10)
 					.attr("width", 30)
 					.attr("height", 30)
@@ -44,19 +44,67 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
 				d3.select(`#${this.id}`)
 					.append("circle")
-					.attr("id","input_anchor")
-					.attr("cx",model.getElementById("logo_frame").getAttribute("width"))
-					.attr("cy",8)
-					.attr("r",7)
-					.attr("style","stroke:black; stroke-width:1; fill:red");
+					.attr("id",this.id+"input_anchor_bottom")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width")*(3/5))
+					.attr("cy",50)
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
 
 				d3.select(`#${this.id}`)
 					.append("circle")
-					.attr("id","output_anchor")
+					.attr("id",this.id+"output_anchor_bottom")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width")*(2/5))
+					.attr("cy",50)
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"input_anchor_top")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width")*(3/5))
+					.attr("cy",2)
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"output_anchor_top")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width")*(2/5))
+					.attr("cy",2)
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"input_anchor_left")
+					.attr("cx",3)
+					.attr("cy",model.getElementById("logo_frame").getAttribute("height")*(1/4))
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"output_anchor_left")
+					.attr("cx",3)
+					.attr("cy",model.getElementById("logo_frame").getAttribute("height")*(3/4))
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"input_anchor_right")
 					.attr("cx",model.getElementById("logo_frame").getAttribute("width"))
-					.attr("cy",44)
-					.attr("r",7)
-					.attr("style","stroke:black; stroke-width:1; fill:blue");
+					.attr("cy",model.getElementById("logo_frame").getAttribute("height")*(1/4))
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"output_anchor_right")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width"))
+					.attr("cy",model.getElementById("logo_frame").getAttribute("height")*(3/4))
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
 
         if(content) {
             svgParent.querySelector("g").appendChild(model);
