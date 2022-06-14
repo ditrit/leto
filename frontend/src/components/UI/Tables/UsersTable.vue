@@ -11,7 +11,7 @@
 		</div>
 		<q-table
 			:rows="rowsData"
-			:columns="userColumns"
+			:columns="columns.colUsers"
 			:grid="$q.screen.xs"
 			row-key="name"
 			field
@@ -251,7 +251,7 @@ import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/userFileData";
 import FileUploader from "../Form/FileUploader.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
-import userColumns from "./colums/userColumns";
+import columns from "./colums/index";
 
 export default {
 	components: { Modal, FileUploader, AvatarImg },
@@ -278,27 +278,13 @@ export default {
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					deleteRow(item);
-				})
+			}).onOk(() => {
+				deleteRow(item);
+			});
 		};
 		const allUsers = async () => {
 			await store.dispatch("appUsers/fetchUsers");
-			const getUsers = store.getters["appUsers/allUsers"];
-			rowsData.value = Object.values(
-				getUsers.map((item) => {
-					return {
-						ID: item.ID,
-						Logo: item.Logo,
-						FirstName: item.FirstName,
-						LastName: item.LastName,
-						Email: item.Email,
-						Password: item.Password,
-						Description: item.Description,
-					};
-				})
-			);
+			rowsData.value = await store.getters["appUsers/allUsers"];
 		};
 		allUsers();
 
@@ -394,7 +380,7 @@ export default {
 			isPwd,
 			confirm,
 			editedIndex,
-			userColumns,
+			columns,
 			rowsData,
 			userObj,
 			AddUser,
