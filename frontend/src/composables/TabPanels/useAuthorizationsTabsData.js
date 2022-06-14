@@ -88,10 +88,9 @@ export default function useAuthorizationsTabsData(props) {
 			message: "Are you sure to delete this item?",
 			cancel: true,
 			persistent: true,
-		})
-			.onOk(() => {
-				deleteAuthorization(id);
-			})
+		}).onOk(() => {
+			deleteAuthorization(id);
+		});
 	};
 
 	return {
