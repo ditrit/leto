@@ -6,7 +6,7 @@ import API from "../../services/index";
 
 export default function useDomainData() {
 	const store = useStore();
-	const $q = useQuasar();
+	const quasar = useQuasar();
 	const router = useRouter();
 	const menu = ref(null);
 	const choosenNodeID = ref("");
@@ -98,8 +98,19 @@ export default function useDomainData() {
 	};
 
 	const addTagtoDomain = async (tag) => {
+		try {
 			await API.post(`/domain/${choosenNodeID.value}/tag/${tag.id}`);
-			refreshDomainTag(choosenNodeID.value);
+			await refreshDomainTag(choosenNodeID.value);
+			quasar.notify({
+				type: "positive",
+				message: "Tag has been successfully added",
+			});
+		} catch (error) {
+			quasar.notify({
+				type: "negative",
+				message: "Error while adding tag",
+			});
+		}
 	};
 
 	const getTagsTree = async () => {
@@ -141,8 +152,19 @@ export default function useDomainData() {
 	getTagsTree();
 
 	const OnDelete = async (id) => {
-		await API.delete(`/domain/${choosenNodeID.value}/tag/${id}`)
-			.then(() => refreshDomainTag(choosenNodeID.value))
+		try {
+			await API.delete(`/domain/${choosenNodeID.value}/tag/${id}`);
+			await refreshDomainTag(choosenNodeID.value);
+			quasar.notify({
+				type: "positive",
+				message: "Tag has been successfully deleted",
+			});
+		} catch (error) {
+			quasar.notify({
+				type: "negative",
+				message: "Error while deleting tag",
+			});
+		}
 	};
 
 	const OnEdit = () => {
@@ -150,19 +172,20 @@ export default function useDomainData() {
 	};
 
 	const confirm = (id) => {
-		$q.dialog({
-			title: "Confirm",
-			message: "Are you sure to delete this item?",
-			cancel: true,
-			persistent: true,
-		})
+		quasar
+			.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
 			.onOk(() => {
 				OnDelete(id);
-			})
+			});
 	};
 
 	return {
-		$q,
+		quasar,
 		menu,
 		store,
 		editMode,
