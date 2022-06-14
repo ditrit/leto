@@ -10,7 +10,7 @@ const d3 = require("d3");
 import Palette from './Palette'
 import TerraformTypeNode from './TerraformTypeNode'
 import TerraformObjectNode from './TerraformObjectNode'
-import {getObjectInTree} from "./utils"
+import {drawLink,getAnchorAbsPos,updateLinks,getModelAbsPos} from "./utils"
 import { useStore } from "vuex";
 import plugins from '../../assets/plugins/terraform/plugins'
 

@@ -1,5 +1,6 @@
 import LetoObjectNode from "./LetoObjectNode";
 import SVGinstanciate from "./svgvar.js";
+import { getModelAbsPos } from "./utils";
 const d3 = require("d3");
 
 export default class TerraformObjectNode extends LetoObjectNode {
@@ -87,4 +88,31 @@ export default class TerraformObjectNode extends LetoObjectNode {
     setY(y) {
         this.drawingObject.y = y;
     }
+
+		static getLinkAnchors(beginId,endId){
+
+			let beginPos = getModelAbsPos(document.getElementById(beginId));
+			let endPos = getModelAbsPos(document.getElementById(endId));
+			let xDiff = beginPos[0]-endPos[0];
+			let yDiff = beginPos[1]-endPos[1];
+			let beginAnchor;
+			let endAnchor;
+			if (Math.abs(xDiff)>Math.abs(yDiff) && xDiff>0){
+				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_left");
+				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_right");
+			}
+			else if(Math.abs(xDiff)<Math.abs(yDiff) && yDiff>0){
+				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_top");
+				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_bottom");
+			}
+			else if (Math.abs(xDiff)>Math.abs(yDiff) && xDiff<0){
+				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_right");
+				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_left");
+			}
+			else if(Math.abs(xDiff)<Math.abs(yDiff) && yDiff<0){
+				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_bottom");
+				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_top");
+			}
+			return [beginAnchor,endAnchor];
+		}
 }
