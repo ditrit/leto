@@ -5,8 +5,8 @@ import { useQuasar } from "quasar";
 
 export default function useAuthorizationsTabsData(props) {
 	const store = useStore();
-	const route = useRouter();
-	const $q = useQuasar();
+	const router = useRouter();
+	const quasar = useQuasar();
 	const usersList = ref([]);
 	const roleList = ref([]);
 	const authorizationIdRef = ref(props.authorizationId);
@@ -27,8 +27,8 @@ export default function useAuthorizationsTabsData(props) {
 
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
-		const list = store.getters["appUsers/allUsers"];
-		usersList.value = list.map((user) => {
+		const list = await store.getters["appUsers/allUsers"];
+		usersList.value = list?.map((user) => {
 			return {
 				ID: user.ID,
 				FirstName: user.FirstName,
@@ -45,9 +45,8 @@ export default function useAuthorizationsTabsData(props) {
 
 	const getRolesList = async () => {
 		await store.dispatch("appRoles/fetchAllRoles");
-		const roles = store.getters["appRoles/allRoles"];
-
-		roleList.value = roles.map((role) => {
+		const roles = await store.getters["appRoles/allRoles"];
+		roleList.value = roles?.map((role) => {
 			return {
 				ID: role.ID,
 				Name: role.Name,
@@ -64,11 +63,11 @@ export default function useAuthorizationsTabsData(props) {
 	const refreshAuthorizationTab = async () => {
 		await store.dispatch(
 			"appDomain/fetchDomainById",
-			route.currentRoute.value.params.id
+			router.currentRoute.value.params.id
 		);
-		let domain = store.getters["appDomain/allDomaines"];
-		let choosenDomain = domain.find(
-			(d) => d.ID === route.currentRoute.value.params.id
+		let domain = await store.getters["appDomain/allDomaines"];
+		let choosenDomain = domain?.find(
+			(d) => d.ID === router.currentRoute.value.params.id
 		);
 		authorizationDomainObj.value = Object.values(choosenDomain)[7];
 	};
@@ -82,20 +81,21 @@ export default function useAuthorizationsTabsData(props) {
 	};
 
 	const confirmDeleteAuthorization = (id) => {
-		$q.dialog({
-			title: "Confirm",
-			message: "Are you sure to delete this item?",
-			cancel: true,
-			persistent: true,
-		}).onOk(() => {
-			deleteAuthorization(id);
-		});
+		quasar
+			.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
+			.onOk(() => {
+				deleteAuthorization(id);
+			});
 	};
 
 	return {
+		quasar,
 		store,
-		route,
-		$q,
 		usersList,
 		roleList,
 		getUsersList,

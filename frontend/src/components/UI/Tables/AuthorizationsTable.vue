@@ -11,7 +11,7 @@
 		</div>
 		<q-table
 			:rows="rowsData"
-			:columns="authorizationColumns"
+			:columns="columns.colAuthorizations"
 			row-key="name"
 			field
 			table-header-class="table_header"
@@ -138,18 +138,15 @@
 
 <script>
 import { ref } from "vue";
-import { useStore } from "vuex";
-import { useQuasar } from "quasar";
-import authorizationColumns from "./colums/authorizationColumns";
+
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
 import Modal from "../Dialogs/Modal.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
+import columns from "./colums/index";
 
 export default {
 	components: { Modal, AvatarImg },
 	setup(props) {
-		const store = useStore();
-		const $q = useQuasar();
 		const authorizationObj = ref(null);
 		const rowsData = ref([]);
 		const authorizsationDomain = ref(null);
@@ -158,6 +155,8 @@ export default {
 		const domainList = ref(null);
 
 		let {
+			quasar,
+			store,
 			usersList,
 			roleList,
 			getUsersList,
@@ -174,33 +173,33 @@ export default {
 		} = useAuthorizationsTabsData(props);
 
 		const confirm = (item) => {
-			$q.dialog({
-				title: "Confirm",
-				message: "Are you sure to delete this item?",
-				cancel: true,
-				persistent: true,
-			}).onOk(() => {
-				deleteRow(item.ID);
-			});
+			quasar
+				.dialog({
+					title: "Confirm",
+					message: "Are you sure to delete this item?",
+					cancel: true,
+					persistent: true,
+				})
+				.onOk(() => {
+					deleteRow(item.ID);
+				});
 		};
 
 		const allAuthorizations = async () => {
 			await store.dispatch("appAuthorization/fetchAllAuthorizations");
 			const getAuth = store.getters["appAuthorization/allAuthorizations"];
-			rowsData.value = Object.values(
-				getAuth.map((item) => {
-					return {
-						ID: item.ID,
-						Logo: item.User.Logo,
-						domainID: item.Domain.ID,
-						Domain: item.Domain.Name,
-						RoleID: item.RoleID,
-						Role: item.Role.Name,
-						UserID: item.UserID,
-						User: item.User.FirstName + " " + item.User.LastName,
-					};
-				})
-			);
+			rowsData.value = getAuth?.map((item) => {
+				return {
+					ID: item.ID,
+					Logo: item.User.Logo,
+					domainID: item.Domain.ID,
+					Domain: item.Domain.Name,
+					RoleID: item.RoleID,
+					Role: item.Role.Name,
+					UserID: item.UserID,
+					User: item.User.FirstName + " " + item.User.LastName,
+				};
+			});
 		};
 		allAuthorizations();
 
@@ -223,12 +222,12 @@ export default {
 				authorizsationDomain.value = "";
 				authorisationUser.value = "";
 				authorizationRole.value = "";
-				$q.notify({
+				quasar.notify({
 					type: "positive",
 					message: "Authorizsation has been successfully created",
 				});
 			} catch (error) {
-				$q.notify({
+				quasar.notify({
 					type: "negative",
 					message: "Sorry, authorizsation has not been created",
 				});
@@ -253,12 +252,12 @@ export default {
 				authorizationRole.value = "";
 				await allAuthorizations();
 
-				$q.notify({
+				quasar.notify({
 					type: "positive",
 					message: "Authorizsation has been successfully updated",
 				});
 			} catch (error) {
-				$q.notify({
+				quasar.notify({
 					type: "negative",
 					message: "Sorry, authorizsation has not been updated",
 				});
@@ -281,12 +280,12 @@ export default {
 				authorizsationDomain.value = "";
 				authorisationUser.value = "";
 				authorizationRole.value = "";
-				$q.notify({
+				quasar.notify({
 					type: "positive",
 					message: "Authorization has been successfully deleted",
 				});
 			} catch (error) {
-				$q.notify({
+				_q.notify({
 					type: "negative",
 					message: "Sorry, authorization has not been deleted",
 				});
@@ -296,10 +295,10 @@ export default {
 		const getDominListTable = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
 			let data = store.getters["appDomain/allDomaines"];
-			let choosenDomain = data.find(
+			let choosenDomain = data?.find(
 				(domain) => domain.ID === authorizationDomainIDRef.value
 			);
-			domainList.value = data.map((domain) => {
+			domainList.value = data?.map((domain) => {
 				return {
 					ID: domain.ID,
 					Name: domain.Name,
@@ -314,8 +313,10 @@ export default {
 		getDominListTable();
 
 		return {
+			quasar,
+			store,
 			confirm,
-			authorizationColumns,
+			columns,
 			rowsData,
 			authorizationObj,
 			addNewAuthorization,
