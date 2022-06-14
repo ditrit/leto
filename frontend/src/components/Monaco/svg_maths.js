@@ -298,7 +298,7 @@ export function calculAttributesObjects(datas) {
   return resources;
 }
 
-function calcul_dimensions(container, width, widthMax) {
+export function calcul_dimensions(container, width, widthMax) {
   const widthMin = 250;
   const heightMin = 70;
   let height = heightMin + 20;
@@ -343,24 +343,11 @@ function calcul_dimension_container(container, widthMax, heightMin) {
   let width = 0; 
   let height = 0;
   if (container.contains.length > 0) {
-    if (!container.width && !container.height) {
       const dimensions = calcul_dimensions(container, 0, widthMax);
       width += dimensions.width;
       height += dimensions.height;
-      container.width = dimensions.width;
+      container.width = dimensions.width - 10;
       container.height = dimensions.height + 20;
-    } else {
-      if (container.height >= height) {
-        height += container.height - heightMin;
-      }
-      if (width + container.width >= widthMax) {
-        height += container.height + 40;
-        width += 20;
-      } else {
-        height += 40;
-        width += container.width + 20;
-      }
-    }
   }
   return {width, height}
 }
@@ -386,7 +373,7 @@ function calcul_xy(object, x, y, container, recourceHeightMax) {
   return { x, y: (returnY != -1) ? returnY : y, recourceHeightMax };
 }
 
-function calcul_xy_container(container, x, y, content, recourceHeightMax, parent) {
+export function calcul_xy_container(container, x, y, content, recourceHeightMax, parent) {
   let newX = -1;
   let newY = -1;
   const heightMin = 40;
