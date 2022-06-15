@@ -10,7 +10,7 @@ const d3 = require("d3");
 import Palette from './Palette'
 import TerraformTypeNode from './TerraformTypeNode'
 import TerraformObjectNode from './TerraformObjectNode'
-import {drawLink,getAnchorAbsPos,updateLinks,getModelAbsPos} from "./utils"
+import {drawLink,updateLinks} from "./utils"
 import { useStore } from "vuex";
 import plugins from '../../assets/plugins/terraform/plugins'
 
@@ -81,7 +81,7 @@ export default {
 				}
 			})
 			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0);
-			
+
 			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, drag);
 			d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
 

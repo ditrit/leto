@@ -77,12 +77,11 @@ export function replaceComponents(group) {
 				return pos;
 		}
 
-		export function drawLink(beginAnchor,endAnchor,rootID,links,id){
+		export function drawLink(beginAnchor,endAnchor,rootID,_links,id){
 
 			let beginAnchorPos=getAnchorAbsPos(beginAnchor);
 			let endAnchorPos=getAnchorAbsPos(endAnchor);
 
-			//let id = Date.now();
 			d3.select("#"+rootID).append("line")
 									.attr("id",id)
 									.attr("class","link")
