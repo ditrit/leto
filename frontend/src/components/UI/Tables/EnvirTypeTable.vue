@@ -11,7 +11,7 @@
 		</div>
 		<q-table
 			:rows="rowsData"
-			:columns="columns"
+			:columns="columns.colRoles"
 			row-key="name"
 			field
 			table-header-class="table_header"
@@ -167,7 +167,7 @@ import Modal from "../Dialogs/Modal.vue";
 import useFileData from "../../../composables/Forms/userFileData";
 import FileUploader from "../Form/FileUploader.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
-import columns from "./colums/enviTypeRoleColumns";
+import columns from "./colums/index";
 
 export default {
 	components: { Modal, FileUploader, AvatarImg },

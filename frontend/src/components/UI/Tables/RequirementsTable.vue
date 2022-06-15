@@ -12,7 +12,7 @@
 
 		<q-table
 			:rows="rowsData"
-			:columns="requirementColumns"
+			:columns="columns.colRequirements"
 			:grid="$q.screen.xs"
 			row-key="name"
 			field
@@ -297,7 +297,7 @@ import { ref } from "vue";
 import { useQuasar } from "quasar";
 import Modal from "../Dialogs/Modal.vue";
 import AvatarImg from "../Images/AvatarImg.vue";
-import requirementColumns from "./colums/requirementColumns";
+import columns from "./colums/index";
 
 export default {
 	components: { Modal, AvatarImg },
@@ -308,7 +308,7 @@ export default {
 		const userObj = ref(null);
 		const rowsData = ref([
 			{
-				name: "nameOne",
+				Name: "nameOne",
 				active: "Yes",
 				required: "No",
 				dataType: "Int",
@@ -319,7 +319,7 @@ export default {
 				max_value: 100,
 			},
 			{
-				name: "nameTwo",
+				Name: "nameTwo",
 				active: "Yes",
 				required: "No",
 				dataType: "String",
@@ -330,7 +330,7 @@ export default {
 				max_value: "lorem ipsum",
 			},
 			{
-				name: "nameThree",
+				Name: "nameThree",
 				active: "No",
 				required: "No",
 				dataType: "Int",
@@ -388,7 +388,7 @@ export default {
 		};
 
 		return {
-			requirementColumns,
+			columns,
 			rowsData,
 			confirm,
 			optionsValue,

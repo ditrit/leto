@@ -1,8 +1,8 @@
 import API from "../../services/index";
 
-export const fetchAllAuthorization = async ({ commit }) => {
+export const fetchAllAuthorizations = async ({ commit }) => {
 	let response = await API.get("/authorization");
-	commit("GET_AUTHORIZATION", response.data);
+	commit("GET_AUTHORIZATIONS", response.data);
 };
 
 export const fetchAuthorizationById = async ({ commit }, id) => {
@@ -15,7 +15,7 @@ export const addAuthorization = async ({ commit }, teamMember) => {
 	commit("NEW_AUTHORIZATION", response.data);
 };
 export const updateAuthorization = async ({ commit }, updates) => {
-	let response = await API.put(`/authorization/${updates.id}`, updates);
+	let response = await API.put(`/authorization/${updates.ID}`, updates);
 	commit("UPDATE_AUTHORIZATION", response.data);
 };
 

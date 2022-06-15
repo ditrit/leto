@@ -1,12 +1,12 @@
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 
 export default function useAuthorizationsTabsData(props) {
 	const store = useStore();
-	const route = useRouter();
-	const $q = useQuasar();
+	const router = useRouter();
+	const quasar = useQuasar();
 	const usersList = ref([]);
 	const roleList = ref([]);
 	const authorizationIdRef = ref(props.authorizationId);
@@ -27,17 +27,17 @@ export default function useAuthorizationsTabsData(props) {
 
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
-		const list = computed(() => store.getters["appUsers/allUsers"]);
-		usersList.value = list.value.map((user) => {
+		const list = await store.getters["appUsers/allUsers"];
+		usersList.value = list?.map((user) => {
 			return {
-				id: user.ID,
-				firstName: user.FirstName,
-				lastName: user.LastName,
-				email: user.Email,
+				ID: user.ID,
+				FirstName: user.FirstName,
+				LastName: user.LastName,
+				Email: user.Email,
 				label: user.FirstName + " " + user.LastName,
 				value: user.FirstName + " " + user.LastName,
-				logo: user.Logo,
-				description: user.Description,
+				Logo: user.Logo,
+				Description: user.Description,
 			};
 		});
 	};
@@ -45,17 +45,16 @@ export default function useAuthorizationsTabsData(props) {
 
 	const getRolesList = async () => {
 		await store.dispatch("appRoles/fetchAllRoles");
-		const roles = computed(() => store.getters["appRoles/allRoles"]);
-
-		roleList.value = roles.value.map((role) => {
+		const roles = await store.getters["appRoles/allRoles"];
+		roleList.value = roles?.map((role) => {
 			return {
-				id: role.ID,
-				name: role.Name,
+				ID: role.ID,
+				Name: role.Name,
 				label: role.Name,
 				value: role.Name,
-				logo: role.Logo,
-				shortDescription: role.ShortDescription,
-				description: role.Description,
+				Logo: role.Logo,
+				ShortDescription: role.ShortDescription,
+				Description: role.Description,
 			};
 		});
 	};
@@ -64,15 +63,14 @@ export default function useAuthorizationsTabsData(props) {
 	const refreshAuthorizationTab = async () => {
 		await store.dispatch(
 			"appDomain/fetchDomainById",
-			route.currentRoute.value.params.id
+			router.currentRoute.value.params.id
 		);
-		let domain = store.getters["appDomain/allDomaines"];
-		let choosenDomain = domain.find(
-			(d) => d.ID === route.currentRoute.value.params.id
+		let domain = await store.getters["appDomain/allDomaines"];
+		let choosenDomain = domain?.find(
+			(d) => d.ID === router.currentRoute.value.params.id
 		);
 		authorizationDomainObj.value = Object.values(choosenDomain)[7];
 	};
-	refreshAuthorizationTab();
 
 	const deleteAuthorization = async (id) => {
 		await store
@@ -83,21 +81,21 @@ export default function useAuthorizationsTabsData(props) {
 	};
 
 	const confirmDeleteAuthorization = (id) => {
-		$q.dialog({
-			title: "Confirm",
-			message: "Are you sure to delete this item?",
-			cancel: true,
-			persistent: true,
-		})
+		quasar
+			.dialog({
+				title: "Confirm",
+				message: "Are you sure to delete this item?",
+				cancel: true,
+				persistent: true,
+			})
 			.onOk(() => {
 				deleteAuthorization(id);
-			})
+			});
 	};
 
 	return {
+		quasar,
 		store,
-		route,
-		$q,
 		usersList,
 		roleList,
 		getUsersList,
