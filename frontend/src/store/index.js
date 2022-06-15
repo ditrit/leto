@@ -10,7 +10,7 @@ import appEnviType from "./EnviTypes/index";
 import appEnvironment from "./Environment/index";
 import appProducts from "./Products/index";
 import appLibraries from "./Libraries/index";
-import appAuthorization from "./Authorization/index";
+import appAuthorization from "./Authorizations/index";
 import appFiles from "./Files/index";
 import appGit from "./Git/index";
 import appMonaco from "./Monaco/index";

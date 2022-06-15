@@ -11,13 +11,13 @@
 		</div>
 		<q-table
 			:rows="rowsData"
-			:columns="authorizationColumns"
+			:columns="columns.colAuthorizations"
 			row-key="name"
 			field
 			table-header-class="table_header"
 		>
-			<template v-slot:body-cell-avatar="props">
-				<AvatarImg :source="props.row.avatar" />
+			<template v-slot:body-cell-Logo="props">
+				<AvatarImg :source="props.row.Logo" />
 			</template>
 			<template v-slot:body-cell-actionsButtons="props">
 				<q-td :props="props">
@@ -137,19 +137,16 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
-import { useStore } from "vuex";
-import { useQuasar } from "quasar";
-import authorizationColumns from "./colums/authorizationColumns";
+import { ref } from "vue";
+
 import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
 import Modal from "../Dialogs/Modal.vue";
 import AvatarImg from "components/UI/Images/AvatarImg.vue";
+import columns from "./colums/index";
 
 export default {
 	components: { Modal, AvatarImg },
 	setup(props) {
-		const store = useStore();
-		const $q = useQuasar();
 		const authorizationObj = ref(null);
 		const rowsData = ref([]);
 		const authorizsationDomain = ref(null);
@@ -158,6 +155,8 @@ export default {
 		const domainList = ref(null);
 
 		let {
+			quasar,
+			store,
 			usersList,
 			roleList,
 			getUsersList,
@@ -174,37 +173,33 @@ export default {
 		} = useAuthorizationsTabsData(props);
 
 		const confirm = (item) => {
-			$q.dialog({
-				title: "Confirm",
-				message: "Are you sure to delete this item?",
-				cancel: true,
-				persistent: true,
-			})
-				.onOk(() => {
-					deleteRow(item.id);
+			quasar
+				.dialog({
+					title: "Confirm",
+					message: "Are you sure to delete this item?",
+					cancel: true,
+					persistent: true,
 				})
+				.onOk(() => {
+					deleteRow(item.ID);
+				});
 		};
 
 		const allAuthorizations = async () => {
-			await store.dispatch("appAuthorization/fetchAllAuthorization");
-			const getAuth = computed(
-				() => store.getters["appAuthorization/allAuthorizations"]
-			);
-
-			rowsData.value = Object.values(
-				getAuth.value.map((item) => {
-					return {
-						id: item.ID,
-						avatar: item.User.Logo,
-						domainID: item.Domain.ID,
-						domain: item.Domain.Name,
-						roleID: item.RoleID,
-						role: item.Role.Name,
-						userID: item.UserID,
-						user: item.User.FirstName + " " + item.User.LastName,
-					};
-				})
-			);
+			await store.dispatch("appAuthorization/fetchAllAuthorizations");
+			const getAuth = store.getters["appAuthorization/allAuthorizations"];
+			rowsData.value = getAuth?.map((item) => {
+				return {
+					ID: item.ID,
+					Logo: item.User.Logo,
+					domainID: item.Domain.ID,
+					Domain: item.Domain.Name,
+					RoleID: item.RoleID,
+					Role: item.Role.Name,
+					UserID: item.UserID,
+					User: item.User.FirstName + " " + item.User.LastName,
+				};
+			});
 		};
 		allAuthorizations();
 
@@ -213,9 +208,9 @@ export default {
 		};
 		const onSubmitAdd = async () => {
 			const authorizationData = {
-				domainID: authorizsationDomain.value.id,
-				userID: authorisationUser.value.id,
-				roleID: authorizationRole.value.id,
+				DomainID: authorizsationDomain.value.ID,
+				UserID: authorisationUser.value.ID,
+				RoleID: authorizationRole.value.ID,
 			};
 
 			try {
@@ -227,12 +222,12 @@ export default {
 				authorizsationDomain.value = "";
 				authorisationUser.value = "";
 				authorizationRole.value = "";
-				$q.notify({
+				quasar.notify({
 					type: "positive",
 					message: "Authorizsation has been successfully created",
 				});
 			} catch (error) {
-				$q.notify({
+				quasar.notify({
 					type: "negative",
 					message: "Sorry, authorizsation has not been created",
 				});
@@ -241,10 +236,10 @@ export default {
 
 		const onSubmitUpdate = async () => {
 			const authorizationData = {
-				id: authorizationObj.value[0],
-				domainID: authorizationObj.value[3].id,
-				roleID: authorizationObj.value[5].id,
-				userID: authorizationObj.value[7].id,
+				ID: authorizationObj.value[0],
+				DomainID: authorizationObj.value[3].ID,
+				RoleID: authorizationObj.value[5].ID,
+				UserID: authorizationObj.value[7].ID,
 			};
 
 			try {
@@ -257,12 +252,12 @@ export default {
 				authorizationRole.value = "";
 				await allAuthorizations();
 
-				$q.notify({
+				quasar.notify({
 					type: "positive",
 					message: "Authorizsation has been successfully updated",
 				});
 			} catch (error) {
-				$q.notify({
+				quasar.notify({
 					type: "negative",
 					message: "Sorry, authorizsation has not been updated",
 				});
@@ -285,12 +280,12 @@ export default {
 				authorizsationDomain.value = "";
 				authorisationUser.value = "";
 				authorizationRole.value = "";
-				$q.notify({
+				quasar.notify({
 					type: "positive",
 					message: "Authorization has been successfully deleted",
 				});
 			} catch (error) {
-				$q.notify({
+				_q.notify({
 					type: "negative",
 					message: "Sorry, authorization has not been deleted",
 				});
@@ -299,14 +294,14 @@ export default {
 
 		const getDominListTable = async () => {
 			await store.dispatch("appDomain/fetchAllDomaines");
-			let data = computed(() => store.getters["appDomain/allDomaines"]);
-			let choosenDomain = data.value.find(
+			let data = store.getters["appDomain/allDomaines"];
+			let choosenDomain = data?.find(
 				(domain) => domain.ID === authorizationDomainIDRef.value
 			);
-			domainList.value = data.value.map((domain) => {
+			domainList.value = data?.map((domain) => {
 				return {
-					id: domain.ID,
-					name: domain.Name,
+					ID: domain.ID,
+					Name: domain.Name,
 					value: domain.Name,
 					label: domain.Name,
 				};
@@ -318,8 +313,10 @@ export default {
 		getDominListTable();
 
 		return {
+			quasar,
+			store,
 			confirm,
-			authorizationColumns,
+			columns,
 			rowsData,
 			authorizationObj,
 			addNewAuthorization,

@@ -1,4 +1,4 @@
-export const GET_USERS = (state, theUsers) => (state.theUsers = theUsers);
+export const GET_USERS = (state, user) => (state.theUsers = user);
 export const NEW_USER = (state, user) => state.theUsers.unshift(user);
 
 export const UPDATE_USER = (state, updatedUser) => {
