@@ -1,4 +1,5 @@
 const d3 = require("d3");
+import TerraformObjectNode from "./TerraformObjectNode";
 
 export function getObjectInTree(node,currentModel){
 	if (node == null){
@@ -54,4 +55,94 @@ export function replaceComponents(group) {
 			) {
 				replaceComponents(group.parentNode);
 			}
+		}
+
+		function addParentPos(parent,pos){
+
+			pos[0]+=parseFloat(parent.getAttribute("x"));
+			pos[1]+=parseFloat(parent.getAttribute("y"));
+
+			if (parent.parentNode.id!="svg0")
+			{
+				if (parent.parentNode.tagName == "g"){
+					parent = parent.parentNode;
+				}
+				addParentPos(parent.parentNode,pos)
+			}
+		}
+
+		export function getAnchorAbsPos(anchor){
+			let pos = [parseFloat(anchor.getAttribute("cx")),parseFloat(anchor.getAttribute("cy"))];
+				addParentPos(anchor.parentNode,pos);
+				return pos;
+		}
+
+		export function drawLink(beginAnchor,endAnchor,rootID,_links,id){
+
+			let beginAnchorPos=getAnchorAbsPos(beginAnchor);
+			let endAnchorPos=getAnchorAbsPos(endAnchor);
+
+			d3.select("#"+rootID).append("line")
+									.attr("id",id)
+									.attr("class","link")
+									.attr("x1",endAnchorPos[0])
+									.attr("y1",endAnchorPos[1])
+									.attr("x2",beginAnchorPos[0])
+									.attr("y2",beginAnchorPos[1])
+									.attr("cursor", "pointer")
+									.attr("stroke","black")
+									.attr("stroke-width",1)
+									.attr("marker-start","url(#arrow)")
+									.on("click",function()
+										{
+
+											this.remove();
+
+										});
+			return id;
+		}
+
+		export function updateLinks(links,model){
+
+			links[model.id].outputs.forEach(link => {
+				let arrow = document.getElementById(link.id);
+				let beginId = model.id;
+				let endId = link.targetId
+				let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
+				let beginAnchor = anchors[0];
+
+				let beginAnchorPos = getAnchorAbsPos(beginAnchor);
+				d3.select(arrow)
+					.attr("x2",beginAnchorPos[0])
+					.attr("y2",beginAnchorPos[1])
+			})
+
+			links[model.id].inputs.forEach(link => {
+				let arrow = document.getElementById(link.id);
+				let endId = model.id;
+				let beginId = link.sourceId
+				let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
+				let endAnchor = anchors[1];
+
+				let endAnchorPos = getAnchorAbsPos(endAnchor);
+				d3.select(arrow)
+					.attr("x1",endAnchorPos[0])
+					.attr("y1",endAnchorPos[1])
+			})
+
+			model.childNodes.forEach(element =>{
+				if(element.tagName == "g"){
+					element.childNodes.forEach(childModel => {
+						if(childModel.tagName == "svg"){
+							updateLinks(links,childModel)
+						}
+					})
+				}
+			})
+		}
+
+		export function getModelAbsPos(model){
+			let pos = [parseFloat(model.getAttribute("x")),parseFloat(model.getAttribute("y"))];
+				addParentPos(model,pos);
+				return pos;
 		}

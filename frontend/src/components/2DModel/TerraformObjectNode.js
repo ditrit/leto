@@ -1,5 +1,6 @@
 import LetoObjectNode from "./LetoObjectNode";
 import SVGinstanciate from "./svgvar.js";
+import { getModelAbsPos } from "./utils";
 const d3 = require("d3");
 
 export default class TerraformObjectNode extends LetoObjectNode {
@@ -34,12 +35,76 @@ export default class TerraformObjectNode extends LetoObjectNode {
         d3.select(`#${this.id}`)
 					.append("svg:image")
 					.attr("cursor", "move")
-					.attr("x",model.getElementById("logo_frame").getAttribute("width")-30)
+					.attr("x",model.getElementById("logo_frame").getAttribute("width")-35)
 					.attr("y",10)
 					.attr("width", 30)
 					.attr("height", 30)
 					.attr("xlink:href", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAqklEQVRIieWVQQ6DIBBFX1wYvFrRy9KF7eWwi0KkiDqSIWnTl8zK+L/OfBj4JwzgQhlt8R64A0uoJzC0Elc3sYAvGHjgpmGQEsXFdNpfIDEwwFihNSFIlwFm3v0tcdQiH97dNcnTctXgNF2ObVJqy0XR5kNO6fn8ixKSZw8O5tB0yKmJrTCwEvEzfuMk54ysl10kXnZ7rbxEnq70QKktntLCUd9qTVfm9/IC8+hUYHPjvWwAAAAASUVORK5CYII=")
 					.call(drag.value);
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"input_anchor_bottom")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width")*(3/5))
+					.attr("cy",50)
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"output_anchor_bottom")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width")*(2/5))
+					.attr("cy",50)
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"input_anchor_top")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width")*(3/5))
+					.attr("cy",2)
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"output_anchor_top")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width")*(2/5))
+					.attr("cy",2)
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"input_anchor_left")
+					.attr("cx",3)
+					.attr("cy",model.getElementById("logo_frame").getAttribute("height")*(1/4))
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"output_anchor_left")
+					.attr("cx",3)
+					.attr("cy",model.getElementById("logo_frame").getAttribute("height")*(3/4))
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"input_anchor_right")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width"))
+					.attr("cy",model.getElementById("logo_frame").getAttribute("height")*(1/4))
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
+
+				d3.select(`#${this.id}`)
+					.append("circle")
+					.attr("id",this.id+"output_anchor_right")
+					.attr("cx",model.getElementById("logo_frame").getAttribute("width"))
+					.attr("cy",model.getElementById("logo_frame").getAttribute("height")*(3/4))
+					.attr("r",2)
+					.attr("style","stroke:black; stroke-width:1; fill:none");
 
         if(content) {
             svgParent.querySelector("g").appendChild(model);
@@ -71,4 +136,31 @@ export default class TerraformObjectNode extends LetoObjectNode {
     setY(y) {
         this.drawingObject.y = y;
     }
+
+		static getLinkAnchors(beginId,endId){
+
+			let beginPos = getModelAbsPos(document.getElementById(beginId));
+			let endPos = getModelAbsPos(document.getElementById(endId));
+			let xDiff = beginPos[0]-endPos[0];
+			let yDiff = beginPos[1]-endPos[1];
+			let beginAnchor;
+			let endAnchor;
+			if (Math.abs(xDiff)>Math.abs(yDiff) && xDiff>0){
+				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_left");
+				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_right");
+			}
+			else if(Math.abs(xDiff)<Math.abs(yDiff) && yDiff>0){
+				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_top");
+				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_bottom");
+			}
+			else if (Math.abs(xDiff)>Math.abs(yDiff) && xDiff<0){
+				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_right");
+				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_left");
+			}
+			else if(Math.abs(xDiff)<Math.abs(yDiff) && yDiff<0){
+				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_bottom");
+				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_top");
+			}
+			return [beginAnchor,endAnchor];
+		}
 }

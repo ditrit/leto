@@ -10,7 +10,7 @@ const d3 = require("d3");
 import Palette from './Palette'
 import TerraformTypeNode from './TerraformTypeNode'
 import TerraformObjectNode from './TerraformObjectNode'
-import {getObjectInTree} from "./utils"
+import {drawLink,updateLinks} from "./utils"
 import { useStore } from "vuex";
 import plugins from '../../assets/plugins/terraform/plugins'
 
@@ -27,6 +27,7 @@ export default {
 		const svgs = ref({});
 		const terraformPanelList = ref([]);
 		const loading = ref(true);
+		const links = ref({});
 		const rootTreeObject = ref ({
 			content: [],
 			drawingObject:{},
@@ -58,6 +59,7 @@ export default {
 				.attr("x",coord[0]/zoom.value-rootx/zoom.value-parseFloat(this.getAttribute("x"))-parseFloat(this.getAttribute("width")/2) - translateX.value/zoom.value)
 				.attr("y",coord[1]/zoom.value-rooty/zoom.value-parseFloat(this.getAttribute("y"))-parseFloat(this.getAttribute("height")/2) - translateY.value/zoom.value);
 
+			updateLinks(links.value,this.parentNode);
 		}
 
 		function dragended() {
@@ -79,7 +81,7 @@ export default {
 				}
 			})
 			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0);
-			
+
 			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, drag);
 			d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
 
@@ -92,6 +94,10 @@ export default {
 
 		function drawSVGs(datas, svgParent, parentName, content, level) {
 			datas.forEach( SVGData => {
+				links.value[SVGData.id]={
+					outputs:[],
+					inputs:[]
+					}
 				const terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
 				const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level, SVGData.id);
 				terraformObject.setHeight(SVGData.height);
@@ -99,97 +105,37 @@ export default {
 				terraformObject.setX(SVGData.x);
 				terraformObject.setY(SVGData.y);
 				terraformObject.drawSVG(svgs, svgParent, parentName, content, level, drag);
-				
+
 				if(SVGData.contains) {
                     const model = document.getElementById(`${SVGData.id}`);
-                    drawSVGs(SVGData.contains, model, `${SVGData.id}`, true, level + 1)  
-				}  
+                    drawSVGs(SVGData.contains, model, `${SVGData.id}`, true, level + 1)
+				}
 			})
-			drawLines(datas)
 		}
 
 		function drawLines(datas) {
 			datas.forEach( blockEnd => {
 				if(blockEnd.link) {
 					blockEnd.link.forEach( blockBegin => {
-						let xEnd, yEnd, xBegin, yBegin;
-						const blockEndX = (blockEnd.parentX) ? blockEnd.parentX : blockEnd.x
-						const blockEndY = (blockEnd.parentY) ? blockEnd.parentY : blockEnd.y
-						const blockBeginX = (blockBegin.parentX) ? blockBegin.parentX : blockBegin.x
-						const blockBeginY = (blockBegin.parentY) ? blockBegin.parentY : blockBegin.y
-						let blockEndWidth = ((blockEnd.width > 0) ? blockEnd.width + 30 : 220)
-						let blockBeginWidth = ((blockBegin.width > 0) ? blockBegin.width + 30 : 220)
-						let blockEndHeight = ((blockEnd.height > 0) ? blockEnd.height + 30 : 44)
-						let blockBeginHeight = ((blockBegin.height > 0) ? blockBegin.height + 30 : 44)
-						let endX1 = blockEndX + blockEndWidth
-						let endY1 = blockEndY + blockEndHeight
-						let endX2 = blockBeginX + blockBeginWidth
-						let endY2 = blockBeginY + blockBeginHeight
-						if(blockBeginY == blockEndY && blockBeginHeight == blockEndHeight) {
-							yEnd = blockEndY + blockEndHeight/2
-							yBegin = blockBeginY + blockBeginHeight/2
-							if(blockBeginX > blockEndX) {
-								yEnd+= 10
-								yBegin+= 10
-								xEnd = endX1 + 10
-								xBegin = blockBeginX + 4
-							} else {
-								yEnd-= 10
-								yBegin-= 10
-								xEnd = blockEndX
-								xBegin = endX2 + 4
-							}
-						} else if(blockBeginX == blockEndX && blockBeginWidth == blockEndWidth){
-							xEnd = blockEndX + blockEndWidth/2
-							xBegin = blockBeginX + blockBeginWidth/2
-							if(blockBeginY > blockEndY) {
-								xEnd+= 10
-								xBegin+= 10
-								yEnd = endY1 + 10
-								yBegin = blockBeginY + 4
-							} else {
-								xEnd-= 10
-								xBegin-= 10
-								yEnd = blockEndY
-								yBegin = endY2 + 4
-							}
-						} else {
-							if(blockEndWidth > blockBeginX && blockEndWidth > endX2) {
-								xEnd = blockEndX + blockEndWidth/2 - 5
-								xBegin = blockBeginX + blockBeginWidth/2 + 10
-								yEnd = endY1 - 10
-								yBegin = blockBeginY + 4
-							} else if(endX2 > endX1 && endY2 > endY1) {
-								xEnd = blockEndX + blockEndWidth/2 - 10
-								xBegin = blockBeginX + blockBeginWidth/2 + 10
-								yEnd = endY1 + 8
-								yBegin = blockBeginY + 4
-							} else if(endX2 > endX1 && endY2 < endY1) {
-								xEnd = endX1 + 8
-								xBegin = blockBeginX + blockBeginWidth/2 - 10
-								yEnd = blockEndY + blockEndHeight/2 - 10
-								yBegin = endY2 + 4
-							} else if(endX2 < endX1 && endY2 < endY1) {
-								xEnd = blockEndX + blockEndWidth/2 - 10
-								xBegin = endX2 + 4
-								yEnd = blockEndY
-								yBegin = blockBeginY + blockBeginHeight/2 - 10
-							} else {
-								xEnd = blockEndX + blockEndWidth/2 - 10
-								xBegin = blockBeginX + blockBeginWidth/2 + 10
-								yEnd = endY1 + 8
-								yBegin = blockBeginY + 4
-							}
-						}
-						d3.select('#svg0').append("line")
-							.attr("x1",xEnd)
-							.attr("y1",yEnd)
-							.attr("x2",xBegin)
-							.attr("y2",yBegin)
-							.attr("stroke","black")
-							.attr("stroke-width",1)
-							.attr("marker-start","url(#arrow)");
+						let endId = blockEnd.id;
+						let beginId = blockBegin.id;
+						let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
+						let beginAnchor = anchors[0];
+						let endAnchor = anchors[1];
+						let linkId = drawLink(beginAnchor,endAnchor,"svg0",links.value,beginId+"_to_"+endId);
+
+						links.value[beginId].outputs.push({
+							targetId : endId,
+							id : linkId
+						})
+						links.value[endId].inputs.push({
+							sourceId : beginId,
+							id : linkId
+						})
 					})
+				}
+				if (blockEnd.contains){
+					drawLines(blockEnd.contains);
 				}
 			})
 		}
@@ -278,6 +224,7 @@ export default {
 			zoom,
 			translateX,
 			translateY,
+			links,
 			rootTreeObject
 		};
 	}
