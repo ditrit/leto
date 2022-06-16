@@ -11,7 +11,12 @@ export default class LetoObjectNode{
 		this.secondary_color=letoTypeNode.secondary_color;
 		this.instance_name=instance_name;
 		this.level=level;
-
+		this.rightSibling=null;
+		this.contains = [];
+		this.links = {
+			outputs : [],
+			inputs : [],
+		}
 	}
 
 	drawingObject ={}

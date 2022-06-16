@@ -1,16 +1,30 @@
 const d3 = require("d3");
 import TerraformObjectNode from "./TerraformObjectNode";
 
-export function getObjectInTree(node,currentModel){
+export function storeOutputLinkInData(node,currentModelId,link){
 	if (node == null){
 		 return;
 	}
 
-	else if(node.drawingObject.id == parseInt(currentModel.getAttribute("id"))){
-		return node;
+	else if(node.drawingObject.id == currentModelId){
+		node.addOutputLink(link);
 	}
-	getObjectInTree(node.content[0],currentModel);
-	getObjectInTree(node.rightSibling,currentModel);
+
+	storeOutputLinkInData(node.contains[0],currentModelId,link);
+	storeOutputLinkInData(node.rightSibling,currentModelId,link);
+}
+
+export function storeInputLinkInData(node,currentModelId,link){
+	if (node == null){
+		 return;
+	}
+
+	else if(node.drawingObject.id == currentModelId){
+		node.addInputLink(link);
+	}
+
+	storeInputLinkInData(node.contains[0],currentModelId,link);
+	storeInputLinkInData(node.rightSibling,currentModelId,link);
 }
 
 export function replaceComponents(group) {

@@ -25,12 +25,8 @@ export default {
 		const terraformPanelList = ref([]);
 		const loading = ref(true);
 		const links = ref({});
-		const rootTreeObject = ref ({
-			content: [],
-			drawingObject:{},
-			level:-1,
-			rightSibling:null,
-		})
+		const rootTreeObject = ref (new LetoObjectNode(new LetoTypeNode("","","","",""),"",-1))
+		rootTreeObject.value.setId("0");
 		const drag = ref(d3.drag()
 							.on("start", dragstarted)
 							.on("drag", dragged)
@@ -78,7 +74,7 @@ export default {
 				.attr("x",coord[0]/zoom.value-rootx/zoom.value-parseFloat(this.getAttribute("x"))-parseFloat(this.getAttribute("width")/2) - translateX.value/zoom.value)
 				.attr("y",coord[1]/zoom.value-rooty/zoom.value-parseFloat(this.getAttribute("y"))-parseFloat(this.getAttribute("height")/2) - translateY.value/zoom.value);
 
-			updateLinks(links.value,this.parentNode);
+			updateLinks(rootTreeObject.value,this.parentNode);
 		}
 
 		function dragended() {
@@ -112,15 +108,16 @@ export default {
 
 			if (minGroup != null && minGroup != this) {
 				const resource = getResource(monacoSourceData.value["resources"], [minGroup.getAttribute('id')], null);
-				store.commit('appMonaco/ADD_CONTENT', {idContainer : minGroup.getAttribute('id'), idResource : currentGroup.getAttribute('id')});		
+				store.commit('appMonaco/ADD_CONTENT', {idContainer : minGroup.getAttribute('id'), idResource : currentGroup.getAttribute('id')});
 				store.commit('appMonaco/SET_CONTAINER_DRAWING', {ids : [resource.id], remove : false});
-				getDatas();		
+				getDatas();
 				d3.select('#'+currentGroup.getAttribute('id')).remove();
 				d3.select('#'+resource.id).remove();
 				if(resource !== null) createTerraformObject(resource, svg, "root", false, 0);
 			}
 
 			return;
+			updateDrawingInfosInData(rootTreeObject.value,this.parentNode);
 		}
 
 		function clickOnPalette() {
@@ -137,15 +134,16 @@ export default {
 					panelObject = element;
 				}
 			})
-			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0);
+			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,Date.now());
 
 			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, drag);
 			d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
 
-			if (rootTreeObject.value.content.length!=0){
-				rootTreeObject.value.content[rootTreeObject.value.content.length-1].rightSibling = terraformObject;
+			if (rootTreeObject.value.contains.length!=0){
+				rootTreeObject.value.contains[rootTreeObject.value.contains.length-1].setRightSibling(terraformObject);
 			}
-			rootTreeObject.value.content.push(terraformObject);
+			rootTreeObject.value.contains.push(terraformObject);
+			console.log(rootTreeObject.value)
 		}
 
 		function getIndex(currentModel, container, ids) {
@@ -161,12 +159,24 @@ export default {
 				links.value[SVGData.id]= {
 					outputs:[],
 					inputs:[]
+					}
+				const terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
+				const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level, SVGData.id);
+				terraformObject.setHeight(SVGData.height);
+				terraformObject.setWidth(SVGData.width);
+				terraformObject.setX(SVGData.x);
+				terraformObject.setY(SVGData.y);
+				terraformObject.drawSVG(svgs, svgParent, parentName, content, level, drag);
+				const model = document.getElementById(`${SVGData.id}`);
+				addContentInData(rootTreeObject.value,model,terraformObject);
+				if(SVGData.contains) {
+          drawSVGs(SVGData.contains, model, `${SVGData.id}`, true, level + 1)
 				}
 				createTerraformObject(SVGData, svgParent, parentName, content, level);
 			})
 		}
 
-		function createTerraformObject(SVGData, svgParent, parentName, content, level) {	
+		function createTerraformObject(SVGData, svgParent, parentName, content, level) {
 			const terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
 			const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level, SVGData.id);
 			terraformObject.setHeight(SVGData.height);
@@ -191,15 +201,13 @@ export default {
 						let beginAnchor = anchors[0];
 						let endAnchor = anchors[1];
 						let linkId = drawLink(beginAnchor,endAnchor,"svg0",links.value,beginId+"_to_"+endId);
-
-						links.value[beginId].outputs.push({
+						let link = {
 							targetId : endId,
-							id : linkId
-						})
-						links.value[endId].inputs.push({
 							sourceId : beginId,
-							id : linkId
-						})
+							id : linkId,
+						}
+						storeOutputLinkInData(rootTreeObject.value,beginId,link);
+						storeInputLinkInData(rootTreeObject.value,endId,link)
 					})
 				}
 				if (blockEnd.contains){
@@ -248,7 +256,7 @@ export default {
 				.attr("id", "svg0");
 
 			let svg = d3.select('#root')
-			
+
 			drawSVGs(monacoSourceData.value["resources"], svg, "root", false, 0);
 			drawLines(monacoSourceData.value["resources"]);
 
