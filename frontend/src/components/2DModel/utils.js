@@ -91,7 +91,7 @@ export function getAnchorAbsPos(anchor){
 				return pos;
 }
 
-export function drawLink(beginAnchor,endAnchor,rootID,_links,id){
+export function drawLink(beginAnchor,endAnchor,rootID,id){
 
 			let beginAnchorPos=getAnchorAbsPos(beginAnchor);
 			let endAnchorPos=getAnchorAbsPos(endAnchor);

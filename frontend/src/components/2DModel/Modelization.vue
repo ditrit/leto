@@ -26,7 +26,6 @@ export default {
 		const svgs = ref({});
 		const terraformPanelList = ref([]);
 		const loading = ref(true);
-		const links = ref({});
 		const rootTreeObject = ref (new LetoObjectNode(new LetoTypeNode("","","","",""),"",-1))
 		rootTreeObject.value.setId("0");
 		const drag = ref(d3.drag()
@@ -145,7 +144,6 @@ export default {
 				rootTreeObject.value.contains[rootTreeObject.value.contains.length-1].setRightSibling(terraformObject);
 			}
 			rootTreeObject.value.contains.push(terraformObject);
-			console.log(rootTreeObject.value)
 		}
 
 		function getIndex(currentModel, container, ids) {
@@ -158,10 +156,6 @@ export default {
 
 		function drawSVGs(datas, svgParent, parentName, content, level) {
 			datas.forEach( SVGData => {
-				links.value[SVGData.id]= {
-					outputs:[],
-					inputs:[]
-					}
 				const terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
 				const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level, SVGData.id);
 				terraformObject.setHeight(SVGData.height);
@@ -202,7 +196,7 @@ export default {
 						let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
 						let beginAnchor = anchors[0];
 						let endAnchor = anchors[1];
-						let linkId = drawLink(beginAnchor,endAnchor,"svg0",links.value,beginId+"_to_"+endId);
+						let linkId = drawLink(beginAnchor,endAnchor,"svg0",beginId+"_to_"+endId);
 						let link = {
 							targetId : endId,
 							sourceId : beginId,
@@ -302,7 +296,6 @@ export default {
 			zoom,
 			translateX,
 			translateY,
-			links,
 			rootTreeObject
 		};
 	}
