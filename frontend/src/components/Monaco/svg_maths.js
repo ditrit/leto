@@ -330,6 +330,8 @@ export function calcul_dimensions(container, width, widthMax, remove) {
     let widthResource = (lastX != undefined) ? lastX : 0;
     container.contains.forEach(c => {
       if (c.representation != 'container') {
+        c.width = 0;
+        c.height = 0;
         if (widthResource + widthMin + 20 >= widthMax) {
           height += heightMin + 15;
           widthResource = widthMin + 20;
@@ -376,13 +378,8 @@ function calcul_dimension_container(container, widthMax) {
   return {width, height}
 }
 
-function calcul_xy(object, x, y, isContent, parent, recourceWidthMax, heightMax) {
-  const heightMin = 40;
-  if (object.representation != 'container') {
-    object.width = 0;
-    object.height = 0;
-  }
-  const reelHeight = (object.height === 0) ? heightMin : object.height;
+function calculCoordResource(object, x, y, isContent, parent, recourceWidthMax, heightMax) {
+  const reelHeight = (object.height === 0) ? 40 : object.height;
   let returnY = -1;
   let xMax = x + ((object.width > 0) ? object.width : 220);
   if (xMax >= ((isContent && parent.width > recourceWidthMax) ? (parent.width) : recourceWidthMax)) {
@@ -394,10 +391,13 @@ function calcul_xy(object, x, y, isContent, parent, recourceWidthMax, heightMax)
   if(isContent && reelHeight > heightMax) {
     heightMax = reelHeight + 30;
   }
-  object.x = x;
-  object.y = (returnY != -1) ? returnY : y;
-  x = xMax + 40;
-  return { x, y: (returnY != -1) ? returnY : y, heightMax : heightMax};
+  setObjectCoord(object, x, (returnY != -1) ? returnY : y)
+  return { x : xMax + 40, y: (returnY != -1) ? returnY : y, heightMax : heightMax};
+}
+
+function setObjectCoord(resource, x, y) {
+  resource.x = x;
+  resource.y = y;
 }
 
 export function calcul_xy_container(container, x, y, recourceWidthMax, resourceHeightMax, content, parent) {
@@ -406,7 +406,7 @@ export function calcul_xy_container(container, x, y, recourceWidthMax, resourceH
   const heightMin = 40;
   if(!content) resourceHeightMax = 0;
   if (!container.inContainer || content) {  
-    let xy = calcul_xy(container, x, y, content, parent, recourceWidthMax, resourceHeightMax);
+    let xy = calculCoordResource(container, x, y, content, parent, recourceWidthMax, resourceHeightMax);
     newX = xy.x;
     newY = xy.y;
     resourceHeightMax = xy.heightMax;
