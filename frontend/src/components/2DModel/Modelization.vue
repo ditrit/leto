@@ -39,14 +39,14 @@ export default {
 		function dragstarted() {
 			let currentModel = this.parentNode;
 			const datas = monacoSourceData.value["resources"];
-			let svg = d3.select('#root')
+			let svg = d3.select('#root');
 
 			if (currentModel.parentNode.getAttribute("id") != "svg0") {
 				let ids = getIndex(currentModel, datas, []).reverse();
-				store.commit('appMonaco/UPDATE_SOURCE', ids);
+				store.commit('appMonaco/REMOVE_CONTENT', ids);
 				getDatas();
 				ids = getIndex(currentModel, datas, []).reverse();
-				store.commit('appMonaco/SET_DATAS_DRAWING', ids);
+				store.commit('appMonaco/SET_CONTAINER_DRAWING', {ids : ids, remove : true});
 				getDatas();
 				ids = getIndex(currentModel, datas, []).reverse();
 				d3.select('#'+ids[0]).remove()
@@ -56,12 +56,14 @@ export default {
 			}
 		}
 
-		function getResource(datas, ids) {
-			let returnResource;
+		function getResource(datas, ids, returnResource) {
 			datas.forEach(resource => {
 				if(resource.name + '_' + resource.type === ids[0]) {
 					returnResource = resource;
-				} 
+				} else if(resource.contains) {
+					const result = getResource(resource.contains, ids, returnResource);
+					returnResource = (result !== null && returnResource === null) ? resource : result;
+				}
 			});
 			return returnResource;
 		}
@@ -80,10 +82,43 @@ export default {
 		}
 
 		function dragended() {
-			const id = this.parentNode.getAttribute('id');
-			const x = this.parentNode.getAttribute('x');
-			const y = this.parentNode.getAttribute('y');
+      		const currentGroup = this.parentNode;
+			const id = currentGroup.getAttribute('id');
+			const x = currentGroup.getAttribute('x');
+			const y = currentGroup.getAttribute('y');
 			store.commit('appMonaco/SET_COORD', {id : id, x : x, y : y});
+			var groups = d3.select('#root').selectAll('svg');
+      		var minGroup;
+			let svg = d3.select('#root')
+
+			groups.each(function () {
+				if (this.getAttribute("id") != "svg0") {
+					const groupRect = this.getElementById("content");
+					const groupRectX = parseInt(this.getAttribute('x'));
+					const groupRectY = parseInt(this.getAttribute('y'));
+					const groupRectWidth = parseInt(groupRect.getAttribute('width'));
+					const groupRectHeight = parseInt(groupRect.getAttribute('height'));
+					if (
+						x > groupRectX &&
+						x < groupRectX + groupRectWidth &&
+						y > groupRectY &&
+						y < groupRectY + groupRectHeight &&
+						this != currentGroup
+					) {
+						minGroup = this;
+					}
+				}
+			});
+
+			if (minGroup != null && minGroup != this) {
+				const resource = getResource(monacoSourceData.value["resources"], [minGroup.getAttribute('id')], null);
+				store.commit('appMonaco/ADD_CONTENT', {idContainer : minGroup.getAttribute('id'), idResource : currentGroup.getAttribute('id')});		
+				store.commit('appMonaco/SET_CONTAINER_DRAWING', {ids : [resource.id], remove : false});
+				getDatas();		
+				d3.select('#'+currentGroup.getAttribute('id')).remove();
+				d3.select('#'+resource.id).remove();
+				if(resource !== null) createTerraformObject(resource, svg, "root", false, 0);
+			}
 
 			return;
 		}
