@@ -378,70 +378,91 @@ function calcul_dimension_container(container, widthMax) {
   return {width, height}
 }
 
-function calculCoordResource(object, x, y, isContent, parent, recourceWidthMax, heightMax) {
+function calculCoordResource(object, x, y, parent, recourceWidthMax, heightMax) {
   const reelHeight = (object.height === 0) ? 40 : object.height;
   let returnY = -1;
   let xMax = x + ((object.width > 0) ? object.width : 220);
-  if (xMax >= ((isContent && parent.width > recourceWidthMax) ? (parent.width) : recourceWidthMax)) {
-    x = ((isContent) ? (parent.x + 10) : 10);
+  if (xMax >= ((parent.width > recourceWidthMax) ? (parent.width) : recourceWidthMax)) {
+    x = parent.x + 10;
     xMax = x + ((object.width > 0) ? object.width : 220);
-    returnY = (isContent) ? (y + heightMax) : -1;
-    heightMax = (isContent) ? reelHeight + 30 : heightMax;
-  }
-  if(isContent && reelHeight > heightMax) {
+    returnY = y + heightMax;
     heightMax = reelHeight + 30;
   }
-  setObjectCoord(object, x, (returnY != -1) ? returnY : y)
+  if(reelHeight > heightMax) {
+    heightMax = reelHeight + 30;
+  }
+  object.x = x;
+  object.y = (returnY != -1) ? returnY : y;
   return { x : xMax + 40, y: (returnY != -1) ? returnY : y, heightMax : heightMax};
 }
 
-function setObjectCoord(resource, x, y) {
-  resource.x = x;
-  resource.y = y;
+function calculCoordContainer(object, x, y, recourceWidthMax, heightMax) {
+  let returnY = -1;
+  let xMax = x + ((object.width > 0) ? object.width : 220);
+  if (xMax >= recourceWidthMax) {
+    x = 10;
+    xMax = x + ((object.width > 0) ? object.width : 220);
+  }
+  object.x = x;
+  object.y = (returnY != -1) ? returnY : y;
+  return { x : xMax + 40, y: (returnY != -1) ? returnY : y, heightMax : heightMax};
 }
 
-export function calcul_xy_container(container, x, y, recourceWidthMax, resourceHeightMax, content, parent) {
+function calculCoordModuleAttributes(attributes) {
+  let cox = 20;
+  let coy = 60;
+  const heightMin = 40;
+
+  for (let i = 0; i < attributes.length; i++) {
+    const xy = calcul_xy_container(attributes[i], cox, coy, recourceWidthMax);
+    cox = xy.x;
+    coy = xy.y;
+    resourceHeightMax = xy.resourceHeightMax;
+    if ((i + 1 < attributes.length && attributes[i + 1].order != attributes[i].order) || cox >= recourceWidthMax) {
+      coy = coy + ((attributes[i].height > 0) ? attributes[i].height : heightMin) + 50;
+      cox = 20;
+    }
+  }
+}
+
+function calculCoordContainerAttributes(recourceWidthMax, container) {
+  let cox = 20;
+  let coy = 60;
+  let containerHeightMax = 0;
+  
+  container.contains.forEach((content) => {
+    const xy = calculCoordResource(content, cox, coy, container, recourceWidthMax, containerHeightMax);
+    cox = xy.x;
+    coy = xy.y;
+    containerHeightMax = xy.heightMax;
+    getParentPosition(content, container);
+    if(content.contains) {
+      calculCoordContainerAttributes(recourceWidthMax, content)
+    }
+  });
+}
+
+function getParentPosition(resource, parent) {  
+  const parentX = ((parent.parentX) ? parent.parentX : parent.x)
+  const parentY = ((parent.parentY) ? parent.parentY : parent.y)
+  resource.parentX = parentX + resource.x
+  resource.parentY = parentY + resource.y
+}
+
+export function calcul_xy_container(container, x, y, recourceWidthMax) {
   let newX = -1;
   let newY = -1;
-  const heightMin = 40;
-  if(!content) resourceHeightMax = 0;
-  if (!container.inContainer || content) {  
-    let xy = calculCoordResource(container, x, y, content, parent, recourceWidthMax, resourceHeightMax);
+  let resourceHeightMax = 0;
+  if (!container.inContainer) {   
+    const xy = calculCoordContainer(container, x, y, recourceWidthMax, resourceHeightMax);
     newX = xy.x;
     newY = xy.y;
     resourceHeightMax = xy.heightMax;
-    if (content) {
-      const parentX = ((parent.parentX) ? parent.parentX : parent.x)
-      const parentY = ((parent.parentY) ? parent.parentY : parent.y)
-      container.parentX = parentX + container.x
-      container.parentY = parentY + container.y
-    }
     if (container.attributes) {
-      let cox = 20;
-      let coy = 60;
-
-      for (let i = 0; i < container.contains.length; i++) {
-        xy = calcul_xy_container(container.contains[i], cox, coy, recourceWidthMax, resourceHeightMax, true, container);
-        cox = xy.x;
-        coy = xy.y;
-        resourceHeightMax = xy.resourceHeightMax;
-        if ((i + 1 < container.contains.length && container.contains[i + 1].order != container.contains[i].order) || cox >= recourceWidthMax) {
-          coy = coy + ((container.contains[i].height > 0) ? container.contains[i].height : heightMin) + 50;
-          cox = 20;
-        }
-      }
+      calculCoordModuleAttributes(container.attributes);
     } else if (container.contains && container.contains.length > 0) {
-      let cox = 20;
-      let coy = 60;
-      let containerHeightMax = 0;
-
-      container.contains.forEach((co) => {
-        xy = calcul_xy_container(co, cox, coy, recourceWidthMax, containerHeightMax, true, container);
-        cox = xy.x;
-        coy = xy.y;
-        containerHeightMax = xy.heightMax;
-      });
-    } 
+      calculCoordContainerAttributes(recourceWidthMax, container);
+    }
   }
   return { x: newX, y: newY, heightMax: resourceHeightMax };
 }
