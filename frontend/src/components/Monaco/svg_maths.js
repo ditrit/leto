@@ -432,12 +432,13 @@ export function calcul_xy_container(container, x, y, recourceWidthMax, resourceH
     } else if (container.contains && container.contains.length > 0) {
       let cox = 20;
       let coy = 60;
+      let containerHeightMax = 0;
 
       container.contains.forEach((co) => {
-        xy = calcul_xy_container(co, cox, coy, recourceWidthMax, resourceHeightMax, true, container);
+        xy = calcul_xy_container(co, cox, coy, recourceWidthMax, containerHeightMax, true, container);
         cox = xy.x;
         coy = xy.y;
-        resourceHeightMax = xy.heightMax;
+        containerHeightMax = xy.heightMax;
       });
     } 
   }
