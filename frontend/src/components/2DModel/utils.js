@@ -69,9 +69,9 @@ export function replaceComponents(group) {
 			) {
 				replaceComponents(group.parentNode);
 			}
-		}
+}
 
-		function addParentPos(parent,pos){
+function addParentPos(parent,pos){
 
 			pos[0]+=parseFloat(parent.getAttribute("x"));
 			pos[1]+=parseFloat(parent.getAttribute("y"));
@@ -83,15 +83,15 @@ export function replaceComponents(group) {
 				}
 				addParentPos(parent.parentNode,pos)
 			}
-		}
+}
 
-		export function getAnchorAbsPos(anchor){
+export function getAnchorAbsPos(anchor){
 			let pos = [parseFloat(anchor.getAttribute("cx")),parseFloat(anchor.getAttribute("cy"))];
 				addParentPos(anchor.parentNode,pos);
 				return pos;
-		}
+}
 
-		export function drawLink(beginAnchor,endAnchor,rootID,_links,id){
+export function drawLink(beginAnchor,endAnchor,rootID,_links,id){
 
 			let beginAnchorPos=getAnchorAbsPos(beginAnchor);
 			let endAnchorPos=getAnchorAbsPos(endAnchor);
@@ -114,49 +114,84 @@ export function replaceComponents(group) {
 
 										});
 			return id;
-		}
+}
 
-		export function updateLinks(links,model){
+export function updateLinks(node,model){
 
-			links[model.id].outputs.forEach(link => {
-				let arrow = document.getElementById(link.id);
-				let beginId = model.id;
-				let endId = link.targetId
-				let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
-				let beginAnchor = anchors[0];
+			if (node == null){
+				return;
+			}
+			if (node.drawingObject.id == model.getAttribute("id")){
 
-				let beginAnchorPos = getAnchorAbsPos(beginAnchor);
-				d3.select(arrow)
-					.attr("x2",beginAnchorPos[0])
-					.attr("y2",beginAnchorPos[1])
-			})
+				node.links.outputs.forEach(link => {
+					let arrow = document.getElementById(link.id);
+					let beginId = model.id;
+					let endId = link.targetId
+					let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
+					let beginAnchor = anchors[0];
 
-			links[model.id].inputs.forEach(link => {
-				let arrow = document.getElementById(link.id);
-				let endId = model.id;
-				let beginId = link.sourceId
-				let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
-				let endAnchor = anchors[1];
+					let beginAnchorPos = getAnchorAbsPos(beginAnchor);
+					d3.select(arrow)
+						.attr("x2",beginAnchorPos[0])
+						.attr("y2",beginAnchorPos[1])
+				})
 
-				let endAnchorPos = getAnchorAbsPos(endAnchor);
-				d3.select(arrow)
-					.attr("x1",endAnchorPos[0])
-					.attr("y1",endAnchorPos[1])
-			})
+				node.links.inputs.forEach(link => {
+					let arrow = document.getElementById(link.id);
+					let endId = model.id;
+					let beginId = link.sourceId
+					let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
+					let endAnchor = anchors[1];
 
-			model.childNodes.forEach(element =>{
-				if(element.tagName == "g"){
-					element.childNodes.forEach(childModel => {
-						if(childModel.tagName == "svg"){
-							updateLinks(links,childModel)
-						}
-					})
-				}
-			})
-		}
+					let endAnchorPos = getAnchorAbsPos(endAnchor);
+					d3.select(arrow)
+						.attr("x1",endAnchorPos[0])
+						.attr("y1",endAnchorPos[1])
+				})
 
-		export function getModelAbsPos(model){
+				model.childNodes.forEach(element =>{
+					if(element.tagName == "g"){
+						element.childNodes.forEach(childModel => {
+							if(childModel.tagName == "svg"){
+								updateLinks(node,childModel)
+							}
+						})
+					}
+				})
+
+			}
+			updateLinks(node.contains[0],model);
+			updateLinks(node.rightSibling,model);
+}
+
+export function getModelAbsPos(model){
 			let pos = [parseFloat(model.getAttribute("x")),parseFloat(model.getAttribute("y"))];
 				addParentPos(model,pos);
 				return pos;
-		}
+}
+
+export function updateDrawingInfosInData(node,currentModel){
+	if (node == null) return;
+
+	else if(node.drawingObject.id == (currentModel.getAttribute("id"))){
+		node.setX(parseFloat(currentModel.getAttribute("x")));
+		node.setY(parseFloat(currentModel.getAttribute("y")));
+	}
+	updateDrawingInfosInData(node.contains[0],currentModel);
+	updateDrawingInfosInData(node.rightSibling,currentModel);
+}
+
+export function addContentInData(node,currentModel,letoObjectNode){
+	if (node == null) {
+		return;
+	}
+	else if ((currentModel.parentNode.getAttribute("id")) == "svg0"){
+		node.addContent(letoObjectNode);
+		return;
+	}
+	else if(node.drawingObject.id == (currentModel.parentNode.parentNode.getAttribute("id"))){
+		node.addContent(letoObjectNode);
+	}
+	addContentInData(node.contains[0],currentModel,letoObjectNode);
+	addContentInData(node.rightSibling,currentModel,letoObjectNode);
+}

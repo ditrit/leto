@@ -30,6 +30,29 @@ export default class LetoObjectNode{
 		this.drawingObject.id=id;
 	}
 
+	setRightSibling(rightSibling){
+		this.rightSibling = rightSibling;
+	}
+
+	addContent(letoContentObject){
+		if (this.contains.length!=0){
+			this.contains[this.contains.length-1].setRightSibling(letoContentObject);
+		}
+		this.contains.push(letoContentObject);
+	}
+
+	getLinks (){
+		return this.links;
+	}
+
+	addOutputLink(link){
+		this.links.outputs.push(link);
+	}
+
+	addInputLink(link){
+		this.links.inputs.push(link);
+	}
+
 
 	drawInWorkshop(parent,svgs,modelArea,zoom,clickArrow,click,drag){
 		if(this.drawingObject.id==null){
