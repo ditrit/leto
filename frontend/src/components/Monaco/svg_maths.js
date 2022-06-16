@@ -299,83 +299,105 @@ export function calculAttributesObjects(datas) {
   return resources;
 }
 
+function calculDimensionModuleAttributes(attributes, height, width) {  
+  for (let i = 0; i < attributes.length; i++) {
+    if (i + 1 < attributes.length && attributes[i + 1].order != attributes[i].order) {
+      if (attributes[i].representation != 'container') {
+        height += heightMin + 15;
+      } else {
+        const dimensions = calculDimensionContainer(attributes[i], widthMax, height, width);
+        width += dimensions.width;
+        height += dimensions.height;
+      }
+    } else if (i + 1 < attributes.length && attributes[i].order >= 0 && attributes[i + 1].order == undefined) {
+      height += heightMin + 15;
+    } else {
+      width += widthMin + 20;
+    }
+  }
+  return {width, height};
+}
+
+function calculDimensionContainerAttributes(container, widthMax, remove, widthMin, heightMin, height) {
+  const initialWidth = (container.width !== undefined) ? container.width : 0;
+  const initialHeight = (container.height !== undefined) ? container.height - 20 : 0;
+  let index = container.contains.length - 2;
+  let dimensions, width = 0;
+  if(container.contains.length === 1) {
+    index = container.contains.length - 1;
+  }
+  const lastX = container.contains[index].x;
+  let widthResource = (lastX != undefined) ? lastX : 0;
+  container.contains.forEach(resource => {    
+    if (resource.representation != 'container') {
+      resource.width = 0;
+      resource.height = 0;
+      dimensions = calculDimensionResource(width, height, widthResource, widthMin, widthMax, heightMin);
+    } else {
+      dimensions = calculDimensionContainer(resource, widthMax, height, width);
+    }
+    width = dimensions.width;
+    height = dimensions.height;
+    widthResource = dimensions.widthResource;
+  });
+  width = (width < initialWidth && !remove) ? initialWidth : width;
+  height = (height < initialHeight && !remove) ? initialHeight : height;
+
+  return {width, height};
+}
+
+function calculDimensionResource(width, height, widthResource, widthMin, widthMax, heightMin) {
+  if (widthResource + widthMin + 20 >= widthMax) {
+    height += heightMin + 15;
+    widthResource = widthMin + 20;
+  } else if(width + widthMin + 20 < widthMax){
+    width += widthMin + 20;
+    widthResource = width;
+  } else {
+    widthResource += widthMin + 20;
+  }
+
+  return {width, height, widthResource};
+}
+
+function calculDimensionContainer(container, widthMax, height, width) {
+  let dimensions;
+  
+  if (container.contains.length > 0) {
+    dimensions = calcul_dimensions(container, 0, widthMax);
+    container.width = (container.width >= widthMax) ? container.width : (dimensions.width - 10);
+    container.height = height + 10;
+  }
+
+  if (width + dimensions.width + 30 >= widthMax) {
+    width = (dimensions.width > width) ? dimensions.width + 30 : width + 30;
+  } else {
+    width += dimensions.width + 30;
+  }
+  let widthResource = width;
+  height += dimensions.height + 40;
+
+  return {width, height, widthResource}
+}
+
 export function calcul_dimensions(container, width, widthMax, remove) {
   const widthMin = 250;
   const heightMin = 70;
   let height = heightMin + 20;
+  let dimensions;
   if (container.attributes) {
-    for (let i = 0; i < container.contains.length; i++) {
-      if (i + 1 < container.contains.length && container.contains[i + 1].order != container.contains[i].order) {
-        if (container.contains[i].representation != 'container') {
-          height += heightMin + 15;
-        } else {
-          const dimensions = calcul_dimension_container(container.contains[i], widthMax);
-          width += dimensions.width;
-          height += dimensions.height;
-        }
-      } else if (i + 1 < container.contains.length && container.contains[i].order >= 0 && container.contains[i + 1].order == undefined) {
-        height += heightMin + 15;
-      } else {
-        width += widthMin + 20;
-      }
-    }
+    dimensions = calculDimensionModuleAttributes(container.attribute, height, width);
+    width = dimensions.width;
+    height = dimensions.height;
   } else if (container.contains && container.contains.length > 0) {
-    const initialWidth = (container.width !== undefined) ? container.width : 0;
-    const initialHeight = (container.height !== undefined) ? container.height - 20 : 0;
-    let index = container.contains.length - 2;
-    if(container.contains.length === 1) {
-      index = container.contains.length - 1;
-    }
-    const lastX = container.contains[index].x;
-    let widthResource = (lastX != undefined) ? lastX : 0;
-    container.contains.forEach(c => {
-      if (c.representation != 'container') {
-        c.width = 0;
-        c.height = 0;
-        if (widthResource + widthMin + 20 >= widthMax) {
-          height += heightMin + 15;
-          widthResource = widthMin + 20;
-        } else if(width + widthMin + 20 < widthMax){
-          width += widthMin + 20;
-          widthResource = width;
-        } else {
-          widthResource += widthMin + 20;
-        }
-      } else {
-        const dimensions = calcul_dimension_container(c, widthMax);
-        if (width + dimensions.width + 30 >= widthMax) {
-          height += dimensions.height + 30;
-          width = (dimensions.width > width) ? dimensions.width + 30 : width + 30;
-          widthResource = width;
-        } else if(width + dimensions.width + 30 < widthMax){
-          width += dimensions.width + 30;
-          height += dimensions.height + 30;
-          widthResource = width;
-        } else {
-          widthResource += dimensions.width + 30;
-        }
-      }
-    });
-    width = (width < initialWidth && !remove) ? initialWidth : width;
-    height = (height < initialHeight && !remove) ? initialHeight : height;
+    dimensions = calculDimensionContainerAttributes(container, widthMax, remove, widthMin, heightMin, height);
+    width = dimensions.width;
+    height = dimensions.height;
   } else {
     width = widthMin;
     height = heightMin;
   }
   return { width, height };
-}
-
-function calcul_dimension_container(container, widthMax) {
-  let width = 0; 
-  let height = 0;
-  if (container.contains.length > 0) {
-    const dimensions = calcul_dimensions(container, 0, widthMax);
-    width += dimensions.width;
-    height += dimensions.height + 20;
-    container.width = (container.width >= widthMax) ? container.width : (dimensions.width - 10);
-    container.height = height;
-  }
-  return {width, height}
 }
 
 function calculCoordResource(object, x, y, parent, recourceWidthMax, heightMax) {
