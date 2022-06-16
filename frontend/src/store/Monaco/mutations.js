@@ -7,9 +7,17 @@ export const SET_SOURCE = (state) => {
 export const GET_METADATAS = (state, metadata) =>
 	(state.metadatas = metadata);
 
-export const UPDATE_SOURCE = (state, ids) => { 
+export const REMOVE_CONTENT = (state, ids) => { 
 	const resource = removeContent(state.monacoSource["resources"], ids);
 	state.monacoSource["resources"].push(resource[0]);
+};
+
+export const ADD_CONTENT = (state, ids) => { 
+	const container = getContainer(state.monacoSource["resources"], ids.idContainer);
+	const resource = getContainer(state.monacoSource["resources"], ids.idResource);
+	const index = state.monacoSource["resources"].indexOf(resource);
+	container.contains.push(resource);
+	state.monacoSource["resources"].splice(index, 1);
 };
 
 function removeContent(datas, ids) {
@@ -43,14 +51,13 @@ function getContainer(datas, id) {
 	return container;
 }
 
-export const SET_DATAS_DRAWING = (state, ids) => { 
-	const container = getContainer(state.monacoSource["resources"], ids[0]);
-	const index = state.monacoSource["resources"].indexOf(container);
-	const dimensions = calcul_dimensions(container, 0, 1000, true);
+export const SET_CONTAINER_DRAWING = (state, datas) => { 
+	const container = getContainer(state.monacoSource["resources"], datas.ids[0]);
+	const dimensions = calcul_dimensions(container, 0, 1000,  datas.remove);
 	if(container != null && container.inContainer) container.inContainer = false;
-	calcul_xy_container(container, container.x, container.y);
-	state.monacoSource["resources"][index].height = dimensions.height + 20;
-	state.monacoSource["resources"][index].width = dimensions.width;
+	calcul_xy_container(container, container.x, container.y, 1000);
+	container.height = dimensions.height + 20;
+	container.width = dimensions.width;
 };
 
 export const SET_COORD = (state, resource) => { 
