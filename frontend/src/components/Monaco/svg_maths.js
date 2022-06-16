@@ -330,6 +330,8 @@ export function calcul_dimensions(container, width, widthMax, remove) {
     let widthResource = (lastX != undefined) ? lastX : 0;
     container.contains.forEach(c => {
       if (c.representation != 'container') {
+        c.width = 0;
+        c.height = 0;
         if (widthResource + widthMin + 20 >= widthMax) {
           height += heightMin + 15;
           widthResource = widthMin + 20;
@@ -376,12 +378,8 @@ function calcul_dimension_container(container, widthMax) {
   return {width, height}
 }
 
-function calcul_xy(object, x, y, isContent, parent, recourceWidthMax, heightMax) {
+function calculCoordResource(object, x, y, isContent, parent, recourceWidthMax, heightMax) {
   const heightMin = 40;
-  if (object.representation != 'container') {
-    object.width = 0;
-    object.height = 0;
-  }
   const reelHeight = (object.height === 0) ? heightMin : object.height;
   let returnY = -1;
   let xMax = x + ((object.width > 0) ? object.width : 220);
@@ -406,7 +404,7 @@ export function calcul_xy_container(container, x, y, recourceWidthMax, resourceH
   const heightMin = 40;
   if(!content) resourceHeightMax = 0;
   if (!container.inContainer || content) {  
-    let xy = calcul_xy(container, x, y, content, parent, recourceWidthMax, resourceHeightMax);
+    let xy = calculCoordResource(container, x, y, content, parent, recourceWidthMax, resourceHeightMax);
     newX = xy.x;
     newY = xy.y;
     resourceHeightMax = xy.heightMax;
