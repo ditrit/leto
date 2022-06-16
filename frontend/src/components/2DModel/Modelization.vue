@@ -87,8 +87,8 @@ export default {
 			const x = currentGroup.getAttribute('x');
 			const y = currentGroup.getAttribute('y');
 			store.commit('appMonaco/SET_COORD', {id : id, x : x, y : y});
-			var groups = d3.select('#root').selectAll('svg');
-      		var minGroup;
+			const groups = d3.select('#root').selectAll('svg');
+      		let minGroup;
 			let svg = d3.select('#root')
 
 			groups.each(function () {

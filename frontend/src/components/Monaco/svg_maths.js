@@ -376,7 +376,8 @@ function calcul_dimension_container(container, widthMax) {
   return {width, height}
 }
 
-function calcul_xy(object, x, y, isContent, parent, recourceWidthMax, heightMax, heightMin) {
+function calcul_xy(object, x, y, isContent, parent, recourceWidthMax, heightMax) {
+  const heightMin = 40;
   if (object.representation != 'container') {
     object.width = 0;
     object.height = 0;
@@ -405,7 +406,7 @@ export function calcul_xy_container(container, x, y, recourceWidthMax, resourceH
   const heightMin = 40;
   if(!content) resourceHeightMax = 0;
   if (!container.inContainer || content) {  
-    let xy = calcul_xy(container, x, y, content, parent, recourceWidthMax, resourceHeightMax, heightMin);
+    let xy = calcul_xy(container, x, y, content, parent, recourceWidthMax, resourceHeightMax);
     newX = xy.x;
     newY = xy.y;
     resourceHeightMax = xy.heightMax;
