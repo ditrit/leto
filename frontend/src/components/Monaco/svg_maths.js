@@ -299,63 +299,100 @@ export function calculAttributesObjects(datas) {
   return resources;
 }
 
+function calculDimensionModuleAttributes(attributes, height, width) {  
+  for (let i = 0; i < attributes.length; i++) {
+    if (i + 1 < attributes.length && attributes[i + 1].order != attributes[i].order) {
+      if (attributes[i].representation != 'container') {
+        height += heightMin + 15;
+      } else {
+        const dimensions = calculDimensionContainer(attributes[i], widthMax, height, width);
+        width += dimensions.width;
+        height += dimensions.height;
+      }
+    } else if (i + 1 < attributes.length && attributes[i].order >= 0 && attributes[i + 1].order == undefined) {
+      height += heightMin + 15;
+    } else {
+      width += widthMin + 20;
+    }
+  }
+  return {width, height};
+}
+
+function calculDimensionContainerAttributes(container, widthMax, remove, widthMin, heightMin, height) {
+  const initialWidth = (container.width !== undefined) ? container.width : 0;
+  const initialHeight = (container.height !== undefined) ? container.height - 20 : 0;
+  let index = container.contains.length - 2;
+  let dimensions, width = 0;
+  if(container.contains.length === 1) {
+    index = container.contains.length - 1;
+  }
+  const lastX = container.contains[index].x;
+  let widthResource = (lastX != undefined) ? lastX : 0;
+  container.contains.forEach(resource => {    
+    if (resource.representation != 'container') {
+      resource.width = 0;
+      resource.height = 0;
+      dimensions = calculDimensionResource(width, height, widthResource, widthMin, widthMax, heightMin);
+    } else {
+      dimensions = calculDimensionContainer(resource, widthMax, height, width);
+    }
+    width = dimensions.width;
+    height = dimensions.height;
+    widthResource = dimensions.widthResource;
+  });
+  width = (width < initialWidth && !remove) ? initialWidth : width;
+  height = (height < initialHeight && !remove) ? initialHeight : height;
+
+  return {width, height};
+}
+
+function calculDimensionResource(width, height, widthResource, widthMin, widthMax, heightMin) {
+  if (widthResource + widthMin + 20 >= widthMax) {
+    height += heightMin + 15;
+    widthResource = widthMin + 20;
+  } else if(width + widthMin + 20 < widthMax){
+    width += widthMin + 20;
+    widthResource = width;
+  } else {
+    widthResource += widthMin + 20;
+  }
+
+  return {width, height, widthResource};
+}
+
+function calculDimensionContainer(container, widthMax, height, width) {
+  let dimensions;
+  
+  if (container.contains.length > 0) {
+    dimensions = calcul_dimensions(container, 0, widthMax);
+    container.width = (container.width >= widthMax) ? container.width : (dimensions.width - 10);
+    container.height = height + 10;
+  }
+
+  if (width + dimensions.width + 30 >= widthMax) {
+    width = (dimensions.width > width) ? dimensions.width + 30 : width + 30;
+  } else {
+    width += dimensions.width + 30;
+  }
+  let widthResource = width;
+  height += dimensions.height + 40;
+
+  return {width, height, widthResource}
+}
+
 export function calcul_dimensions(container, width, widthMax, remove) {
   const widthMin = 250;
   const heightMin = 70;
   let height = heightMin + 20;
+  let dimensions;
   if (container.attributes) {
-    for (let i = 0; i < container.contains.length; i++) {
-      if (i + 1 < container.contains.length && container.contains[i + 1].order != container.contains[i].order) {
-        if (container.contains[i].representation != 'container') {
-          height += heightMin + 15;
-        } else {
-          const dimensions = calcul_dimension_container(container.contains[i], widthMax);
-          width += dimensions.width;
-          height += dimensions.height;
-        }
-      } else if (i + 1 < container.contains.length && container.contains[i].order >= 0 && container.contains[i + 1].order == undefined) {
-        height += heightMin + 15;
-      } else {
-        width += widthMin + 20;
-      }
-    }
+    dimensions = calculDimensionModuleAttributes(container.attribute, height, width);
+    width = dimensions.width;
+    height = dimensions.height;
   } else if (container.contains && container.contains.length > 0) {
-    const initialWidth = (container.width !== undefined) ? container.width : 0;
-    const initialHeight = (container.height !== undefined) ? container.height - 20 : 0;
-    let index = container.contains.length - 2;
-    if(container.contains.length === 1) {
-      index = container.contains.length - 1;
-    }
-    const lastX = container.contains[index].x;
-    let widthResource = (lastX != undefined) ? lastX : 0;
-    container.contains.forEach(c => {
-      if (c.representation != 'container') {
-        if (widthResource + widthMin + 20 >= widthMax) {
-          height += heightMin + 15;
-          widthResource = widthMin + 20;
-        } else if(width + widthMin + 20 < widthMax){
-          width += widthMin + 20;
-          widthResource = width;
-        } else {
-          widthResource += widthMin + 20;
-        }
-      } else {
-        const dimensions = calcul_dimension_container(c, widthMax);
-        if (width + dimensions.width + 30 >= widthMax) {
-          height += dimensions.height + 30;
-          width = (dimensions.width > width) ? dimensions.width + 30 : width + 30;
-          widthResource = width;
-        } else if(width + dimensions.width + 30 < widthMax){
-          width += dimensions.width + 30;
-          height += dimensions.height + 30;
-          widthResource = width;
-        } else {
-          widthResource += dimensions.width + 30;
-        }
-      }
-    });
-    width = (width < initialWidth && !remove) ? initialWidth : width;
-    height = (height < initialHeight && !remove) ? initialHeight : height;
+    dimensions = calculDimensionContainerAttributes(container, widthMax, remove, widthMin, heightMin, height);
+    width = dimensions.width;
+    height = dimensions.height;
   } else {
     width = widthMin;
     height = heightMin;
@@ -363,85 +400,91 @@ export function calcul_dimensions(container, width, widthMax, remove) {
   return { width, height };
 }
 
-function calcul_dimension_container(container, widthMax) {
-  let width = 0; 
-  let height = 0;
-  if (container.contains.length > 0) {
-    const dimensions = calcul_dimensions(container, 0, widthMax);
-    width += dimensions.width;
-    height += dimensions.height + 20;
-    container.width = (container.width >= widthMax) ? container.width : (dimensions.width - 10);
-    container.height = height;
-  }
-  return {width, height}
-}
-
-function calcul_xy(object, x, y, isContent, parent, recourceWidthMax, heightMax) {
-  const heightMin = 40;
-  if (object.representation != 'container') {
-    object.width = 0;
-    object.height = 0;
-  }
-  const reelHeight = (object.height === 0) ? heightMin : object.height;
+function calculCoordResource(object, x, y, parent, recourceWidthMax, heightMax) {
+  const reelHeight = (object.height === 0) ? 40 : object.height;
   let returnY = -1;
   let xMax = x + ((object.width > 0) ? object.width : 220);
-  if (xMax >= ((isContent && parent.width > recourceWidthMax) ? (parent.width) : recourceWidthMax)) {
-    x = ((isContent) ? (parent.x + 10) : 10);
+  if (xMax >= ((parent.width > recourceWidthMax) ? (parent.width) : recourceWidthMax)) {
+    x = parent.x + 10;
     xMax = x + ((object.width > 0) ? object.width : 220);
-    returnY = (isContent) ? (y + heightMax) : -1;
-    heightMax = (isContent) ? reelHeight + 30 : heightMax;
+    returnY = y + heightMax;
+    heightMax = reelHeight + 30;
   }
-  if(isContent && reelHeight > heightMax) {
+  if(reelHeight > heightMax) {
     heightMax = reelHeight + 30;
   }
   object.x = x;
   object.y = (returnY != -1) ? returnY : y;
-  x = xMax + 40;
-  return { x, y: (returnY != -1) ? returnY : y, heightMax : heightMax};
+  return { x : xMax + 40, y: (returnY != -1) ? returnY : y, heightMax : heightMax};
 }
 
-export function calcul_xy_container(container, x, y, recourceWidthMax, resourceHeightMax, content, parent) {
+function calculCoordContainer(object, x, y, recourceWidthMax, heightMax) {
+  let returnY = -1;
+  let xMax = x + ((object.width > 0) ? object.width : 220);
+  if (xMax >= recourceWidthMax) {
+    x = 10;
+    xMax = x + ((object.width > 0) ? object.width : 220);
+  }
+  object.x = x;
+  object.y = (returnY != -1) ? returnY : y;
+  return { x : xMax + 40, y: (returnY != -1) ? returnY : y, heightMax : heightMax};
+}
+
+function calculCoordModuleAttributes(attributes) {
+  let cox = 20;
+  let coy = 60;
+  const heightMin = 40;
+
+  for (let i = 0; i < attributes.length; i++) {
+    const xy = calcul_xy_container(attributes[i], cox, coy, recourceWidthMax);
+    cox = xy.x;
+    coy = xy.y;
+    resourceHeightMax = xy.resourceHeightMax;
+    if ((i + 1 < attributes.length && attributes[i + 1].order != attributes[i].order) || cox >= recourceWidthMax) {
+      coy = coy + ((attributes[i].height > 0) ? attributes[i].height : heightMin) + 50;
+      cox = 20;
+    }
+  }
+}
+
+function calculCoordContainerAttributes(recourceWidthMax, container) {
+  let cox = 20;
+  let coy = 60;
+  let containerHeightMax = 0;
+  
+  container.contains.forEach((content) => {
+    const xy = calculCoordResource(content, cox, coy, container, recourceWidthMax, containerHeightMax);
+    cox = xy.x;
+    coy = xy.y;
+    containerHeightMax = xy.heightMax;
+    getParentPosition(content, container);
+    if(content.contains) {
+      calculCoordContainerAttributes(recourceWidthMax, content)
+    }
+  });
+}
+
+function getParentPosition(resource, parent) {  
+  const parentX = ((parent.parentX) ? parent.parentX : parent.x)
+  const parentY = ((parent.parentY) ? parent.parentY : parent.y)
+  resource.parentX = parentX + resource.x
+  resource.parentY = parentY + resource.y
+}
+
+export function calcul_xy_container(container, x, y, recourceWidthMax) {
   let newX = -1;
   let newY = -1;
-  const heightMin = 40;
-  if(!content) resourceHeightMax = 0;
-  if (!container.inContainer || content) {  
-    let xy = calcul_xy(container, x, y, content, parent, recourceWidthMax, resourceHeightMax);
+  let resourceHeightMax = 0;
+  if (!container.inContainer) {   
+    const xy = calculCoordContainer(container, x, y, recourceWidthMax, resourceHeightMax);
     newX = xy.x;
     newY = xy.y;
     resourceHeightMax = xy.heightMax;
-    if (content) {
-      const parentX = ((parent.parentX) ? parent.parentX : parent.x)
-      const parentY = ((parent.parentY) ? parent.parentY : parent.y)
-      container.parentX = parentX + container.x
-      container.parentY = parentY + container.y
-    }
     if (container.attributes) {
-      let cox = 20;
-      let coy = 60;
-
-      for (let i = 0; i < container.contains.length; i++) {
-        xy = calcul_xy_container(container.contains[i], cox, coy, recourceWidthMax, resourceHeightMax, true, container);
-        cox = xy.x;
-        coy = xy.y;
-        resourceHeightMax = xy.resourceHeightMax;
-        if ((i + 1 < container.contains.length && container.contains[i + 1].order != container.contains[i].order) || cox >= recourceWidthMax) {
-          coy = coy + ((container.contains[i].height > 0) ? container.contains[i].height : heightMin) + 50;
-          cox = 20;
-        }
-      }
+      calculCoordModuleAttributes(container.attributes);
     } else if (container.contains && container.contains.length > 0) {
-      let cox = 20;
-      let coy = 60;
-      let containerHeightMax = 0;
-
-      container.contains.forEach((co) => {
-        xy = calcul_xy_container(co, cox, coy, recourceWidthMax, containerHeightMax, true, container);
-        cox = xy.x;
-        coy = xy.y;
-        containerHeightMax = xy.heightMax;
-      });
-    } 
+      calculCoordContainerAttributes(recourceWidthMax, container);
+    }
   }
   return { x: newX, y: newY, heightMax: resourceHeightMax };
 }
