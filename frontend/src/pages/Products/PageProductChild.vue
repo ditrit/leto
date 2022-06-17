@@ -15,40 +15,22 @@
 			</q-toolbar>
 		</q-header>
 		<AjaxBar />
-		<q-drawer
 
+		<q-drawer
 			side="right"
 			show-if-above
-      bordered
-      :width="250"
-      :breakpoint="500"
+			bordered
+			:width="250"
+			:breakpoint="500"
 			class="bg-grey-3"
 		>
-		<h6>Object Details</h6>
-		<div id="detailsContainer"></div>
+			<h6>Object Details</h6>
+			<div id="detailsContainer"></div>
+		</q-drawer>
 
-</q-drawer>
 		<Drawer v-model="drawer">
 			<template v-slot:drawerFilter>
-				<div class="search_container">
-					<q-input ref="filterRef" filled v-model="filter" label="Search">
-						<template v-slot:append>
-							<q-icon
-								v-if="filter !== ''"
-								name="clear"
-								class="cursor-pointer"
-								@click="resetFilter"
-							/>
-							<q-icon
-								v-else
-								name="search"
-								class="cursor-pointer"
-								@click="resetFilter"
-							/>
-						</template>
-					</q-input>
-					<div id="drawerContent"></div>
-				</div>
+				<PaletteMenu :data="mockData"></PaletteMenu>
 			</template>
 			<template v-slot:drawerMenu>
 				<div class="q-pa-md q-gutter-sm" v-if="menu">
@@ -76,6 +58,7 @@ import { defineComponent, ref } from "vue";
 import AjaxBar from "components/UI/Progress/AjaxBar";
 import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
+import PaletteMenu from "components/PaletteMenu";
 import { pageSizeTweak } from "../../common/index";
 import useProductDetails from "../../composables/Products/useProductDetails";
 import useDomainData from "../../composables/WorkSpace/useDomainData";
@@ -87,14 +70,14 @@ export default defineComponent({
 		AjaxBar,
 		Drawer,
 		AccountSettings,
+		PaletteMenu,
 		ProductDetailsNavigation,
 	},
 	props: ["id"],
 	setup(props) {
 		const drawer = ref(false);
 		const oepnDialog = ref(false);
-		const filter = ref("");
-		const filterRef = ref(null);
+		const filterRef = ref("");
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
 		const selected = ref("DDS");
@@ -112,21 +95,46 @@ export default defineComponent({
 			domainID,
 		} = useDomainData(props);
 
+		const mockData = [
+			{
+				name: "AWS",
+				icon: "explore",
+				data: Array.from({ length: 20 }).map((_, i) => ({
+					name: `toto${i}`,
+					description: `this is some toto ${20 - i}`,
+					imageUrl: "/svgs/logos/conteneur.png",
+				})),
+			},
+			{
+				name: "SG Internal",
+				icon: "explore",
+				data: Array.from({ length: 20 }).map((_, i) => ({
+					name: `toto${i}`,
+					description: `this is some toto ${20 - i}`,
+					imageUrl: "/svgs/logos/conteneur.png",
+				})),
+			},
+			{
+				name: "Templates",
+				data: Array.from({ length: 20 }).map((_, i) => ({
+					name: `toto${i}`,
+					description: `this is some toto ${20 - i}`,
+					imageUrl: "/svgs/logos/conteneur.png",
+				})),
+			},
+		];
+
 		return {
 			store,
 			router,
 			drawer,
 			oepnDialog,
-			filter,
 			filterRef,
 			filterTag,
 			filterTagRef,
 			selected,
 			$q,
-			resetFilter() {
-				filter.value = "";
-				filterRef.value.focus();
-			},
+			mockData,
 			resetFilterTag() {
 				filterTag.value = "";
 				filterTagRef.value.focus();

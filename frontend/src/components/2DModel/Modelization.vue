@@ -39,7 +39,7 @@ export default {
 			let svg = d3.select('#root');
 			let currentTfTypeNode = getLetoTypeNodeFromData(terraformPanelList.value,currentModel.getElementById("type").textContent.replace(/\s+/g, ''));
 			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentModel.getElementById("name").textContent.replace(/\s+/g, ''),0,currentModel.id,currentModel.parentNode.parentNode.id);
-			
+
 			if (currentModel.parentNode.getAttribute("id") != "svg0") {
 				let parent = getParent(rootTreeObject.value,currentModel.parentNode.parentNode.id);
 				removeContentInData(rootTreeObject.value,currentModel.parentNode.parentNode.id,currentTfObjectNode);
@@ -104,14 +104,10 @@ export default {
 			});
 
 			if (minGroup != null && minGroup != this) {
-				let parent = getParent(rootTreeObject.value,minGroup.getAttribute('id'));
-				removeContentInData(rootTreeObject.value,"svg0",currentTfObjectNode);
-				addContentInData(rootTreeObject.value,minGroup.id,currentTfObjectNode);
-				const dimensions = calcul_dimensions(parent.drawingObject, 0, 1000,  false, parent.contains);
-				calcul_xy_container(parent.drawingObject, parent.drawingObject.x, parent.drawingObject.y, 1000, parent.contains);
-				parent.drawingObject.height = dimensions.height + 20;
-				parent.drawingObject.width = dimensions.width;
-
+				const resource = getResource(monacoSourceData.value["resources"], [minGroup.getAttribute('id')], null);
+				store.commit('appMonaco/ADD_CONTENT', {idContainer : minGroup.getAttribute('id'), idResource : currentGroup.getAttribute('id')});
+				store.commit('appMonaco/SET_CONTAINER_DRAWING', {ids : [resource.id], remove : false});
+				getDatas();
 				d3.select('#'+currentGroup.getAttribute('id')).remove();
 				d3.select('#'+parent.id).remove();
 				let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,parent.type_name)
@@ -189,17 +185,18 @@ export default {
 				} else {
 					data = SVGData;
 					terraformObject = SVGData;
-				}				
+				}
 				createTerraformObject(terraformObject,data, svgParent, parentName, content, level);
 			})
 		}
 
-		function createTerraformObject(terraformObject,SVGData, svgParent, parentName, content, level) {
-			const object = (SVGData.drawingObject) ? SVGData.drawingObject : SVGData;
-			terraformObject.setHeight(object.height);
-			terraformObject.setWidth(object.width);
-			terraformObject.setX(object.x);
-			terraformObject.setY(object.y);
+		function createTerraformObject(SVGData, svgParent, parentName, content, level) {
+			const terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
+			const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level, SVGData.id);
+			terraformObject.setHeight(SVGData.height);
+			terraformObject.setWidth(SVGData.width);
+			terraformObject.setX(SVGData.x);
+			terraformObject.setY(SVGData.y);
 			terraformObject.drawSVG(svgs, svgParent, parentName, content, level, drag);
 			const model = document.getElementById(`${object.id}`);
 			if(SVGData.contains) {
@@ -280,7 +277,6 @@ export default {
 
 			let svg = d3.select('#root')
 
-			fillDataStorage(monacoSourceData.value["resources"],"svg0",0);
 			drawSVGs(monacoSourceData.value["resources"], svg, "root", false, 0);
 			drawLines(monacoSourceData.value["resources"]);
 
