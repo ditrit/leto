@@ -334,7 +334,7 @@ function calculDimensionContainerAttributes(container, widthMax, remove, widthMi
       resource.height = 0;
       dimensions = calculDimensionResource(width, height, widthResource, widthMin, widthMax, heightMin);
     } else {
-      dimensions = calculDimensionContainer(resource, widthMax, height, width);
+      dimensions = calculDimensionContainer(resource, widthMax, height, width, remove);
     }
     width = dimensions.width;
     height = dimensions.height;
@@ -360,17 +360,17 @@ function calculDimensionResource(width, height, widthResource, widthMin, widthMa
   return {width, height, widthResource};
 }
 
-function calculDimensionContainer(container, widthMax, height, width) {
+function calculDimensionContainer(container, widthMax, height, width, remove) {
   let dimensions;
   
   if (container.contains.length > 0) {
-    dimensions = calcul_dimensions(container, 0, widthMax);
+    dimensions = calcul_dimensions(container, 0, widthMax, remove);
     container.width = (container.width >= widthMax) ? container.width : (dimensions.width - 10);
-    container.height = height + 10;
+    container.height = dimensions.height + 10;
   }
 
   if (width + dimensions.width + 30 >= widthMax) {
-    width = (dimensions.width > width) ? dimensions.width + 30 : width + 30;
+    width = dimensions.width + 30;
   } else {
     width += dimensions.width + 30;
   }
