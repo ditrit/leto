@@ -42,7 +42,7 @@ export default {
 			analyse_resources(data.resources, this.metadatas.provider.resources);
 			data.resources = calculAttributesObjects(data);	
 			window.localStorage.setItem("monacoSource", JSON.stringify(data));
-			this.getSource();
+			this.getSource();		
 		});
 	},
 	mounted() {
@@ -93,7 +93,8 @@ export default {
 		});
 	},
 	computed: {
-		...mapGetters({ allMetadatas: "appMonaco/allMetadatas" }),
+		...mapGetters({ allMetadatas: "appMonaco/allMetadatas",
+						allMonacoSource : "appMonaco/allMonacoSource" }),
 	},
 	methods: {
 		...mapActions({
@@ -115,7 +116,36 @@ export default {
 		},
 		onChange(value) {
 			this.valueEditor = value;
-		},
+		}, 
+		toStringResource(resource, type) {
+			let resourceToString = `${type} "${resource.type}" "${resource.name}" {`;
+			resourceToString += this.toStringObject(resource.objects.value);
+			resourceToString += `\n}`;
+			return resourceToString;
+		}, 
+		toStringProvider(provider, type) {
+			let providerToString = `${type} "${provider.name}" {`;
+			providerToString += this.toStringObject(provider.objects.value);
+			providerToString += `\n}`;
+			return providerToString;
+		}, 
+		toStringObject(objects) {	
+			let res = '';
+			if (objects.length > 0) {
+				for (let i = 0; i < objects.length; i++) {
+					if(typeof(objects[i]) === 'object') {	
+						res += `\n  ${objects[i].name} {\n`;
+						objects[i].objects.forEach((object) => {
+							res += `    ${object}\n`;
+						});
+						res += '  }';
+					} else {
+						res += `\n  ${objects[i]}`;
+					}								
+				}
+			}
+			return res;
+		}
 	},
 };
 </script>
