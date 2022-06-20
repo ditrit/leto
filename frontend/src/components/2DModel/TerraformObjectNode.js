@@ -8,6 +8,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
 		super(terraformTypeNode,instance_name,level,id);
 		this.contains=[];
 		this.level=level;
+		this.attributes = terraformTypeNode.attributes;
 
 		this.drawingObject ={
 			width:0,
@@ -143,7 +144,6 @@ export default class TerraformObjectNode extends LetoObjectNode {
 			let endPos = getModelAbsPos(document.getElementById(endId));
 			let xDiff = beginPos[0]-endPos[0];
 			let yDiff = beginPos[1]-endPos[1];
-			console.log(xDiff,yDiff)
 			let beginAnchor;
 			let endAnchor;
 			if (Math.abs(xDiff)>=Math.abs(yDiff) && xDiff>=0){
