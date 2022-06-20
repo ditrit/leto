@@ -220,3 +220,15 @@ export function removeContentInData(node,parentId,letoObjectNode){
 }
 
 
+export function getLetoTypeNodeFromData(panelList,modelType){
+	let letoType;
+	panelList.forEach(element=>{
+		if (
+			element.type_name ==
+			modelType
+		) {
+			letoType = element;
+		}
+	})
+	return letoType;
+}

@@ -10,7 +10,7 @@ const d3 = require("d3");
 import Palette from './Palette'
 import TerraformTypeNode from './TerraformTypeNode'
 import TerraformObjectNode from './TerraformObjectNode'
-import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData, storeOutputLinkInData, storeInputLinkInData,removeContentInData} from "./utils"
+import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData, storeOutputLinkInData, storeInputLinkInData,removeContentInData, getLetoTypeNodeFromData} from "./utils"
 import { useStore } from "vuex";
 import plugins from '../../assets/plugins/terraform/plugins'
 import LetoTypeNode from './LetoTypeNode';
@@ -38,7 +38,7 @@ export default {
 			let currentParent = currentModel.parentNode;
 			const datas = monacoSourceData.value["resources"];
 			let svg = d3.select('#root');
-			let currentTfTypeNode = new TerraformTypeNode(currentModel.getElementById("logo").getAttribute("xlink:href"),currentModel.getElementById("type").textContent.replace(/\s+/g, ''),"","","dbtf");
+			let currentTfTypeNode = getLetoTypeNodeFromData(terraformPanelList.value,currentModel.getElementById("type").textContent.replace(/\s+/g, ''));
 			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentModel.getElementById("name").textContent.replace(/\s+/g, ''),0,currentModel.id);
 
 			if (currentModel.parentNode.getAttribute("id") != "svg0") {
@@ -54,7 +54,7 @@ export default {
 				d3.select('#'+ids[0]).remove()
 				document.getElementById("svg0").appendChild(currentModel);
 				const resource = getResource(monacoSourceData.value["resources"], ids)
-				const terraformType = new TerraformTypeNode(`logos/${resource.icon}`,resource.type, "","","dbtf");
+				let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,resource.type)
 				const terraformObject = new TerraformObjectNode(terraformType, resource.name, 0, resource.id);
 				createTerraformObject(terraformObject,resource, svg, "root", false, 0);
 
@@ -95,11 +95,12 @@ export default {
 			const id = currentGroup.getAttribute('id');
 			const x = currentGroup.getAttribute('x');
 			const y = currentGroup.getAttribute('y');
+			console.log(id)
 			store.commit('appMonaco/SET_COORD', {id : id, x : x, y : y});
 			const groups = d3.select('#root').selectAll('svg');
       let minGroup;
 			let svg = d3.select('#root')
-			let currentTfTypeNode = new TerraformTypeNode(d3.select(currentGroup).select("#logo").attr("xlink:href"),currentGroup.getElementById("type").textContent.replace(/\s+/g, ''),"","","dbtf");
+			let currentTfTypeNode = getLetoTypeNodeFromData(terraformPanelList.value,currentGroup.getElementById("type").textContent.replace(/\s+/g, ''));
 			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentGroup.getElementById("name").textContent.replace(/\s+/g, ''),0,currentGroup.id);
 
 			groups.each(function () {
@@ -130,7 +131,7 @@ export default {
 				d3.select('#'+currentGroup.getAttribute('id')).remove();
 				d3.select('#'+resource.id).remove();
 				if(resource !== null) {
-					const terraformType = new TerraformTypeNode(`logos/${resource.icon}`,resource.type, "","","dbtf");
+					let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,resource.type);
 					const terraformObject = new TerraformObjectNode(terraformType, resource.name, 0, resource.id);
 					createTerraformObject(terraformObject,resource, svg, "root", false, 0);
 					removeContentInData(rootTreeObject.value,"svg0",currentTfObjectNode)
@@ -148,18 +149,10 @@ export default {
 
 		function clickOnPalette() {
 			let clickedOnPalette = this;
-			let panelObject;
+			let panelObject = getLetoTypeNodeFromData(terraformPanelList.value,clickedOnPalette.getElementById("type").textContent.replace(/\s+/g, ''));
 			let svg = d3.select('#root')
 
 			d3.select(this).transition().attr("fill", "black");
-			terraformPanelList.value.forEach(element=>{
-				if (
-					element.type_name ==
-					clickedOnPalette.getElementById("type").textContent.replace(/\s+/g, '')
-				) {
-					panelObject = element;
-				}
-			})
 			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name);
 			let monacoObj = {
 				containers : [],
@@ -202,7 +195,8 @@ export default {
 
 		function fillDataStorage(datas,parentId,level){
 			datas.forEach(SVGData => {
-				const terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
+
+				let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,SVGData.type);
 				const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level, SVGData.id);
 				addContentInData(rootTreeObject.value,parentId,terraformObject);
 				if(SVGData.contains) {
@@ -213,7 +207,7 @@ export default {
 
 		function drawSVGs(datas, svgParent, parentName, content, level) {
 			datas.forEach( SVGData => {
-				const terraformType = new TerraformTypeNode(`logos/${SVGData.icon}`,SVGData.type, "","","dbtf");
+				let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,SVGData.type);
 				const terraformObject = new TerraformObjectNode(terraformType, SVGData.name, level, SVGData.id);
 				createTerraformObject(terraformObject,SVGData, svgParent, parentName, content, level);
 			})
@@ -278,6 +272,12 @@ export default {
 			const provider = monacoSourceData.value["provider"][0].name;
 			const plugin = plugins[provider];
 
+			const metadatas = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`);
+			metadatas.provider.resources.forEach((element) => {
+				terraformPanelList.value.push(
+					new TerraformTypeNode(`logos/${element.icon}`,element.resourceType, "","","dbtf",element.attributes));
+			});
+
 			let svg0 = d3.select("#myDataViz")
 				.append("svg")
 				.attr("id", "root")
@@ -321,12 +321,6 @@ export default {
 				.attr("id", "svg1")
 				.attr("width", 250)
 				.attr("height", 2000);
-
-			const metadatas = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`);
-			metadatas.provider.resources.forEach((element) => {
-				terraformPanelList.value.push(
-					new TerraformTypeNode(`logos/${element.icon}`,element.resourceType, "","","dbtf"));
-			});
 
 			let palette = new Palette(terraformPanelList.value);
 			palette.drawPalette(svgs.value, clickOnPalette);
