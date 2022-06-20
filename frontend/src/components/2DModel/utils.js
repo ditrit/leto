@@ -1,4 +1,5 @@
 const d3 = require("d3");
+
 import TerraformObjectNode from "./TerraformObjectNode";
 
 export function storeOutputLinkInData(node,currentModelId,link){
@@ -59,7 +60,6 @@ export function replaceComponents(group) {
 							parseFloat(group.childNodes[prop]
 								.getElementsByClassName("main")[0]
 								.getAttribute("height"))
-
 					}
 				}
 			}
@@ -117,22 +117,17 @@ export function drawLink(beginAnchor,endAnchor,rootID,id){
 }
 
 export function updateLinks(node,model){
-
 			if (node == null){
 				return;
 			}
 			if (node.drawingObject.id == model.id){
-				console.log(node)
 
 				node.links.outputs.forEach(link => {
-					console.log(link)
 					let arrow = document.getElementById(link.id);
 					let beginId = model.id;
 					let endId = link.targetId
 					let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
 					let beginAnchor = anchors[0];
-					console.log(link.targetId)
-
 					let beginAnchorPos = getAnchorAbsPos(beginAnchor);
 					d3.select(arrow)
 						.attr("x2",beginAnchorPos[0])
@@ -145,7 +140,6 @@ export function updateLinks(node,model){
 					let beginId = link.sourceId
 					let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
 					let endAnchor = anchors[1];
-
 					let endAnchorPos = getAnchorAbsPos(endAnchor);
 					d3.select(arrow)
 						.attr("x1",endAnchorPos[0])
@@ -161,7 +155,6 @@ export function updateLinks(node,model){
 						})
 					}
 				})
-
 			}
 			updateLinks(node.contains[0],model);
 			updateLinks(node.rightSibling,model);
@@ -210,7 +203,6 @@ export function removeContentInData(node,parentId,letoObjectNode){
 				if(node.contains[node.contains.indexOf(letoNode)-1]){
 					node.contains[node.contains.indexOf(letoNode)-1].setRightSibling(null);
 				}
-				//letoNode.rightSibling = null;
 				let nextSibling = letoNode.rightSibling;
 				letoObjectNode.setContains(letoNode.getContains());
 				letoObjectNode.setLinks(letoNode.getLinks());

@@ -38,10 +38,8 @@ export default {
 			let currentParent = currentModel.parentNode;
 			const datas = monacoSourceData.value["resources"];
 			let svg = d3.select('#root');
-
 			let currentTfTypeNode = new TerraformTypeNode(currentModel.getElementById("logo").getAttribute("xlink:href"),currentModel.getElementById("type").textContent.replace(/\s+/g, ''),"","","dbtf");
 			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentModel.getElementById("name").textContent.replace(/\s+/g, ''),0,currentModel.id);
-
 
 			if (currentModel.parentNode.getAttribute("id") != "svg0") {
 				removeContentInData(rootTreeObject.value,currentModel.parentNode.parentNode.id,currentTfObjectNode);
@@ -101,7 +99,6 @@ export default {
 			const groups = d3.select('#root').selectAll('svg');
       let minGroup;
 			let svg = d3.select('#root')
-
 			let currentTfTypeNode = new TerraformTypeNode(d3.select(currentGroup).select("#logo").attr("xlink:href"),currentGroup.getElementById("type").textContent.replace(/\s+/g, ''),"","","dbtf");
 			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentGroup.getElementById("name").textContent.replace(/\s+/g, ''),0,currentGroup.id);
 
@@ -139,18 +136,14 @@ export default {
 					removeContentInData(rootTreeObject.value,"svg0",currentTfObjectNode)
 					addContentInData(rootTreeObject.value,minGroup.id,currentTfObjectNode)
 					}
-				console.log(currentTfObjectNode)
 				let children = minGroup.getElementsByTagName("svg")
 				for(let child in children){
 				updateLinks(rootTreeObject.value,children[child]);
 				}
 			}
-			console.log(this.parentNode)
 			updateLinks(rootTreeObject.value,this.parentNode)
 			updateDrawingInfosInData(rootTreeObject.value,this.parentNode);
-
 			return;
-
 		}
 
 		function clickOnPalette() {
@@ -242,6 +235,7 @@ export default {
 				}
 			})
 		}
+
 		const getDatas = async () => {
 			monacoSourceData.value = await store.getters["appMonaco/allMonacoSource"];
 			return monacoSourceData.value;
@@ -254,7 +248,6 @@ export default {
 
 			return svgs.value;
 		};
-
 
 		onMounted(async () => {
 
