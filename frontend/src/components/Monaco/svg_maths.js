@@ -39,24 +39,24 @@ export function calculAttributesObjects(datas) {
       m.contains = [];
       m.containers = [];
       for (let i = 0; i < orderResources.length; i++) {
-        m.attributes.forEach((attribute) => {
-          if (attribute.type == orderResources[i]) {
-            attribute.order = i;
-            m.contains.push(attribute);
+        m.resources.forEach((resource) => {
+          if (resource.type == orderResources[i]) {
+            resource.order = i;
+            m.contains.push(resource);
           }
           if (isArray(orderResources[i])) {
             orderResources[i].forEach((type) => {
-              if (attribute.type == type) {
-                attribute.order = i;
-                m.contains.push(attribute);
+              if (resource.type == type) {
+                resource.order = i;
+                m.contains.push(resource);
               }
             });
           }
         });
       }
-      m.attributes.forEach((attribute) => {
-        if (!m.contains.includes(attribute) && attribute.representation == 'contained') {
-          m.contains.push(attribute);
+      m.resources.forEach((resource) => {
+        if (!m.contains.includes(resource) && resource.representation == 'contained') {
+          m.contains.push(resource);
         }
       });
       containers.push(m);
@@ -107,7 +107,7 @@ export function calculAttributesObjects(datas) {
     let find = false;
     if (r.representation != 'container') {
       containers.forEach((c) => {
-        if (c.contains.includes(r) || c.containers.includes(r) || (c.attributes && c.attributes.includes(r))) {
+        if (c.contains.includes(r) || c.containers.includes(r) || (c.resources && c.resources.includes(r))) {
             find = true;
         } 
       });
@@ -158,12 +158,12 @@ export function calculAttributesObjects(datas) {
   containers.forEach((c) => {
     if (c.type == 'module') {
       let externLink = false;
-      c.attributes.forEach((a) => {
+      c.resources.forEach((a) => {
         if (a.link) {
           let find = false;
           a.link.forEach((l) => {
-            c.attributes.forEach((attribute) => {
-              if (attribute.name == l.name && attribute.type == l.type) {
+            c.resources.forEach((resource) => {
+              if (resource.name == l.name && resource.type == l.type) {
                 find = true;
               }
             });
@@ -299,17 +299,17 @@ export function calculAttributesObjects(datas) {
   return resources;
 }
 
-function calculDimensionModuleAttributes(attributes, height, width) {  
-  for (let i = 0; i < attributes.length; i++) {
-    if (i + 1 < attributes.length && attributes[i + 1].order != attributes[i].order) {
-      if (attributes[i].representation != 'container') {
+function calculDimensionModuleAttributes(resources, height, width) {  
+  for (let i = 0; i < resources.length; i++) {
+    if (i + 1 < resources.length && resources[i + 1].order != resources[i].order) {
+      if (resources[i].representation != 'container') {
         height += heightMin + 15;
       } else {
-        const dimensions = calculDimensionContainer(attributes[i], widthMax, height, width);
+        const dimensions = calculDimensionContainer(resources[i], widthMax, height, width);
         width += dimensions.width;
         height += dimensions.height;
       }
-    } else if (i + 1 < attributes.length && attributes[i].order >= 0 && attributes[i + 1].order == undefined) {
+    } else if (i + 1 < resources.length && resources[i].order >= 0 && resources[i + 1].order == undefined) {
       height += heightMin + 15;
     } else {
       width += widthMin + 20;
@@ -385,8 +385,8 @@ export function calcul_dimensions(container, width, widthMax, remove) {
   const heightMin = 70;
   let height = heightMin + 20;
   let dimensions;
-  if (container.attributes) {
-    dimensions = calculDimensionModuleAttributes(container.attribute, height, width);
+  if (container.resources) {
+    dimensions = calculDimensionModuleAttributes(container.resources, height, width);
     width = dimensions.width;
     height = dimensions.height;
   } else if (container.contains && container.contains.length > 0) {
@@ -430,18 +430,18 @@ function calculCoordContainer(object, x, y, recourceWidthMax, heightMax) {
   return { x : xMax + 40, y: (returnY != -1) ? returnY : y, heightMax : heightMax};
 }
 
-function calculCoordModuleAttributes(attributes) {
+function calculCoordModuleAttributes(resources) {
   let cox = 20;
   let coy = 60;
   const heightMin = 40;
 
-  for (let i = 0; i < attributes.length; i++) {
-    const xy = calcul_xy_container(attributes[i], cox, coy, recourceWidthMax);
+  for (let i = 0; i < resources.length; i++) {
+    const xy = calcul_xy_container(resources[i], cox, coy, recourceWidthMax);
     cox = xy.x;
     coy = xy.y;
     resourceHeightMax = xy.resourceHeightMax;
-    if ((i + 1 < attributes.length && attributes[i + 1].order != attributes[i].order) || cox >= recourceWidthMax) {
-      coy = coy + ((attributes[i].height > 0) ? attributes[i].height : heightMin) + 50;
+    if ((i + 1 < resources.length && resources[i + 1].order != resources[i].order) || cox >= recourceWidthMax) {
+      coy = coy + ((resources[i].height > 0) ? resources[i].height : heightMin) + 50;
       cox = 20;
     }
   }
@@ -480,8 +480,8 @@ export function calcul_xy_container(container, x, y, recourceWidthMax) {
     newX = xy.x;
     newY = xy.y;
     resourceHeightMax = xy.heightMax;
-    if (container.attributes) {
-      calculCoordModuleAttributes(container.attributes);
+    if (container.resources) {
+      calculCoordModuleAttributes(container.resources);
     } else if (container.contains && container.contains.length > 0) {
       calculCoordContainerAttributes(recourceWidthMax, container);
     }
