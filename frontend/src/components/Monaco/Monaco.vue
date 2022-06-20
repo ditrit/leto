@@ -132,17 +132,17 @@ export default {
 		toStringObject(objects) {	
 			let res = '';
 			if (objects.length > 0) {
-				for (let i = 0; i < objects.length; i++) {
-					if(typeof(objects[i]) === 'object') {	
-						res += `\n  ${objects[i].name} {\n`;
-						objects[i].objects.forEach((object) => {
-							res += `    ${object}\n`;
+				objects.forEach( object => {
+					if(typeof(object) === 'object') {	
+						res += `\n  ${object.name} {\n`;
+						object.objects.forEach((o) => {
+							res += `    ${o}\n`;
 						});
 						res += '  }';
 					} else {
-						res += `\n  ${objects[i]}`;
+						res += `\n  ${object}`;
 					}								
-				}
+				})
 			}
 			return res;
 		}
