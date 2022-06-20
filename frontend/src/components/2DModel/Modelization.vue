@@ -35,10 +35,17 @@ export default {
 
 		function dragstarted() {
 			let currentModel = this.parentNode;
+			let currentParent = currentModel.parentNode;
 			const datas = monacoSourceData.value["resources"];
 			let svg = d3.select('#root');
 
+			let currentTfTypeNode = new TerraformTypeNode(currentModel.getElementById("logo").getAttribute("xlink:href"),currentModel.getElementById("type").textContent.replace(/\s+/g, ''),"","","dbtf");
+			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentModel.getElementById("name").textContent.replace(/\s+/g, ''),0,currentModel.id);
+
+
 			if (currentModel.parentNode.getAttribute("id") != "svg0") {
+				removeContentInData(rootTreeObject.value,currentModel.parentNode.parentNode.id,currentTfObjectNode);
+				addContentInData(rootTreeObject.value,"svg0",currentTfObjectNode);
 				let ids = getIndex(currentModel, datas, []).reverse();
 				store.commit('appMonaco/REMOVE_CONTENT', ids);
 				getDatas();
@@ -49,7 +56,14 @@ export default {
 				d3.select('#'+ids[0]).remove()
 				document.getElementById("svg0").appendChild(currentModel);
 				const resource = getResource(monacoSourceData.value["resources"], ids)
-				createTerraformObject(resource, svg, "root", false, 0);
+				const terraformType = new TerraformTypeNode(`logos/${resource.icon}`,resource.type, "","","dbtf");
+				const terraformObject = new TerraformObjectNode(terraformType, resource.name, 0, resource.id);
+				createTerraformObject(terraformObject,resource, svg, "root", false, 0);
+
+				let children = currentParent.getElementsByTagName("svg")
+				for(let child in children){
+					updateLinks(rootTreeObject.value,children[child]);
+				}
 			}
 		}
 
@@ -79,14 +93,17 @@ export default {
 		}
 
 		function dragended() {
-      		const currentGroup = this.parentNode;
+    	const currentGroup = this.parentNode;
 			const id = currentGroup.getAttribute('id');
 			const x = currentGroup.getAttribute('x');
 			const y = currentGroup.getAttribute('y');
 			store.commit('appMonaco/SET_COORD', {id : id, x : x, y : y});
 			const groups = d3.select('#root').selectAll('svg');
-      		let minGroup;
+      let minGroup;
 			let svg = d3.select('#root')
+
+			let currentTfTypeNode = new TerraformTypeNode(d3.select(currentGroup).select("#logo").attr("xlink:href"),currentGroup.getElementById("type").textContent.replace(/\s+/g, ''),"","","dbtf");
+			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentGroup.getElementById("name").textContent.replace(/\s+/g, ''),0,currentGroup.id);
 
 			groups.each(function () {
 				if (this.getAttribute("id") != "svg0") {
@@ -108,17 +125,32 @@ export default {
 			});
 
 			if (minGroup != null && minGroup != this) {
+
 				const resource = getResource(monacoSourceData.value["resources"], [minGroup.getAttribute('id')], null);
 				store.commit('appMonaco/ADD_CONTENT', {idContainer : minGroup.getAttribute('id'), idResource : currentGroup.getAttribute('id')});
 				store.commit('appMonaco/SET_CONTAINER_DRAWING', {ids : [resource.id], remove : false});
 				getDatas();
 				d3.select('#'+currentGroup.getAttribute('id')).remove();
 				d3.select('#'+resource.id).remove();
-				if(resource !== null) createTerraformObject(resource, svg, "root", false, 0);
+				if(resource !== null) {
+					const terraformType = new TerraformTypeNode(`logos/${resource.icon}`,resource.type, "","","dbtf");
+					const terraformObject = new TerraformObjectNode(terraformType, resource.name, 0, resource.id);
+					createTerraformObject(terraformObject,resource, svg, "root", false, 0);
+					removeContentInData(rootTreeObject.value,"svg0",currentTfObjectNode)
+					addContentInData(rootTreeObject.value,minGroup.id,currentTfObjectNode)
+					}
+				console.log(currentTfObjectNode)
+				let children = minGroup.getElementsByTagName("svg")
+				for(let child in children){
+				updateLinks(rootTreeObject.value,children[child]);
+				}
 			}
+			console.log(this.parentNode)
+			updateLinks(rootTreeObject.value,this.parentNode)
+			updateDrawingInfosInData(rootTreeObject.value,this.parentNode);
 
 			return;
-			updateDrawingInfosInData(rootTreeObject.value,this.parentNode);
+
 		}
 
 		function clickOnPalette() {
