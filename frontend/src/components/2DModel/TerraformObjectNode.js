@@ -8,6 +8,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
 		super(terraformTypeNode,instance_name,level,id);
 		this.contains=[];
 		this.level=level;
+		this.attributes = terraformTypeNode.attributes;
 
 		this.drawingObject ={
 			width:0,

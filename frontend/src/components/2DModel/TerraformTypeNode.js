@@ -1,8 +1,10 @@
 import LetoTypeNode from "./LetoTypeNode";
 
 export default class TerraformTypeNode extends LetoTypeNode {
-	constructor(logo_path, type_name, primary_color, secondary_color,svg){
+	constructor(logo_path, type_name, primary_color, secondary_color,svg,attributes){
 		super(logo_path, type_name, primary_color, secondary_color,svg);
+
+		this.attributes = attributes;
 
 		this.defaultPalette={
 			width:0,
