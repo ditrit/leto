@@ -160,7 +160,28 @@ export default {
 					panelObject = element;
 				}
 			})
-			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,Date.now());
+			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name);
+			let monacoObj = {
+				containers : [],
+				contains : [],
+				datasName : [],
+				datasObject : [],
+				fileName : monacoSourceData.value["resources"][0].fileName,
+				height: 0,
+				width: 0,
+				icon: terraformObject.logo_path.replace("logos/",""),
+				type: terraformObject.type_name,
+				name: terraformObject.instance_name,
+				id:  terraformObject.instance_name+"_"+ terraformObject.type_name,
+				link: [],
+				parentX: 0,
+				parentY: 0,
+				representation: "block",
+				x: -translateX.value/zoom.value,
+				y: -translateY.value/zoom.value
+			}
+			terraformObject.id = terraformObject.instance_name+"_"+ terraformObject.type_name;
+			store.commit('appMonaco/ADD_CONTENT_IN_ROOT',monacoObj)
 
 			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, drag);
 			d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
