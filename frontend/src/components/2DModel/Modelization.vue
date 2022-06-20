@@ -10,7 +10,7 @@ const d3 = require("d3");
 import Palette from './Palette'
 import TerraformTypeNode from './TerraformTypeNode'
 import TerraformObjectNode from './TerraformObjectNode'
-import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData,addOutputLink,addInputLink, storeOutputLinkInData, storeInputLinkInData} from "./utils"
+import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData, storeOutputLinkInData, storeInputLinkInData,removeContentInData} from "./utils"
 import { useStore } from "vuex";
 import plugins from '../../assets/plugins/terraform/plugins'
 import LetoTypeNode from './LetoTypeNode';

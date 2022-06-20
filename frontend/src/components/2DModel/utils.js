@@ -121,14 +121,17 @@ export function updateLinks(node,model){
 			if (node == null){
 				return;
 			}
-			if (node.drawingObject.id == model.getAttribute("id")){
+			if (node.drawingObject.id == model.id){
+				console.log(node)
 
 				node.links.outputs.forEach(link => {
+					console.log(link)
 					let arrow = document.getElementById(link.id);
 					let beginId = model.id;
 					let endId = link.targetId
 					let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
 					let beginAnchor = anchors[0];
+					console.log(link.targetId)
 
 					let beginAnchorPos = getAnchorAbsPos(beginAnchor);
 					d3.select(arrow)
@@ -181,17 +184,47 @@ export function updateDrawingInfosInData(node,currentModel){
 	updateDrawingInfosInData(node.rightSibling,currentModel);
 }
 
-export function addContentInData(node,currentModel,letoObjectNode){
+export function addContentInData(node,parentId,letoObjectNode){
 	if (node == null) {
 		return;
 	}
-	else if ((currentModel.parentNode.getAttribute("id")) == "svg0"){
+	else if ((parentId) == "svg0"){
 		node.addContent(letoObjectNode);
 		return;
 	}
-	else if(node.drawingObject.id == (currentModel.parentNode.parentNode.getAttribute("id"))){
+	else if(node.drawingObject.id == (parentId)){
+		letoObjectNode.setLevel(node.getLevel() + 1);
 		node.addContent(letoObjectNode);
 	}
-	addContentInData(node.contains[0],currentModel,letoObjectNode);
-	addContentInData(node.rightSibling,currentModel,letoObjectNode);
+	addContentInData(node.contains[0],parentId,letoObjectNode);
+	addContentInData(node.rightSibling,parentId,letoObjectNode);
 }
+
+export function removeContentInData(node,parentId,letoObjectNode){
+	if (node == null) {
+		return;
+	}
+	else if(node.drawingObject.id == (parentId)){
+		node.contains.forEach(letoNode =>{
+			if(letoNode.drawingObject.id == letoObjectNode.drawingObject.id){
+				if(node.contains[node.contains.indexOf(letoNode)-1]){
+					node.contains[node.contains.indexOf(letoNode)-1].setRightSibling(null);
+				}
+				//letoNode.rightSibling = null;
+				let nextSibling = letoNode.rightSibling;
+				letoObjectNode.setContains(letoNode.getContains());
+				letoObjectNode.setLinks(letoNode.getLinks());
+				node.contains.splice(node.contains.indexOf(letoNode));
+
+				while (nextSibling){
+					node.addContent(nextSibling);
+					nextSibling = nextSibling.rightSibling;
+				}
+			}
+		})
+	}
+	removeContentInData(node.contains[0],parentId,letoObjectNode);
+	removeContentInData(node.rightSibling,parentId,letoObjectNode);
+}
+
+
