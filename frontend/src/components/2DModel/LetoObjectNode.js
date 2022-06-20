@@ -3,7 +3,7 @@ import { replaceComponents } from "./utils";
 const d3 = require("d3");
 
 export default class LetoObjectNode{
-	constructor(letoTypeNode,instance_name,level){
+	constructor(letoTypeNode,instance_name,level,id){
 		this.svg = letoTypeNode.svg;
 		this.logo_path=letoTypeNode.logo_path;
 		this.type_name=letoTypeNode.type_name;
@@ -17,6 +17,8 @@ export default class LetoObjectNode{
 			outputs : [],
 			inputs : [],
 		}
+		this.id=id;
+
 	}
 
 	drawingObject ={}
@@ -24,6 +26,10 @@ export default class LetoObjectNode{
 	setLevel(level){
 		this.level=level;
 		this.drawingObject.level=level;
+	}
+
+	setLinks(links){
+		this.links = links;
 	}
 
 	setId(id){
@@ -34,6 +40,10 @@ export default class LetoObjectNode{
 		this.rightSibling = rightSibling;
 	}
 
+	setContains(contains){
+		this.contains = contains;
+	}
+
 	addContent(letoContentObject){
 		if (this.contains.length!=0){
 			this.contains[this.contains.length-1].setRightSibling(letoContentObject);
@@ -41,8 +51,16 @@ export default class LetoObjectNode{
 		this.contains.push(letoContentObject);
 	}
 
+	getContains(){
+		return this.contains;
+	}
+
 	getLinks (){
 		return this.links;
+	}
+
+	getLevel(){
+		return this.level;
 	}
 
 	addOutputLink(link){

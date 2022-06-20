@@ -5,10 +5,9 @@ const d3 = require("d3");
 
 export default class TerraformObjectNode extends LetoObjectNode {
 	constructor(terraformTypeNode,instance_name,level,id){
-		super(terraformTypeNode,instance_name,level);
+		super(terraformTypeNode,instance_name,level,id);
 		this.contains=[];
 		this.level=level;
-		this.id=id;
 
 		this.drawingObject ={
 			width:0,
