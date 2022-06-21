@@ -95,32 +95,27 @@ export default defineComponent({
 			domainID,
 		} = useDomainData(props);
 
+		function makeToto(i) {
+			return {
+				name: `toto${i}`,
+				description: `this is some toto ${20 - i}`,
+				imageUrl: "/svgs/logos/conteneur.png",
+			};
+		}
 		const mockData = [
 			{
 				name: "AWS",
 				icon: "explore",
-				data: Array.from({ length: 20 }).map((_, i) => ({
-					name: `toto${i}`,
-					description: `this is some toto ${20 - i}`,
-					imageUrl: "/svgs/logos/conteneur.png",
-				})),
+				data: Array.from({ length: 20 }).map((_, i) => makeToto(i)),
 			},
 			{
 				name: "SG Internal",
 				icon: "explore",
-				data: Array.from({ length: 20 }).map((_, i) => ({
-					name: `toto${i}`,
-					description: `this is some toto ${20 - i}`,
-					imageUrl: "/svgs/logos/conteneur.png",
-				})),
+				data: Array.from({ length: 20 }).map((_, i) => makeToto(i)),
 			},
 			{
 				name: "Templates",
-				data: Array.from({ length: 20 }).map((_, i) => ({
-					name: `toto${i}`,
-					description: `this is some toto ${20 - i}`,
-					imageUrl: "/svgs/logos/conteneur.png",
-				})),
+				data: Array.from({ length: 20 }).map((_, i) => makeToto(i)),
 			},
 		];
 
