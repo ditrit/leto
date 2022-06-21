@@ -69,11 +69,11 @@ export function calculAttributesObjects(datas) {
         r.resourcesObject.forEach((ro) => {
           containers.forEach((c) => {
             if (c.name == ro.value.name && ro.representation == 'contained') {
-              c.contains.push(r);
+              c.contains.push({name : ro.name, value : r});
             } else if (c.name == ro.value.name && ro.representation == 'containedInOtherContainer') {
-              c.containers.push(r);
+              c.containers.push({name : ro.name, value : r});
             } else if (c.name == ro.value.name && ro.representation == 'link') {
-              c.link.push(r);
+              c.link.push({name : ro.name, value : r});
             }
           });
         });
@@ -86,16 +86,21 @@ export function calculAttributesObjects(datas) {
       r.resourcesObject.forEach((ro) => {
         datas.resources.forEach((c) => {
           if (c.name == ro.value.name && c.type == ro.value.type && ro.representation == 'link') {
-            if (c.link && !c.link.includes(r)) {
-              c.link.push(r);
+            let find = false;
+            if (c.link) {
+              c.link.forEach( l => {
+                if(l.name === ro.name && l.value.name === r.name) find = true;
+              })
+              if(!find)
+                c.link.push({name : ro.name, value : r});
             } else {
-              c.link = [r];
+              c.link = [{name : ro.name, value : r}];
             }
           } else if (c.name == ro.value.name && c.type == ro.value.type && ro.representation == 'inverseLink') {
-            if (r.link && !r.link.includes(c)) {
-              r.link.push(c);
+            if (r.link && !r.link.includes({name : ro.name, value : c})) {
+              r.link.push({name : ro.name, value : c});
             } else {
-              r.link = [c];
+              r.link = [{name : ro.name, value : c}];
             }
           }
         });
@@ -107,9 +112,23 @@ export function calculAttributesObjects(datas) {
     let find = false;
     if (r.representation != 'container') {
       containers.forEach((c) => {
-        if (c.contains.includes(r) || c.containers.includes(r) || (c.resources && c.resources.includes(r))) {
+        c.contains.forEach( contain => {
+          if(contain.value == r) {
             find = true;
-        } 
+          }
+        })
+        c.containers.forEach( container => {
+          if(container.value == r) {
+            find = true;
+          }
+        })
+        if(c.resources) {
+          c.resources.forEach( resource => {
+            if(resource.value == r) {
+              find = true;
+            }
+          })
+        }
       });
       if (!find && !blocks.includes(r)) {
         for (let i = 0; i < orderResources.length; i++) {
@@ -135,13 +154,31 @@ export function calculAttributesObjects(datas) {
     let find = false;
     if (r.representation != 'container') {
       containers.forEach((c) => {
-        if (c.contains.includes(r) || c.containers.includes(r) || (c.link && c.link.includes(r))) {
-          find = true;
+        c.contains.forEach( contain => {
+          if(contain.value == r) {
+            find = true;
+          }
+        })
+        c.containers.forEach( container => {
+          if(container.value == r) {
+            find = true;
+          }
+        })
+        if(c.link) {
+          c.link.forEach( l => {
+            if(l.value == r) {
+              find = true;
+            }
+          })
         }
       });
       datas.resources.forEach((c) => {
-        if (c.link && c.link.includes(r)) {
-          find = true;
+        if(c.link) {
+          c.link.forEach( l => {
+            if(l.value == r) {
+              find = true;
+            }
+          })
         }
       });
       if (r.link) {
@@ -180,19 +217,20 @@ export function calculAttributesObjects(datas) {
   containers.forEach((c) => {
     c.resourcesObject.forEach((ro) => {
       if (ro.representation == 'contained') {
-        c.contains.push(ro.value);
+        c.contains.push({name : ro.name, value : ro.value});
       }
     });
   });
+
 
   containers.forEach((c) => {
     c.containers.forEach((cn) => {
       containers.forEach((cs) => {
         cs.contains.forEach((ctn) => {
-          if (cn.name == ctn.name) {
+          if (cn.value.name == ctn.value.name) {
             if (!c.contains.includes(cs)) {
               cs.inContainer = true;
-              c.contains.push(cs);
+              c.contains.push({name : '', value : cs});
               const index = containers.indexOf(cs);
               containers.splice(index, 1);
             }
@@ -318,28 +356,31 @@ function calculDimensionModuleAttributes(resources, height, width) {
   return {width, height};
 }
 
-function calculDimensionContainerAttributes(container, widthMax, remove, widthMin, heightMin, height) {
+function calculDimensionContainerAttributes(container, widthMax, remove, heightMin, height, contains) {
   const initialWidth = (container.width !== undefined) ? container.width : 0;
   const initialHeight = (container.height !== undefined) ? container.height - 20 : 0;
-  let index = container.contains.length - 2;
+  let index = contains.length - 2;
   let dimensions, width = 0;
-  if(container.contains.length === 1) {
-    index = container.contains.length - 1;
+  if(contains.length === 1) {
+    index = contains.length - 1;
   }
-  const lastX = container.contains[index].x;
+  const content = (contains.length > 0 && contains[index].value) ? contains[index].value : contains[index];
+  const lastX = (content !== undefined && content.drawingObject) ? content.drawingObject.x : contains.x;
   let widthResource = (lastX != undefined) ? lastX : 0;
-  container.contains.forEach(resource => {    
-    if (resource.representation != 'container') {
-      resource.width = 0;
-      resource.height = 0;
-      dimensions = calculDimensionResource(width, height, widthResource, widthMin, widthMax, heightMin);
+  contains.forEach(resource => {   
+    const object = (resource.value) ? resource.value : resource;
+    if (object.contains !== undefined && object.contains.length > 0) {
+      dimensions = calculDimensionContainer(object, widthMax, height, width, remove);
     } else {
-      dimensions = calculDimensionContainer(resource, widthMax, height, width, remove);
+      object.width = 0;
+      object.height = 0;
+      dimensions = calculDimensionResource(width, height, widthResource, 250, widthMax, heightMin);
     }
     width = dimensions.width;
     height = dimensions.height;
     widthResource = dimensions.widthResource;
   });
+  
   width = (width < initialWidth && !remove) ? initialWidth : width;
   height = (height < initialHeight && !remove) ? initialHeight : height;
 
@@ -364,9 +405,10 @@ function calculDimensionContainer(container, widthMax, height, width, remove) {
   let dimensions;
   
   if (container.contains.length > 0) {
-    dimensions = calcul_dimensions(container, 0, widthMax, remove);
-    container.width = (container.width >= widthMax) ? container.width : (dimensions.width - 10);
-    container.height = dimensions.height + 10;
+    const object = (container.drawingObject) ? container.drawingObject : container;
+    dimensions = calcul_dimensions(object, 0, widthMax, remove, container.contains);
+    object.width = (object.width >= widthMax) ? object.width : (dimensions.width - 10);
+    object.height = dimensions.height + 10;
   }
 
   if (width + dimensions.width + 30 >= widthMax) {
@@ -380,7 +422,7 @@ function calculDimensionContainer(container, widthMax, height, width, remove) {
   return {width, height, widthResource}
 }
 
-export function calcul_dimensions(container, width, widthMax, remove) {
+export function calcul_dimensions(container, width, widthMax, remove, contains) {
   const widthMin = 250;
   const heightMin = 70;
   let height = heightMin + 20;
@@ -390,7 +432,11 @@ export function calcul_dimensions(container, width, widthMax, remove) {
     width = dimensions.width;
     height = dimensions.height;
   } else if (container.contains && container.contains.length > 0) {
-    dimensions = calculDimensionContainerAttributes(container, widthMax, remove, widthMin, heightMin, height);
+    dimensions = calculDimensionContainerAttributes(container, widthMax, remove, heightMin, height, container.contains);
+    width = dimensions.width;
+    height = dimensions.height;
+  } else if (contains && contains.length > 0) {
+    dimensions = calculDimensionContainerAttributes(container, widthMax, remove, heightMin, height, contains);
     width = dimensions.width;
     height = dimensions.height;
   } else {
@@ -447,31 +493,25 @@ function calculCoordModuleAttributes(resources) {
   }
 }
 
-function calculCoordContainerAttributes(recourceWidthMax, container) {
+function calculCoordContainerAttributes(recourceWidthMax, container, contains) {
   let cox = 20;
   let coy = 60;
   let containerHeightMax = 0;
   
-  container.contains.forEach((content) => {
-    const xy = calculCoordResource(content, cox, coy, container, recourceWidthMax, containerHeightMax);
+  contains.forEach((content) => {
+    const drawingObject = (content.value) ? content.value : ((content.drawingObject) ? content.drawingObject : content);
+    const object = (content.value) ? content.value : content;
+    const xy = calculCoordResource(drawingObject, cox, coy, container, recourceWidthMax, containerHeightMax);
     cox = xy.x;
     coy = xy.y;
     containerHeightMax = xy.heightMax;
-    getParentPosition(content, container);
-    if(content.contains) {
-      calculCoordContainerAttributes(recourceWidthMax, content)
+    if(object.contains) {
+      calculCoordContainerAttributes(recourceWidthMax, object, object.contains)
     }
   });
 }
 
-function getParentPosition(resource, parent) {  
-  const parentX = ((parent.parentX) ? parent.parentX : parent.x)
-  const parentY = ((parent.parentY) ? parent.parentY : parent.y)
-  resource.parentX = parentX + resource.x
-  resource.parentY = parentY + resource.y
-}
-
-export function calcul_xy_container(container, x, y, recourceWidthMax) {
+export function calcul_xy_container(container, x, y, recourceWidthMax, contains) {
   let newX = -1;
   let newY = -1;
   let resourceHeightMax = 0;
@@ -483,7 +523,9 @@ export function calcul_xy_container(container, x, y, recourceWidthMax) {
     if (container.resources) {
       calculCoordModuleAttributes(container.resources);
     } else if (container.contains && container.contains.length > 0) {
-      calculCoordContainerAttributes(recourceWidthMax, container);
+      calculCoordContainerAttributes(recourceWidthMax, container, container.contains);
+    } else if(contains) {
+      calculCoordContainerAttributes(recourceWidthMax, container, contains);
     }
   }
   return { x: newX, y: newY, heightMax: resourceHeightMax };
