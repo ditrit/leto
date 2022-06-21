@@ -192,7 +192,6 @@ export default {
 				}				
 				createTerraformObject(terraformObject,data, svgParent, parentName, content, level);
 			})
-			console.log(rootTreeObject)
 		}
 
 		function createTerraformObject(terraformObject,SVGData, svgParent, parentName, content, level) {
