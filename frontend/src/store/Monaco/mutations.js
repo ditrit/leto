@@ -27,7 +27,8 @@ export const ADD_CONTENT_IN_ROOT = (state,resource)=>{
 function removeContent(datas, ids) {
 	let removeResource = [];
 	datas.forEach(resource => {
-		if(resource.name + '_' + resource.type === ids[0]) {
+		const resourceId = (resource.value) ? resource.value.name + '_' + resource.value.type : resource.name + '_' + resource.type;
+		if(resourceId === ids[0]) {
 			if(ids.length > 1) {
 				ids.shift();
 				removeResource = removeContent(resource.contains, ids);
@@ -43,10 +44,12 @@ function removeContent(datas, ids) {
 
 function getContainer(datas, id) {
 	let container = null;
+	
 	datas.forEach(resource => {
-		if(resource.name + '_' + resource.type === id) {
-			container = resource;
-		}
+		const resourceId = (resource.value) ? resource.value.name + '_' + resource.value.type : resource.name + '_' + resource.type;
+		if(resourceId === id) {
+			container = resource;		
+		} 
 		if(resource.contains) {
 			const object = getContainer(resource.contains, id);
 			if(object !== null) container = object;
