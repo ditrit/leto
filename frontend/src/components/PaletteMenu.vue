@@ -44,7 +44,7 @@
           >
             <template v-slot:item="props">
               <div class="q-pa-xs col-xs-12 col-sm-6 col-md-6 text-primary">
-                <q-card class="my-card" @click="onClick">
+                <q-card class="leto-palette-card" @click="onClick">
                   <q-tooltip class="text-body2" v-if="props.row.description">
                     {{ props.row.description }}
                   </q-tooltip>
@@ -110,7 +110,7 @@ export default defineComponent({
 })
 </script>
 <style lang="sass" scoped>
-.my-card
+.leto-palette-card
   max-width: 250px
   cursor: pointer
 </style>
