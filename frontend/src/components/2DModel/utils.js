@@ -1,6 +1,4 @@
 const d3 = require("d3");
-
-import { Int8BufferAttribute } from "three";
 import TerraformObjectNode from "./TerraformObjectNode";
 
 export function storeOutputLinkInData(node,currentModelId,link){

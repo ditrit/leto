@@ -1,4 +1,3 @@
-import { csvParse } from "d3";
 import LetoObjectNode from "./LetoObjectNode";
 import SVGinstanciate from "./svgvar.js";
 import { getModelAbsPos } from "./utils";

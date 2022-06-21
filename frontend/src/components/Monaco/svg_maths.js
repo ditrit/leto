@@ -10,6 +10,7 @@ export function calculAttributesObjects(datas) {
   const blocks = [];
   const noRelations = [];
   const orderResources = (datas.provider.length > 0) ? datas.provider[0].orderResources : [];
+  
   datas.resources.forEach((r) => {
 		r.id = r.name + "_" + r.type;
     if (r.representation == 'container') {
@@ -112,23 +113,7 @@ export function calculAttributesObjects(datas) {
     let find = false;
     if (r.representation != 'container') {
       containers.forEach((c) => {
-        c.contains.forEach( contain => {
-          if(contain.value == r) {
-            find = true;
-          }
-        })
-        c.containers.forEach( container => {
-          if(container.value == r) {
-            find = true;
-          }
-        })
-        if(c.resources) {
-          c.resources.forEach( resource => {
-            if(resource.value == r) {
-              find = true;
-            }
-          })
-        }
+        find = (!find) ? checkContainsResource(c, r, false) : find;
       });
       if (!find && !blocks.includes(r)) {
         for (let i = 0; i < orderResources.length; i++) {
@@ -154,23 +139,7 @@ export function calculAttributesObjects(datas) {
     let find = false;
     if (r.representation != 'container') {
       containers.forEach((c) => {
-        c.contains.forEach( contain => {
-          if(contain.value == r) {
-            find = true;
-          }
-        })
-        c.containers.forEach( container => {
-          if(container.value == r) {
-            find = true;
-          }
-        })
-        if(c.link) {
-          c.link.forEach( l => {
-            if(l.value == r) {
-              find = true;
-            }
-          })
-        }
+        find = checkContainsResource(c, r, true);
       });
       datas.resources.forEach((c) => {
         if(c.link) {
@@ -337,6 +306,30 @@ export function calculAttributesObjects(datas) {
   return resources;
 }
 
+function checkContainsResource(container, resource, links){  
+  let find = false;
+
+  container.contains.forEach( contain => {
+    if(contain.value == resource) {
+      find = true;
+    }
+  })
+  container.containers.forEach( c => {
+    if(c.value == resource) {
+      find = true;
+    }
+  })
+  if(links && container.link) {
+    container.link.forEach( l => {
+      if(l.value == resource) {
+        find = true;
+      }
+    })
+  }
+
+  return find;
+}
+
 function calculDimensionModuleAttributes(resources, height, width) {  
   for (let i = 0; i < resources.length; i++) {
     if (i + 1 < resources.length && resources[i + 1].order != resources[i].order) {
@@ -356,35 +349,43 @@ function calculDimensionModuleAttributes(resources, height, width) {
   return {width, height};
 }
 
-function calculDimensionContainerAttributes(container, widthMax, remove, heightMin, height, contains) {
+function formatDatas(container, widthMax, remove, height, contains) {
   const initialWidth = (container.width !== undefined) ? container.width : 0;
   const initialHeight = (container.height !== undefined) ? container.height - 20 : 0;
-  let index = contains.length - 2;
-  let dimensions, width = 0;
-  if(contains.length === 1) {
-    index = contains.length - 1;
-  }
+  let index = (contains.length === 1) ? contains.length - 1 : contains.length - 2;
+  let width = 0;  
   const content = (contains.length > 0 && contains[index].value) ? contains[index].value : contains[index];
   const lastX = (content !== undefined && content.drawingObject) ? content.drawingObject.x : contains.x;
   let widthResource = (lastX != undefined) ? lastX : 0;
-  contains.forEach(resource => {   
+
+  const dimensions = calculDimensionContainerAttributes(contains, widthMax, remove, widthResource, height, width);
+  width = dimensions.width;
+  height = dimensions.height;
+  
+  width = (width < initialWidth && !remove) ? initialWidth : width;
+  height = (height < initialHeight && !remove) ? initialHeight : height;
+
+  return {width, height};
+}
+
+function calculDimensionContainerAttributes(container, widthMax, remove, widthResource, height, width) {
+  let dimensions;
+
+  container.forEach(resource => {   
     const object = (resource.value) ? resource.value : resource;
     if (object.contains !== undefined && object.contains.length > 0) {
       dimensions = calculDimensionContainer(object, widthMax, height, width, remove);
     } else {
       object.width = 0;
       object.height = 0;
-      dimensions = calculDimensionResource(width, height, widthResource, 250, widthMax, heightMin);
+      dimensions = calculDimensionResource(width, height, widthResource, 250, widthMax, 70);
     }
     width = dimensions.width;
     height = dimensions.height;
     widthResource = dimensions.widthResource;
   });
-  
-  width = (width < initialWidth && !remove) ? initialWidth : width;
-  height = (height < initialHeight && !remove) ? initialHeight : height;
 
-  return {width, height};
+  return {width, height, widthResource};
 }
 
 function calculDimensionResource(width, height, widthResource, widthMin, widthMax, heightMin) {
@@ -432,11 +433,11 @@ export function calcul_dimensions(container, width, widthMax, remove, contains) 
     width = dimensions.width;
     height = dimensions.height;
   } else if (container.contains && container.contains.length > 0) {
-    dimensions = calculDimensionContainerAttributes(container, widthMax, remove, heightMin, height, container.contains);
+    dimensions = formatDatas(container, widthMax, remove, height, container.contains);
     width = dimensions.width;
     height = dimensions.height;
   } else if (contains && contains.length > 0) {
-    dimensions = calculDimensionContainerAttributes(container, widthMax, remove, heightMin, height, contains);
+    dimensions = formatDatas(container, widthMax, remove, height, contains);
     width = dimensions.width;
     height = dimensions.height;
   } else {
@@ -499,7 +500,8 @@ function calculCoordContainerAttributes(recourceWidthMax, container, contains) {
   let containerHeightMax = 0;
   
   contains.forEach((content) => {
-    const drawingObject = (content.value) ? content.value : ((content.drawingObject) ? content.drawingObject : content);
+    let drawingObject = (content.value) ? content.value : content;
+    drawingObject = (content.drawingObject) ? content.drawingObject : drawingObject;
     const object = (content.value) ? content.value : content;
     const xy = calculCoordResource(drawingObject, cox, coy, container, recourceWidthMax, containerHeightMax);
     cox = xy.x;
