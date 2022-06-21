@@ -68,13 +68,14 @@ export function calculAttributesObjects(datas) {
     if (r.representation != 'container') {
       if (r.resourcesObject.length > 0) {
         r.resourcesObject.forEach((ro) => {
+          const multiple = (ro.array === undefined) ? false : ro.array;
           containers.forEach((c) => {
             if (c.name == ro.value.name && ro.representation == 'contained') {
-              c.contains.push({name : ro.name, value : r});
+              c.contains.push({name : ro.name, required : ro.required, multiple : multiple, value : r});
             } else if (c.name == ro.value.name && ro.representation == 'containedInOtherContainer') {
-              c.containers.push({name : ro.name, value : r});
+              c.containers.push({name : ro.name, required : ro.required, multiple : multiple, value : r});
             } else if (c.name == ro.value.name && ro.representation == 'link') {
-              c.link.push({name : ro.name, value : r});
+              c.link.push({name : ro.name, required : ro.required, multiple : multiple, value : r});
             }
           });
         });
@@ -85,6 +86,7 @@ export function calculAttributesObjects(datas) {
   datas.resources.forEach((r) => {
     if (r.resourcesObject.length > 0) {
       r.resourcesObject.forEach((ro) => {
+        const multiple = (ro.array === undefined) ? false : ro.array;
         datas.resources.forEach((c) => {
           if (c.name == ro.value.name && c.type == ro.value.type && ro.representation == 'link') {
             let find = false;
@@ -93,15 +95,15 @@ export function calculAttributesObjects(datas) {
                 if(l.name === ro.name && l.value.name === r.name) find = true;
               })
               if(!find)
-                c.link.push({name : ro.name, value : r});
+                c.link.push({name : ro.name, required : ro.required, multiple : multiple, value : r});
             } else {
-              c.link = [{name : ro.name, value : r}];
+              c.link = [{name : ro.name, required : ro.required, multiple : multiple, value : r}];
             }
           } else if (c.name == ro.value.name && c.type == ro.value.type && ro.representation == 'inverseLink') {
-            if (r.link && !r.link.includes({name : ro.name, value : c})) {
-              r.link.push({name : ro.name, value : c});
+            if (r.link && !r.link.includes({name : ro.name, required : ro.required, multiple : multiple, value : c})) {
+              r.link.push({name : ro.name, required : ro.required, multiple : multiple, value : c});
             } else {
-              r.link = [{name : ro.name, value : c}];
+              r.link = [{name : ro.name, required : ro.required, multiple : multiple, value : c}];
             }
           }
         });
@@ -185,8 +187,9 @@ export function calculAttributesObjects(datas) {
 
   containers.forEach((c) => {
     c.resourcesObject.forEach((ro) => {
+      const multiple = (ro.array === undefined) ? false : ro.array;
       if (ro.representation == 'contained') {
-        c.contains.push({name : ro.name, value : ro.value});
+        c.contains.push({name : ro.name, required : ro.required, multiple : multiple, value : ro.value});
       }
     });
   });
