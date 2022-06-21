@@ -20,7 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - UserFileData function.
 - API calls naming convention (Users, EnviTypes, Roles, Authorizations).
-
+- Default parent workspace value in workspace creation
+- Mandatory fields in workspace creation
 - Unused properties in table.
 - Partial clean.
 - .DS_Store.
