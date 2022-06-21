@@ -4,9 +4,10 @@ import { getModelAbsPos } from "./utils";
 const d3 = require("d3");
 
 export default class TerraformObjectNode extends LetoObjectNode {
-	constructor(terraformTypeNode,instance_name,level,id){
-		super(terraformTypeNode,instance_name,level,id);
+	constructor(terraformTypeNode,instance_name,level,id, parentId){
+		super(terraformTypeNode, instance_name, level, id, parentId);
 		this.contains=[];
+		this.parentId = parentId;
 		this.level=level;
 		this.attributes = terraformTypeNode.attributes;
 
@@ -19,15 +20,14 @@ export default class TerraformObjectNode extends LetoObjectNode {
 			logopath: this.logo_path,
 			primary_color: this.primary_color,
 			secondary_color: this.secondary_color,
-      x:0,
-      y:0,
+			x:0,
+			y:0,
 			id: this.id
 		}
 
 	}
 
     drawSVG(svgs, svgParent, parentName, content, level, drag) {
-
         let data = { logopath: this.drawingObject.logopath,  width: this.drawingObject.width, height: this.drawingObject.height, name: this.drawingObject.name, type: this.drawingObject.type, id : this.id };
         const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
         d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
@@ -136,6 +136,10 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
     setY(y) {
         this.drawingObject.y = y;
+    }
+
+    setContains(contains) {
+        this.contains = contains;
     }
 
 		static getLinkAnchors(beginId,endId){

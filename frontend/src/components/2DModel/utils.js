@@ -1,5 +1,4 @@
 const d3 = require("d3");
-
 import TerraformObjectNode from "./TerraformObjectNode";
 
 export function storeOutputLinkInData(node,currentModelId,link){
@@ -219,7 +218,6 @@ export function removeContentInData(node,parentId,letoObjectNode){
 	removeContentInData(node.rightSibling,parentId,letoObjectNode);
 }
 
-
 export function getLetoTypeNodeFromData(panelList,modelType){
 	let letoType;
 	panelList.forEach(element=>{
@@ -231,4 +229,16 @@ export function getLetoTypeNodeFromData(panelList,modelType){
 		}
 	})
 	return letoType;
+}
+
+export function getParent(node,parentId){
+	if (node == null) {
+		return;
+	} else if(node.drawingObject.id == (parentId)){
+		return node;
+	}
+	let result = getParent(node.contains[0],parentId);
+	if(result === undefined) result = getParent(node.rightSibling,parentId);
+	else if(node.drawingObject.id !== 'svg0') result = node;
+	return result;
 }
