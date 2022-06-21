@@ -162,6 +162,7 @@ export default {
 			optionsSelections.value = [...new Set(dataReturned)].filter(
 				(item) => item != null
 			);
+			selectedParentData.value = dataReturned[0];
 		};
 		getAllDomains();
 
