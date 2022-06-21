@@ -1,7 +1,7 @@
 <template>
 	<div class="q-pa-md stepper_wrapper">
 		<q-form
-			@submit="step === 3 ? onSubmit() : $refs.stepper.next()"
+			@submit="onSubmit($refs.stepper)"
 			class="q-gutter-md"
 		>
 			<q-stepper
@@ -37,7 +37,7 @@
 						<div class="col">
 							<q-input
 								filled
-								label="Short description"
+								label="Short description *"
 								lazy-rules
 								:rules="[
 									(val) => (val && val.length > 0) || 'Please type something',
@@ -85,7 +85,7 @@
 						<div class="flex justify-center">
 							<q-btn
 								v-if="step <= 2"
-								@click="$refs.stepper.next()"
+								type="submit"
 								color="positive"
 								label="Next"
 								style="padding: 15px 50px"
@@ -186,8 +186,11 @@ export default {
 			logoUrl,
 			imagesUID,
 			uploadFile,
-
-			onSubmit() {
+			onSubmit(stepper) {
+				if (this.step < 3) {
+					stepper.next();
+					return;
+				}
 				try {
 					const newDomain = {
 						pid: selectedParentData.value.id,
