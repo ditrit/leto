@@ -19,7 +19,7 @@ export const addDomain = async ({ commit }, domain) => {
 	commit("NEW_DOMAIN", response.data);
 };
 export const updateDomain = async ({ commit }, domain) => {
-	let response = await API.put(`/domain/${domain.id}`, domain);
+	let response = await API.put(`/domain/${domain.ID}`, domain);
 	commit("UPDATE_DOMAIN", response.data);
 };
 
