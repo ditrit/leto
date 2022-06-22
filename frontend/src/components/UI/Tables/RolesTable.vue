@@ -41,11 +41,11 @@
 			</template>
 		</q-table>
 
-		<Modal class="modalGlobal" v-model="openAddRoleDialog" persistent>
+		<Modal class="modalGlobal" v-model="openAddRoleDialog">
 			<template v-slot:ModalTitle> {{ $t("create_role") }} </template>
 			<template v-slot:ModalContent>
 				<q-form
-					@submit.prevent="onSubmitAdd"
+					@submit="onSubmitAdd"
 					@reset="onResetAdd"
 					class="q-gutter-md q-pa-md"
 				>
@@ -87,8 +87,8 @@
 						align="right"
 						class="text-primary flex justify-center"
 					>
-						<q-btn type="reset" label="Cancel" v-close-popup />
-						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+						<q-btn type="reset" label="Cancel" />
+						<q-btn label="Create" type="submit" color="primary" />
 					</q-card-actions>
 				</q-form>
 			</template>
@@ -207,6 +207,7 @@ export default {
 				roleName.value = "";
 				roleShortDescription.value = "";
 				roleDescription.value = "";
+				openAddRoleDialog.value = false;
 				$q.notify({
 					type: "positive",
 					message: "Role has been successfully created",
