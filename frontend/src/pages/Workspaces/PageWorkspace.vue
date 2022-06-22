@@ -27,7 +27,9 @@
 				<div class="buttons_wrapper">
 					<div class="teams_buttons__container">
 						<ModalStepper :oepnDialog="oepnDialog">
-							<template v-slot:ModalHeadline> {{ $t("add_team") }} </template>
+							<template v-slot:ModalHeadline>
+								{{ $t("create_workspace") }}
+							</template>
 							<template v-slot:ModalBody>
 								<CreationFormStepper />
 							</template>
@@ -41,13 +43,13 @@
 
 <script>
 import { ref } from "vue";
-import useDomainData from "../../composables/WorkSpace/useDomainData.js";
+import useDomainData from "src/composables/WorkSpace/useDomainData.js";
 import ModalStepper from "components/UI/Dialogs/ModalStepper.vue";
 import PageContent from "components/Content/PageContent";
 import CreationFormStepper from "components/UI/Stepper/CreationFormStepper";
 import AjaxBar from "components/UI/Progress/AjaxBar";
 import AccountSettings from "components/UI/Profil/AccountSettings";
-import { pageSizeTweak } from "../../common/index";
+import { pageSizeTweak } from "src/common/index";
 
 export default {
 	name: "PageTeams",
@@ -64,9 +66,7 @@ export default {
 			useDomainData();
 		const filter = ref("");
 		const filterRef = ref(null);
-
 		const oepnDialog = ref(false);
-
 		const drawer = ref(true);
 		const teamData = ref([
 			{

@@ -11,6 +11,12 @@
 			>
 				<q-tab v-if="tags" dense name="tags" label="Tags" icon="sell" />
 				<q-tab dense name="products" label="Products" icon="apps" />
+				<q-tab
+					dense
+					name="subworkspace"
+					label="Sub workspace"
+					icon="mdi-source-branch"
+				/>
 				<q-tab dense name="requirements" label="Requirements" icon="info" />
 				<q-tab
 					dense
@@ -137,6 +143,118 @@
 													(val && val.length > 0) || 'Please type something',
 											]"
 											v-model="productDescription"
+										/>
+									</div>
+									<FileUploader @uploadAction="uploadFile" />
+								</div>
+								<q-card-actions
+									align="right"
+									class="text-primary flex justify-center"
+								>
+									<q-btn type="reset" label="Cancel" v-close-popup />
+									<q-btn
+										label="Create"
+										type="submit"
+										color="primary"
+										v-close-popup
+									/>
+								</q-card-actions>
+							</q-form>
+						</template>
+					</Modal>
+				</q-tab-panel>
+
+				<q-tab-panel name="subworkspace" class="flex q-gutter-md">
+					<div
+						class="cards_wrapper"
+						v-for="subworkspace in workspaceSubworkspaces"
+						:key="subworkspace.ID"
+					>
+						<div>
+							<SubWorkspaceTabCard
+								:id="subworkspace.ID"
+								:parentID="subworkspace.ParentID"
+								:name="subworkspace.Name"
+								:shortDescription="subworkspace.ShortDescription"
+								:description="subworkspace.Description"
+								:logo="subworkspace.Logo ? subworkspace.Logo : logo"
+								:repositoryURL="subworkspace.GitURL"
+								@deleteProductAction="
+									confirmDeleteSubworkspace(subworkspace.ID)
+								"
+							/>
+						</div>
+					</div>
+					<div class="panel_add__btn q-pa-md q-gutter-sm absolute-bottom-right">
+						<q-btn
+							color="white"
+							text-color="primary"
+							icon="add"
+							class="text-primary"
+							label="New subworkspace"
+							@click.prevent="openCreationProductModal(productTeam)"
+						/>
+					</div>
+					<!-- Subworkspaces Creation dialog -->
+					<Modal class="modalGlobal" v-model="isCreationProductsOpened">
+						<template v-slot:ModalTitle>
+							{{ $t("create_workspace") }}
+						</template>
+						<template v-slot:ModalContent>
+							<q-form
+								@submit.prevent="addNewSubworkspace"
+								@reset="onResetProduct"
+								class="q-gutter-sm q-pa-md"
+							>
+								<div class="row col-md-12 q-gutter-md">
+									<div class="col">
+										<q-input
+											filled
+											label="Name *"
+											hint=""
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+											v-model="subworkspaceName"
+										/>
+									</div>
+								</div>
+								<q-input
+									class="q-gutter-md"
+									filled
+									label="Short Description *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="subworkspaceShortDescription"
+								/>
+								<q-input
+									class="q-gutter-md"
+									filled
+									label="Git provider *"
+									lazy-rules
+									:rules="[
+										(val) => (val && val.length > 0) || 'Please type something',
+									]"
+									v-model="subworkspaceProductRepositoryURL"
+								/>
+
+								<div class="row q-gutter-md">
+									<div class="col col-md-8">
+										<q-input
+											class="q-gutter-md"
+											filled
+											type="textarea"
+											label="Description *"
+											lazy-rules
+											:rules="[
+												(val) =>
+													(val && val.length > 0) || 'Please type something',
+											]"
+											v-model="subworkspaceDescription"
 										/>
 									</div>
 									<FileUploader @uploadAction="uploadFile" />
@@ -488,24 +606,27 @@
 </template>
 <script>
 import { ref, computed } from "vue";
-import LibraryTabCard from "../Cards/LibraryTabCard.vue";
-import EnvironemtsTabCard from "../Cards/EnvironemtsTabCard.vue";
-import AuthorizationsTabCard from "../Cards/AuthorizationsTabCard.vue";
-import ProductsTabCard from "../Cards/ProductsTabCard.vue";
-import RequirementsTabCard from "../Cards/RequirementsTabCard.vue";
-import useEnvironmentsTabsData from "../../../composables/TabPanels/useEnvironmentsTabsData";
-import useAuthorizationsTabsData from "../../../composables/TabPanels/useAuthorizationsTabsData";
-import useProductsTabData from "../../../composables/TabPanels/useProductsTabData";
-import useLibraryTabData from "../../../composables/TabPanels/useLibraryTabData";
-import Modal from "../Dialogs/Modal.vue";
-import FileUploader from "../Form/FileUploader.vue";
-import useFileData from "../../../composables/Forms/userFileData";
+import LibraryTabCard from "components/UI/Cards/LibraryTabCard.vue";
+import EnvironemtsTabCard from "components/UI/Cards/EnvironemtsTabCard.vue";
+import AuthorizationsTabCard from "components/UI/Cards/AuthorizationsTabCard.vue";
+import ProductsTabCard from "components/UI//Cards/ProductsTabCard.vue";
+import SubWorkspaceTabCard from "components/UI/Cards/SubWorkspaceTabCard.vue";
+import RequirementsTabCard from "components/UI/Cards/RequirementsTabCard.vue";
+import useEnvironmentsTabsData from "src/composables/TabPanels/useEnvironmentsTabsData";
+import useAuthorizationsTabsData from "src/composables/TabPanels/useAuthorizationsTabsData";
+import useProductsTabData from "src/composables/TabPanels/useProductsTabData";
+import useLibraryTabData from "src/composables/TabPanels/useLibraryTabData";
+import useSubworkspaceTabData from "src/composables/TabPanels/useSubworkspaceTabData";
+import Modal from "components/UI/Dialogs/Modal.vue";
+import FileUploader from "components/UI//Form/FileUploader.vue";
+import useFileData from "src/composables/Forms/userFileData";
 
 export default {
 	components: {
 		LibraryTabCard,
 		EnvironemtsTabCard,
 		ProductsTabCard,
+		SubWorkspaceTabCard,
 		RequirementsTabCard,
 		AuthorizationsTabCard,
 		Modal,
@@ -666,6 +787,17 @@ export default {
 			addNewProduct,
 			updateProduct,
 		} = useProductsTabData(props);
+		let {
+			workspaceSubworkspaces,
+			subworkspaceName,
+			subworkspaceShortDescription,
+			subworkspaceDescription,
+			subworkspaceRepositoryURL,
+			deleteSubworkspace,
+			confirmDeleteSubworkspace,
+			addNewSubworkspace,
+			updateSubworkspace,
+		} = useSubworkspaceTabData(props);
 
 		let {
 			librariesList,
@@ -695,7 +827,6 @@ export default {
 		const isModificationProductsOpened = ref(false);
 		const isEnvironmentsModificationOpened = ref(false);
 		const authorizationDomainNameRef = ref(null);
-
 		const domainList = ref(null);
 		const domainNameRef = ref(null);
 
@@ -801,6 +932,15 @@ export default {
 			confirmDeleteProduct,
 			addNewProduct,
 			updateProduct,
+			workspaceSubworkspaces,
+			subworkspaceName,
+			subworkspaceShortDescription,
+			subworkspaceDescription,
+			subworkspaceRepositoryURL,
+			deleteSubworkspace,
+			confirmDeleteSubworkspace,
+			addNewSubworkspace,
+			updateSubworkspace,
 			environmentTeam,
 			addNewAuthorization,
 			getAllEnviTypes,
