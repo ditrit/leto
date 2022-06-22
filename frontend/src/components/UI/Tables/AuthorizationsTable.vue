@@ -45,7 +45,7 @@
 			<template v-slot:ModalTitle> {{ $t("create_authorization") }} </template>
 			<template v-slot:ModalContent>
 				<q-form
-					@submit.prevent="onSubmitAdd(props)"
+					@submit="onSubmitAdd"
 					@reset="onResetAdd"
 					class="q-gutter-md q-pa-md"
 				>
@@ -54,22 +54,25 @@
 							<q-select
 								filled
 								:options="usersList"
-								label="User"
+								label="User *"
 								v-model="authorisationUser"
+								:rules="[(val) => val || 'Please select something']"
 							/>
 
 							<q-select
 								filled
 								:options="roleList"
-								label="Role"
+								label="Role *"
 								v-model="authorizationRole"
+								:rules="[(val) => val || 'Please select something']"
 							/>
 
 							<q-select
 								filled
 								:options="domainList"
-								label="Domain"
+								label="Domain *"
 								v-model="authorizsationDomain"
+								:rules="[(val) => val || 'Please select something']"
 							/>
 						</div>
 					</div>
@@ -78,8 +81,8 @@
 						align="right"
 						class="text-primary flex justify-center"
 					>
-						<q-btn type="reset" label="Cancel" v-close-popup />
-						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+						<q-btn type="reset" label="Cancel" />
+						<q-btn label="Create" type="submit" color="primary" />
 					</q-card-actions>
 				</q-form>
 			</template>
@@ -222,6 +225,7 @@ export default {
 				authorizsationDomain.value = "";
 				authorisationUser.value = "";
 				authorizationRole.value = "";
+				openAddAuthorizationDialog.value = false;
 				quasar.notify({
 					type: "positive",
 					message: "Authorizsation has been successfully created",
