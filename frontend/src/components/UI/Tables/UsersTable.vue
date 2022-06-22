@@ -47,13 +47,11 @@
 			class="modalGlobal"
 			v-show="openAddUserDialog"
 			v-model="openAddUserDialog"
-			persistent
-			position="bottom"
 		>
 			<template v-slot:ModalTitle> {{ $t("create_user") }} </template>
 			<template v-slot:ModalContent>
 				<q-form
-					@submit.prevent="onSubmitAdd"
+					@submit="onSubmitAdd"
 					@reset="onResetAdd"
 					class="q-gutter-md q-pa-md"
 				>
@@ -136,8 +134,8 @@
 						align="right"
 						class="text-primary flex justify-center"
 					>
-						<q-btn type="reset" label="Cancel" v-close-popup />
-						<q-btn label="Create" type="submit" color="primary" v-close-popup />
+						<q-btn type="reset" label="Cancel" />
+						<q-btn label="Create" type="submit" color="primary" />
 					</q-card-actions>
 				</q-form>
 			</template>
@@ -313,6 +311,7 @@ export default {
 				userFirstName.value = "";
 				userLastName.value = "";
 				userEmail.value = "";
+				openAddUserDialog.value = false;
 				$q.notify({
 					type: "positive",
 					message: "User has been successfully created",
