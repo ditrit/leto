@@ -39,7 +39,7 @@ export default {
 			let svg = d3.select('#root');
 			let currentTfTypeNode = getLetoTypeNodeFromData(terraformPanelList.value,currentModel.getElementById("type").textContent.replace(/\s+/g, ''));
 			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentModel.getElementById("name").textContent.replace(/\s+/g, ''),0,currentModel.id,currentModel.parentNode.parentNode.id);
-			
+
 			if (currentModel.parentNode.getAttribute("id") != "svg0") {
 				let parent = getParent(rootTreeObject.value,currentModel.parentNode.parentNode.id);
 				removeContentInData(rootTreeObject.value,currentModel.parentNode.parentNode.id,currentTfObjectNode);
@@ -189,7 +189,7 @@ export default {
 				} else {
 					data = SVGData;
 					terraformObject = SVGData;
-				}				
+				}
 				createTerraformObject(terraformObject,data, svgParent, parentName, content, level);
 			})
 		}
@@ -308,7 +308,6 @@ export default {
 				.attr("height", 2000);
 
 			let palette = new Palette(terraformPanelList.value);
-			palette.drawPalette(svgs.value, clickOnPalette);
 		});
 
 		return {
