@@ -26,89 +26,89 @@ const routes = [
 		children: [
 			{
 				path: "home",
-				component: () => PageHome,
+				component: PageHome,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/profile",
-				component: () => PageHomeProfile,
+				component: PageHomeProfile,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/products",
-				component: () => PageHomeProducts,
+				component: PageHomeProducts,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "home/workspaces",
-				component: () => PageHomeWorkspaces,
+				component: PageHomeWorkspaces,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "workspaces",
-				component: () => PageWorkspace,
+				component: PageWorkspace,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "workspaces/:id",
-				component: () => PageWorkspaceChild,
+				component: PageWorkspaceChild,
 				props: true,
 				meta: { requiresAuth: true },
 			},
 
 			{
 				path: "libraries",
-				component: () => PageLibraries,
+				component: PageLibraries,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings",
-				component: () => PageSettingsUsers,
+				component: PageSettingsUsers,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/users",
-				component: () => PageSettingsUsers,
+				component: PageSettingsUsers,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings/roles",
-				component: () => PageSettingsRoles,
+				component: PageSettingsRoles,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/authorizations",
-				component: () => PageSettingsAuthorizations,
+				component: PageSettingsAuthorizations,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/requirements",
-				component: () => PageSettingsRequirements,
+				component: PageSettingsRequirements,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/tags",
-				component: () => PageSettingsTags,
+				component: PageSettingsTags,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/environmentstypes",
-				component: () => PageSettingsEnviType,
+				component: PageSettingsEnviType,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "settings/dashboard",
-				component: () => PageSettingsDashboard,
+				component: PageSettingsDashboard,
 				meta: { requiresAuth: true },
 			},
 			{
 				path: "product",
-				component: () => PageProductChild,
+				component: PageProductChild,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "product/:id",
-				component: () => PageProductChild,
+				component: PageProductChild,
 				props: true,
 				meta: { requiresAuth: false },
 			},
@@ -116,22 +116,22 @@ const routes = [
 	},
 	{
 		path: "/login",
-		component: () => LoginLayout,
+		component: LoginLayout,
 		children: [
 			{
 				path: "/login",
-				component: () => LoginPage,
+				component: LoginPage,
 			},
 			{
 				path: "/register",
-				component: () => RegisterPage,
+				component: RegisterPage,
 			},
 		],
 	},
 	{ path: "", redirect: "/login" },
 	{
 		path: "/:catchAll(.*)*",
-		component: () => Page404,
+		component: Page404,
 	},
 ];
 
