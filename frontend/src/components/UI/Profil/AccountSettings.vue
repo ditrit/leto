@@ -3,19 +3,16 @@
 		<q-item clickable>
 			<q-item-section>
 				<q-avatar round size="40px" v-if="user">
-					<img :src="user.user.Logo ? user.user.Logo : logo" />
+					<img
+						:src="user.user.Logo ? user.user.Logo : logo"
+						alt="user avatar"
+					/>
 				</q-avatar>
 			</q-item-section>
 		</q-item>
 		<q-menu>
 			<div class="row no-wrap q-pa-md">
 				<q-list separator>
-					<q-item clickable v-ripple>
-						<q-item-section>
-							<router-link to="/dashboard">Dashboard</router-link>
-						</q-item-section>
-					</q-item>
-
 					<q-item clickable v-ripple>
 						<q-item-section>
 							<q-item-label>
@@ -33,7 +30,10 @@
 
 				<div class="column" v-if="user">
 					<q-avatar size="72px">
-						<img :src="user.user.Logo ? user.user.Logo : logo" />
+						<img
+							:src="user.user.Logo ? user.user.Logo : logo"
+							alt="user avatar"
+						/>
 					</q-avatar>
 
 					<div class="q-mt-md q-mb-xs">
@@ -54,16 +54,17 @@
 	</div>
 </template>
 <script>
-import { ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import LangSwitcher from "../../LangSwitcher.vue";
+import LangSwitcher from "components/LangSwitcher.vue";
+import profilImg from "src/assets/profil.png";
+
 export default {
 	components: { LangSwitcher },
 	props: {
 		logo: {
 			type: String,
-			default: "https://cdn.quasar.dev/img/boy-avatar.png",
+			default: profilImg,
 		},
 	},
 	setup() {
