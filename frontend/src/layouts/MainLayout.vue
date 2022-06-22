@@ -45,12 +45,6 @@ const linksToolsList = [
 	},
 	{
 		title: "",
-		caption: "Libraries",
-		icon: "library_books",
-		link: "#/libraries",
-	},
-	{
-		title: "",
 		caption: "Settings",
 		icon: "settings",
 		link: "#/settings",

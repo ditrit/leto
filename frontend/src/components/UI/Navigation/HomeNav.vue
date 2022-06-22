@@ -19,7 +19,6 @@ import { ref } from "vue";
 export default {
 	setup() {
 		const navigationItem = ref([
-			{ label: "My Profile", link: "/home/profile", icon: "user" },
 			{ label: "My Products", link: "/home/products", icon: "group" },
 			{ label: "My Workspaces", link: "/home/workspaces", icon: "group" },
 		]);
