@@ -222,6 +222,9 @@ export default {
 							targetId : endId,
 							sourceId : beginId,
 							id : linkId,
+							variableName : blockBegin.name,
+							required : blockBegin.required,
+							multiple : blockBegin.multiple,
 						}
 						storeOutputLinkInData(rootTreeObject.value,beginId,link);
 						storeInputLinkInData(rootTreeObject.value,endId,link)
