@@ -36,6 +36,18 @@ export default {
 							.on("start", dragstarted)
 							.on("drag", dragged)
 							.on("end", dragended));
+		const dragLink = ref(d3.drag()
+							.on("start",dragLinkStarted)
+							.on("drag",draggedLink)
+							.on("end",dragLinkEnded));
+		const drawingLink = ref({
+			source: null,
+			resourceType: null,
+			id: null,
+			target: null,
+			variableName: null,
+			multiple: null,
+		});
 
 		function dragstarted() {
 			let currentModel = this.parentNode;
@@ -260,7 +272,7 @@ export default {
 			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name, 'svg0');
 			terraformObject.id = terraformObject.instance_name+"_"+ terraformObject.type_name;
 
-			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, drag);
+			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, drag, dragLink, rootTreeObject.value,drawingLink.value);
 			d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
 
 			if (rootTreeObject.value.contains.length!=0){
@@ -307,7 +319,7 @@ export default {
 			terraformObject.setWidth(object.width);
 			terraformObject.setX(object.x);
 			terraformObject.setY(object.y);
-			terraformObject.drawSVG(svgs, svgParent, parentName, content, level, drag);
+			terraformObject.drawSVG(svgs, svgParent, parentName, content, level, drag, dragLink, rootTreeObject.value,drawingLink.value);
 			const model = document.getElementById(`${object.id}`);
 			if(SVGData.contains) {
           		drawSVGs(SVGData.contains, model, `${object.id}`, true, level + 1)

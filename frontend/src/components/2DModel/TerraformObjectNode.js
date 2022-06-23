@@ -162,20 +162,20 @@ export default class TerraformObjectNode extends LetoObjectNode {
 			let beginAnchor;
 			let endAnchor;
 			if (Math.abs(xDiff)>=Math.abs(yDiff) && xDiff>=0){
-				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_left");
-				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_right");
+				beginAnchor = document.getElementById(beginId+"output_anchor_left");
+				endAnchor = document.getElementById(endId+"input_anchor_right");
 			}
 			else if(Math.abs(xDiff)<Math.abs(yDiff) && yDiff>=0){
-				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_top");
-				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_bottom");
+				beginAnchor = document.getElementById(beginId+"output_anchor_top");
+				endAnchor = document.getElementById(endId+"input_anchor_bottom");
 			}
 			else if (Math.abs(xDiff)>=Math.abs(yDiff) && xDiff<=0){
-				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_right");
-				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_left");
+				beginAnchor = document.getElementById(beginId+"output_anchor_right");
+				endAnchor = document.getElementById(endId+"input_anchor_left");
 			}
 			else if(Math.abs(xDiff)<Math.abs(yDiff) && yDiff<=0){
-				beginAnchor = document.getElementById(beginId).getElementById(beginId+"output_anchor_bottom");
-				endAnchor = document.getElementById(endId).getElementById(endId+"input_anchor_top");
+				beginAnchor = document.getElementById(beginId+"output_anchor_bottom");
+				endAnchor = document.getElementById(endId+"input_anchor_top");
 			}
 			return [beginAnchor,endAnchor];
 		}
