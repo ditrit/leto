@@ -410,7 +410,11 @@ export default {
 				.append("g")
 				.attr("id", "svg0");
 
-			let svg = d3.select('#root')
+			let svg = d3.select('#root').on("click",(e) => {
+						e.preventDefault();
+						let menu = document.getElementById("contextMenu")
+						menu.style.display = 'none';
+			})
 
 			fillDataStorage(monacoSourceData.value["resources"],"svg0",0);
 			drawSVGs(monacoSourceData.value["resources"], svg, "root", false, 0);
@@ -449,9 +453,33 @@ export default {
 			zoom,
 			translateX,
 			translateY,
-			rootTreeObject
+			rootTreeObject,
+			drawingLink
 		};
 	}
 }
 </script>
-<style></style>
+
+<style>
+.context-menu {
+  position: absolute;
+  text-align: center;
+  background: lightgray;
+  border: 1px solid black;
+}
+a:hover{
+	background: darkgray;
+	cursor: pointer;
+}
+.context-menu ul {
+  padding: 0px;
+  margin: 0px;
+  min-width: 150px;
+  list-style: none;
+}
+.context-menu ul li {
+  padding-bottom: 7px;
+  padding-top: 7px;
+  border: 1px solid black;
+}
+</style>

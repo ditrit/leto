@@ -27,14 +27,64 @@ export default class TerraformObjectNode extends LetoObjectNode {
 			y:0,
 			id: this.id
 		}
-
 	}
 
-    drawSVG(svgs, svgParent, parentName, content, level, drag) {
+    drawSVG(svgs, svgParent, parentName, content, level, drag, dragLink, rootTreeObject,drawingLink) {
         let data = { logopath: this.drawingObject.logopath,  width: this.drawingObject.width, height: this.drawingObject.height, name: this.drawingObject.name, type: this.drawingObject.type, id : this.id };
         const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
         d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
         const model = document.getElementById(`${this.id}`);
+
+				d3.select(model.getElementById("logo_frame")).call(dragLink.value);
+
+				d3.select(model.getElementById("logo_frame"))
+					.on("contextmenu",(e) => {
+						e.preventDefault();
+						const groups = d3.select('#root').selectAll('svg');
+						d3.selectAll(groups).select('#logo_frame').attr("fill","white");
+						let menu = document
+                    .getElementById("contextMenu");
+						let list = document.getElementById("contextMenuList");
+
+						d3.selectAll(list.children).remove();
+
+						let rootx = document.getElementById("root").getBoundingClientRect().x;
+						let rooty = document.getElementById("root").getBoundingClientRect().y;
+            menu.style.left = e.pageX-rootx + "px";
+            menu.style.top = e.pageY-rooty/2 + "px";
+
+						let currentLetoObj = {
+							attributes:null,
+						}
+						getAttributesInData(rootTreeObject,this.id,currentLetoObj);
+						let nLinkAttr = 0;
+						if(currentLetoObj.attributes){
+							currentLetoObj.attributes.forEach(attribute => {
+								if(attribute.representation == "link"){
+									nLinkAttr ++;
+									let listElem = document.createElement("li");
+									let listElemText = document.createElement("a");
+									d3.select(listElemText).on("click",function(){
+										menu.style.display = "none"
+										d3.select(model.getElementById("logo_frame")).attr("fill","green");
+										drawingLink.resourceType = this.textContent;
+										drawingLink.variableName = attribute.variableName;
+										drawingLink.multiple = attribute.array;
+									})
+									let text = document.createTextNode(attribute.resourceType);
+									listElemText.appendChild(text);
+									listElem.appendChild(listElemText);
+									list.appendChild(listElem);
+								}
+							})
+						}
+						if(nLinkAttr>0){
+							menu.style.display = 'block';
+						}
+						else{
+							menu.style.display = 'none';
+						}
+					})
 
         d3.select(model)
 					.append("svg:image")
