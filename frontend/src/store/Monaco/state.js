@@ -1,4 +1,5 @@
 export default {
+	isDrawerOn: false,
 	metadatas: [],
 	monacoSource: {
 		provider: [],

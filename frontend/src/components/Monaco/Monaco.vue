@@ -1,19 +1,19 @@
 <template>
 	<div>
 		<div class="monaco" ref="monacoContainer"></div>
-		<button :onClick="consoleClick" class="Button">
+		<!-- <button :onClick="consoleClick" class="Button">
 			<slot>Compiler</slot>
-		</button>
+		</button> -->
 	</div>
 </template>
 <script>
-import * as monaco from 'monaco-editor';
-import { hclTokensProvider } from './hclTokensProvider.js';
-import Button from '../UI/Buttons/BtnAddNew.vue';
-import { calculAttributesObjects } from './svg_maths.js';
-import { mapActions, mapGetters } from 'vuex';
-import { analyse_resources } from 'hcl/src/parser/compiler/schema_parser.js';
-import plugins from '../../assets/plugins/terraform/plugins';
+import * as monaco from "monaco-editor";
+import { hclTokensProvider } from "./hclTokensProvider.js";
+import Button from "../UI/Buttons/BtnAddNew.vue";
+import { calculAttributesObjects } from "./svg_maths.js";
+import { mapActions, mapGetters } from "vuex";
+import { analyse_resources } from "hcl/src/parser/compiler/schema_parser.js";
+import plugins from "../../assets/plugins/terraform/plugins";
 
 export default {
 	data() {
@@ -21,16 +21,16 @@ export default {
 			monacoEditor: {},
 			iactorDatas: {},
 			button: Button,
-			metadatas: {}
+			metadatas: {},
 		};
 	},
 	created() {
-		this.worker = new Worker(new URL('./iactor.js', import.meta.url));
+		this.worker = new Worker(new URL("./iactor.js", import.meta.url));
 		this.worker.onmessage = function (event) {
 			this.iactorDatas = event.data;
 			const provider = {
 				provider: this.iactorDatas.provider,
-			}
+			};
 			window.localStorage.setItem("monacoSource", JSON.stringify(provider));
 		};
 		this.worker.addEventListener("message", (event) => {
@@ -38,11 +38,13 @@ export default {
 			this.getMetaDatas();
 			this.metadatas = this.allMetadatas;
 			const data = event.data;
-			data.provider[0].orderResources = (this.metadatas.provider.orderResources) ? this.metadatas.provider.orderResources : [];
+			data.provider[0].orderResources = this.metadatas.provider.orderResources
+				? this.metadatas.provider.orderResources
+				: [];
 			analyse_resources(data.resources, this.metadatas.provider.resources);
-			data.resources = calculAttributesObjects(data);	
+			data.resources = calculAttributesObjects(data);
 			window.localStorage.setItem("monacoSource", JSON.stringify(data));
-			this.getSource();		
+			this.getSource();
 		});
 	},
 	mounted() {
@@ -93,8 +95,10 @@ export default {
 		});
 	},
 	computed: {
-		...mapGetters({ allMetadatas: "appMonaco/allMetadatas",
-						allMonacoSource : "appMonaco/allMonacoSource" }),
+		...mapGetters({
+			allMetadatas: "appMonaco/allMetadatas",
+			allMonacoSource: "appMonaco/allMonacoSource",
+		}),
 	},
 	methods: {
 		...mapActions({
@@ -104,48 +108,50 @@ export default {
 		consoleClick() {
 			this.worker.postMessage(this.valueEditor);
 			this.getSource();
+			console.log("consoleClick");
 		},
 		getSource() {
 			return this.getMonacoSource();
 		},
 		async getMetaDatas() {
-			const provider = JSON.parse(window.localStorage.getItem("monacoSource")).provider[0].name;
-			const plugin = plugins[provider]
-			const meta = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`)
+			const provider = JSON.parse(window.localStorage.getItem("monacoSource"))
+				.provider[0].name;
+			const plugin = plugins[provider];
+			const meta = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`);
 			await this.getMetaSource(meta);
 		},
 		onChange(value) {
 			this.valueEditor = value;
-		}, 
+		},
 		toStringResource(resource, type) {
 			let resourceToString = `${type} "${resource.type}" "${resource.name}" {`;
 			resourceToString += this.toStringObject(resource.objects.value);
 			resourceToString += `\n}`;
 			return resourceToString;
-		}, 
+		},
 		toStringProvider(provider, type) {
 			let providerToString = `${type} "${provider.name}" {`;
 			providerToString += this.toStringObject(provider.objects.value);
 			providerToString += `\n}`;
 			return providerToString;
-		}, 
-		toStringObject(objects) {	
-			let res = '';
+		},
+		toStringObject(objects) {
+			let res = "";
 			if (objects.length > 0) {
-				objects.forEach( object => {
-					if(typeof(object) === 'object') {	
+				objects.forEach((object) => {
+					if (typeof object === "object") {
 						res += `\n  ${object.name} {\n`;
 						object.objects.forEach((o) => {
 							res += `    ${o}\n`;
 						});
-						res += '  }';
+						res += "  }";
 					} else {
 						res += `\n  ${object}`;
-					}								
-				})
+					}
+				});
 			}
 			return res;
-		}
+		},
 	},
 };
 </script>

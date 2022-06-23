@@ -16,19 +16,7 @@
 		</q-header>
 		<AjaxBar />
 
-		<q-drawer
-			side="right"
-			show-if-above
-			bordered
-			:width="250"
-			:breakpoint="500"
-			class="bg-grey-3"
-		>
-			<h6>Object Details</h6>
-			<div id="detailsContainer"></div>
-		</q-drawer>
-
-		<Drawer v-model="drawer">
+		<Drawer v-model="drawer" id="drawerHamburgerMenu">
 			<template v-slot:drawerFilter>
 				<PaletteMenu :data="mockData"></PaletteMenu>
 			</template>
@@ -45,11 +33,9 @@
 			</template>
 		</Drawer>
 
-		<q-page-container class="q-pa-lg">
-			<q-page :style-fn="pageSizeTweak" class="q-mt-lg">
-				<ProductDetailsNavigation />
-			</q-page>
-		</q-page-container>
+		<q-page style="height: 100vh">
+			<ProductDetailsNavigation />
+		</q-page>
 	</q-layout>
 </template>
 
@@ -59,9 +45,9 @@ import AjaxBar from "components/UI/Progress/AjaxBar";
 import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import PaletteMenu from "components/PaletteMenu";
-import { pageSizeTweak } from "../../common/index";
-import useProductDetails from "../../composables/Products/useProductDetails";
-import useDomainData from "../../composables/WorkSpace/useDomainData";
+import { pageSizeTweak } from "src/common/index";
+import useProductDetails from "src/composables/Products/useProductDetails";
+import useDomainData from "src/composables/WorkSpace/useDomainData";
 import ProductDetailsNavigation from "components/UI/Stepper/ProductDetailsNavigation.vue";
 
 export default defineComponent({
@@ -81,6 +67,7 @@ export default defineComponent({
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
 		const selected = ref("DDS");
+		const drawerHamburgerMenu = ref(false);
 
 		let { store, router, $q, openProject } = useProductDetails();
 		openProject(props.id);
@@ -144,6 +131,7 @@ export default defineComponent({
 			OnEdit,
 			domainID,
 			openProject,
+			drawerHamburgerMenu,
 		};
 	},
 });
