@@ -297,7 +297,7 @@ export function fillAbleToLinkList(node,attribute,ableToLinkList){
 					count ++;
 				}
 			})
-			if(count==0 || (count>0 && attribute.multiple == true)){
+			if(count==0 || (count>0 && attribute.multiple)){
 				ableToLinkList.push(node.drawingObject.id);
 			}
 		}

@@ -205,13 +205,12 @@ export default {
 				}
 		}
 
-		function dragLinkEnded (event){
+		function dragLinkEnded (){
 			let currentModel = this.parentNode.parentNode;
 			let rootx = document.getElementById("root").getBoundingClientRect().x;
 			let rooty = document.getElementById("root").getBoundingClientRect().y;
 			const groups = d3.select('#root').selectAll('svg');
 			let minGroup;
-			let sameLink;
 
 			if(drawingLink.value.id){
 				let link = document.getElementById(drawingLink.value.id);
@@ -230,7 +229,6 @@ export default {
 							this != currentModel
 						) {
 							minGroup = this;
-							sameLink = document.getElementById(currentModel.id+"_to_"+minGroup.id);
 						}
 					}
 				});
@@ -272,7 +270,7 @@ export default {
 			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name, 'svg0');
 			terraformObject.id = terraformObject.instance_name+"_"+ terraformObject.type_name;
 
-			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, drag, dragLink, rootTreeObject.value,drawingLink.value);
+			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, [drag, dragLink], [rootTreeObject.value,drawingLink.value]);
 			d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
 
 			if (rootTreeObject.value.contains.length!=0){
@@ -319,7 +317,7 @@ export default {
 			terraformObject.setWidth(object.width);
 			terraformObject.setX(object.x);
 			terraformObject.setY(object.y);
-			terraformObject.drawSVG(svgs, svgParent, parentName, content, level, drag, dragLink, rootTreeObject.value,drawingLink.value);
+			terraformObject.drawSVG(svgs, svgParent, parentName, content, level, [drag, dragLink],[rootTreeObject.value,drawingLink.value]);
 			const model = document.getElementById(`${object.id}`);
 			if(SVGData.contains) {
           		drawSVGs(SVGData.contains, model, `${object.id}`, true, level + 1)

@@ -29,7 +29,11 @@ export default class TerraformObjectNode extends LetoObjectNode {
 		}
 	}
 
-    drawSVG(svgs, svgParent, parentName, content, level, drag, dragLink, rootTreeObject,drawingLink) {
+    drawSVG(svgs, svgParent, parentName, content, level, dragList, dataList) {
+			let drag = dragList[0];
+			let dragLink = dragList[1];
+			let rootTreeObject = dataList[0];
+			let drawingLink = dataList[1];
         let data = { logopath: this.drawingObject.logopath,  width: this.drawingObject.width, height: this.drawingObject.height, name: this.drawingObject.name, type: this.drawingObject.type, id : this.id };
         const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
         d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
