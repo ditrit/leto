@@ -1,16 +1,18 @@
 <template>
 	<div id="myDataViz">
-
+		<div id="contextMenu" class="context-menu" style="display:none; max-width: 150px; background-color:white;">
+        <ul id="contextMenuList" dense bordered padding class="rounded-borders"></ul>
+    </div>
 	</div>
 </template>
 
 <script>
 import { onMounted, ref } from "vue";
 const d3 = require("d3");
-import Palette from './Palette'
 import TerraformTypeNode from './TerraformTypeNode'
 import TerraformObjectNode from './TerraformObjectNode'
-import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData, storeOutputLinkInData, storeInputLinkInData,removeContentInData, getLetoTypeNodeFromData, getParent, getNode} from "./utils"
+import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData, storeOutputLinkInData,
+ storeInputLinkInData,removeContentInData, getLetoTypeNodeFromData, getParent, getAnchorAbsPos, fillAbleToLinkList, getNode} from "./utils"
 import { useStore } from "vuex";
 import plugins from '../../assets/plugins/terraform/plugins'
 import LetoTypeNode from './LetoTypeNode';
@@ -43,7 +45,7 @@ export default {
 			currentTfObjectNode.setHeight(currentModel.getAttribute("height"));
 			currentTfObjectNode.setWidth(currentModel.getAttribute("width"));
 
-			if (currentModel.parentNode.getAttribute("id") != "svg0") {		
+			if (currentModel.parentNode.getAttribute("id") != "svg0") {
 				let parent = getParent(rootTreeObject.value,currentModel.id);
 				let node = getNode(rootTreeObject.value,currentModel.id);
 				currentTfObjectNode.setObjects(node.objects);
@@ -82,7 +84,7 @@ export default {
 		function dragended() {
     		const currentGroup = this.parentNode;
 			const x = currentGroup.getAttribute('x');
-			const y = currentGroup.getAttribute('y');			
+			const y = currentGroup.getAttribute('y');
 			const groups = d3.select('#root').selectAll('svg');
       		let minGroup;
 			let svg = d3.select('#root')
@@ -133,6 +135,120 @@ export default {
 			updateLinks(rootTreeObject.value,this.parentNode)
 			updateDrawingInfosInData(rootTreeObject.value,this.parentNode);
 			return;
+		}
+
+		function dragLinkStarted(event){
+			let coord = d3.pointer(event);
+			let rootx = document.getElementById("root").getBoundingClientRect().x;
+			let rooty = document.getElementById("root").getBoundingClientRect().y;
+			let currentModel = this.parentNode.parentNode;
+			if(d3.select(this).attr("fill") == "green"){
+
+				let ableToLinkList = [];
+				fillAbleToLinkList(rootTreeObject.value,drawingLink.value,ableToLinkList);
+
+				drawingLink.value.source = currentModel;
+				let id = Date.now();
+				drawingLink.value.id = id;
+				let beginAnchor = document.getElementById(currentModel.id+"output_anchor_right");
+				let beginAnchorPos = getAnchorAbsPos(beginAnchor);
+				d3.select("#svg0").append("line")
+					.attr("id",id)
+					.attr("class","link")
+					.attr("x1",beginAnchorPos[0])
+					.attr("y1",beginAnchorPos[1])
+					.attr("x2",coord[0]/zoom.value - rootx/zoom.value - translateX.value/zoom.value)
+					.attr("y2",coord[1]/zoom.value-rooty/zoom.value - translateY.value/zoom.value)
+					.attr("cursor", "pointer")
+					.attr("stroke","black")
+					.attr("stroke-width",1)
+					.attr("marker-end","url(#arrow)")
+					.on("click",function()
+					{
+						this.remove();
+					});
+					const groups = d3.select('#root').selectAll('svg');
+					groups.each(function () {
+						let sameLink = document.getElementById(currentModel.id+"_to_"+this.id);
+						if (sameLink==null&&this!=currentModel&&ableToLinkList.includes(this.id)) {
+							d3.select(this).select('#logo_frame').attr("fill","green");
+						}
+						else {
+							d3.select(this).select('#logo_frame').attr("fill","grey");
+						}
+					})
+				}
+			}
+
+		function draggedLink (event){
+			let coord = d3.pointer(event);
+			let rootx = document.getElementById("root").getBoundingClientRect().x;
+			let rooty = document.getElementById("root").getBoundingClientRect().y;
+			if(drawingLink.value.id){
+				let link = document.getElementById(drawingLink.value.id);
+				d3.select(link)
+					.raise()
+					.attr("x2",coord[0]/zoom.value - rootx/zoom.value - translateX.value/zoom.value)
+					.attr("y2",coord[1]/zoom.value-rooty/zoom.value - translateY.value/zoom.value);
+				}
+		}
+
+		function dragLinkEnded (event){
+			let currentModel = this.parentNode.parentNode;
+			let rootx = document.getElementById("root").getBoundingClientRect().x;
+			let rooty = document.getElementById("root").getBoundingClientRect().y;
+			const groups = d3.select('#root').selectAll('svg');
+			let minGroup;
+			let sameLink;
+
+			if(drawingLink.value.id){
+				let link = document.getElementById(drawingLink.value.id);
+				groups.each(function () {
+					if (this.getAttribute("id") != "svg0") {
+						const groupRect = this.getElementById("logo_frame");
+						const groupRectX = parseInt(this.getBoundingClientRect().x/zoom.value - rootx/zoom.value - translateX.value/zoom.value);
+						const groupRectY = parseInt(this.getBoundingClientRect().y/zoom.value-rooty/zoom.value - translateY.value/zoom.value);
+						const groupRectWidth = parseInt(groupRect.getAttribute('width'));
+						const groupRectHeight = parseInt(groupRect.getAttribute('height'));
+						if (
+							link.getAttribute("x2") > groupRectX &&
+							link.getAttribute("x2") < groupRectX + groupRectWidth &&
+							link.getAttribute("y2") > groupRectY &&
+							link.getAttribute("y2") < groupRectY + groupRectHeight &&
+							this != currentModel
+						) {
+							minGroup = this;
+							sameLink = document.getElementById(currentModel.id+"_to_"+minGroup.id);
+						}
+					}
+				});
+				if (minGroup!=null&&minGroup.getElementById("logo_frame").getAttribute("fill")=="green") {
+					let beginId = currentModel.id;
+					let endId = minGroup.id;
+					let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
+					let beginAnchor = anchors[0];
+					let endAnchor = anchors[1];
+					let linkId = drawLink(beginAnchor,endAnchor,"svg0",beginId+"_to_"+endId,rootTreeObject.value);
+					let linkObj = {
+						targetId : endId,
+						sourceId : beginId,
+						id : linkId,
+						multiple: drawingLink.value.multiple,
+						resourceType: drawingLink.value.resourceType,
+						variableName: drawingLink.value.variableName,
+					}
+					storeOutputLinkInData(rootTreeObject.value,beginId,linkObj);
+					storeInputLinkInData(rootTreeObject.value,endId,linkObj);
+				}
+				d3.selectAll(groups).select('#logo_frame').attr("fill","white");
+				d3.select(link).remove();
+				drawingLink.value.id = null;
+				drawingLink.value.source = null;
+				drawingLink.value.target = null;
+				drawingLink.value.resourceType = null;
+				drawingLink.value.variableName = null;
+				drawingLink.value.multiple = null;
+			}
 		}
 
 		function clickOnPalette() {
@@ -213,7 +329,7 @@ export default {
 						const anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
 						const beginAnchor = anchors[0];
 						const endAnchor = anchors[1];
-						const linkId = drawLink(beginAnchor,endAnchor,"svg0",beginId+"_to_"+endId);
+						const linkId = drawLink(beginAnchor,endAnchor,"svg0",beginId+"_to_"+endId,rootTreeObject.value);
 						const link = {
 							targetId : endId,
 							targetName : endName,

@@ -1,6 +1,6 @@
 import LetoObjectNode from "./LetoObjectNode";
 import SVGinstanciate from "./svgvar.js";
-import { getModelAbsPos } from "./utils";
+import { getModelAbsPos, getAttributesInData } from "./utils";
 const d3 = require("d3");
 
 export default class TerraformObjectNode extends LetoObjectNode {
@@ -124,6 +124,10 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
         return document.getElementById(`${this.id}`);
     }
+
+		getAttributes(){
+			return this.attributes;
+		}
 
     setHeight(height) {
         this.drawingObject.height = height;

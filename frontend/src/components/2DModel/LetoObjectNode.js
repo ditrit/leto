@@ -71,6 +71,23 @@ export default class LetoObjectNode{
 		this.links.inputs.push(link);
 	}
 
+	removeOutputLink(linkId){
+		let outputs = this.links.outputs;
+		outputs.forEach(link =>{
+			if(link.id == linkId){
+				outputs.splice(outputs.indexOf(link));
+			}
+		})
+	}
+
+	removeInputLink(linkId){
+		let inputs = this.links.inputs;
+		inputs.forEach(link =>{
+			if(link.id == linkId){
+				inputs.splice(inputs.indexOf(link));
+			}
+		})
+	}
 
 	drawInWorkshop(parent,svgs,modelArea,zoom,clickArrow,click,drag){
 		if(this.drawingObject.id==null){
