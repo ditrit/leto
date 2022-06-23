@@ -439,8 +439,6 @@ export default {
 				.attr("id", "svg1")
 				.attr("width", 250)
 				.attr("height", 2000);
-
-			let palette = new Palette(terraformPanelList.value);
 		});
 
 		return {
