@@ -10,7 +10,7 @@ const d3 = require("d3");
 import Palette from './Palette'
 import TerraformTypeNode from './TerraformTypeNode'
 import TerraformObjectNode from './TerraformObjectNode'
-import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData, storeOutputLinkInData, storeInputLinkInData,removeContentInData, getLetoTypeNodeFromData, getParent} from "./utils"
+import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData, storeOutputLinkInData, storeInputLinkInData,removeContentInData, getLetoTypeNodeFromData, getParent, getNode} from "./utils"
 import { useStore } from "vuex";
 import plugins from '../../assets/plugins/terraform/plugins'
 import LetoTypeNode from './LetoTypeNode';
@@ -18,7 +18,8 @@ import LetoObjectNode from './LetoObjectNode';
 import { calcul_dimensions, calcul_xy_container} from '../Monaco/svg_maths'
 
 export default {
-	setup() {
+	emits: ['getTreeObjects'],
+	setup(_props, {emit}) {
 		const zoom = ref(1);
 		const translateX = ref(0);
 		const translateY = ref(0);
@@ -39,9 +40,13 @@ export default {
 			let svg = d3.select('#root');
 			let currentTfTypeNode = getLetoTypeNodeFromData(terraformPanelList.value,currentModel.getElementById("type").textContent.replace(/\s+/g, ''));
 			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentModel.getElementById("name").textContent.replace(/\s+/g, ''),0,currentModel.id,currentModel.parentNode.parentNode.id);
+			currentTfObjectNode.setHeight(currentModel.getAttribute("height"));
+			currentTfObjectNode.setWidth(currentModel.getAttribute("width"));
 
-			if (currentModel.parentNode.getAttribute("id") != "svg0") {
-				let parent = getParent(rootTreeObject.value,currentModel.parentNode.parentNode.id);
+			if (currentModel.parentNode.getAttribute("id") != "svg0") {		
+				let parent = getParent(rootTreeObject.value,currentModel.id);
+				let node = getNode(rootTreeObject.value,currentModel.id);
+				currentTfObjectNode.setObjects(node.objects);
 				removeContentInData(rootTreeObject.value,currentModel.parentNode.parentNode.id,currentTfObjectNode);
 				addContentInData(rootTreeObject.value,"svg0",currentTfObjectNode);
 				const dimensions = calcul_dimensions(parent.drawingObject, 0, 1000,  true, parent.contains);
@@ -51,7 +56,7 @@ export default {
 				d3.select('#'+parent.id).remove()
 				document.getElementById("svg0").appendChild(currentModel);
 				let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,parent.type_name)
-				const terraformObject = new TerraformObjectNode(terraformType, parent.instance_name, 0, parent.id, 'svg0');
+				const terraformObject = new TerraformObjectNode(terraformType, parent.instance_name, 0, parent.id, 'svg0', parent.objects);
 				createTerraformObject(terraformObject,parent, svg, "root", false, 0);
 
 				let children = currentModel.parentNode.getElementsByTagName("svg")
@@ -77,7 +82,7 @@ export default {
 		function dragended() {
     		const currentGroup = this.parentNode;
 			const x = currentGroup.getAttribute('x');
-			const y = currentGroup.getAttribute('y');
+			const y = currentGroup.getAttribute('y');			
 			const groups = d3.select('#root').selectAll('svg');
       		let minGroup;
 			let svg = d3.select('#root')
@@ -105,6 +110,8 @@ export default {
 
 			if (minGroup != null && minGroup != this) {
 				let parent = getParent(rootTreeObject.value,minGroup.getAttribute('id'));
+				let node = getNode(rootTreeObject.value,currentModel.id);
+				currentTfObjectNode.setObjects(node.objects);
 				removeContentInData(rootTreeObject.value,"svg0",currentTfObjectNode);
 				addContentInData(rootTreeObject.value,minGroup.id,currentTfObjectNode);
 				const dimensions = calcul_dimensions(parent.drawingObject, 0, 1000,  false, parent.contains);
@@ -115,7 +122,7 @@ export default {
 				d3.select('#'+currentGroup.getAttribute('id')).remove();
 				d3.select('#'+parent.id).remove();
 				let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,parent.type_name)
-				const terraformObject = new TerraformObjectNode(terraformType, parent.instance_name, 0, parent.id, 'svg0');
+				const terraformObject = new TerraformObjectNode(terraformType, parent.instance_name, 0, parent.id, 'svg0', parent.objects);
 				createTerraformObject(terraformObject,parent, svg, "root", false, 0);
 
 				let children = minGroup.getElementsByTagName("svg")
@@ -135,27 +142,7 @@ export default {
 
 			d3.select(this).transition().attr("fill", "black");
 			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name, 'svg0');
-			let monacoObj = {
-				containers : [],
-				contains : [],
-				datasName : [],
-				datasObject : [],
-				fileName : monacoSourceData.value["resources"][0].fileName,
-				height: 0,
-				width: 0,
-				icon: terraformObject.logo_path.replace("logos/",""),
-				type: terraformObject.type_name,
-				name: terraformObject.instance_name,
-				id:  terraformObject.instance_name+"_"+ terraformObject.type_name,
-				link: [],
-				parentX: 0,
-				parentY: 0,
-				representation: "block",
-				x: -translateX.value/zoom.value,
-				y: -translateY.value/zoom.value
-			}
 			terraformObject.id = terraformObject.instance_name+"_"+ terraformObject.type_name;
-			store.commit('appMonaco/ADD_CONTENT_IN_ROOT',monacoObj)
 
 			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, drag);
 			d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
@@ -168,10 +155,13 @@ export default {
 
 		function fillDataStorage(datas,parentId,level){
 			datas.forEach(SVGData => {
-
 				const data = (SVGData.value) ? SVGData.value : SVGData;
 				let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,data.type);
-				const terraformObject = new TerraformObjectNode(terraformType, data.name, level, data.id,parentId);
+				const terraformObject = new TerraformObjectNode(terraformType, data.name, level, data.id,parentId, data.objects);
+				terraformObject.setHeight(data.height);
+				terraformObject.setWidth(data.width);
+				terraformObject.setX(data.x);
+				terraformObject.setY(data.y);
 				addContentInData(rootTreeObject.value,parentId,terraformObject);
 				if(data.contains) {
           			fillDataStorage(data.contains,data.id, level + 1)
@@ -185,13 +175,14 @@ export default {
 				if(!SVGData.drawingObject){
 					data = (SVGData.value) ? SVGData.value : SVGData;
 					terraformType = getLetoTypeNodeFromData(terraformPanelList.value,data.type);
-					terraformObject = new TerraformObjectNode(terraformType, data.name, level, data.id, parentName);
+					terraformObject = new TerraformObjectNode(terraformType, data.name, level, data.id, parentName, data.objects);
 				} else {
 					data = SVGData;
 					terraformObject = SVGData;
 				}
 				createTerraformObject(terraformObject,data, svgParent, parentName, content, level);
 			})
+			emit('getTreeObjects', rootTreeObject.value);
 		}
 
 		function createTerraformObject(terraformObject,SVGData, svgParent, parentName, content, level) {
@@ -208,23 +199,33 @@ export default {
 		}
 
 		function drawLines(datas) {
-			datas.forEach( blockEnd => {
-				const objectLinks = (blockEnd.value) ? blockEnd.value.link : blockEnd.link;
-				if(objectLinks) {
-					objectLinks.forEach( blockBegin => {
-						let endId = (blockEnd.value) ? blockEnd.value.id : blockEnd.id;
-						let beginId = (blockBegin.value) ? blockBegin.value.id : blockBegin.id;
-						let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
-						let beginAnchor = anchors[0];
-						let endAnchor = anchors[1];
-						let linkId = drawLink(beginAnchor,endAnchor,"svg0",beginId+"_to_"+endId);
-						let link = {
+			datas.forEach( blockE => {
+				const blockEnd = (blockE.value) ? blockE.value : blockE;
+				if(blockEnd.link) {
+					blockEnd.link.forEach( blockB => {
+						const blockBegin = (blockB.value) ? blockB.value : blockB;
+						const endId = blockEnd.id;
+						const endName = blockEnd.name;
+						const endType = blockEnd.type;
+						const beginId = blockBegin.id;
+						const beginName = blockBegin.name;
+						const beginType = blockBegin.type;
+						const anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
+						const beginAnchor = anchors[0];
+						const endAnchor = anchors[1];
+						const linkId = drawLink(beginAnchor,endAnchor,"svg0",beginId+"_to_"+endId);
+						const link = {
 							targetId : endId,
+							targetName : endName,
+							targetType : endType,
 							sourceId : beginId,
+							sourceName : beginName,
+							sourceType : beginType,
 							id : linkId,
-							variableName : blockBegin.name,
-							required : blockBegin.required,
-							multiple : blockBegin.multiple,
+							variableName : blockB.name,
+							required : blockB.required,
+							multiple : blockB.multiple,
+							representation : blockB.representation,
 						}
 						storeOutputLinkInData(rootTreeObject.value,beginId,link);
 						storeInputLinkInData(rootTreeObject.value,endId,link)
@@ -316,7 +317,7 @@ export default {
 			store,
 			getSVGS,
 			clickOnPalette,
-			monacoSourceData: store.getters["appMonaco/allMonacoSource"],
+			monacoSourceData,
 			zoom,
 			translateX,
 			translateY,

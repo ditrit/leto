@@ -14,11 +14,11 @@ import { calculAttributesObjects } from './svg_maths.js';
 import { mapActions, mapGetters } from 'vuex';
 import { analyse_resources } from 'hcl/src/parser/compiler/schema_parser.js';
 import plugins from '../../assets/plugins/terraform/plugins';
+import {toString, toStringResource} from './toStringFunctions';
 
 export default {
 	data() {
 		return {
-			monacoEditor: {},
 			iactorDatas: {},
 			button: Button,
 			metadatas: {}
@@ -46,7 +46,6 @@ export default {
 		});
 	},
 	mounted() {
-		// Initialize the editor, make sure the dom has been rendered, and the dialog should be written in opened
 		monaco.languages.register({ id: "hcl" });
 		monaco.languages.setTokensProvider("hcl", hclTokensProvider.prototype);
 		let string = "BF2937";
@@ -98,6 +97,7 @@ export default {
 	},
 	methods: {
 		...mapActions({
+			setResources: "appMonaco/setResources",
 			getMonacoSource: "appMonaco/getMonacoSource",
 			getMetaSource: "appMonaco/getMetadatas",
 		}),
@@ -108,6 +108,49 @@ export default {
 		getSource() {
 			return this.getMonacoSource();
 		},
+		getGraph() {
+			const datas = JSON.parse(window.localStorage.getItem("monacoSource"));
+			const str = this.graphToString(datas);
+			const models = monaco.editor.getModels();
+			const editor = models[models.length - 1];
+			editor.setValue(str);
+			this.valueEditor = str;
+		},
+		graphToString(datas) {			
+			let str = '';
+			str += this.resourceToString(datas['resources']);
+			datas['provider'].forEach( provider => {
+				str += toString(provider, 'provider') + '\n';
+			})
+			datas['variables'].forEach( variable => {
+				str += toString(variable, 'variable') + '\n';
+			})
+			datas['datas'].forEach( data => {
+				str += toString(data, 'data') + '\n';
+			})
+			datas['outputs'].forEach( output => {
+				str += toString(output, 'output') + '\n';
+			})
+			return str;
+		},
+		resourceToString(resources, containers) {		
+			let str = '';	
+				
+			resources.forEach( resource => {
+				str += toStringResource(resource, 'resource', containers) + '\n';
+				if(resource.contains.length > 0) {
+					if(!containers) {
+						let container = [resource];
+						str += this.resourceToString(resource.contains, container);
+					} else {
+						containers.push(resource);
+						str += this.resourceToString(resource.contains, containers);
+					}
+				}
+			})
+
+			return str;
+		},
 		async getMetaDatas() {
 			const provider = JSON.parse(window.localStorage.getItem("monacoSource")).provider[0].name;
 			const plugin = plugins[provider]
@@ -116,37 +159,8 @@ export default {
 		},
 		onChange(value) {
 			this.valueEditor = value;
-		}, 
-		toStringResource(resource, type) {
-			let resourceToString = `${type} "${resource.type}" "${resource.name}" {`;
-			resourceToString += this.toStringObject(resource.objects.value);
-			resourceToString += `\n}`;
-			return resourceToString;
-		}, 
-		toStringProvider(provider, type) {
-			let providerToString = `${type} "${provider.name}" {`;
-			providerToString += this.toStringObject(provider.objects.value);
-			providerToString += `\n}`;
-			return providerToString;
-		}, 
-		toStringObject(objects) {	
-			let res = '';
-			if (objects.length > 0) {
-				objects.forEach( object => {
-					if(typeof(object) === 'object') {	
-						res += `\n  ${object.name} {\n`;
-						object.objects.forEach((o) => {
-							res += `    ${o}\n`;
-						});
-						res += '  }';
-					} else {
-						res += `\n  ${object}`;
-					}								
-				})
-			}
-			return res;
 		}
-	},
+ 	},
 };
 </script>
 <style lang="sass" scoped>

@@ -56,24 +56,20 @@ function getModules(modules, containers, orderResources) {
   return containers;
 }
 
-function getRelationsContainers(resources, containers) {
-  resources.forEach((r) => {
-    if (r.representation != 'container') {
-      r.resourcesObject.forEach((ro) => {
-        const multiple = (ro.array === undefined) ? false : ro.array;
-        containers.forEach((c) => {
-          if(c.name == ro.value.name) {
-            if (ro.representation == 'contained') {
-              c.contains.push({name : ro.name, required : ro.required, multiple : multiple, value : r});
-            } else if (ro.representation == 'containedInOtherContainer') {
-              c.containers.push({name : ro.name, required : ro.required, multiple : multiple, value : r});
-            } else if (ro.representation == 'link') {
-              c.link.push({name : ro.name, required : ro.required, multiple : multiple, value : r});
-            }
-          }
-        });
-      });
-    }
+function getRelationsContainers(resourcesObject, containers, resource) {
+  resourcesObject.forEach((ro) => {
+    const multiple = (ro.array === undefined) ? false : ro.array;
+    containers.forEach((c) => {
+      if(c.name == ro.value.name) {
+        if (ro.representation == 'contained' || ro.representation == 'contain') {
+          c.contains.push({name : ro.name, required : ro.required, multiple : multiple, representation : ro.representation, value : resource});
+        } else if (ro.representation == 'containedInOtherContainer') {
+          c.containers.push({name : ro.name, required : ro.required, multiple : multiple, representation : ro.representation, value : resource});
+        } else if (ro.representation == 'link') {
+          c.link.push({name : ro.name, required : ro.required, multiple : multiple, representation : ro.representation, value : resource});
+        }
+      }
+    });
   });
 
   return containers;
@@ -106,9 +102,9 @@ function researchLinks(container, resourceObject, resource, multiple) {
       if(l.name === resourceObject.name && l.value.name === resource.name) find = true;
     })
     if(!find)
-      container.link.push({name : resourceObject.name, required : resourceObject.required, multiple : multiple, value : resource});
+      container.link.push({name : resourceObject.name, required : resourceObject.required, multiple : multiple, representation : resourceObject.representation, value : resource});
   } else {
-    container.link = [{name : resourceObject.name, required : resourceObject.required, multiple : multiple, value : resource}];
+    container.link = [{name : resourceObject.name, required : resourceObject.required, multiple : multiple, representation : resourceObject.representation, value : resource}];
   }
 }
 
@@ -133,7 +129,7 @@ function getBlocks(resources, containers, orderResources) {
   return blocks;
 }
 
-function getNoRelationsObjects(resources, containers) {
+function getNoRelationsObjects(resources, containers, blocks) {
   const noRelations = [];
   let index = -1;
 
@@ -196,8 +192,8 @@ function getContent(containers) {
   containers.forEach((c) => {
     c.resourcesObject.forEach((ro) => {
       const multiple = (ro.array === undefined) ? false : ro.array;
-      if (ro.representation == 'contained') {
-        c.contains.push({name : ro.name, required : ro.required, multiple : multiple, value : ro.value});
+      if (ro.representation == 'contained' || ro.representation == 'contain') {
+        c.contains.push({name : ro.name, required : ro.required, multiple : multiple, representation : ro.representation, value : ro.value});
       }
     });
   });
@@ -348,13 +344,17 @@ export function calculAttributesObjects(datas) {
 
   containers = getModules(datas.modules, containers, orderResources);
   
-  containers = getRelationsContainers(datas.resources, containers);
-
+  datas.resources.forEach((resource) => {
+    if (resource.representation != 'container') {
+      containers = getRelationsContainers(resource.resourcesObject, containers, resource);
+    }
+  });
+  
   datas.resources = getLinksResources(datas.resources);
 
   let blocks = getBlocks(datas.resources, containers, orderResources);
 
-  let noRelations = getNoRelationsObjects(datas.resources, containers);
+  let noRelations = getNoRelationsObjects(datas.resources, containers, blocks);
 
   noRelations = getNoRelationsModules(noRelations, containers);
 
@@ -378,7 +378,7 @@ export function calculAttributesObjects(datas) {
 
   const results = getResourcesCoord(resources, noRelations, resourceWidthMax, heightMin, widthMin, windowWidthMax);
   resources = results.resources;
-  let yCurrent = results.resources;
+  let yCurrent = results.yCurrent;
   let widthMax = results.widthMax;
 
   yCurrent += 75;

@@ -242,3 +242,14 @@ export function getParent(node,parentId){
 	else if(node.drawingObject.id !== 'svg0') result = node;
 	return result;
 }
+
+export function getNode(node,id){
+	if (node == null) {
+		return;
+	} else if(node.drawingObject.id === id){
+		return node;
+	}
+	let result = getNode(node.contains[0],id);
+	if(result === undefined) result = getNode(node.rightSibling,id);
+	return result;
+}
