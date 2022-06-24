@@ -30,6 +30,10 @@ export const ADD_CONTENT_IN_ROOT = (state, resource)=>{
 	state.monacoSource["resources"].push(resource);
 }
 
+export const GET_MONACOSOURCE_PROVIDER = (state)=>{
+	return state.monacoSource["provider"][0].name;
+}
+
 function removeContent(datas, ids) {
 	let removeResource = [];
 	datas.forEach(r => {
@@ -51,13 +55,13 @@ function removeContent(datas, ids) {
 function getContainer(datas, id) {
 	let container = null;
 	let index = -1;
-	
+
 	for(let i = 0; i < datas.length; i++) {
 		const resource = (datas[i].value) ? datas[i].value : datas[i];
 		if(resource.name + '_' + resource.type === id) {
-			container = datas[i];	
+			container = datas[i];
 			index = i;
-		} 
+		}
 		if(resource.contains) {
 			const object = getContainer(resource.contains, id).container;
 			if(object !== null)  {
@@ -86,5 +90,5 @@ export const SET_COORD = (state, resource) => {
 	} else {
 		state.monacoSource["resources"][index].x = resource.x;
 		state.monacoSource["resources"][index].y = resource.y;
-	}	
+	}
 };
