@@ -30,8 +30,8 @@
 		</div>
 		</q-drawer>
 		<Drawer v-model="drawer">
-			<template v-slot:drawerFilter>
-				<PaletteMenu :data="mockData"></PaletteMenu>
+			<template v-slot:drawerFilter v-if="isMounted">
+				<PaletteMenu id="paletteMenu"  :data="paletteData"></PaletteMenu>
 			</template>
 			<template v-slot:drawerMenu>
 				<div class="q-pa-md q-gutter-sm" v-if="menu">
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import AjaxBar from "components/UI/Progress/AjaxBar";
 import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
@@ -84,6 +84,8 @@ export default defineComponent({
 		const filterTag = ref("");
 		const filterTagRef = ref(null);
 		const selected = ref("DDS");
+		const isMounted = ref(false);
+		const svgs = ref({});
 
 		let { store, router, $q, openProject } = useProductDetails();
 		openProject(props.id);
@@ -105,22 +107,52 @@ export default defineComponent({
 				imageUrl: "/svgs/logos/conteneur.png",
 			};
 		}
-		const mockData = [
+
+		const paletteData = [
 			{
 				name: "AWS",
 				icon: "explore",
-				data: Array.from({ length: 20 }).map((_, i) => makeToto(i)),
+				data:[],
 			},
 			{
-				name: "SG Internal",
+				name: "SG-Interne",
 				icon: "explore",
-				data: Array.from({ length: 20 }).map((_, i) => makeToto(i)),
+				data:[],
 			},
-			{
-				name: "Templates",
-				data: Array.from({ length: 20 }).map((_, i) => makeToto(i)),
-			},
-		];
+		]
+
+		const getSVGS = async () => {
+			await store.dispatch("appSVGs/loadPath");
+			svgs.value = await store.getters["appSVGs/allSvgs"];
+			return svgs.value;
+		};
+
+
+		onMounted(async () => {
+			await getSVGS();
+
+			const awsMetadatas = require(`../../assets/plugins/terraform/internal/aws/metadatas.json`);
+			awsMetadatas.provider.resources.forEach((element) => {
+				paletteData[0].data.push(
+					{
+						name: element.resourceType,
+						imageUrl: `logos/${element.icon}`,
+						description: "Description",
+					}
+				)
+			});
+			const sgMetadatas = require(`../../assets/plugins/terraform/external/iactor-plugin-terraform-sginterne/metadatas.json`);
+			sgMetadatas.provider.resources.forEach((element) => {
+				paletteData[1].data.push(
+					{
+						name: element.resourceType,
+						imageUrl: `logos/${element.icon}`,
+						description: "Description",
+					}
+				)
+			});
+		isMounted.value = true;
+		});
 
 		return {
 			store,
@@ -132,7 +164,7 @@ export default defineComponent({
 			filterTagRef,
 			selected,
 			$q,
-			mockData,
+			paletteData,
 			resetFilterTag() {
 				filterTag.value = "";
 				filterTagRef.value.focus();
@@ -147,6 +179,7 @@ export default defineComponent({
 			OnEdit,
 			domainID,
 			openProject,
+			isMounted,
 		};
 	},
 });
