@@ -213,7 +213,7 @@
                     {
                         "variableName" : "subnet_ids",
                         "resourceType" : "aws_subnet",
-                        "representation" : "contained",
+                        "representation" : "contain",
                         "array" : true,
                         "required" : true
                     }
