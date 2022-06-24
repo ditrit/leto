@@ -275,7 +275,7 @@ export default {
 			if (panelObject){
 				d3.select(this).transition().attr("fill", "black");
 				let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name, 'svg0',[]);
-				terraformObject.id = terraformObject.instance_name+"_"+ terraformObject.type_name;
+				terraformObject.setId(terraformObject.instance_name+"_"+ terraformObject.type_name);
 
 				let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, [drag, dragLink], [rootTreeObject.value,drawingLink.value]);
 				d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);

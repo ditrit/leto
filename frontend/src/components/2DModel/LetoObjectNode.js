@@ -34,6 +34,7 @@ export default class LetoObjectNode{
 
 	setId(id){
 		this.drawingObject.id=id;
+		this.id = id;
 	}
 
 	setRightSibling(rightSibling){
