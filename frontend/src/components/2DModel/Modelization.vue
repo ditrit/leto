@@ -11,7 +11,7 @@ import { onMounted, ref } from "vue";
 const d3 = require("d3");
 import TerraformTypeNode from './TerraformTypeNode'
 import TerraformObjectNode from './TerraformObjectNode'
-import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData, storeOutputLinkInData,
+import {drawLink,updateLinks,updateDrawingInfosInData,addContentInData, storeOutputLinkInData, fillAbleToDropList,
  storeInputLinkInData,removeContentInData, getLetoTypeNodeFromData, getParent, getAnchorAbsPos, fillAbleToLinkList, getNode} from "./utils"
 import { useStore } from "vuex";
 import plugins from '../../assets/plugins/terraform/plugins'
@@ -414,7 +414,7 @@ export default {
 			const metadatas = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`);
 			metadatas.provider.resources.forEach((element) => {
 				terraformPanelList.value.push(
-					new TerraformTypeNode(`logos/${element.icon}`,element.resourceType, "","","dbtf",element.attributes));
+					new TerraformTypeNode(`logos/${element.icon}`,element.resourceType, "","","dbtf",element.attributes,element.representation));
 			});
 
 			let svg0 = d3.select("#myDataViz")

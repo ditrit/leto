@@ -304,3 +304,16 @@ export function fillAbleToLinkList(node,attribute,ableToLinkList){
 	fillAbleToLinkList(node.contains[0],attribute,ableToLinkList)
 	fillAbleToLinkList(node.rightSibling,attribute,ableToLinkList)
 }
+
+export function fillAbleToDropList(node,attribute,ableToDropList){
+	if (node == null){
+		return;
+	}
+	else if(node.representation == "container"){
+		if(attribute.resourceType == node.type_name || attribute.resourceType == null ){
+			ableToDropList.push(node.drawingObject.id);
+		}
+	}
+	fillAbleToDropList(node.contains[0],attribute,ableToDropList)
+	fillAbleToDropList(node.rightSibling,attribute,ableToDropList)
+}
