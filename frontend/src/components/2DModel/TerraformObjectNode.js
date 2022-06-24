@@ -4,12 +4,15 @@ import { getModelAbsPos } from "./utils";
 const d3 = require("d3");
 
 export default class TerraformObjectNode extends LetoObjectNode {
-	constructor(terraformTypeNode,instance_name,level,id, parentId){
+	constructor(terraformTypeNode,instance_name,level, id, parentId, objects){
 		super(terraformTypeNode, instance_name, level, id, parentId);
 		this.contains=[];
 		this.parentId = parentId;
 		this.level=level;
 		this.attributes = terraformTypeNode.attributes;
+		this.type = this.type_name;
+		this.name = this.instance_name;
+		this.objects = (objects) ? objects : [];
 
 		this.drawingObject ={
 			width:0,
@@ -140,6 +143,10 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
     setContains(contains) {
         this.contains = contains;
+    }
+
+    setObjects(objects) {
+        this.objects = objects;
     }
 
 		static getLinkAnchors(beginId,endId){
