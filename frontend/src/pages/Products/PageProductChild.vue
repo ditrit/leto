@@ -24,9 +24,10 @@
 			:breakpoint="500"
 			class="bg-grey-3"
 		>
-			<h6>Object Details</h6>
-			<div id="detailsContainer"></div>
-		</q-drawer>
+		<h6>Object Details</h6>
+		<div id="detailsContainer">
+			<ConfigPannel></ConfigPannel>
+		</div>
 
 		<Drawer v-model="drawer">
 			<template v-slot:drawerFilter>
@@ -63,6 +64,7 @@ import { pageSizeTweak } from "../../common/index";
 import useProductDetails from "../../composables/Products/useProductDetails";
 import useDomainData from "../../composables/WorkSpace/useDomainData";
 import ProductDetailsNavigation from "components/UI/Stepper/ProductDetailsNavigation.vue";
+import ConfigPannel from "components/ConfigPannel.vue"
 
 export default defineComponent({
 	name: "PageDomainChild",
@@ -72,6 +74,7 @@ export default defineComponent({
 		AccountSettings,
 		PaletteMenu,
 		ProductDetailsNavigation,
+		ConfigPannel,
 	},
 	props: ["id"],
 	setup(props) {
