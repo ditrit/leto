@@ -18,6 +18,7 @@ import plugins from '../../assets/plugins/terraform/plugins'
 import LetoTypeNode from './LetoTypeNode';
 import LetoObjectNode from './LetoObjectNode';
 import { calcul_dimensions, calcul_xy_container} from '../Monaco/svg_maths'
+import EventBus from "src/services/EventBus"
 
 export default {
 	emits: ['getTreeObjects'],
@@ -32,6 +33,10 @@ export default {
 		const loading = ref(true);
 		const rootTreeObject = ref (new LetoObjectNode(new LetoTypeNode("","","","",""),"",-1))
 		rootTreeObject.value.setId("svg0");
+		EventBus.on("selected:component", (component) => {
+			clickOnPalette(component)
+
+		})
 		const drag = ref(d3.drag()
 							.on("start", dragstarted)
 							.on("drag", dragged)
@@ -125,7 +130,9 @@ export default {
 			if (minGroup != null && minGroup != this) {
 				let parent = getParent(rootTreeObject.value,minGroup.getAttribute('id'));
 				let node = getNode(rootTreeObject.value,currentGroup.id);
-				currentTfObjectNode.setObjects(node.objects);
+				if(node){
+					currentTfObjectNode.setObjects(node.objects);
+				}
 				removeContentInData(rootTreeObject.value,"svg0",currentTfObjectNode);
 				addContentInData(rootTreeObject.value,minGroup.id,currentTfObjectNode);
 				const dimensions = calcul_dimensions(parent.drawingObject, 0, 1000,  false, parent.contains);
@@ -261,22 +268,26 @@ export default {
 			}
 		}
 
-		function clickOnPalette() {
+		function clickOnPalette(clickedType) {
 			let clickedOnPalette = this;
-			let panelObject = getLetoTypeNodeFromData(terraformPanelList.value,clickedOnPalette.getElementById("type").textContent.replace(/\s+/g, ''));
+			let panelObject = getLetoTypeNodeFromData(terraformPanelList.value,clickedType);
 			let svg = d3.select('#root')
+			if (panelObject){
+				d3.select(this).transition().attr("fill", "black");
+				let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name, 'svg0',[]);
+				terraformObject.id = terraformObject.instance_name+"_"+ terraformObject.type_name;
 
-			d3.select(this).transition().attr("fill", "black");
-			let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name, 'svg0');
-			terraformObject.id = terraformObject.instance_name+"_"+ terraformObject.type_name;
+				let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, [drag, dragLink], [rootTreeObject.value,drawingLink.value]);
+				d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
 
-			let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, [drag, dragLink], [rootTreeObject.value,drawingLink.value]);
-			d3.select(drawnModel).attr("x",-translateX.value/zoom.value).attr("y",-translateY.value/zoom.value);
-
-			if (rootTreeObject.value.contains.length!=0){
-				rootTreeObject.value.contains[rootTreeObject.value.contains.length-1].setRightSibling(terraformObject);
+				if (rootTreeObject.value.contains.length!=0){
+					rootTreeObject.value.contains[rootTreeObject.value.contains.length-1].setRightSibling(terraformObject);
+				}
+				rootTreeObject.value.contains.push(terraformObject);
 			}
-			rootTreeObject.value.contains.push(terraformObject);
+			else{
+				alert("This provider has not been loaded")
+			}
 		}
 
 		function fillDataStorage(datas,parentId,level){
