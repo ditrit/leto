@@ -138,7 +138,7 @@ export default {
 		const vOne = ref("Model");
 		const vTwo = ref("Source");
 		const modelValue = ref("Source");
-
+		
 		let { store, router, $q, currentProductContent, menu } =
 			useProductDetails();
 

@@ -1,9 +1,9 @@
 <template>
-	<div>
-		<div class="monaco" ref="monacoContainer"></div>
-		<button :onClick="consoleClick" class="Button">
+	<div style="text-align: center;">
+		<q-btn @click="consoleClick" class="Button" color="grey-7" style="margin-bottom:15px;">
 			<slot>Compiler</slot>
-		</button>
+		</q-btn>
+		<div class="monaco" ref="monacoContainer" style="text-align: left;"></div>
 	</div>
 </template>
 <script>
@@ -40,7 +40,7 @@ export default {
 			const data = event.data;
 			data.provider[0].orderResources = (this.metadatas.provider.orderResources) ? this.metadatas.provider.orderResources : [];
 			analyse_resources(data.resources, this.metadatas.provider.resources);
-			data.resources = calculAttributesObjects(data);	
+			data.resources = calculAttributesObjects(data);
 			window.localStorage.setItem("monacoSource", JSON.stringify(data));
 			this.getSource();		
 		});

@@ -52,6 +52,8 @@ export default {
 			target: null,
 			variableName: null,
 			multiple: null,
+			representation: null,
+			required: null,
 		});
 
 		function dragstarted() {
@@ -241,14 +243,24 @@ export default {
 				});
 				if (minGroup!=null&&minGroup.getElementById("logo_frame").getAttribute("fill")=="green") {
 					let beginId = currentModel.id;
+					let beginName = currentModel.getElementById('name').textContent.replace(/\s+/g, '');
+					let beginType = currentModel.getElementById('type').textContent.replace(/\s+/g, '');
 					let endId = minGroup.id;
+					let endName = minGroup.getElementById('name').textContent.replace(/\s+/g, '');
+					let endType = minGroup.getElementById('type').textContent.replace(/\s+/g, '');
 					let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
 					let beginAnchor = anchors[0];
 					let endAnchor = anchors[1];
 					let linkId = drawLink(beginAnchor,endAnchor,"svg0",beginId+"_to_"+endId,rootTreeObject.value);
 					let linkObj = {
 						targetId : endId,
+						targetName : endName,
+						targetType : endType,
 						sourceId : beginId,
+						sourceName : beginName,
+						sourceType : beginType,
+						required : drawingLink.value.required,
+						representation : drawingLink.value.representation,
 						id : linkId,
 						multiple: drawingLink.value.multiple,
 						resourceType: drawingLink.value.resourceType,
@@ -265,6 +277,8 @@ export default {
 				drawingLink.value.resourceType = null;
 				drawingLink.value.variableName = null;
 				drawingLink.value.multiple = null;
+				drawingLink.value.required = null;
+				drawingLink.value.representation = null;
 			}
 		}
 
@@ -274,7 +288,7 @@ export default {
 			let svg = d3.select('#root')
 			if (panelObject){
 				d3.select(this).transition().attr("fill", "black");
-				let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name, 'svg0',[]);
+				let terraformObject = new TerraformObjectNode(panelObject,"myTerraformObjectNode",0,panelObject.type_name, 'svg0',{value : [`name ="${panelObject.type_name}"`]});
 				terraformObject.setId(terraformObject.instance_name+"_"+ terraformObject.type_name);
 
 				let drawnModel = terraformObject.drawSVG(svgs, svg, "root", false, 0, [drag, dragLink], [rootTreeObject.value,drawingLink.value]);
@@ -299,6 +313,7 @@ export default {
 				terraformObject.setWidth(data.width);
 				terraformObject.setX(data.x);
 				terraformObject.setY(data.y);
+				terraformObject.setAttributes(data.attributes);
 				addContentInData(rootTreeObject.value,parentId,terraformObject);
 				if(data.contains) {
           			fillDataStorage(data.contains,data.id, level + 1)
@@ -328,6 +343,7 @@ export default {
 			terraformObject.setWidth(object.width);
 			terraformObject.setX(object.x);
 			terraformObject.setY(object.y);
+			terraformObject.setAttributes(object.attributes);
 			terraformObject.drawSVG(svgs, svgParent, parentName, content, level, [drag, dragLink],[rootTreeObject.value,drawingLink.value]);
 			const model = document.getElementById(`${object.id}`);
 			if(SVGData.contains) {
