@@ -265,6 +265,41 @@ function getResourcesInOrder(containers, blocks, orderResources) {
   return resources;
 }
 
+function inverseAttribute(resources) {
+  resources.forEach( resource => {
+    if(resource.attributes) {
+      resource.attributes.forEach( attribute => {
+        if(attribute.representation === 'inverseLink') {
+          const resourceType = attribute.resourceType;
+          resources.forEach( r => {
+            if(r.type === resourceType) {
+              const newAttribute = {variableName: attribute.variableName, resourceType: resource.type, representation : attribute.representation, array: attribute.array, required: attribute.required};
+              const attributes = [];
+              r.attributes.forEach(a => {
+                attributes.push(a);
+              })
+              if(!getAttribute(attributes, newAttribute)) attributes.push(newAttribute);
+              r.attributes = attributes;
+            }
+          })
+        }
+      })
+    }
+  })
+
+  return resources;
+}
+
+function getAttribute(attributes, researchAttribute) {
+  let find = false;
+
+  attributes.forEach( attribute => {
+    if(attribute.variableName === researchAttribute.variableName) find = true;
+  })
+
+  return find;
+}
+
 function getResourcesCoord(resources, noRelations, resourceWidthMax, heightMin, widthMin, windowWidthMax) {
   let xCurrent = 10;
   let yCurrent = 10;
@@ -375,6 +410,8 @@ export function calculAttributesObjects(datas) {
   containers = getDimensionsContainers(containers, resourceWidthMax);
 
   let resources = getResourcesInOrder(containers, blocks, orderResources);
+
+  resources = inverseAttribute(resources);
 
   const results = getResourcesCoord(resources, noRelations, resourceWidthMax, heightMin, widthMin, windowWidthMax);
   resources = results.resources;

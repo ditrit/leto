@@ -1,8 +1,8 @@
 export function toStringResource(resource, type, container) {
 	let resourceToString = `${type} "${resource.type}" "${resource.name}" {\n`;
-	resourceToString += toStringObjects(resource.objects.value, resource);
-	resourceToString += toStringLinks(resource.links.outputs, true);
-	resourceToString += toStringLinks(resource.links.inputs, false);
+	resourceToString += (resource.objects) ? toStringObjects(resource.objects.value, resource) : '';
+	resourceToString += (resource.links) ? toStringLinks(resource.links.outputs, true) : '';
+	resourceToString += (resource.links) ?toStringLinks(resource.links.inputs, false) : '';
     if(container !== undefined && container.length > 0) resourceToString += toStringContainer(resource, container);
 	resourceToString += `}\n`;
 	return resourceToString;
@@ -88,26 +88,28 @@ function toStringContainer(resource, containers) {
 	let res = '';
     let variableTypes = [];
 
-    resource.attributes.forEach( attribute => {
-        if(attribute.representation === 'contained' || attribute.representation === 'containedInOtherContainer') {
-            containers.forEach( container => {
-                if(container.type === attribute.resourceType) {
-                    res += `  ${attribute.variableName} = ${container.type}.${container.name}\n`; 
-                }
-            })  
-            if(!attribute.resourceType) {
-                res += `  ${attribute.variableName} = ${containers[0].type}.${containers[0].name}\n`; 
-            }         
-        } else if(attribute.representation === 'contain') {
-            resource.contains.forEach( content => {
-                if(attribute.array && !variableTypes.includes(attribute.resourceType)) {
-                    variableTypes.push(attribute.resourceType);
-                    res += toStringArray(resource.contains, attribute.variableName, false, attribute.resourceType);
-                } else if(!attribute.array) {
-                    res += `  ${attribute.variableName} = ${content.type}.${content.name}\n`; 
-                }
-            })               
-        }
-    })
+    if(resource.attributes) {
+        resource.attributes.forEach( attribute => {
+            if(attribute.representation === 'contained' || attribute.representation === 'containedInOtherContainer') {
+                containers.forEach( container => {
+                    if(container.type === attribute.resourceType) {
+                        res += `  ${attribute.variableName} = ${container.type}.${container.name}\n`; 
+                    }
+                })  
+                if(!attribute.resourceType) {
+                    res += `  ${attribute.variableName} = ${containers[0].type}.${containers[0].name}\n`; 
+                }         
+            } else if(attribute.representation === 'contain') {
+                resource.contains.forEach( content => {
+                    if(attribute.array && !variableTypes.includes(attribute.resourceType)) {
+                        variableTypes.push(attribute.resourceType);
+                        res += toStringArray(resource.contains, attribute.variableName, false, attribute.resourceType);
+                    } else if(!attribute.array) {
+                        res += `  ${attribute.variableName} = ${content.type}.${content.name}\n`; 
+                    }
+                })               
+            }
+        })
+    }
 	return res;
 }

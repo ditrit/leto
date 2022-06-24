@@ -64,7 +64,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
 						let nLinkAttr = 0;
 						if(currentLetoObj.attributes){
 							currentLetoObj.attributes.forEach(attribute => {
-								if(attribute.representation == "link"){
+								if(attribute.representation == "link" || attribute.representation == "inverseLink"){
 									nLinkAttr ++;
 									let listElem = document.createElement("li");
 									let listElemText = document.createElement("a");
@@ -74,6 +74,8 @@ export default class TerraformObjectNode extends LetoObjectNode {
 										drawingLink.resourceType = this.textContent;
 										drawingLink.variableName = attribute.variableName;
 										drawingLink.multiple = attribute.array;
+										drawingLink.required = attribute.required;
+										drawingLink.representation = attribute.representation;
 									})
 									let text = document.createTextNode(attribute.resourceType);
 									listElemText.appendChild(text);
@@ -205,6 +207,10 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
     setObjects(objects) {
         this.objects = objects;
+    }
+	
+    setAttributes(attributes) {
+        this.attributes = attributes;
     }
 
 		static getLinkAnchors(beginId,endId){
