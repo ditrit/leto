@@ -110,7 +110,6 @@ export default {
 		},
 		getGraph() {
 			const datas = JSON.parse(window.localStorage.getItem("monacoSource"));
-			console.log(datas)
 			const str = this.graphToString(datas);
 			const models = monaco.editor.getModels();
 			const editor = models[models.length - 1];
