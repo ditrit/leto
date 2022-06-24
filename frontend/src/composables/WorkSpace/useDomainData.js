@@ -64,7 +64,6 @@ export default function useDomainData() {
 	const rigthData = async (id) => {
 		await store.dispatch("appDomain/fetchDomainById", `${id}`);
 		let data = await store.getters["appDomain/allDomaines"];
-		console.log("data: ", Object.values(data));
 
 		currentDomainDataContent.value = Object.values(data).map((item) => {
 			return {
@@ -87,7 +86,6 @@ export default function useDomainData() {
 	};
 	const goToID = async (node) => {
 		choosenNodeID.value = node.id;
-		console.log("goToID choosenNodeID.value: ", choosenNodeID.value);
 		await router.push(`/workspaces/${choosenNodeID.value}`);
 		editMode.value = false;
 
@@ -105,7 +103,6 @@ export default function useDomainData() {
 			await API.post(`/domain/${choosenNodeID.value}/tag/${tag.id}`);
 			refreshDomainTag(choosenNodeID.value);
 		} catch (error) {
-			console.log(err);
 		}
 	};
 
@@ -148,10 +145,8 @@ export default function useDomainData() {
 	getTagsTree();
 
 	const OnDelete = async (id) => {
-		console.log("deleted ID:", id);
 		await API.delete(`/domain/${choosenNodeID.value}/tag/${id}`)
-			.then(() => refreshDomainTag(choosenNodeID.value))
-			.catch((error) => console.log(error));
+			.then(() => refreshDomainTag(choosenNodeID.value));
 	};
 
 	const OnEdit = () => {
@@ -169,7 +164,6 @@ export default function useDomainData() {
 				OnDelete(id);
 			})
 			.onCancel(() => {
-				console.log("Cancel");
 			});
 	};
 

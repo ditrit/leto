@@ -184,7 +184,6 @@ export default {
 					deleteRow(item.id);
 				})
 				.onCancel(() => {
-					console.log("Cancel");
 				});
 		};
 

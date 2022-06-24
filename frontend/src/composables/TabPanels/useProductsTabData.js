@@ -22,12 +22,6 @@ export default function useProductsTabData(props) {
 		let data = computed(() => {
 			return store.getters["appDomain/allDomaines"];
 		});
-		console.log('"data from refreshData: ": ', data.value);
-		console.log("data.value[0].Products: ", data.value[0].Products);
-		console.log(
-			"	route.currentRoute.value.params.id: ",
-			route.currentRoute.value.params.id
-		);
 		productTeam.value = data.value[0].Products;
 	};
 
@@ -48,7 +42,6 @@ export default function useProductsTabData(props) {
 				deleteProduct(id);
 			})
 			.onCancel(() => {
-				console.log("Cancel");
 			});
 	};
 
@@ -60,7 +53,6 @@ export default function useProductsTabData(props) {
 			shortDescription: productShortDescription.value,
 			description: productDescription.value,
 		};
-		console.log("newProduct: ", newProduct);
 		try {
 			await store
 				.dispatch("appProducts/addProduct", newProduct)
@@ -74,7 +66,6 @@ export default function useProductsTabData(props) {
 					});
 				});
 
-			console.log("productTeam from useTabs:", productTeam.value);
 		} catch (error) {
 			$q.notify({
 				type: "negative",
@@ -110,7 +101,6 @@ export default function useProductsTabData(props) {
 					message: `${productName.value} product was succefuly updated`,
 				});
 			});
-		console.log("Update product from useTabs: ", product);
 	};
 
 	return {

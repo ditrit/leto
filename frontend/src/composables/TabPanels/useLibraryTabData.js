@@ -61,7 +61,6 @@ export default function useLibraryTabData(props) {
 				deleteLibrary(item);
 			})
 			.onCancel(() => {
-				console.log("Canceled");
 			});
 	};
 

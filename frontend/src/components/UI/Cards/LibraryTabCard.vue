@@ -61,7 +61,6 @@ export default {
 		};
 
 		const onResetUpdate = () => {
-			console.log("event: ", props.id);
 		};
 
 		return {

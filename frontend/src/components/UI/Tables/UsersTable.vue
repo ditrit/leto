@@ -283,7 +283,6 @@ export default {
 					deleteRow(item);
 				})
 				.onCancel(() => {
-					console.log("Cancel");
 				});
 		};
 		const allUsers = async () => {

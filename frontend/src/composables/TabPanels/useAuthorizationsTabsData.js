@@ -93,7 +93,6 @@ export default function useAuthorizationsTabsData(props) {
 				deleteAuthorization(id);
 			})
 			.onCancel(() => {
-				console.log("canceled");
 			});
 	};
 

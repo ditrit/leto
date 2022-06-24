@@ -8,7 +8,6 @@ export default function useRequirementsTabData() {
 	const $q = useQuasar();
 
 	const Test = () => {
-		console.log("This is from useRequirmentsTabData");
 	};
 
 	return {
