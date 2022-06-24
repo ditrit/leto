@@ -46,6 +46,18 @@ npm run build
 
 The binary of the built app is in the `dist/spa` folder.
 
+### Environment variable
+
+`GANDALF_API_BASE_URL` is used to define the url of Gandalf, by default is equals to `/ditrit/Gandalf/1.0.0`.
+
+If you don't want to redefine it, you have to setup a reverse proxy.
+
+To override it :
+
+```bash
+GANDALF_API_BASE_URL="Something else" npm run build
+```
+
 ### Reverse proxy for the production
 
 In the dev mode, we use a reverse proxy to make a redirection from `http://localhost:8080/ditrit/*` to `http://127.0.0.1:9203/ditrit/*`.
