@@ -24,14 +24,14 @@
 			:breakpoint="500"
 			class="bg-grey-3"
 		>
-		<h6>Object Details</h6>
-		<div id="detailsContainer">
-			<ConfigPannel></ConfigPannel>
-		</div>
+			<h6>Object Details</h6>
+			<div id="detailsContainer">
+				<ConfigPannel></ConfigPannel>
+			</div>
 		</q-drawer>
 		<Drawer v-model="drawer">
 			<template v-slot:drawerFilter v-if="isMounted">
-				<PaletteMenu id="paletteMenu"  :data="paletteData"></PaletteMenu>
+				<PaletteMenu id="paletteMenu" :data="paletteData"></PaletteMenu>
 			</template>
 			<template v-slot:drawerMenu>
 				<div class="q-pa-md q-gutter-sm" v-if="menu">
@@ -65,6 +65,8 @@ import useProductDetails from "../../composables/Products/useProductDetails";
 import useDomainData from "../../composables/WorkSpace/useDomainData";
 import ProductDetailsNavigation from "components/UI/Stepper/ProductDetailsNavigation.vue";
 import ConfigPannel from "src/components/ConfigPannel.vue";
+import awsMetadatas from "src/assets/plugins/terraform/internal/aws/metadatas.json";
+// import sgMetadatas from "src/assets/plugins/terraform/external/iactor-plugin-terraform-sginterne/metadatas.json";
 
 export default defineComponent({
 	name: "PageDomainChild",
@@ -112,14 +114,14 @@ export default defineComponent({
 			{
 				name: "AWS",
 				icon: "explore",
-				data:[],
+				data: [],
 			},
 			{
 				name: "SG-Interne",
 				icon: "explore",
-				data:[],
+				data: [],
 			},
-		]
+		];
 
 		const getSVGS = async () => {
 			await store.dispatch("appSVGs/loadPath");
@@ -127,31 +129,25 @@ export default defineComponent({
 			return svgs.value;
 		};
 
-
 		onMounted(async () => {
 			await getSVGS();
 
-			const awsMetadatas = require(`../../assets/plugins/terraform/internal/aws/metadatas.json`);
 			awsMetadatas.provider.resources.forEach((element) => {
-				paletteData[0].data.push(
-					{
-						name: element.resourceType,
-						imageUrl: `logos/${element.icon}`,
-						description: "Description",
-					}
-				)
+				paletteData[0].data.push({
+					name: element.resourceType,
+					imageUrl: `logos/${element.icon}`,
+					description: "Description",
+				});
 			});
-			const sgMetadatas = require(`../../assets/plugins/terraform/external/iactor-plugin-terraform-sginterne/metadatas.json`);
-			sgMetadatas.provider.resources.forEach((element) => {
-				paletteData[1].data.push(
-					{
-						name: element.resourceType,
-						imageUrl: `logos/${element.icon}`,
-						description: "Description",
-					}
-				)
-			});
-		isMounted.value = true;
+
+			// sgMetadatas.provider.resources.forEach((element) => {
+			// 	paletteData[1].data.push({
+			// 		name: element.resourceType,
+			// 		imageUrl: `logos/${element.icon}`,
+			// 		description: "Description",
+			// 	});
+			// });
+			isMounted.value = true;
 		});
 
 		return {

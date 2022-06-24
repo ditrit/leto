@@ -1,6 +1,17 @@
 <template>
 	<div class="q-pa-md">
-		<q-stepper v-model="step" header-nav ref="stepper" color="primary" animated>
+		<div class="q-pa-md q-gutter-y-sm row justify-end">
+			<q-toggle
+				:label="modelValue"
+				color="primary"
+				:false-value="vOne"
+				:true-value="vTwo"
+				v-model="modelValue"
+			/>
+		</div>
+		<Modelization v-if="modelValue === vOne" @getTreeObjects="tree" />
+		<Monaco v-show="modelValue === vTwo" />
+		<!-- <q-stepper v-model="step" header-nav ref="stepper" color="primary" animated>
 			<q-step :name="1" title="Definition" prefix="1">
 				<ProductContent :data="currentProductContent">
 					<template v-slot:productTags>
@@ -117,28 +128,27 @@
 				aut similique nihil id corrupti ipsa nulla, asperiores ratione molestias
 				quidem excepturi.
 			</q-step>
-		</q-stepper>
+		</q-stepper> -->
 	</div>
 </template>
 
 <script>
 import { ref } from "vue";
-import ProductContent from "../Cards/ProductContent.vue";
 import useProductDetails from "../../../composables/Products/useProductDetails";
 import useDomainData from "../../../composables/WorkSpace/useDomainData";
 import Modelization from "../../2DModel/Modelization.vue";
 import Monaco from "../../Monaco/Monaco.vue";
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 
 export default {
 	props: ["id"],
-	components: { ProductContent, Modelization, Monaco },
+	components: { Modelization, Monaco },
 	setup(props) {
 		const step = ref(1);
 		const vOne = ref("Model");
 		const vTwo = ref("Source");
 		const modelValue = ref("Source");
-		
+
 		let { store, router, $q, currentProductContent, menu } =
 			useProductDetails();
 
@@ -173,22 +183,25 @@ export default {
 			modelValue,
 		};
 	},
-	watch : {
+	watch: {
 		modelValue(_oldModel, currentModel) {
-			if(currentModel === 'Model') {
-				window.localStorage.setItem("monacoSource", JSON.stringify(this.objectsTree.contains));
+			if (currentModel === "Model") {
+				window.localStorage.setItem(
+					"monacoSource",
+					JSON.stringify(this.objectsTree.contains)
+				);
 				this.setResources();
 				Monaco.methods.getGraph();
 			}
-		}
+		},
 	},
 	methods: {
 		...mapActions({
-			setResources: "appMonaco/setResources"
+			setResources: "appMonaco/setResources",
 		}),
 		tree(e) {
 			this.objectsTree = e;
-		}
+		},
 	},
 };
 </script>
