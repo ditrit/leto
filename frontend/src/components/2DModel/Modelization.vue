@@ -63,7 +63,14 @@ export default {
 			let currentTfObjectNode = new TerraformObjectNode(currentTfTypeNode,currentModel.getElementById("name").textContent.replace(/\s+/g, ''),0,currentModel.id,currentModel.parentNode.parentNode.id);
 			currentTfObjectNode.setHeight(currentModel.getAttribute("height"));
 			currentTfObjectNode.setWidth(currentModel.getAttribute("width"));
-
+			let ableToDropList = [];
+			if(currentTfObjectNode.attributes){
+				currentTfObjectNode.attributes.forEach(attribute =>{
+					if(attribute.representation == "contained" || attribute.representation =="containedInOtherContainer"){
+						fillAbleToDropList(rootTreeObject.value,attribute,ableToDropList);
+					}
+				})
+			}
 			if (currentModel.parentNode.getAttribute("id") != "svg0") {
 				let parent = getParent(rootTreeObject.value,currentModel.id);
 				let node = getNode(rootTreeObject.value,currentModel.id);
@@ -85,6 +92,12 @@ export default {
 					updateLinks(rootTreeObject.value,children[child]);
 				}
 			}
+			const groups = d3.select('#root').selectAll('svg');
+					groups.each(function () {
+						if (ableToDropList.includes(this.id)) {
+							d3.select("#"+this.id).select('#logo_frame').attr("fill","green");
+						}
+					});
 		}
 
 		function dragged(event) {
@@ -101,7 +114,7 @@ export default {
 		}
 
 		function dragended() {
-    		const currentGroup = this.parentNode;
+    	const currentGroup = this.parentNode;
 			const x = currentGroup.getAttribute('x');
 			const y = currentGroup.getAttribute('y');
 			const groups = d3.select('#root').selectAll('svg');
@@ -129,32 +142,35 @@ export default {
 				}
 			});
 
-			if (minGroup != null && minGroup != this) {
-				let parent = getParent(rootTreeObject.value,minGroup.getAttribute('id'));
-				let node = getNode(rootTreeObject.value,currentGroup.id);
-				if(node){
-					currentTfObjectNode.setObjects(node.objects);
-				}
-				removeContentInData(rootTreeObject.value,"svg0",currentTfObjectNode);
-				addContentInData(rootTreeObject.value,minGroup.id,currentTfObjectNode);
-				const dimensions = calcul_dimensions(parent.drawingObject, 0, 1000,  false, parent.contains);
-				calcul_xy_container(parent.drawingObject, parent.drawingObject.x, parent.drawingObject.y, 1000, parent.contains);
-				parent.drawingObject.height = dimensions.height + 20;
-				parent.drawingObject.width = dimensions.width;
+			if (minGroup != null) {
+				if(minGroup.getElementById("logo_frame").getAttribute("fill")=="green"){
+					let parent = getParent(rootTreeObject.value,minGroup.getAttribute('id'));
+					let node = getNode(rootTreeObject.value,currentGroup.id);
+					if(node){
+						currentTfObjectNode.setObjects(node.objects);
+					}
+					removeContentInData(rootTreeObject.value,"svg0",currentTfObjectNode);
+					addContentInData(rootTreeObject.value,minGroup.id,currentTfObjectNode);
+					const dimensions = calcul_dimensions(parent.drawingObject, 0, 1000,  false, parent.contains);
+					calcul_xy_container(parent.drawingObject, parent.drawingObject.x, parent.drawingObject.y, 1000, parent.contains);
+					parent.drawingObject.height = dimensions.height + 20;
+					parent.drawingObject.width = dimensions.width;
 
-				d3.select('#'+currentGroup.getAttribute('id')).remove();
-				d3.select('#'+parent.id).remove();
-				let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,parent.type_name)
-				const terraformObject = new TerraformObjectNode(terraformType, parent.instance_name, 0, parent.id, 'svg0', parent.objects);
-				createTerraformObject(terraformObject,parent, svg, "root", false, 0);
+					d3.select('#'+currentGroup.getAttribute('id')).remove();
+					d3.select('#'+parent.id).remove();
+					let terraformType = getLetoTypeNodeFromData(terraformPanelList.value,parent.type_name)
+					const terraformObject = new TerraformObjectNode(terraformType, parent.instance_name, 0, parent.id, 'svg0', parent.objects);
+					createTerraformObject(terraformObject,parent, svg, "root", false, 0);
 
-				let children = minGroup.getElementsByTagName("svg")
-				for(let child in children) {
-					updateLinks(rootTreeObject.value,children[child]);
+					let children = minGroup.getElementsByTagName("svg")
+					for(let child in children) {
+						updateLinks(rootTreeObject.value,children[child]);
+					}
 				}
 			}
 			updateLinks(rootTreeObject.value,this.parentNode)
 			updateDrawingInfosInData(rootTreeObject.value,this.parentNode);
+			d3.selectAll(groups).select('#logo_frame').attr("fill","white");
 			return;
 		}
 

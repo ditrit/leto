@@ -309,10 +309,8 @@ export function fillAbleToDropList(node,attribute,ableToDropList){
 	if (node == null){
 		return;
 	}
-	else if(node.representation == "container"){
-		if(attribute.resourceType == node.type_name || attribute.resourceType == null ){
+	if(node.representation == "container" && (attribute.resourceType == node.type_name || attribute.resourceType == null )){
 			ableToDropList.push(node.drawingObject.id);
-		}
 	}
 	fillAbleToDropList(node.contains[0],attribute,ableToDropList)
 	fillAbleToDropList(node.rightSibling,attribute,ableToDropList)
