@@ -28,7 +28,7 @@
 		<div id="detailsContainer">
 			<ConfigPannel></ConfigPannel>
 		</div>
-
+		</q-drawer>
 		<Drawer v-model="drawer">
 			<template v-slot:drawerFilter>
 				<PaletteMenu :data="mockData"></PaletteMenu>
