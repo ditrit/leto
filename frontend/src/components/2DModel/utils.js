@@ -27,6 +27,28 @@ export function storeInputLinkInData(node,currentModelId,link){
 	storeInputLinkInData(node.rightSibling,currentModelId,link);
 }
 
+export function removeInputLinkInData(node,currentModelId,linkId){
+	if (node == null){
+		return;
+	}
+	else if(node.drawingObject.id == currentModelId){
+		node.removeInputLink(linkId);
+	}
+	removeInputLinkInData(node.contains[0],currentModelId,linkId);
+	removeInputLinkInData(node.rightSibling,currentModelId,linkId);
+}
+
+export function removeOutputLinkInData(node,currentModelId,linkId){
+	if (node == null){
+		return;
+	}
+	else if(node.drawingObject.id == currentModelId){
+		node.removeOutputLink(linkId);
+	}
+	removeOutputLinkInData(node.contains[0],currentModelId,linkId);
+	removeOutputLinkInData(node.rightSibling,currentModelId,linkId);
+}
+
 export function replaceComponents(group) {
 	let i = 0;
 	let height =
@@ -90,7 +112,7 @@ export function getAnchorAbsPos(anchor){
 				return pos;
 }
 
-export function drawLink(beginAnchor,endAnchor,rootID,id){
+export function drawLink(beginAnchor,endAnchor,rootID,id,rootTreeObject){
 
 			let beginAnchorPos=getAnchorAbsPos(beginAnchor);
 			let endAnchorPos=getAnchorAbsPos(endAnchor);
@@ -108,9 +130,9 @@ export function drawLink(beginAnchor,endAnchor,rootID,id){
 									.attr("marker-start","url(#arrow)")
 									.on("click",function()
 										{
-
 											this.remove();
-
+											removeInputLinkInData(rootTreeObject,endAnchor.parentNode.id,id);
+											removeOutputLinkInData(rootTreeObject,beginAnchor.parentNode.id,id)
 										});
 			return id;
 }
@@ -252,4 +274,33 @@ export function getNode(node,id){
 	let result = getNode(node.contains[0],id);
 	if(result === undefined) result = getNode(node.rightSibling,id);
 	return result;
+}
+export function getAttributesInData(node,currentModelId,letoObject){
+	if(node == null){
+		return;
+	}
+	else if(node.drawingObject.id == currentModelId){
+		letoObject.attributes = node.getAttributes();
+	}
+	getAttributesInData(node.contains[0],currentModelId,letoObject);
+	getAttributesInData(node.rightSibling,currentModelId,letoObject);
+}
+
+export function fillAbleToLinkList(node,attribute,ableToLinkList){
+	if (node == null){
+		return;
+	}
+		if(node.type_name == attribute.resourceType){
+			let count = 0;
+			node.getLinks().outputs.forEach(link=>{
+				if(link.variableName == attribute.variableName){
+					count ++;
+				}
+			})
+			if(count==0 || (count>0 && attribute.multiple)){
+				ableToLinkList.push(node.drawingObject.id);
+			}
+		}
+	fillAbleToLinkList(node.contains[0],attribute,ableToLinkList)
+	fillAbleToLinkList(node.rightSibling,attribute,ableToLinkList)
 }
