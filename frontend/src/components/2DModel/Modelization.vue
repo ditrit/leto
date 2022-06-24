@@ -110,7 +110,7 @@ export default {
 
 			if (minGroup != null && minGroup != this) {
 				let parent = getParent(rootTreeObject.value,minGroup.getAttribute('id'));
-				let node = getNode(rootTreeObject.value,currentModel.id);
+				let node = getNode(rootTreeObject.value,currentGroup.id);
 				currentTfObjectNode.setObjects(node.objects);
 				removeContentInData(rootTreeObject.value,"svg0",currentTfObjectNode);
 				addContentInData(rootTreeObject.value,minGroup.id,currentTfObjectNode);
