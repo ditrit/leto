@@ -1,143 +1,33 @@
 <template>
 	<div class="q-pa-md">
 		<div class="q-pa-md q-gutter-y-sm row justify-end">
-			<q-toggle
-				:label="modelValue"
-				color="primary"
-				:false-value="vOne"
-				:true-value="vTwo"
+			<q-btn-toggle
+				class="modelization_toggle q-ml-lg"
+				no-caps
+				rounded
+				elevated
+				toggle-color="primary"
+				color="white"
+				text-color="primary"
 				v-model="modelValue"
+				size="10px"
+				:options="[
+					{ label: 'Model 3D', value: vOne },
+					{ label: 'Text', value: vTwo },
+				]"
 			/>
 		</div>
 		<Modelization v-if="modelValue === vOne" @getTreeObjects="tree" />
 		<Monaco v-show="modelValue === vTwo" />
-		<!-- <q-stepper v-model="step" header-nav ref="stepper" color="primary" animated>
-			<q-step :name="1" title="Definition" prefix="1">
-				<ProductContent :data="currentProductContent">
-					<template v-slot:productTags>
-						<section class="col-4">
-							<div class="tags_wrapper">
-								<q-card flat bordered class="card_tags_default">
-									<q-card-section>
-										<div class="row no-wrap">
-											<div class="col">
-												<div class="row">
-													<q-icon name="sell" size="30px" class="q-mr-sm" />
-													<div class="text-h6">Tags</div>
-												</div>
-											</div>
-											<div class="button_actions__container col-auto">
-												<q-btn color="grey-7" round flat icon="more_vert">
-													<q-menu cover auto-close>
-														<q-list>
-															<q-item clickable @click.prevent="OnEdit">
-																<q-item-section class="action_card__item">
-																	<q-icon
-																		name="edit"
-																		size="1.5em"
-																		class="q-mr-sm"
-																	/>
-																	Edit</q-item-section
-																>
-															</q-item>
-														</q-list>
-													</q-menu>
-												</q-btn>
-											</div>
-										</div>
-									</q-card-section>
-									<q-card-section>
-										<ul
-											class="cards_tags_wrapper rounded-borders overflow-hidden"
-										>
-											<li
-												v-for="item in domainTags"
-												:key="item.ID"
-												:class="item.class"
-											>
-												{{ item.Name }}
-												<q-btn
-													v-if="editMode"
-													round
-													dense
-													unelevated
-													size="xs"
-													color="red"
-													text-color="white"
-													icon="delete"
-													@click.prevent="confirm(item.ID)"
-													class="q-ml-sm"
-												/>
-											</li>
-										</ul>
-										<div
-											v-if="globalTagsTreeList"
-											v-show="editMode"
-											class="globalTagTree_container"
-										>
-											<q-input
-												ref="filterTagRef"
-												v-model="filterTag"
-												label="Search"
-												dense
-											>
-												<template v-slot:append>
-													<q-icon
-														v-if="filterTag !== ''"
-														name="clear"
-														class="cursor-pointer"
-														@click="resetFilterTag"
-													/>
-												</template>
-											</q-input>
-											<div class="q-pa-md q-gutter-sm">
-												<q-tree
-													dense
-													:nodes="globalTagsTreeList"
-													node-key="label"
-													:filter="filterTag"
-													default-expand-all
-												/>
-											</div>
-										</div>
-									</q-card-section>
-								</q-card>
-							</div>
-						</section>
-					</template>
-				</ProductContent>
-			</q-step>
-
-			<q-step :name="2" title="Modelization" prefix="2">
-				<div class="q-pa-md q-gutter-y-sm row justify-end">
-					<q-toggle
-						:label="modelValue"
-						color="primary"
-						:false-value="vOne"
-						:true-value="vTwo"
-						v-model="modelValue"
-					/>
-				</div>
-				<Modelization v-if="modelValue === vOne" @getTreeObjects="tree"/>
-				<Monaco v-show="modelValue === vTwo"/>
-			</q-step>
-
-			<q-step :name="3" title="Substurion" prefix="3">
-				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam mollitia
-				ea voluptatum consequatur incidunt aspernatur maiores, quisquam, itaque
-				aut similique nihil id corrupti ipsa nulla, asperiores ratione molestias
-				quidem excepturi.
-			</q-step>
-		</q-stepper> -->
 	</div>
 </template>
 
 <script>
 import { ref } from "vue";
-import useProductDetails from "../../../composables/Products/useProductDetails";
-import useDomainData from "../../../composables/WorkSpace/useDomainData";
-import Modelization from "../../2DModel/Modelization.vue";
-import Monaco from "../../Monaco/Monaco.vue";
+import useProductDetails from "src/composables/Products/useProductDetails";
+import useDomainData from "src/composables/WorkSpace/useDomainData";
+import Modelization from "components/2DModel/Modelization.vue";
+import Monaco from "components/Monaco/Monaco.vue";
 import { mapActions } from "vuex";
 
 export default {
@@ -207,12 +97,20 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.q-stepper
-  background: none !important
-  box-shadow: none !important
-  max-width: 1200px !important
-  border: none !important
 
-.q-stepper__header--border
-  border-bottom: none !important
+
+.modelization_navbar
+  display: flex
+  flex-direction: row
+  justify-content: flex-start
+  align-items: center
+  margin: 50px 0 50px 0
+  padding: 10px
+
+.modelization_toggle
+  //border: 1.5px solid white
+  margin-top: -10px
+
+.monaco_wrapper
+  margin-top: 100px
 </style>

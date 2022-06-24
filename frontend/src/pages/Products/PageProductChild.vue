@@ -24,7 +24,7 @@
 			:breakpoint="500"
 			class="bg-grey-3"
 		>
-			<h6>Object Details</h6>
+			<h6 class="q-pl-md text-grey-14">Object Details</h6>
 			<div id="detailsContainer">
 				<ConfigPannel></ConfigPannel>
 			</div>
@@ -60,13 +60,12 @@ import AjaxBar from "components/UI/Progress/AjaxBar";
 import Drawer from "components/UI/Drawers/Drawer.vue";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import PaletteMenu from "components/PaletteMenu";
-import { pageSizeTweak } from "../../common/index";
-import useProductDetails from "../../composables/Products/useProductDetails";
-import useDomainData from "../../composables/WorkSpace/useDomainData";
+import { pageSizeTweak } from "src/common/index";
+import useProductDetails from "src/composables/Products/useProductDetails";
+import useDomainData from "src/composables/WorkSpace/useDomainData";
 import ProductDetailsNavigation from "components/UI/Stepper/ProductDetailsNavigation.vue";
 import ConfigPannel from "src/components/ConfigPannel.vue";
 import awsMetadatas from "src/assets/plugins/terraform/internal/aws/metadatas.json";
-// import sgMetadatas from "src/assets/plugins/terraform/external/iactor-plugin-terraform-sginterne/metadatas.json";
 
 export default defineComponent({
 	name: "PageDomainChild",
@@ -139,14 +138,6 @@ export default defineComponent({
 					description: "Description",
 				});
 			});
-
-			// sgMetadatas.provider.resources.forEach((element) => {
-			// 	paletteData[1].data.push({
-			// 		name: element.resourceType,
-			// 		imageUrl: `logos/${element.icon}`,
-			// 		description: "Description",
-			// 	});
-			// });
 			isMounted.value = true;
 		});
 
