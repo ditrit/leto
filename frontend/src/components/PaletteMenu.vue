@@ -48,7 +48,7 @@
                   <q-tooltip class="text-body2" v-if="props.row.description">
                     {{ props.row.description }}
                   </q-tooltip>
-                  <q-img :src="props.row.imageUrl" height="70px"/>
+                  <q-img :src="props.row.imageUrl" fit="content" height="70px"/>
                   <q-card-section>
                     <div class="text-h6 centered">{{ props.row.name }}</div>
                   </q-card-section>
