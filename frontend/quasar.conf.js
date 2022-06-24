@@ -61,7 +61,7 @@ module.exports = configure(function (ctx) {
 
 			// Options below are automatically set depending on the env, set them if you want to override
 			env: {
-				BASEURL: process.env.BASEURL || "/ditrit/Gandalf/1.0.0"
+				BASEURL: process.env.GANDALF_API_BASE_URL || "/ditrit/Gandalf/1.0.0"
 			},
 			// extractCSS: false,
 
