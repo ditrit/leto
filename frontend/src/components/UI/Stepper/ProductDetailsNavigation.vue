@@ -174,7 +174,7 @@ export default {
 		};
 	},
 	watch : {
-		modelValue(oldModel, currentModel) {
+		modelValue(_oldModel, currentModel) {
 			if(currentModel === 'Model') {
 				window.localStorage.setItem("monacoSource", JSON.stringify(this.objectsTree.contains));
 				this.setResources();

@@ -19,7 +19,7 @@ import { calcul_dimensions, calcul_xy_container} from '../Monaco/svg_maths'
 
 export default {
 	emits: ['getTreeObjects'],
-	setup(props, {emit}) {
+	setup(_props, {emit}) {
 		const zoom = ref(1);
 		const translateX = ref(0);
 		const translateY = ref(0);
@@ -199,21 +199,22 @@ export default {
 		}
 
 		function drawLines(datas) {
-			datas.forEach( block => {
-				const blockEnd = (block.value) ? block.value : block;
+			datas.forEach( blockE => {
+				const blockEnd = (blockE.value) ? blockE.value : blockE;
 				if(blockEnd.link) {
-					blockEnd.link.forEach( blockBegin => {
-						let endId = (blockEnd.value) ? blockEnd.value.id : blockEnd.id;
-						let endName = (blockEnd.value) ? blockEnd.value.name : blockEnd.name;
-						let endType = (blockEnd.value) ? blockEnd.value.type : blockEnd.type;
-						let beginId = (blockBegin.value) ? blockBegin.value.id : blockBegin.id;
-						let beginName = (blockBegin.value) ? blockBegin.value.name : blockBegin.name;
-						let beginType = (blockBegin.value) ? blockBegin.value.type : blockBegin.type;
-						let anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
-						let beginAnchor = anchors[0];
-						let endAnchor = anchors[1];
-						let linkId = drawLink(beginAnchor,endAnchor,"svg0",beginId+"_to_"+endId);
-						let link = {
+					blockEnd.link.forEach( blockB => {
+						const blockBegin = (blockB.value) ? blockB.value : blockB;
+						const endId = blockEnd.id;
+						const endName = blockEnd.name;
+						const endType = blockEnd.type;
+						const beginId = blockBegin.id;
+						const beginName = blockBegin.name;
+						const beginType = blockBegin.type;
+						const anchors = TerraformObjectNode.getLinkAnchors(beginId,endId);
+						const beginAnchor = anchors[0];
+						const endAnchor = anchors[1];
+						const linkId = drawLink(beginAnchor,endAnchor,"svg0",beginId+"_to_"+endId);
+						const link = {
 							targetId : endId,
 							targetName : endName,
 							targetType : endType,
@@ -221,10 +222,10 @@ export default {
 							sourceName : beginName,
 							sourceType : beginType,
 							id : linkId,
-							variableName : blockBegin.name,
-							required : blockBegin.required,
-							multiple : blockBegin.multiple,
-							representation : blockBegin.representation,
+							variableName : blockB.name,
+							required : blockB.required,
+							multiple : blockB.multiple,
+							representation : blockB.representation,
 						}
 						storeOutputLinkInData(rootTreeObject.value,beginId,link);
 						storeInputLinkInData(rootTreeObject.value,endId,link)

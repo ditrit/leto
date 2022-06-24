@@ -65,7 +65,7 @@ function getContainer(datas, id) {
 				index = i;
 			}
 		}
-	};
+	}
 	return {container, index};
 }
 
