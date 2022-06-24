@@ -107,8 +107,8 @@
 						v-model="modelValue"
 					/>
 				</div>
-				<Modelization v-if="modelValue === vOne" />
-				<Monaco v-show="modelValue === vTwo" @parse_datas="parseDatas"/>
+				<Modelization v-if="modelValue === vOne" @getTreeObjects="tree"/>
+				<Monaco v-show="modelValue === vTwo"/>
 			</q-step>
 
 			<q-step :name="3" title="Substurion" prefix="3">
@@ -128,6 +128,7 @@ import useProductDetails from "../../../composables/Products/useProductDetails";
 import useDomainData from "../../../composables/WorkSpace/useDomainData";
 import Modelization from "../../2DModel/Modelization.vue";
 import Monaco from "../../Monaco/Monaco.vue";
+import { mapActions } from 'vuex';
 
 export default {
 	props: ["id"],
@@ -172,9 +173,21 @@ export default {
 			modelValue,
 		};
 	},
+	watch : {
+		modelValue(oldModel, currentModel) {
+			if(currentModel === 'Model') {
+				window.localStorage.setItem("monacoSource", JSON.stringify(this.objectsTree.contains));
+				this.setResources();
+				Monaco.methods.getGraph();
+			}
+		}
+	},
 	methods: {
-		parseDatas(e) {
-			console.log(e)
+		...mapActions({
+			setResources: "appMonaco/setResources"
+		}),
+		tree(e) {
+			this.objectsTree = e;
 		}
 	},
 };
