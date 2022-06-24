@@ -1,113 +1,84 @@
 <template>
-	<q-layout container style="height: 100vh" view="lHh lpR lFf">
-		<q-header class="bg-white main_header">
-			<q-toolbar>
-				<div class="row">
-					<q-btn
-						flat
-						@click="drawer = !drawer"
-						round
-						color="primary"
-						icon="menu"
+	<div>
+		<q-banner inline-actions rounded class="bg-orange text-white">
+			<spam style="font-size: 1.2em"> This page is under construction.</spam>
+		</q-banner>
+		<q-layout container style="height: 100vh" view="lHh lpR lFf">
+			<q-header class="bg-white main_header">
+				<q-toolbar>
+					<div class="row">
+						<q-btn
+							flat
+							@click="drawer = !drawer"
+							round
+							color="primary"
+							icon="menu"
+						/>
+					</div>
+					<AccountSettings />
+				</q-toolbar>
+			</q-header>
+
+			<AjaxBar />
+			<Drawer v-model="drawer">
+				<template v-slot:drawerFilter>
+					<div class="search_container">
+						<q-input ref="filterRef" filled v-model="filter" label="Search">
+							<template v-slot:append>
+								<q-icon
+									v-if="filter !== ''"
+									name="clear"
+									class="cursor-pointer"
+									@click="resetFilter"
+								/>
+								<q-icon
+									v-else
+									name="search"
+									s
+									class="cursor-pointer"
+									@click="resetFilter"
+								/>
+							</template>
+						</q-input>
+					</div>
+				</template>
+				<template v-slot:drawerMenu>
+					<HomeNav />
+				</template>
+			</Drawer>
+
+			<q-page-container>
+				<q-page :style-fn="pageSizeTweak" class="flex bg-gray">
+					<PageContent
+						v-for="item in homeData"
+						:key="item.id"
+						:icon="item.icon"
+						:headline="$t('home')"
+						:textContent="$t('text_content')"
 					/>
-				</div>
-				<AccountSettings />
-			</q-toolbar>
-		</q-header>
-
-		<AjaxBar />
-		<Drawer v-model="drawer">
-			<template v-slot:drawerFilter>
-				<div class="search_container">
-					<q-input ref="filterRef" filled v-model="filter" label="Search">
-						<template v-slot:append>
-							<q-icon
-								v-if="filter !== ''"
-								name="clear"
-								class="cursor-pointer"
-								@click="resetFilter"
-							/>
-							<q-icon
-								v-else
-								name="search"
-								s
-								class="cursor-pointer"
-								@click="resetFilter"
-							/>
-						</template>
-					</q-input>
-				</div>
-			</template>
-			<template v-slot:drawerMenu>
-				<HomeNav />
-			</template>
-		</Drawer>
-
-		<q-page-container>
-			<q-page :style-fn="pageSizeTweak" class="flex bg-gray">
-				<PageContent
-					v-for="item in homeData"
-					:key="item.id"
-					:icon="item.icon"
-					:headline="$t('home')"
-					:textContent="$t('text_content')"
-				/>
-				<div class="row">
-					<div class="col-md-12">
-						<FavoriteContent
-							v-for="item in favoriteData"
-							:key="item.id"
-							:icon="item.icon"
-							:headline="$t('favorite_workspaces')"
-							:textContent="$t('text_content')"
-						>
-							<template v-slot:favoriteContent>
-								<WorkspacesCarousel />
-							</template>
-						</FavoriteContent>
-					</div>
-					<div class="col-md-12">
-						<FavoriteContent
-							v-for="item in productData"
-							:key="item.id"
-							:icon="item.icon"
-							:headline="$t('favorite_products')"
-							:textContent="$t('text_content')"
-						>
-							<template v-slot:favoriteContent>
-								<ProductsCarousel />
-							</template>
-						</FavoriteContent>
-					</div>
-				</div>
-			</q-page>
-		</q-page-container>
-	</q-layout>
+				</q-page>
+			</q-page-container>
+		</q-layout>
+	</div>
 </template>
 
 <script>
 import { defineComponent, ref } from "vue";
-import PageContent from "../../components/Content/PageContent";
-import FavoriteContent from "../../components/Content/FavoriteContent";
-import AjaxBar from "../../components/UI/Progress/AjaxBar.vue";
-import Drawer from "../../components/UI/Drawers/Drawer.vue";
-import { pageSizeTweak } from "../../common/index";
-import AccountSettings from "../../components/UI/Profil/AccountSettings";
-import HomeNav from "../../components/UI/Navigation/HomeNav.vue";
-import ProductsCarousel from "../../components/UI/Carousel/ProductsCarousel.vue";
-import WorkspacesCarousel from "../../components/UI/Carousel/WorkspacesCarousel.vue";
+import PageContent from "components/Content/PageContent";
+import AjaxBar from "components/UI/Progress/AjaxBar.vue";
+import Drawer from "components/UI/Drawers/Drawer.vue";
+import { pageSizeTweak } from "src/common/index";
+import AccountSettings from "components/UI/Profil/AccountSettings";
+import HomeNav from "components/UI/Navigation/HomeNav.vue";
 
 export default defineComponent({
 	name: "PageTeams",
 	components: {
 		AccountSettings,
 		PageContent,
-		FavoriteContent,
 		AjaxBar,
 		Drawer,
 		HomeNav,
-		ProductsCarousel,
-		WorkspacesCarousel,
 	},
 
 	setup() {

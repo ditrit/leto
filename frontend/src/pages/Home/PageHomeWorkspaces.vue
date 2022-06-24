@@ -1,59 +1,64 @@
 <template>
-	<q-layout container style="height: 100vh" view="lHh lpR lFf">
-		<q-header class="bg-white main_header">
-			<q-toolbar>
-				<div class="row">
-					<q-btn
-						flat
-						@click="drawer = !drawer"
-						round
-						color="primary"
-						icon="menu"
+	<div>
+		<q-banner inline-actions rounded class="bg-orange text-white">
+			<spam style="font-size: 1.2em"> This page is under construction.</spam>
+		</q-banner>
+		<q-layout container style="height: 100vh" view="lHh lpR lFf">
+			<q-header class="bg-white main_header">
+				<q-toolbar>
+					<div class="row">
+						<q-btn
+							flat
+							@click="drawer = !drawer"
+							round
+							color="primary"
+							icon="menu"
+						/>
+					</div>
+					<AccountSettings />
+				</q-toolbar>
+			</q-header>
+
+			<AjaxBar />
+			<Drawer v-model="drawer">
+				<template v-slot:drawerFilter>
+					<div class="search_container">
+						<q-input ref="filterRef" filled v-model="filter" label="Search">
+							<template v-slot:append>
+								<q-icon
+									v-if="filter !== ''"
+									name="clear"
+									class="cursor-pointer"
+									@click="resetFilter"
+								/>
+								<q-icon
+									v-else
+									name="search"
+									class="cursor-pointer"
+									@click="resetFilter"
+								/>
+							</template>
+						</q-input>
+					</div>
+				</template>
+				<template v-slot:drawerMenu>
+					<HomeNav />
+				</template>
+			</Drawer>
+
+			<q-page-container>
+				<q-page :style-fn="pageSizeTweak" class="flex bg-gray">
+					<PageContent
+						v-for="item in myProductsData"
+						:key="item.id"
+						:icon="item.icon"
+						:headline="$t('my_workspaces')"
+						:textContent="$t('text_content')"
 					/>
-				</div>
-				<AccountSettings />
-			</q-toolbar>
-		</q-header>
-
-		<AjaxBar />
-		<Drawer v-model="drawer">
-			<template v-slot:drawerFilter>
-				<div class="search_container">
-					<q-input ref="filterRef" filled v-model="filter" label="Search">
-						<template v-slot:append>
-							<q-icon
-								v-if="filter !== ''"
-								name="clear"
-								class="cursor-pointer"
-								@click="resetFilter"
-							/>
-							<q-icon
-								v-else
-								name="search"
-								class="cursor-pointer"
-								@click="resetFilter"
-							/>
-						</template>
-					</q-input>
-				</div>
-			</template>
-			<template v-slot:drawerMenu>
-				<HomeNav />
-			</template>
-		</Drawer>
-
-		<q-page-container>
-			<q-page :style-fn="pageSizeTweak" class="flex bg-gray">
-				<PageContent
-					v-for="item in myProductsData"
-					:key="item.id"
-					:icon="item.icon"
-					:headline="$t('my_workspaces')"
-					:textContent="$t('text_content')"
-				/>
-			</q-page>
-		</q-page-container>
-	</q-layout>
+				</q-page>
+			</q-page-container>
+		</q-layout>
+	</div>
 </template>
 
 <script>
@@ -61,7 +66,7 @@ import { ref } from "vue";
 import PageContent from "components/Content/PageContent";
 import AjaxBar from "components/UI/Progress/AjaxBar";
 import Drawer from "components/UI/Drawers/Drawer.vue";
-import { pageSizeTweak } from "../../common/index";
+import { pageSizeTweak } from "src/common/index";
 import AccountSettings from "components/UI/Profil/AccountSettings";
 import HomeNav from "components/UI/Navigation/HomeNav.vue";
 
