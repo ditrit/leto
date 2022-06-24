@@ -33,6 +33,7 @@
 		"grapesjs-preset-webpage": "^0.1.11",
 		"hcl": "github:ditrit/iactor#414a628ddb4e5b7ab761edbc0e5b1874ca64378a",
 		"isomorphic-git": "^1.12.1",
+		"mitt": "^3.0.0",
 		"monaco-editor": "^0.25.2",
 		"quasar": "^2.0.4",
 		"three": "^0.130.1",

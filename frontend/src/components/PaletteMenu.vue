@@ -44,7 +44,7 @@
           >
             <template v-slot:item="props">
               <div class="q-pa-xs col-xs-12 col-sm-6 col-md-6 text-primary">
-                <q-card class="leto-palette-card" @click="onClick">
+                <q-card class="leto-palette-card" @click="onClick(props.row.name)">
                   <q-tooltip class="text-body2" v-if="props.row.description">
                     {{ props.row.description }}
                   </q-tooltip>
@@ -66,6 +66,7 @@
 
 <script>
 import { defineComponent, ref } from "vue"
+import EventBus from "src/services/EventBus"
 
 /**
  * @typedef {{
@@ -81,8 +82,8 @@ import { defineComponent, ref } from "vue"
  */
 
 
-function onClick($event) {
-  console.log($event)
+function onClick(name) {
+  EventBus.emit('selected:component', name)
 }
 
 export default defineComponent({
