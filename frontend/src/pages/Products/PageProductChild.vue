@@ -64,7 +64,7 @@ import { pageSizeTweak } from "../../common/index";
 import useProductDetails from "../../composables/Products/useProductDetails";
 import useDomainData from "../../composables/WorkSpace/useDomainData";
 import ProductDetailsNavigation from "components/UI/Stepper/ProductDetailsNavigation.vue";
-import ConfigPannel from "components/ConfigPannel.vue"
+import ConfigPannel from "src/components/ConfigPannel.vue";
 
 export default defineComponent({
 	name: "PageDomainChild",
