@@ -11,6 +11,7 @@
 			>
 				<q-tab v-if="tags" dense name="tags" label="Tags" icon="sell" />
 				<q-tab dense name="products" label="Products" icon="apps" />
+				<q-tab dense name="gitprovider" label="Git provider" icon="account_tree" />
 				<q-tab dense name="requirements" label="Requirements" icon="info" />
 				<q-tab
 					dense
@@ -156,6 +157,11 @@
 							</q-form>
 						</template>
 					</Modal>
+				</q-tab-panel>
+				<q-tab-panel name="gitprovider" class="flex q-gutter-md">
+					<div class="cards_wrapper">
+						<git-provider-tab-card/>
+					</div>
 				</q-tab-panel>
 				<q-tab-panel name="requirements" class="flex q-gutter-md">
 					<div class="cards_wrapper">
@@ -500,9 +506,11 @@ import useLibraryTabData from "../../../composables/TabPanels/useLibraryTabData"
 import Modal from "../Dialogs/Modal.vue";
 import FileUploader from "../Form/FileUploader.vue";
 import useFileData from "../../../composables/Forms/userFileData";
+import GitProviderTabCard from "components/UI/Cards/GitProviderTabCard";
 
 export default {
 	components: {
+		GitProviderTabCard,
 		LibraryTabCard,
 		EnvironemtsTabCard,
 		ProductsTabCard,
