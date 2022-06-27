@@ -137,20 +137,20 @@ export default defineComponent({
 					{
 						name: element.resourceType,
 						imageUrl: `logos/${element.icon}`,
-						description: "Description",
+						description: element.resourceType,
 					}
 				)
 			});
-			const sgMetadatas = require(`../../assets/plugins/terraform/external/iactor-plugin-terraform-sginterne/metadatas.json`);
-			sgMetadatas.provider.resources.forEach((element) => {
-				paletteData[1].data.push(
-					{
-						name: element.resourceType,
-						imageUrl: `logos/${element.icon}`,
-						description: "Description",
-					}
-				)
-			});
+			// const sgMetadatas = require(`../../assets/plugins/terraform/external/iactor-plugin-terraform-sginterne/metadatas.json`);
+			// sgMetadatas.provider.resources.forEach((element) => {
+			// 	paletteData[1].data.push(
+			// 		{
+			// 			name: element.resourceType,
+			// 			imageUrl: `logos/${element.icon}`,
+			// 			description: "Description",
+			// 		}
+			// 	)
+			// });
 		isMounted.value = true;
 		});
 
