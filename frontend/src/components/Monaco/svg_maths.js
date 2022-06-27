@@ -193,12 +193,25 @@ function getContent(containers) {
     c.resourcesObject.forEach((ro) => {
       const multiple = (ro.array === undefined) ? false : ro.array;
       if (ro.representation == 'contain') {
+        ro.representation = 'contained';
+        const newAttribute = {variableName: ro.name, resourceType: ro.value.type, representation : ro.representation, array: false, required: false};            
+        ro.value.attributes = addAttribute(ro.value.attributes, newAttribute);
         c.contains.push({name : ro.name, required : ro.required, multiple : multiple, representation : ro.representation, value : ro.value});
       }
     });
   });
 
   return containers;
+}
+
+function addAttribute(attributesArray, newAttribute) {
+  const attributes = [];
+  attributesArray.forEach(attribute => {
+    attributes.push(attribute);
+  })
+  if(!getAttribute(attributes, newAttribute)) attributes.push(newAttribute);
+  
+  return attributes;
 }
 
 function getContentInContainers(containers) {
@@ -209,7 +222,11 @@ function getContentInContainers(containers) {
           if (cn.value.name == ctn.value.name) {
             if (!c.contains.includes(cs)) {
               cs.inContainer = true;
-              c.contains.push({name : ctn.value.name, value : cs});
+              cn.value = c;
+              cn.representation = 'contained';
+              const newAttribute = {variableName: cn.name, resourceType: cn.value.type, representation : cn.representation, array: false, required: false};            
+              cs.attributes = addAttribute(cs.attributes, newAttribute);
+              c.contains.push({name : cs.name, value : cs});
               const index = containers.indexOf(cs);
               containers.splice(index, 1);
             }
@@ -285,12 +302,7 @@ function inverseAttribute(resources) {
           resources.forEach( r => {
             if(r.type === resourceType) {
               const newAttribute = {variableName: attribute.variableName, resourceType: resource.type, representation : attribute.representation, array: attribute.array, required: attribute.required};
-              const attributes = [];
-              r.attributes.forEach(a => {
-                attributes.push(a);
-              })
-              if(!getAttribute(attributes, newAttribute)) attributes.push(newAttribute);
-              r.attributes = attributes;
+              r.attributes = addAttribute(r.attributes, newAttribute);
             }
           })
         }
