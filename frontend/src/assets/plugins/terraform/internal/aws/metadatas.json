@@ -20,12 +20,12 @@
         "resources" : [
             {
                 "resourceType" : "aws_security_group",
-                "representation" : "block",
+                "representation" : "container",
                 "attributes" : [
                     {
                         "variableName" : "vpc_id",
                         "resourceType" : "aws_vpc",
-                        "representation" : "link",
+                        "representation" : "contained",
                         "required" : false
                     }
                 ],
@@ -39,14 +39,14 @@
                     {
                         "variableName" : "security_groups",
                         "resourceType" : "aws_security_group",
-                        "representation" : "inverseLink",
+                        "representation" : "contained",
                         "array" : true,
                         "required" : false
                     },
                     {
                         "variableName" : "vpc_security_group_ids",
                         "resourceType" : "aws_security_group",
-                        "representation" : "inverseLink",
+                        "representation" : "contained",
                         "array" : true,
                         "required" : false
                     },
