@@ -41,12 +41,10 @@ import LetoTypeNode from "./LetoTypeNode";
 import LetoObjectNode from "./LetoObjectNode";
 import { calcul_dimensions, calcul_xy_container } from "../Monaco/svg_maths";
 import EventBus from "src/services/EventBus";
-import { useQuasar } from "quasar";
 
 export default {
 	emits: ["getTreeObjects"],
 	setup(_props, { emit }) {
-		const $q = useQuasar()
 		const zoom = ref(1);
 		const translateX = ref(0);
 		const translateY = ref(0);
@@ -363,11 +361,6 @@ export default {
 		}
 
 		function dragLinkEnded() {
-			$q.notify({
-				position: "top-right",
-				type: 'warning',
-				message: "Your changes will not be saved.",
-			})
 			let currentModel = this.parentNode.parentNode;
 			let rootx = document.getElementById("root").getBoundingClientRect().x;
 			let rooty = document.getElementById("root").getBoundingClientRect().y;

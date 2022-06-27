@@ -107,8 +107,8 @@
 						v-model="modelValue"
 					/>
 				</div>
-				<Modelization v-if="modelValue === vOne" @getTreeObjects="tree"/>
-				<Monaco v-show="modelValue === vTwo"/>
+				<Modelization v-if="modelValue === vOne" @getTreeObjects="tree" />
+				<Monaco v-show="modelValue === vTwo" />
 			</q-step>
 
 			<q-step :name="3" title="Substurion" prefix="3">
@@ -128,7 +128,9 @@ import useProductDetails from "../../../composables/Products/useProductDetails";
 import useDomainData from "../../../composables/WorkSpace/useDomainData";
 import Modelization from "../../2DModel/Modelization.vue";
 import Monaco from "../../Monaco/Monaco.vue";
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
+import { Notify } from "quasar";
+
 
 export default {
 	props: ["id"],
@@ -138,11 +140,10 @@ export default {
 		const vOne = ref("Model");
 		const vTwo = ref("Source");
 		const modelValue = ref("Source");
-		
-		let { store, router, $q, currentProductContent, menu } =
-			useProductDetails();
 
-		let {
+		const { store, router, $q, currentProductContent, menu } = useProductDetails();
+
+		const {
 			domainTags,
 			globalTagsTreeList,
 			getTagsTree,
@@ -173,22 +174,32 @@ export default {
 			modelValue,
 		};
 	},
-	watch : {
+	watch: {
 		modelValue(_oldModel, currentModel) {
-			if(currentModel === 'Model') {
-				window.localStorage.setItem("monacoSource", JSON.stringify(this.objectsTree.contains));
+			Notify.create({
+				position: "top-right",
+				type: 'warning',
+				timeout: 2000,
+				progress: true,
+				message: "Your changes will not be saved.",
+			});
+			if (currentModel === "Model") {
+				window.localStorage.setItem(
+					"monacoSource",
+					JSON.stringify(this.objectsTree.contains)
+				);
 				this.setResources();
 				Monaco.methods.getGraph();
 			}
-		}
+		},
 	},
 	methods: {
 		...mapActions({
-			setResources: "appMonaco/setResources"
+			setResources: "appMonaco/setResources",
 		}),
 		tree(e) {
 			this.objectsTree = e;
-		}
+		},
 	},
 };
 </script>
