@@ -69,13 +69,14 @@ So, for production mode we need this same thing, there is an example for a Nginx
 http {
   server {
     listen 80;
+    root /usr/share/nginx/html;
 
     location /ditrit {
       proxy_pass http://127.0.0.1:9203;
     }
 
     location / {
-      root /usr/share/nginx/html;
+      try_files $uri $uri/ /index.html;
     }
   }
 }
