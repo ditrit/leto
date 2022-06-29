@@ -80,6 +80,9 @@ export default function useDomainData() {
 				libraries: item.Libraries,
 				gitURL: item.GitURL,
 				parentID: item.ParentID,
+				GitOrganization: item.GitOrganization,
+				GitPersonalAccessToken: item.GitPersonalAccessToken,
+				GitServerURL: item.GitServerURL,
 			};
 		});
 
