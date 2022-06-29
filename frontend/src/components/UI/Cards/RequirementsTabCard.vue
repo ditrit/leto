@@ -134,7 +134,6 @@ export default {
 		const textValue = ref("https://github.com/ditrit/leto.git");
 		return {
 			isOpened,
-			Test,
 			title1,
 			title2,
 			title3,
