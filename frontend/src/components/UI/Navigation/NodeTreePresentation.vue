@@ -79,7 +79,7 @@
 							</template>
 							<template v-slot:ModalContent>
 								<q-form
-									@submit.prevent="onSubmitAdd"
+									@submit="onSubmitAdd"
 									@reset="onResetAdd"
 									class="q-gutter-md q-pa-md"
 								>
@@ -137,7 +137,6 @@
 											label="Create"
 											type="submit"
 											color="primary"
-											v-close-popup
 										/>
 									</q-card-actions>
 								</q-form>

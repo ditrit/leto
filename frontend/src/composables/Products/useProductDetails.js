@@ -14,7 +14,7 @@ export default function useProductDetails() {
 			shortDescription: "Product One short description",
 			description:
 				"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-			logo: "http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/9c19cc0d-bbb7-47c6-bfeb-83059f397ea8?Authorization=Bearer+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI5MGQ0ODFhMy05NDlkLTRkODQtYThlMC0yNjg4NzZkNzRlNGEiLCJOYW1lIjoiIiwiRW1haWwiOiJicmFoaW1AZ21haWwuY29tIiwiVGVuYW50IjoiIiwiZXhwIjoxNjQ4ODAyMDU1fQ.v4aCTTJlDRuxaaQozubfLJjTkF_z2cw0y1VfVNit5eo",
+			logo: `${process.env.BASEURL}/file/9c19cc0d-bbb7-47c6-bfeb-83059f397ea8?Authorization=Bearer+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI5MGQ0ODFhMy05NDlkLTRkODQtYThlMC0yNjg4NzZkNzRlNGEiLCJOYW1lIjoiIiwiRW1haWwiOiJicmFoaW1AZ21haWwuY29tIiwiVGVuYW50IjoiIiwiZXhwIjoxNjQ4ODAyMDU1fQ.v4aCTTJlDRuxaaQozubfLJjTkF_z2cw0y1VfVNit5eo`,
 			gitURL: "https://github.com/ditrit",
 		},
 	]);
@@ -22,7 +22,7 @@ export default function useProductDetails() {
 		{
 			label: "ENV ONE",
 			avatar:
-				"http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/9c19cc0d-bbb7-47c6-bfeb-83059f397ea8?Authorization=Bearer+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI5MGQ0ODFhMy05NDlkLTRkODQtYThlMC0yNjg4NzZkNzRlNGEiLCJOYW1lIjoiIiwiRW1haWwiOiJicmFoaW1AZ21haWwuY29tIiwiVGVuYW50IjoiIiwiZXhwIjoxNjQ4ODAyMDU1fQ.v4aCTTJlDRuxaaQozubfLJjTkF_z2cw0y1VfVNit5eo",
+				`${process.env.BASEURL}/file/9c19cc0d-bbb7-47c6-bfeb-83059f397ea8?Authorization=Bearer+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiI5MGQ0ODFhMy05NDlkLTRkODQtYThlMC0yNjg4NzZkNzRlNGEiLCJOYW1lIjoiIiwiRW1haWwiOiJicmFoaW1AZ21haWwuY29tIiwiVGVuYW50IjoiIiwiZXhwIjoxNjQ4ODAyMDU1fQ.v4aCTTJlDRuxaaQozubfLJjTkF_z2cw0y1VfVNit5eo`,
 			children: [
 				{
 					label: "Model 1",
