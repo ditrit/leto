@@ -117,30 +117,18 @@
 									class="q-gutter-md"
 									filled
 									label="Git provider URL"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
 									v-model="newProductGitServerURL"
 								/>
 								<q-input
 									class="q-gutter-md"
 									filled
 									label="Git organisation"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
 									v-model="newProductGitOrganization"
 								/>
 								<q-input
 									class="q-gutter-md"
 									filled
 									label="Git provider access token"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
 									v-model="newProductGitPersonalAccessToken"
 								/>
 
