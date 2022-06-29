@@ -1,6 +1,12 @@
 <template>
 	<div>
 		<q-banner inline-actions rounded class="bg-orange text-white">
+			<q-icon
+				name="mdi-account-hard-hat"
+				color="white"
+				size="30px"
+				class="q-pr-md"
+			/>
 			<spam style="font-size: 1.2em"> This page is under construction.</spam>
 		</q-banner>
 		<q-layout container style="height: 100vh" view="lHh lpR lFf">
