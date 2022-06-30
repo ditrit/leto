@@ -520,7 +520,7 @@ function calculDimensionContainerAttributes(container, widthMax, remove, widthRe
 
   container.forEach(resource => {   
     const object = (resource.value) ? resource.value : resource;
-    if (object.contains !== undefined && /*object.contains.length > 0*/object.representation === 'container') {
+    if (object.contains !== undefined && object.representation === 'container') {
       dimensions = calculDimensionContainer(object, widthMax, height, width, remove, widthResource);
     } else {
       object.width = 0;
