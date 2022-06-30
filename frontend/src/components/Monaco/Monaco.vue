@@ -1,36 +1,44 @@
 <template>
-	<div style="text-align: center;">
-		<q-btn @click="consoleClick" class="Button" color="grey-7" style="margin-bottom:15px;">
+	<div style="text-align: center">
+		<q-btn
+			@click="consoleClick"
+			class="Button"
+			color="grey-7"
+			style="margin-bottom: 15px"
+		>
 			<slot>Compiler</slot>
 		</q-btn>
-		<div class="monaco" ref="monacoContainer" style="text-align: left;"></div>
+		<div class="monaco" ref="monacoContainer" style="text-align: left"></div>
 	</div>
 </template>
 <script>
-import * as monaco from 'monaco-editor';
-import { hclTokensProvider } from './hclTokensProvider.js';
-import Button from '../UI/Buttons/BtnAddNew.vue';
-import { calculAttributesObjects } from './svg_maths.js';
-import { mapActions, mapGetters } from 'vuex';
-import { analyse_resources } from 'hcl/src/parser/compiler/schema_parser.js';
-import plugins from '../../assets/plugins/terraform/plugins';
-import {toString, toStringResource} from './toStringFunctions';
+import * as monaco from "monaco-editor";
+import { mapActions, mapGetters } from "vuex";
+import { hclTokensProvider } from "src/components/Monaco/hclTokensProvider";
+import Button from "components/UI/Buttons/BtnAddNew.vue";
+import { calculAttributesObjects } from "src/components/Monaco/svg_maths.js";
+import { analyse_resources } from "hcl/src/parser/compiler/schema_parser.js";
+import plugins from "src/assets/plugins/terraform/plugins";
+import {
+	toString,
+	toStringResource,
+} from "src/components/Monaco/toStringFunctions";
 
 export default {
 	data() {
 		return {
 			iactorDatas: {},
 			button: Button,
-			metadatas: {}
+			metadatas: {},
 		};
 	},
 	created() {
-		this.worker = new Worker(new URL('./iactor.js', import.meta.url));
+		this.worker = new Worker(new URL("./iactor.js", import.meta.url));
 		this.worker.onmessage = function (event) {
 			this.iactorDatas = event.data;
 			const provider = {
 				provider: this.iactorDatas.provider,
-			}
+			};
 			window.localStorage.setItem("monacoSource", JSON.stringify(provider));
 		};
 		this.worker.addEventListener("message", (event) => {
@@ -38,11 +46,13 @@ export default {
 			this.getMetaDatas();
 			this.metadatas = this.allMetadatas;
 			const data = event.data;
-			data.provider[0].orderResources = (this.metadatas.provider.orderResources) ? this.metadatas.provider.orderResources : [];
+			data.provider[0].orderResources = this.metadatas.provider.orderResources
+				? this.metadatas.provider.orderResources
+				: [];
 			analyse_resources(data.resources, this.metadatas.provider.resources);
 			data.resources = calculAttributesObjects(data);
 			window.localStorage.setItem("monacoSource", JSON.stringify(data));
-			this.getSource();		
+			this.getSource();
 		});
 	},
 	mounted() {
@@ -92,8 +102,10 @@ export default {
 		});
 	},
 	computed: {
-		...mapGetters({ allMetadatas: "appMonaco/allMetadatas",
-						allMonacoSource : "appMonaco/allMonacoSource" }),
+		...mapGetters({
+			allMetadatas: "appMonaco/allMetadatas",
+			allMonacoSource: "appMonaco/allMonacoSource",
+		}),
 	},
 	methods: {
 		...mapActions({
@@ -116,30 +128,30 @@ export default {
 			editor.setValue(str);
 			this.valueEditor = str;
 		},
-		graphToString(datas) {			
-			let str = '';
-			str += this.resourceToString(datas['resources']);
-			datas['provider'].forEach( provider => {
-				str += toString(provider, 'provider') + '\n';
-			})
-			datas['variables'].forEach( variable => {
-				str += toString(variable, 'variable') + '\n';
-			})
-			datas['datas'].forEach( data => {
-				str += toString(data, 'data') + '\n';
-			})
-			datas['outputs'].forEach( output => {
-				str += toString(output, 'output') + '\n';
-			})
+		graphToString(datas) {
+			let str = "";
+			str += this.resourceToString(datas["resources"]);
+			datas["provider"].forEach((provider) => {
+				str += toString(provider, "provider") + "\n";
+			});
+			datas["variables"].forEach((variable) => {
+				str += toString(variable, "variable") + "\n";
+			});
+			datas["datas"].forEach((data) => {
+				str += toString(data, "data") + "\n";
+			});
+			datas["outputs"].forEach((output) => {
+				str += toString(output, "output") + "\n";
+			});
 			return str;
 		},
-		resourceToString(resources, containers) {		
-			let str = '';	
-				
-			resources.forEach( resource => {
-				str += toStringResource(resource, 'resource', containers) + '\n';
-				if(resource.contains.length > 0) {
-					if(!containers) {
+		resourceToString(resources, containers) {
+			let str = "";
+
+			resources.forEach((resource) => {
+				str += toStringResource(resource, "resource", containers) + "\n";
+				if (resource.contains.length > 0) {
+					if (!containers) {
 						let container = [resource];
 						str += this.resourceToString(resource.contains, container);
 					} else {
@@ -147,29 +159,30 @@ export default {
 						str += this.resourceToString(resource.contains, containers);
 					}
 				}
-			})
+			});
 
 			return str;
 		},
 		async getMetaDatas() {
-			const provider = JSON.parse(window.localStorage.getItem("monacoSource")).provider[0].name;
-			const plugin = plugins[provider]
-			const meta = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`)
+			const provider = JSON.parse(window.localStorage.getItem("monacoSource"))
+				.provider[0].name;
+			const plugin = plugins[provider];
+			const meta = require(`../../assets/plugins/terraform/${plugin}/metadatas.json`);
 			await this.getMetaSource(meta);
 		},
 		onChange(value) {
 			this.valueEditor = value;
-		}
- 	},
+		},
+	},
 };
 </script>
 <style lang="sass" scoped>
 .monaco
-  width: 1200px
-  height: 1000px !important
+  width: 100vw
+  height: 100vh
   overflow-y: hidden
 .monaco-editor
-  width: 100%
-  height: 100% !important
+  width: 100vw
+  height: 100vh !important
   overflow-y: hidden
 </style>
