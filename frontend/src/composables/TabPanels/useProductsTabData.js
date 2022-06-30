@@ -13,6 +13,9 @@ export default function useProductsTabData(props) {
 	const productShortDescription = ref("");
 	const productDescription = ref("");
 	const productRepositoryURL = ref("");
+	const newProductGitServerURL = ref("")
+	const newProductGitOrganization = ref("")
+	const newProductGitPersonalAccessToken = ref("")
 
 	const refreshData = async () => {
 		await store.dispatch(
@@ -47,9 +50,12 @@ export default function useProductsTabData(props) {
 		let newProduct = {
 			domainID: route.currentRoute.value.params.id,
 			name: productName.value,
-			logo: logoUrl.value,
+			//logo: logoUrl.value,
 			shortDescription: productShortDescription.value,
 			description: productDescription.value,
+			GitServerURL: newProductGitServerURL.value,
+			GitOrganization: newProductGitOrganization.value,
+			GitPersonalAccessToken: newProductGitPersonalAccessToken.value,
 		};
 		try {
 			await store
@@ -74,6 +80,9 @@ export default function useProductsTabData(props) {
 		productLogo.value = "";
 		productShortDescription.value = "";
 		productDescription.value = "";
+		newProductGitServerURL.value = ""
+		newProductGitOrganization.value = ""
+		newProductGitPersonalAccessToken.value = ""
 	};
 
 	const updateProduct = async (id) => {
@@ -110,6 +119,9 @@ export default function useProductsTabData(props) {
 		productShortDescription,
 		productDescription,
 		productRepositoryURL,
+		newProductGitServerURL,
+		newProductGitOrganization,
+		newProductGitPersonalAccessToken,
 		deleteProduct,
 		confirmDeleteProduct,
 		addNewProduct,

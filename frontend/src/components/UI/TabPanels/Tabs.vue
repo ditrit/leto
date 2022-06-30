@@ -116,12 +116,20 @@
 								<q-input
 									class="q-gutter-md"
 									filled
-									label="Repo *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="productProductRepositoryURL"
+									label="Git provider URL"
+									v-model="newProductGitServerURL"
+								/>
+								<q-input
+									class="q-gutter-md"
+									filled
+									label="Git organisation"
+									v-model="newProductGitOrganization"
+								/>
+								<q-input
+									class="q-gutter-md"
+									filled
+									label="Git provider access token"
+									v-model="newProductGitPersonalAccessToken"
 								/>
 
 								<div class="row q-gutter-md">
@@ -660,7 +668,9 @@ export default {
 			productName,
 			productShortDescription,
 			productDescription,
-			productProductRepositoryURL,
+			newProductGitServerURL,
+			newProductGitOrganization,
+			newProductGitPersonalAccessToken,
 			deleteProduct,
 			confirmDeleteProduct,
 			addNewProduct,
@@ -796,7 +806,9 @@ export default {
 			productLogo: logoUrl.value,
 			productShortDescription,
 			productDescription,
-			productProductRepositoryURL,
+			newProductGitServerURL,
+			newProductGitOrganization,
+			newProductGitPersonalAccessToken,
 			deleteProduct,
 			confirmDeleteProduct,
 			addNewProduct,

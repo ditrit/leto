@@ -72,7 +72,6 @@
 							<template v-slot:ModalContent>
 								<q-form
 									@submit.prevent="onSubmitUpdate(item)"
-									@reset="onResetUpdate"
 									class="q-gutter-sm q-pa-md"
 								>
 									<div class="row col-md-12 q-gutter-md">
@@ -274,7 +273,7 @@ export default {
 			delteItem,
 			favoriteItem,
 			onSubmitUpdate,
-			onResetUpdate,
+			//onResetUpdate,
 			onRejected,
 			productId,
 			productName,
