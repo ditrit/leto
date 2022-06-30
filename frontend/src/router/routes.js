@@ -1,4 +1,5 @@
 import MainLayout from "layouts/MainLayout.vue";
+import ProductLayout from "layouts/ProductDetailsLayout.vue";
 import LoginLayout from "layouts/LoginLayout.vue";
 import LoginPage from "pages/Auth/Login.vue";
 import RegisterPage from "pages/Auth/Register.vue";
@@ -10,6 +11,7 @@ import PageHomeWorkspaces from "pages/Home/PageHomeWorkspaces.vue";
 import PageWorkspace from "pages/Workspaces/PageWorkspace.vue";
 import PageWorkspaceChild from "pages/Workspaces/PageWorkspaceChild.vue";
 import PageLibraries from "pages/Libraries/PageLibraries.vue";
+import PageProductChild from "pages/Products/PageProductChild.vue";
 import PageSettingsUsers from "pages/Settings/PageSettingsUsers.vue";
 import PageSettingsRoles from "pages/Settings/PageSettingsRoles.vue";
 import PageSettingsAuthorizations from "pages/Settings/PageSettingsAuthorizations.vue";
@@ -17,7 +19,6 @@ import PageSettingsRequirements from "pages/Settings/PageSettingsRequirements.vu
 import PageSettingsTags from "pages/Settings/PageSettingsTags.vue";
 import PageSettingsEnviType from "pages/Settings/PageSettingsEnviType.vue";
 import PageSettingsDashboard from "pages/Settings/PageSettingsDashboard.vue";
-import PageProductChild from "pages/Products/PageProductChild.vue";
 
 const routes = [
 	{
@@ -101,16 +102,19 @@ const routes = [
 				component: () => PageSettingsDashboard,
 				meta: { requiresAuth: false },
 			},
+		],
+	},
+	{
+		path: "/product",
+		component: () => ProductLayout,
+		children: [
 			{
-				path: "product",
+				path: "/product",
 				component: () => PageProductChild,
-				meta: { requiresAuth: false },
 			},
 			{
-				path: "product/:id",
+				path: "/product/:id",
 				component: () => PageProductChild,
-				props: true,
-				meta: { requiresAuth: false },
 			},
 		],
 	},

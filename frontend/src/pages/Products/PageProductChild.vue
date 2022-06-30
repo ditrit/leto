@@ -1,83 +1,127 @@
 <template>
-	<q-layout container style="height: 100vh" view="lHh lpR lFf">
-		<q-header class="bg-white main_header">
-			<q-toolbar>
-				<div class="row">
-					<q-btn
-						flat
-						@click="drawer = !drawer"
-						round
-						color="primary"
-						icon="menu"
-					/>
-				</div>
-				<AccountSettings />
-			</q-toolbar>
-		</q-header>
-		<AjaxBar />
-
-		<q-drawer
-			side="right"
-			show-if-above
-			bordered
-			:width="250"
-			:breakpoint="500"
-			class="bg-grey-3"
-		>
-		<h6>Object Details</h6>
-		<div id="detailsContainer">
-			<ConfigPannel></ConfigPannel>
-		</div>
-		</q-drawer>
-		<Drawer v-model="drawer">
-			<template v-slot:drawerFilter v-if="isMounted">
-				<PaletteMenu id="paletteMenu"  :data="paletteData"></PaletteMenu>
+	<div>
+		<ProductHeader>
+			<template v-slot:productHeaderContent>
+				<section class="productDetails_navbar">
+					<div class="productDetails_name">
+						<span class="text-bold">
+							<q-icon name="apps" size="20px" />
+							Product:
+						</span>
+						<span class="q-ml-sm">
+							{{
+								currentProductContent
+									? currentProductContent[0].name
+									: "Loading..."
+							}}
+						</span>
+					</div>
+					<div class="productDetails_toggle">
+						<q-btn-toggle
+							class="modelization_toggle q-ml-lg"
+							no-caps
+							rounded
+							elevated
+							toggle-color="primary"
+							color="white"
+							text-color="primary"
+							v-model="modelValue"
+							size="10px"
+							:options="[
+								{ label: 'Model 3D', value: isModelMode },
+								{ label: 'Text', value: isSourceMode },
+							]"
+						/>
+					</div>
+				</section>
 			</template>
-			<template v-slot:drawerMenu>
-				<div class="q-pa-md q-gutter-sm" v-if="menu">
-					<q-tree
-						:nodes="menu"
-						node-key="label"
-						:filter="filter"
-						v-model:selected="selected"
-						default-expand-all
-					/>
-				</div>
-			</template>
-		</Drawer>
+		</ProductHeader>
+		<q-layout container style="height: 100vh" view="lHh lpR lFf">
+			<AjaxBar />
 
-		<q-page-container class="q-pa-lg">
-			<q-page :style-fn="pageSizeTweak" class="q-mt-lg">
-				<ProductDetailsNavigation />
-			</q-page>
-		</q-page-container>
-	</q-layout>
+			<!-- Left Drawer-->
+			<SideBar side="left" class="" v-if="modelValue === isModelMode">
+				<template v-slot:drawerContent>
+					<q-scroll-area class="fit">
+						<PaletteMenu id="paletteMenu" :data="paletteData"></PaletteMenu>
+					</q-scroll-area>
+				</template>
+			</SideBar>
+
+			<!-- Rigth Drawer-->
+			<SideBar side="right" class="" v-if="modelValue === isModelMode">
+				<template v-slot:drawerContent>
+					<h6 class="q-pl-md q-pt-md q-ma-none text-grey-8">Object Details</h6>
+					<div id="detailsContainer">
+						<ConfigPannel></ConfigPannel>
+					</div>
+				</template>
+			</SideBar>
+
+			<q-page-container class="q-pa-lg">
+				<q-page :style-fn="pageSizeTweak" class="q-mt-lg">
+					<Modelization
+						v-if="modelValue === isModelMode"
+						@getTreeObjects="tree"
+					/>
+					<Monaco v-show="modelValue === isSourceMode" />
+				</q-page>
+			</q-page-container>
+		</q-layout>
+	</div>
 </template>
 
 <script>
 import { defineComponent, ref, onMounted } from "vue";
+import { mapActions } from "vuex";
 import AjaxBar from "components/UI/Progress/AjaxBar";
-import Drawer from "components/UI/Drawers/Drawer.vue";
-import AccountSettings from "components/UI/Profil/AccountSettings";
+import SideBar from "components/UI/Drawers/SideBar.vue";
 import PaletteMenu from "components/PaletteMenu";
-import { pageSizeTweak } from "../../common/index";
-import useProductDetails from "../../composables/Products/useProductDetails";
-import useDomainData from "../../composables/WorkSpace/useDomainData";
-import ProductDetailsNavigation from "components/UI/Stepper/ProductDetailsNavigation.vue";
+import { pageSizeTweak } from "src/common/index";
+import Modelization from "components/2DModel/Modelization.vue";
+import Monaco from "components/Monaco/Monaco.vue";
+import useProductDetails from "src/composables/Products/useProductDetails";
+import useDomainData from "src/composables/WorkSpace/useDomainData";
 import ConfigPannel from "src/components/ConfigPannel.vue";
+import awsMetadatas from "src/assets/plugins/terraform/internal/aws/metadatas.json";
+import ProductHeader from "src/components/UI/Headers/ProductHeader.vue";
 
 export default defineComponent({
 	name: "PageDomainChild",
 	components: {
+		Modelization,
+		Monaco,
 		AjaxBar,
-		Drawer,
-		AccountSettings,
 		PaletteMenu,
-		ProductDetailsNavigation,
 		ConfigPannel,
+		SideBar,
+		ProductHeader,
+	},
+	methods: {
+		...mapActions({
+			setResources: "appMonaco/setResources",
+		}),
+		tree(e) {
+			this.objectsTree = e;
+		},
+	},
+	watch: {
+		modelValue(_oldModel, currentModel) {
+			if (currentModel === "Model") {
+				window.localStorage.setItem(
+					"monacoSource",
+					JSON.stringify(this.objectsTree.contains)
+				);
+				this.setResources();
+				Monaco.methods.getGraph();
+			}
+		},
 	},
 	props: ["id"],
 	setup(props) {
+		const isModelMode = ref("Model");
+		const isSourceMode = ref("Source");
+		const modelValue = ref("Source");
 		const drawer = ref(false);
 		const oepnDialog = ref(false);
 		const filterRef = ref("");
@@ -87,7 +131,8 @@ export default defineComponent({
 		const isMounted = ref(false);
 		const svgs = ref({});
 
-		let { store, router, $q, openProject } = useProductDetails();
+		let { store, router, $q, openProject, currentProductContent } =
+			useProductDetails();
 		openProject(props.id);
 		let {
 			domainTags,
@@ -100,26 +145,18 @@ export default defineComponent({
 			domainID,
 		} = useDomainData(props);
 
-		function makeToto(i) {
-			return {
-				name: `toto${i}`,
-				description: `this is some toto ${20 - i}`,
-				imageUrl: "/svgs/logos/conteneur.png",
-			};
-		}
-
 		const paletteData = [
 			{
 				name: "AWS",
 				icon: "explore",
-				data:[],
+				data: [],
 			},
 			{
 				name: "SG-Interne",
 				icon: "explore",
-				data:[],
+				data: [],
 			},
-		]
+		];
 
 		const getSVGS = async () => {
 			await store.dispatch("appSVGs/loadPath");
@@ -127,37 +164,26 @@ export default defineComponent({
 			return svgs.value;
 		};
 
-
 		onMounted(async () => {
 			await getSVGS();
 
-			const awsMetadatas = require(`../../assets/plugins/terraform/internal/aws/metadatas.json`);
 			awsMetadatas.provider.resources.forEach((element) => {
-				paletteData[0].data.push(
-					{
-						name: element.resourceType,
-						imageUrl: `logos/${element.icon}`,
-						description: "Description",
-					}
-				)
+				paletteData[0].data.push({
+					name: element.resourceType,
+					imageUrl: `logos/${element.icon}`,
+					description: "Description",
+				});
 			});
-			const sgMetadatas = require(`../../assets/plugins/terraform/external/iactor-plugin-terraform-sginterne/metadatas.json`);
-			sgMetadatas.provider.resources.forEach((element) => {
-				paletteData[1].data.push(
-					{
-						name: element.resourceType,
-						imageUrl: `logos/${element.icon}`,
-						description: "Description",
-					}
-				)
-			});
-		isMounted.value = true;
+			isMounted.value = true;
 		});
 
 		return {
 			store,
 			router,
 			drawer,
+			isModelMode,
+			isSourceMode,
+			modelValue,
 			oepnDialog,
 			filterRef,
 			filterTag,
@@ -180,6 +206,7 @@ export default defineComponent({
 			domainID,
 			openProject,
 			isMounted,
+			currentProductContent,
 		};
 	},
 });
@@ -203,4 +230,7 @@ export default defineComponent({
 .globalTagTree_container
   border: 1px solid $white
   padding: 8px
+
+.q-icon
+  vertical-align: top
 </style>
