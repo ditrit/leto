@@ -60,7 +60,9 @@ module.exports = configure(function (ctx) {
 			// analyze: true,
 
 			// Options below are automatically set depending on the env, set them if you want to override
-			env: { BASEURL: "http://127.0.0.1:9203/ditrit/Gandalf/1.0.0" },
+			env: {
+				BASEURL: process.env.BASEURL || "/ditrit/Gandalf/1.0.0",
+			},
 			// extractCSS: false,
 
 			// https://v2.quasar.dev/quasar-cli/handling-webpack
@@ -96,7 +98,14 @@ module.exports = configure(function (ctx) {
 			https: false,
 			port: 8080,
 			open: true, // opens browser window automatically
-			proxy: { target: "http://localhost:5000" },
+
+			proxy: {
+				"/ditrit": {
+					target: "http://127.0.0.1:9203",
+					ws: true,
+					changeOrigin: true,
+				},
+			},
 		},
 
 		// https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
