@@ -59,5 +59,35 @@ describe("Component: AuthorizationsTable", () => {
 				UserID: "922f552b-9291-424d-9e27-d79a55d3eef7",
 			});
 		});
+
+		it('should handle partial edits correctly' , () => {
+			wrapper.vm.authorizationObj = ["731bcff7-4cf5-4100-b9ea-7648d2f186cb",
+				"",
+				"d353f7bb-bc6f-4fd7-93bc-aeb56ab688f1",
+				"root",
+				"eac752c1-458e-4945-b5ba-f2a104be0230",
+				"Administrator",
+				 "922f552b-9291-424d-9e27-d79a55d3eef7",
+				{
+					Description: "Administrator1",
+					Email: "Administrator1",
+					FirstName: "Administrator1",
+					ID: "0077ff70-5656-4734-ae3c-d115885fd926",
+					LastName: "Administrator1",
+					Logo: "",
+					label: "Administrator1 Administrator1",
+					value: "Administrator1 Administrator1",
+				}];
+			wrapper.vm.allAuthorizations = jest.fn(() => {});
+			store.dispatch = jest.fn(() => {});
+			wrapper.vm.quasar.notify = jest.fn(() => {});
+			wrapper.vm.onSubmitUpdate();
+			expect(store.dispatch).toBeCalledWith("appAuthorization/updateAuthorization", {
+				ID: "731bcff7-4cf5-4100-b9ea-7648d2f186cb",
+				DomainID: "d353f7bb-bc6f-4fd7-93bc-aeb56ab688f1",
+				RoleID: "eac752c1-458e-4945-b5ba-f2a104be0230",
+				UserID: "0077ff70-5656-4734-ae3c-d115885fd926",
+			});
+		});
 	});
 });
