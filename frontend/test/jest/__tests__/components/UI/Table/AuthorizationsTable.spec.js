@@ -37,4 +37,27 @@ describe("Component: AuthorizationsTable", () => {
 		expect(wrapper.vm.authorizationRole).toBe("");
 		expect(wrapper.vm.domainList).toBe();
 	});
+
+	describe('onSubmitUpdate', () => {
+		it('should not remove unmodified fields on blank edit' , () => {
+			wrapper.vm.authorizationObj = ["731bcff7-4cf5-4100-b9ea-7648d2f186cb",
+				"",
+				"d353f7bb-bc6f-4fd7-93bc-aeb56ab688f1",
+				"root",
+				"eac752c1-458e-4945-b5ba-f2a104be0230",
+				"Administrator",
+				"922f552b-9291-424d-9e27-d79a55d3eef7",
+				"test test"];
+			wrapper.vm.allAuthorizations = jest.fn(() => {});
+			store.dispatch = jest.fn(() => {});
+			wrapper.vm.quasar.notify = jest.fn(() => {});
+			wrapper.vm.onSubmitUpdate();
+			expect(store.dispatch).toBeCalledWith("appAuthorization/updateAuthorization", {
+				ID: "731bcff7-4cf5-4100-b9ea-7648d2f186cb",
+				DomainID: "d353f7bb-bc6f-4fd7-93bc-aeb56ab688f1",
+				RoleID: "eac752c1-458e-4945-b5ba-f2a104be0230",
+				UserID: "922f552b-9291-424d-9e27-d79a55d3eef7",
+			});
+		});
+	});
 });
