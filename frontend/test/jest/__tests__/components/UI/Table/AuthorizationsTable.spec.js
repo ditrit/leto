@@ -1,21 +1,17 @@
 import { installQuasarPlugin } from "@quasar/quasar-app-extension-testing-unit-jest";
-import { beforeEach, describe, expect, it } from "@jest/globals";
+import { describe, expect, it } from "@jest/globals";
 import { mount } from "@vue/test-utils";
 import component from "components/UI/Tables/AuthorizationsTable";
 import { createStore } from "vuex";
 
-import {
-	VueRouterMock,
-	createRouterMock,
-	injectRouterMock,
-} from "vue-router-mock";
+import { createRouterMock, injectRouterMock, VueRouterMock } from "vue-router-mock";
 
 installQuasarPlugin();
 
 describe("Component: AuthorizationsTable", () => {
 	let wrapper, store;
 	store = createStore({});
-	beforeEach(() => {
+	beforeAll(() => {
 		const router = createRouterMock();
 		injectRouterMock(router);
 		jest.spyOn(store, "dispatch").mockImplementation();
@@ -24,9 +20,10 @@ describe("Component: AuthorizationsTable", () => {
 				plugins: [VueRouterMock, store],
 			},
 		});
-		afterEach(() => {
-			wrapper.destroy();
-		});
+	});
+
+	afterAll(() => {
+		wrapper.destroy();
 	});
 
 	it("Test: refs", () => {
