@@ -239,11 +239,18 @@ export default {
 		};
 
 		const onSubmitUpdate = async () => {
+			//string values were most likely not modified by user, simply pass the current value instead
 			const authorizationData = {
 				ID: authorizationObj.value[0],
-				DomainID: authorizationObj.value[3].ID,
-				RoleID: authorizationObj.value[5].ID,
-				UserID: authorizationObj.value[7].ID,
+				DomainID: typeof authorizationObj.value[3] === 'string' ?
+					authorizationObj.value[2] :
+					authorizationObj.value[3].ID,
+				RoleID: typeof authorizationObj.value[5] === 'string' ?
+					authorizationObj.value[4] :
+					authorizationObj.value[5].ID,
+				UserID:  typeof authorizationObj.value[7] === 'string' ?
+					authorizationObj.value[6] :
+					authorizationObj.value[7].ID,
 			};
 
 			try {
