@@ -33,6 +33,7 @@ import {
 	getParent,
 	getAnchorAbsPos,
 	fillAbleToLinkList,
+	fillAbleToDropList,
 	getNode,
 } from "./utils";
 import { useStore } from "vuex";
@@ -237,61 +238,70 @@ export default {
 				}
 			});
 
-			if (minGroup != null && minGroup != this) {
-				let parent = getParent(
-					rootTreeObject.value,
-					minGroup.getAttribute("id")
-				);
-				let node = getNode(rootTreeObject.value, currentGroup.id);
-				if (node) {
-					currentTfObjectNode.setObjects(node.objects);
-				}
-				removeContentInData(rootTreeObject.value, "svg0", currentTfObjectNode);
-				addContentInData(
-					rootTreeObject.value,
-					minGroup.id,
-					currentTfObjectNode
-				);
-				const dimensions = calcul_dimensions(
-					parent.drawingObject,
-					0,
-					1000,
-					false,
-					parent.contains
-				);
-				calcul_xy_container(
-					parent.drawingObject,
-					parent.drawingObject.x,
-					parent.drawingObject.y,
-					1000,
-					parent.contains
-				);
-				parent.drawingObject.height = dimensions.height + 20;
-				parent.drawingObject.width = dimensions.width;
+			if (minGroup != null) {
+				if(minGroup.getElementById("logo_frame").getAttribute("fill")=="green"){
+					let parent = getParent(
+						rootTreeObject.value,
+						minGroup.getAttribute('id')
+						);
+					let node = getNode(
+						rootTreeObject.value,
+						currentGroup.id
+						);
+					if(node){
+						currentTfObjectNode.setObjects(node.objects);
+					}
+					removeContentInData(
+						rootTreeObject.value,
+						"svg0",
+						currentTfObjectNode
+						);
+					addContentInData(
+						rootTreeObject.value,
+						minGroup.id,
+						currentTfObjectNode
+						);
+					const dimensions = calcul_dimensions(
+						parent.drawingObject,
+						 0,
+						 1000,
+						 false,
+						 parent.contains
+						 );
+					calcul_xy_container(
+						parent.drawingObject,
+						parent.drawingObject.x,
+						parent.drawingObject.y,
+						1000, parent.contains
+						);
+					parent.drawingObject.height = dimensions.height + 20;
+					parent.drawingObject.width = dimensions.width;
 
-				d3.select("#" + currentGroup.getAttribute("id")).remove();
-				d3.select("#" + parent.id).remove();
-				let terraformType = getLetoTypeNodeFromData(
-					terraformPanelList.value,
-					parent.type_name
-				);
-				const terraformObject = new TerraformObjectNode(
-					terraformType,
-					parent.instance_name,
-					0,
-					parent.id,
-					"svg0",
-					parent.objects
-				);
-				createTerraformObject(terraformObject, parent, svg, "root", false, 0);
+					d3.select('#'+currentGroup.getAttribute('id')).remove();
+					d3.select('#'+parent.id).remove();
+					let terraformType = getLetoTypeNodeFromData(
+						terraformPanelList.value,
+						parent.type_name
+						);
+					const terraformObject = new TerraformObjectNode(
+						terraformType,
+						parent.instance_name,
+						0,
+						parent.id,
+						'svg0',
+						parent.objects
+						);
+					createTerraformObject(terraformObject,parent, svg, "root", false, 0);
 
-				let children = minGroup.getElementsByTagName("svg");
-				for (let child in children) {
-					updateLinks(rootTreeObject.value, children[child]);
+					let children = minGroup.getElementsByTagName("svg")
+					for(let child in children) {
+						updateLinks(rootTreeObject.value,children[child]);
+					}
 				}
 			}
-			updateLinks(rootTreeObject.value, this.parentNode);
-			updateDrawingInfosInData(rootTreeObject.value, this.parentNode);
+			updateLinks(rootTreeObject.value,this.parentNode)
+			updateDrawingInfosInData(rootTreeObject.value,this.parentNode);
+			d3.selectAll(groups).select('#logo_frame').attr("fill","white");
 			return;
 		}
 
@@ -682,7 +692,8 @@ export default {
 						"",
 						"",
 						"dbtf",
-						element.attributes
+						element.attributes,
+						element.representation
 					)
 				);
 			});
