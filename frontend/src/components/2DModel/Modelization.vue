@@ -68,7 +68,7 @@ export default {
 		const terraformPanelList = ref([]);
 		const loading = ref(true);
 		const rootTreeObject = ref(
-			new LetoObjectNode(new LetoTypeNode("", "", "", "", ""), "", -1)
+			new LetoObjectNode(new LetoTypeNode("", "", "", "", ""), "","")
 		);
 		rootTreeObject.value.setId("svg0");
 		EventBus.on("selected:component", (component) => {
@@ -101,15 +101,14 @@ export default {
 
 		function dragstarted() {
 			let currentModel = this.parentNode;
-			let svg = d3.select("#root");
+			let svg = d3.select('#root');
 			let currentTfTypeNode = getLetoTypeNodeFromData(
 				terraformPanelList.value,
-				currentModel.getElementById("type").textContent.replace(/\s+/g, "")
+				currentModel.getElementById("type").textContent.replace(/\s+/g, '')
 			);
 			let currentTfObjectNode = new TerraformObjectNode(
 				currentTfTypeNode,
-				currentModel.getElementById("name").textContent.replace(/\s+/g, ""),
-				0,
+				currentModel.getElementById("name").textContent.replace(/\s+/g, ''),
 				currentModel.id,
 				currentModel.parentNode.parentNode.id
 			);
@@ -211,20 +210,19 @@ export default {
 		}
 
 		function dragended() {
-			const currentGroup = this.parentNode;
-			const x = currentGroup.getAttribute("x");
-			const y = currentGroup.getAttribute("y");
-			const groups = d3.select("#root").selectAll("svg");
-			let minGroup;
-			let svg = d3.select("#root");
+    	const currentGroup = this.parentNode;
+			const x = currentGroup.getAttribute('x');
+			const y = currentGroup.getAttribute('y');
+			const groups = d3.select('#root').selectAll('svg');
+    	let minGroup;
+			let svg = d3.select('#root')
 			let currentTfTypeNode = getLetoTypeNodeFromData(
 				terraformPanelList.value,
-				currentGroup.getElementById("type").textContent.replace(/\s+/g, "")
+				currentGroup.getElementById("type").textContent.replace(/\s+/g, '')
 			);
 			let currentTfObjectNode = new TerraformObjectNode(
 				currentTfTypeNode,
-				currentGroup.getElementById("name").textContent.replace(/\s+/g, ""),
-				0,
+				currentGroup.getElementById("name").textContent.replace(/\s+/g, ''),
 				currentGroup.id,
 				currentGroup.parentNode.parentNode.id
 			);
@@ -505,14 +503,13 @@ export default {
 				d3.select(this).transition().attr("fill", "black");
 				let terraformObject = new TerraformObjectNode(
 					panelObject,
-					`${panelObject.type_name}_${randomHexString(4)}`,
-					0,
-					panelObject.type_name,
-					"svg0",
-					{ value: [`name ="${panelObject.type_name}"`] }
+					`${panelObject.type}_${randomHexString(4)}`,
+					panelObject.type,
+					'svg0',
+					{value : [`name ="${panelObject.type}"`]}
 				);
 				terraformObject.setId(
-					terraformObject.instance_name + "_" + terraformObject.type_name
+					terraformObject.name+"_"+ terraformObject.letoType.type
 				);
 
 				let drawnModel = terraformObject.drawSVG(
@@ -520,18 +517,17 @@ export default {
 					svg,
 					"root",
 					false,
-					0,
 					[drag, dragLink],
-					[rootTreeObject.value, drawingLink.value]
+					[rootTreeObject.value,drawingLink.value]
 				);
 				d3.select(drawnModel)
-					.attr("x", -translateX.value / zoom.value)
-					.attr("y", -translateY.value / zoom.value);
+					.attr("x",-translateX.value/zoom.value)
+					.attr("y",-translateY.value/zoom.value);
 
-				if (rootTreeObject.value.contains.length != 0) {
+				if (rootTreeObject.value.contains.length!=0){
 					rootTreeObject.value.contains[
-						rootTreeObject.value.contains.length - 1
-					].setRightSibling(terraformObject);
+						rootTreeObject.value.contains.length-1
+						].setRightSibling(terraformObject);
 				}
 				rootTreeObject.value.contains.push(terraformObject);
 			} else {
@@ -699,11 +695,9 @@ export default {
 					new TerraformTypeNode(
 						`logos/${element.icon}`,
 						element.resourceType,
-						"",
-						"",
 						"dbtf",
-						element.attributes,
-						element.representation
+						element.representation,
+						element.attributes
 					)
 				);
 			});
