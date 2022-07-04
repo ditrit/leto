@@ -66,6 +66,8 @@
 					/>
 
 					<div
+						@change="consoleClick"
+						@mouseover="consoleClick"
 						v-show="modelValue === isSourceMode"
 						class="monaco"
 						ref="monacoContainer"
@@ -126,6 +128,7 @@ export default defineComponent({
 			const provider = {
 				provider: this.iactorDatas.provider,
 			};
+
 			window.localStorage.setItem("monacoSource", JSON.stringify(provider));
 		};
 		this.worker.addEventListener("message", (event) => {
@@ -271,8 +274,8 @@ export default defineComponent({
 					JSON.stringify(this.objectsTree.contains)
 				);
 				this.setResources();
-			} else {
 				this.consoleClick();
+				this.getGraph();
 			}
 		},
 	},
