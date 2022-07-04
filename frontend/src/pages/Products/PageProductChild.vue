@@ -18,6 +18,7 @@
 					</div>
 					<div class="productDetails_toggle">
 						<q-btn-toggle
+							v-show="isToggleVisible"
 							class="modelization_toggle q-ml-lg"
 							no-caps
 							rounded
@@ -32,6 +33,17 @@
 								{ label: 'Text', value: isSourceMode },
 							]"
 						/>
+					</div>
+					<div class="q-ml-md">
+						<q-btn
+							rounded
+							size="10px"
+							@click="consoleClick"
+							color="primary"
+							v-show="isCompilerVisible"
+						>
+							<slot>Compiler</slot>
+						</q-btn>
 					</div>
 				</section>
 			</template>
@@ -114,7 +126,9 @@ export default defineComponent({
 		return {
 			iactorDatas: {},
 			metadatas: {},
-			valueEditor: null,
+			valueEditor: "",
+			isCompilerVisible: true,
+			isToggleVisible: false,
 		};
 	},
 	created() {
@@ -152,7 +166,6 @@ export default defineComponent({
 		let errorFg = "ff0000";
 		let comment = "07812C";
 		let boolean = "105FEE";
-		this.valueEditor = "";
 		monaco.editor.defineTheme("terraformTheme", {
 			base: "vs",
 			inherit: false,
@@ -200,24 +213,16 @@ export default defineComponent({
 			getMonacoSource: "appMonaco/getMonacoSource",
 			getMetaSource: "appMonaco/getMetadatas",
 		}),
-		async getMetaDatas() {
-			const provider = JSON.parse(window.localStorage.getItem("monacoSource"))
-				.provider[0].name;
-			const plugin = plugins[provider];
-			const meta = require(`src/assets/plugins/terraform/${plugin}/metadatas.json`);
-			await this.getMetaSource(meta);
-		},
-		tree(e) {
-			this.objectsTree = e;
+		consoleClick() {
+			this.worker.postMessage(this.valueEditor);
+			this.getSource();
+			this.isCompilerVisible = false;
+			this.isToggleVisible = true;
 		},
 		getSource() {
 			return this.getMonacoSource();
 		},
-		consoleClick() {
-			this.worker.postMessage(this.valueEditor);
-			this.getSource();
-		},
-		getGraph() {
+		async getGraph() {
 			const datas = JSON.parse(window.localStorage.getItem("monacoSource"));
 			const str = this.graphToString(datas);
 			const models = monaco.editor.getModels();
@@ -225,6 +230,7 @@ export default defineComponent({
 			editor.setValue(str);
 			this.valueEditor = str;
 		},
+
 		graphToString(datas) {
 			let str = "";
 			str += this.resourceToString(datas["resources"]);
@@ -259,6 +265,17 @@ export default defineComponent({
 			});
 			return str;
 		},
+		async getMetaDatas() {
+			const provider = JSON.parse(window.localStorage.getItem("monacoSource"))
+				.provider[0].name;
+			const plugin = plugins[provider];
+			const meta = require(`src/assets/plugins/terraform/${plugin}/metadatas.json`);
+			await this.getMetaSource(meta);
+		},
+		tree(e) {
+			this.objectsTree = e;
+		},
+
 		onChange(value) {
 			this.valueEditor = value;
 		},
@@ -270,9 +287,10 @@ export default defineComponent({
 					"monacoSource",
 					JSON.stringify(this.objectsTree.contains)
 				);
+				this.isCompilerVisible = true;
+				this.isToggleVisible = false;
 				this.setResources();
-			} else {
-				this.consoleClick();
+				this.getGraph();
 			}
 		},
 	},
