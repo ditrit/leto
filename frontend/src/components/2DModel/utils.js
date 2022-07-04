@@ -104,7 +104,6 @@ export function updateLinks(node,model){
 			if (node.id == model.id){
 
 				node.attributes_output_links.forEach(link => {
-					console.log(link)
 					let arrow = document.getElementById(link.id);
 					let beginId = model.id;
 					let endId = link.targetId
@@ -185,7 +184,6 @@ export function removeContentInData(node,parentId,letoObjectNode){
 	}
 	node = (node.value) ? node.value : node;
 	if(node.id == (parentId)){
-		console.log(node)
 		node.contains.forEach(letoNode =>{
 			let letoNodeVal = (letoNode.value) ? letoNode.value : letoNode;
 			if(letoNodeVal.id == letoObjectNode.id){
