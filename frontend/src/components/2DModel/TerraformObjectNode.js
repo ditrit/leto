@@ -15,19 +15,6 @@ export default class TerraformObjectNode extends LetoObjectNode {
 		this.y=0
 	}
 
-		/*this.drawingObject ={
-			width:0,
-			height:0,
-			//svg:this.svg,
-			//type:this.type_name,
-			//name:this.instance_name,
-			//logopath: this.logo_path,
-			x:0,
-			y:0,
-			//id: this.id
-		}*/
-
-
     drawSVG(svgs, svgParent, parentName, content, dragList, dataList) {
 			let drag = dragList[0];
 			let dragLink = dragList[1];

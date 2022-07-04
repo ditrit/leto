@@ -170,7 +170,6 @@ export default {
 				createTerraformObject(terraformObject,parent, svg, "root", false, 0);
 
 				let children = currentModel.parentNode.getElementsByTagName("svg")
-				console.log(currentModel.parentNode)
 				for(let child in children){
 					updateLinks(rootTreeObject.value,children[child]);
 				}
@@ -548,8 +547,6 @@ export default {
 		function fillDataStorage(datas,parentId,level){
 			datas.forEach(SVGData => {
 				const data = (SVGData.value) ? SVGData.value : SVGData;
-				console.log(SVGData);
-
 				let terraformType = getLetoTypeNodeFromData(
 					terraformPanelList.value,
 					data.type
@@ -589,9 +586,7 @@ export default {
 						level + 1
 					);
 				}
-				console.log(rootTreeObject.value)
 			})
-			console.log(rootTreeObject.value)
 		}
 
 		function drawSVGs(datas, svgParent, parentName, content, level) {
