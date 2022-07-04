@@ -103,34 +103,50 @@
 										/>
 									</div>
 								</div>
-								<q-input
-									class="q-gutter-md"
-									filled
-									label="Short Description *"
-									lazy-rules
-									:rules="[
-										(val) => (val && val.length > 0) || 'Please type something',
-									]"
-									v-model="productShortDescription"
-								/>
-								<q-input
-									class="q-gutter-md"
-									filled
-									label="Git provider URL"
-									v-model="newProductGitServerURL"
-								/>
-								<q-input
-									class="q-gutter-md"
-									filled
-									label="Git organisation"
-									v-model="newProductGitOrganization"
-								/>
-								<q-input
-									class="q-gutter-md"
-									filled
-									label="Git provider access token"
-									v-model="newProductGitPersonalAccessToken"
-								/>
+
+								<div class="row col-md-12 q-gutter-md">
+									<div class="col">
+										<q-input
+											filled
+											label="Short Description *"
+											lazy-rules
+											:rules="[
+											(val) => (val && val.length > 0) || 'Please type something',
+										]"
+											v-model="productShortDescription"
+										/>
+									</div>
+								</div>
+
+								<div class="row col-md-12 q-gutter-md">
+									<div class="col">
+										<q-input
+											filled
+											label="Git provider URL"
+											v-model="newProductGitServerURL"
+										/>
+									</div>
+								</div>
+
+								<div class="row col-md-12 q-gutter-md">
+									<div class="col">
+										<q-input
+											filled
+											label="Git organisation"
+											v-model="newProductGitOrganization"
+										/>
+									</div>
+								</div>
+
+								<div class="row col-md-12 q-gutter-md">
+									<div class="col">
+										<q-input
+											filled
+											label="Git provider access token"
+											v-model="newProductGitPersonalAccessToken"
+										/>
+									</div>
+								</div>
 
 								<div class="row q-gutter-md">
 									<div class="col col-md-8">
