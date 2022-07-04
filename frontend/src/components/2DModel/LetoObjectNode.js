@@ -3,37 +3,30 @@ import { replaceComponents } from "./utils";
 const d3 = require("d3");
 
 export default class LetoObjectNode{
-	constructor(letoTypeNode,instance_name,level,id){
-		this.svg = letoTypeNode.svg;
-		this.logo_path=letoTypeNode.logo_path;
-		this.type_name=letoTypeNode.type_name;
-		this.primary_color=letoTypeNode.primary_color;
-		this.secondary_color=letoTypeNode.secondary_color;
-		this.instance_name=instance_name;
-		this.level=level;
+	constructor(letoType,name,id){
+		this.letoType = letoType;
+		this.name=name;
 		this.rightSibling=null;
 		this.contains = [];
-		this.links = {
-			outputs : [],
-			inputs : [],
-		}
 		this.id=id;
+		this.attributes_output_links = [];
+		this.attributes_input_links = [];
 
 	}
-
-	drawingObject ={}
 
 	setLevel(level){
 		this.level=level;
-		this.drawingObject.level=level;
 	}
 
-	setLinks(links){
-		this.links = links;
+	setOutputs(outputs){
+		this.attributes_output_links = outputs;
+	}
+
+	setInputs(inputs){
+		this.attributes_input_links = inputs;
 	}
 
 	setId(id){
-		this.drawingObject.id=id;
 		this.id = id;
 	}
 
@@ -56,24 +49,28 @@ export default class LetoObjectNode{
 		return this.contains;
 	}
 
-	getLinks (){
-		return this.links;
-	}
-
 	getLevel(){
 		return this.level;
 	}
 
+	getOutputs(){
+		return this.attributes_output_links;
+	}
+
+	getInputs(){
+		return this.attributes_input_links;
+	}
+
 	addOutputLink(link){
-		this.links.outputs.push(link);
+		this.attributes_output_links.push(link);
 	}
 
 	addInputLink(link){
-		this.links.inputs.push(link);
+		this.attributes_input_links.push(link);
 	}
 
 	removeOutputLink(linkId){
-		let outputs = this.links.outputs;
+		let outputs = this.attributes_output_links;
 		outputs.forEach(link =>{
 			if(link.id == linkId){
 				outputs.splice(outputs.indexOf(link));
@@ -82,7 +79,7 @@ export default class LetoObjectNode{
 	}
 
 	removeInputLink(linkId){
-		let inputs = this.links.inputs;
+		let inputs = this.attributes_input_links;
 		inputs.forEach(link =>{
 			if(link.id == linkId){
 				inputs.splice(inputs.indexOf(link));

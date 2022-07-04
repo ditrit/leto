@@ -155,7 +155,7 @@ export function updateLinks(node,model){
 						.attr("y2",beginAnchorPos[1])
 				})
 
-				node.links.inputs.forEach(link => {
+				node.attributes_input_links.forEach(link => {
 					let arrow = document.getElementById(link.id);
 					let endId = model.id;
 					let beginId = link.sourceId
@@ -244,7 +244,7 @@ export function getLetoTypeNodeFromData(panelList,modelType){
 	let letoType;
 	panelList.forEach(element=>{
 		if (
-			element.type_name ==
+			element.type ==
 			modelType
 		) {
 			letoType = element;
@@ -298,7 +298,7 @@ export function fillAbleToLinkList(node,attribute,ableToLinkList){
 				}
 			})
 			if(count==0 || (count>0 && attribute.multiple !== undefined)){
-				ableToLinkList.push(node.drawingObject.id);
+				ableToLinkList.push(node.id);
 			}
 		}
 	fillAbleToLinkList(node.contains[0],attribute,ableToLinkList)

@@ -528,9 +528,9 @@ function calculDimensionResource(width, height, widthResource, widthMin, widthMa
 
 function calculDimensionContainer(container, widthMax, height, width, remove) {
   let dimensions;
-  
+
   if (container.contains.length > 0) {
-    const object = (container.drawingObject) ? container.drawingObject : container;
+    const object = (container.drawingObject) ? container : container;
     dimensions = calcul_dimensions(object, 0, widthMax, remove, container.contains);
     object.width = (object.width >= widthMax) ? object.width : (dimensions.width - 10);
     object.height = dimensions.height + 10;
@@ -622,10 +622,10 @@ function calculCoordContainerAttributes(resourceWidthMax, container, contains) {
   let cox = 20;
   let coy = 60;
   let containerHeightMax = 0;
-  
+
   contains.forEach((content) => {
     let drawingObject = (content.value) ? content.value : content;
-    drawingObject = (content.drawingObject) ? content.drawingObject : drawingObject;
+    drawingObject = (content.drawingObject) ? content : drawingObject;
     const object = (content.value) ? content.value : content;
     const xy = calculCoordResource(drawingObject, cox, coy, container, resourceWidthMax, containerHeightMax);
     cox = xy.x;
