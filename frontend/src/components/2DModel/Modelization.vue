@@ -239,69 +239,69 @@ export default {
 			});
 
 			if (minGroup != null) {
-				if(minGroup.getElementById("logo_frame").getAttribute("fill")=="green"){
+				if (
+					minGroup.getElementById("logo_frame").getAttribute("fill") == "green"
+				) {
 					let parent = getParent(
 						rootTreeObject.value,
-						minGroup.getAttribute('id')
-						);
-					let node = getNode(
-						rootTreeObject.value,
-						currentGroup.id
-						);
-					if(node){
+						minGroup.getAttribute("id")
+					);
+					let node = getNode(rootTreeObject.value, currentGroup.id);
+					if (node) {
 						currentTfObjectNode.setObjects(node.objects);
 					}
 					removeContentInData(
 						rootTreeObject.value,
 						"svg0",
 						currentTfObjectNode
-						);
+					);
 					addContentInData(
 						rootTreeObject.value,
 						minGroup.id,
 						currentTfObjectNode
-						);
+					);
 					const dimensions = calcul_dimensions(
 						parent.drawingObject,
-						 0,
-						 1000,
-						 false,
-						 parent.contains
-						 );
+						0,
+						1000,
+						false,
+						parent.contains
+					);
 					calcul_xy_container(
 						parent.drawingObject,
 						parent.drawingObject.x,
 						parent.drawingObject.y,
-						1000, parent.contains
-						);
+						1000,
+						parent.contains
+					);
 					parent.drawingObject.height = dimensions.height + 20;
 					parent.drawingObject.width = dimensions.width;
 
-					d3.select('#'+currentGroup.getAttribute('id')).remove();
-					d3.select('#'+parent.id).remove();
+					d3.select("#" + currentGroup.getAttribute("id")).remove();
+					d3.select("#" + parent.id).remove();
 					let terraformType = getLetoTypeNodeFromData(
 						terraformPanelList.value,
 						parent.type_name
-						);
+					);
 					const terraformObject = new TerraformObjectNode(
 						terraformType,
 						parent.instance_name,
 						0,
 						parent.id,
-						'svg0',
+						"svg0",
 						parent.objects
-						);
-					createTerraformObject(terraformObject,parent, svg, "root", false, 0);
+					);
+					createTerraformObject(terraformObject, parent, svg, "root", false, 0);
 
-					let children = minGroup.getElementsByTagName("svg")
-					for(let child in children) {
-						updateLinks(rootTreeObject.value,children[child]);
+					let children = minGroup.getElementsByTagName("svg");
+					for (let child in children) {
+						updateLinks(rootTreeObject.value, children[child]);
 					}
 				}
 			}
-			updateLinks(rootTreeObject.value,this.parentNode)
-			updateDrawingInfosInData(rootTreeObject.value,this.parentNode);
-			d3.selectAll(groups).select('#logo_frame').attr("fill","white");
+			updateLinks(rootTreeObject.value, this.parentNode);
+			updateDrawingInfosInData(rootTreeObject.value, this.parentNode);
+			d3.selectAll(groups).select("#logo_frame").attr("fill", "white");
 			return;
 		}
 
@@ -702,8 +702,8 @@ export default {
 				.select("#myDataViz")
 				.append("svg")
 				.attr("id", "root")
-				.attr("width", 2000)
-				.attr("height", 2000)
+       	.attr("width", "100%")
+        .attr("height", "100vh")
 				.call(
 					d3
 						.zoom()
@@ -766,7 +766,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .context-menu {
 	position: absolute;
 	text-align: center;
@@ -787,5 +787,8 @@ a:hover {
 	padding-bottom: 7px;
 	padding-top: 7px;
 	border: 1px solid black;
+}
+#myDataViz {
+	border: 0.5px solid $primary;
 }
 </style>
