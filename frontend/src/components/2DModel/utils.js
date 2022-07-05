@@ -290,8 +290,8 @@ export function fillAbleToDropList(node,attribute,ableToDropList){
 		return;
 	}
 	node = (node.value) ? node.value : node;
-	if(node.representation == "container" && (attribute.resourceType == node.letoType.type || attribute.resourceType == null )){
-			ableToDropList.push(node.drawingObject.id);
+	if(node.letoType.representation == "container" && (attribute.resourceType == node.letoType.type || attribute.resourceType == null )){
+			ableToDropList.push(node.id);
 	}
 	fillAbleToDropList(node.contains[0],attribute,ableToDropList)
 	fillAbleToDropList(node.rightSibling,attribute,ableToDropList)
