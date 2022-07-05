@@ -702,8 +702,8 @@ export default {
 				.select("#myDataViz")
 				.append("svg")
 				.attr("id", "root")
-       	.attr("width", "100%")
-        .attr("height", "100vh")
+				.attr("width", "100%")
+				.attr("height", "100vh")
 				.call(
 					d3
 						.zoom()
