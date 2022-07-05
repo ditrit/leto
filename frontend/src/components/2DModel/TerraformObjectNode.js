@@ -57,34 +57,30 @@ export default class TerraformObjectNode extends LetoObjectNode {
 				menu.style.left = e.pageX - rootx + "px";
 				menu.style.top = e.pageY - rooty / 2 + "px";
 
-				let currentLetoObj = {
-					attributes: null,
-				}
+				const currentLetoObj = { attributes: [] }
 				getAttributesInData(rootTreeObject, this.id, currentLetoObj);
-				let nLinkAttr = 0;
-				if (currentLetoObj.attributes) {
-					currentLetoObj.attributes.forEach(attribute => {
-						if (attribute.representation == "link" || attribute.representation == "inverseLink") {
-							nLinkAttr++;
-							let listElem = document.createElement("li");
-							let listElemText = document.createElement("a");
-							d3.select(listElemText).on("click", function () {
-								menu.style.display = "none"
-								d3.select(model.getElementById("logo_frame")).attr("fill", "green");
-								drawingLink.resourceType = this.textContent;
-								drawingLink.variableName = attribute.variableName;
-								drawingLink.multiple = attribute.array;
-								drawingLink.required = attribute.required;
-								drawingLink.representation = attribute.representation;
-							})
-							let text = document.createTextNode(attribute.resourceType);
-							listElemText.appendChild(text);
-							listElem.appendChild(listElemText);
-							list.appendChild(listElem);
-						}
+				for (const attribute of currentLetoObj.attributes ?? []) {
+					if (!attribute.resourceType
+						|| !["link", "inverseLink"].includes(attribute.representation)) {
+						continue;
+					}
+					let listElem = document.createElement("li");
+					let listElemText = document.createElement("a");
+					d3.select(listElemText).on("click", function () {
+						menu.style.display = "none"
+						d3.select(model.getElementById("logo_frame")).attr("fill", "green");
+						drawingLink.resourceType = this.textContent;
+						drawingLink.variableName = attribute.variableName;
+						drawingLink.multiple = attribute.array;
+						drawingLink.required = attribute.required;
+						drawingLink.representation = attribute.representation;
 					})
+					let text = document.createTextNode(attribute.resourceType);
+					listElemText.appendChild(text);
+					listElem.appendChild(listElemText);
+					list.appendChild(listElem);
 				}
-				if (nLinkAttr > 0) {
+				if (list.children.length > 0) {
 					menu.style.display = 'block';
 				}
 				else {
