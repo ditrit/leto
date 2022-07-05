@@ -46,6 +46,16 @@ import {
 } from "src/components/Monaco/svg_maths";
 import EventBus from "src/services/EventBus";
 
+/**
+ * Makes an hexadecimal string of the specified length
+ * @param {number} length
+ */
+function randomHexString(length) {
+	const buffer = new Uint32Array(length);
+	window.crypto.getRandomValues(buffer);
+	return Array.from(buffer, i => (i % 16).toString(16)).join("");
+}
+
 export default {
 	emits: ["getTreeObjects"],
 	setup(_props, { emit }) {
@@ -495,7 +505,7 @@ export default {
 				d3.select(this).transition().attr("fill", "black");
 				let terraformObject = new TerraformObjectNode(
 					panelObject,
-					"myTerraformObjectNode",
+					`${panelObject.type_name}_${randomHexString(4)}`,
 					0,
 					panelObject.type_name,
 					"svg0",
