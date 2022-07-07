@@ -33,7 +33,7 @@ export function removeInputLinkInData(node,currentModelId,linkId){
 	}
 	node = (node.value) ? node.value : node;
 	if(node.id == currentModelId){
-		let foundLink = node.attributesInputLinks.find(element => {element.id == linkId});
+		let foundLink = node.attributesInputLinks.find(element => element.id == linkId);
 		node.attributesInputLinks.splice(node.attributesInputLinks.indexOf(foundLink));
 	}
 	removeInputLinkInData(node.contains[0],currentModelId,linkId);
@@ -46,7 +46,7 @@ export function removeOutputLinkInData(node,currentModelId,linkId){
 	}
 	node = (node.value) ? node.value : node;
 	if(node.id == currentModelId){
-		let foundLink = node.attributesOutputLinks.find(element => {element.id == linkId});
+		let foundLink = node.attributesOutputLinks.find(element => element.id == linkId);
 		node.attributesOutputLinks.splice(node.attributesOutputLinks.indexOf(foundLink));
 	}
 	removeOutputLinkInData(node.contains[0],currentModelId,linkId);
