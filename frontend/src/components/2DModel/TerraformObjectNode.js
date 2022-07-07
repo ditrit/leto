@@ -43,50 +43,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
 		d3.select(model.getElementById("logo_frame")).call(dragLink.value);
 
 		d3.select(model.getElementById("logo_frame"))
-			.on("contextmenu", (e) => {
-				e.preventDefault();
-				const groups = d3.select('#root').selectAll('svg');
-				d3.selectAll(groups).select('#logo_frame').attr("fill", "white");
-				let menu = document.getElementById("contextMenu");
-				let list = document.getElementById("contextMenuList");
-
-				d3.selectAll(list.children).remove();
-
-				let rootx = document.getElementById("root").getBoundingClientRect().x;
-				let rooty = document.getElementById("root").getBoundingClientRect().y;
-				menu.style.left = e.pageX - rootx + "px";
-				menu.style.top = e.pageY - rooty / 2 + "px";
-
-				const currentLetoObj = { attributes: [] }
-				getAttributesInData(rootTreeObject, this.id, currentLetoObj);
-				for (const attribute of currentLetoObj.attributes ?? []) {
-					if (!attribute.resourceType
-						|| !["link", "inverseLink"].includes(attribute.representation)) {
-						continue;
-					}
-					let listElem = document.createElement("li");
-					let listElemText = document.createElement("a");
-					d3.select(listElemText).on("click", function () {
-						menu.style.display = "none"
-						d3.select(model.getElementById("logo_frame")).attr("fill", "green");
-						drawingLink.resourceType = this.textContent;
-						drawingLink.variableName = attribute.variableName;
-						drawingLink.multiple = attribute.array;
-						drawingLink.required = attribute.required;
-						drawingLink.representation = attribute.representation;
-					})
-					let text = document.createTextNode(attribute.resourceType);
-					listElemText.appendChild(text);
-					listElem.appendChild(listElemText);
-					list.appendChild(listElem);
-				}
-				if (list.children.length > 0) {
-					menu.style.display = 'block';
-				}
-				else {
-					menu.style.display = 'none';
-				}
-			})
+			.on("contextmenu", e => this.contextMenu(e, rootTreeObject))
 
 		d3.select(model)
 			.append("svg:image")
@@ -234,5 +191,48 @@ export default class TerraformObjectNode extends LetoObjectNode {
 			endAnchor = document.getElementById(endId + "input_anchor_top");
 		}
 		return [beginAnchor, endAnchor];
+	}
+
+	contextMenu($event, rootTreeObject) {
+		$event.preventDefault();
+		const groups = d3.select('#root').selectAll('svg');
+		d3.selectAll(groups).select('#logo_frame').attr("fill", "white");
+		const menu = document.getElementById("contextMenu");
+		const list = document.getElementById("contextMenuList");
+
+		d3.selectAll(list.children).remove();
+
+		const root = document.getElementById("root").getBoundingClientRect();
+		menu.style.left = `${$event.pageX - root.x}px`;
+		menu.style.top = `${$event.pageY - root.y / 2}px`;
+
+		const currentLetoObj = { attributes: [] }
+		getAttributesInData(rootTreeObject, this.id, currentLetoObj);
+		for (const attribute of currentLetoObj.attributes ?? []) {
+			if (!attribute.resourceType
+				|| !["link", "inverseLink"].includes(attribute.representation)) {
+				continue;
+			}
+			const listElem = document.createElement("li");
+			const listElemText = document.createElement("a");
+			d3.select(listElemText).on("click", function () {
+				menu.style.display = "none"
+				d3.select(model.getElementById("logo_frame")).attr("fill", "green");
+				drawingLink.resourceType = this.textContent;
+				drawingLink.variableName = attribute.variableName;
+				drawingLink.multiple = attribute.array;
+				drawingLink.required = attribute.required;
+				drawingLink.representation = attribute.representation;
+			})
+			const text = document.createTextNode(attribute.resourceType);
+			listElemText.appendChild(text);
+			listElem.appendChild(listElemText);
+			list.appendChild(listElem);
+		}
+		if (list.children.length > 0) {
+			menu.style.display = 'block';
+		} else {
+			menu.style.display = 'none';
+		}
 	}
 }
