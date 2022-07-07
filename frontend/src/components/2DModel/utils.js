@@ -7,7 +7,7 @@ export function storeOutputLinkInData(node,currentModelId,link){
 	}
 	node = (node.value) ? node.value : node;
 	if(node.id == currentModelId){
-		node.addOutputLink(link);
+		node.attributesOutputLinks.push(link);
 	}
 
 	storeOutputLinkInData(node.contains[0],currentModelId,link);
@@ -20,7 +20,7 @@ export function storeInputLinkInData(node,currentModelId,link){
 	}
 	node = (node.value) ? node.value : node;
 	if(node.id == currentModelId){
-		node.addInputLink(link);
+		node.attributesInputLinks.push(link);
 	}
 
 	storeInputLinkInData(node.contains[0],currentModelId,link);
@@ -33,7 +33,8 @@ export function removeInputLinkInData(node,currentModelId,linkId){
 	}
 	node = (node.value) ? node.value : node;
 	if(node.id == currentModelId){
-		node.removeInputLink(linkId);
+		let foundLink = node.attributesInputLinks.find(element => {element.id == linkId});
+		node.attributesInputLinks.splice(node.attributesInputLinks.indexOf(foundLink));
 	}
 	removeInputLinkInData(node.contains[0],currentModelId,linkId);
 	removeInputLinkInData(node.rightSibling,currentModelId,linkId);
@@ -45,7 +46,8 @@ export function removeOutputLinkInData(node,currentModelId,linkId){
 	}
 	node = (node.value) ? node.value : node;
 	if(node.id == currentModelId){
-		node.removeOutputLink(linkId);
+		let foundLink = node.attributesOutputLinks.find(element => {element.id == linkId});
+		node.attributesOutputLinks.splice(node.attributesOutputLinks.indexOf(foundLink));
 	}
 	removeOutputLinkInData(node.contains[0],currentModelId,linkId);
 	removeOutputLinkInData(node.rightSibling,currentModelId,linkId);
@@ -103,7 +105,7 @@ export function updateLinks(node,model){
 			node = (node.value) ? node.value : node;
 			if (node.id == model.id){
 
-				node.attributes_output_links.forEach(link => {
+				node.attributesOutputLinks.forEach(link => {
 					let arrow = document.getElementById(link.id);
 					let beginId = model.id;
 					let endId = link.targetId
@@ -115,7 +117,7 @@ export function updateLinks(node,model){
 						.attr("y2",beginAnchorPos[1])
 				})
 
-				node.attributes_input_links.forEach(link => {
+				node.attributesInputLinks.forEach(link => {
 					let arrow = document.getElementById(link.id);
 					let endId = model.id;
 					let beginId = link.sourceId
@@ -153,8 +155,8 @@ export function updateDrawingInfosInData(node,currentModel){
 	}
 	node = (node.value) ? node.value : node;
 	if(node.id == (currentModel.getAttribute("id"))){
-		node.setX(parseFloat(currentModel.getAttribute("x")));
-		node.setY(parseFloat(currentModel.getAttribute("y")));
+		node.x = (parseFloat(currentModel.getAttribute("x")));
+		node.y = (parseFloat(currentModel.getAttribute("y")));
 	}
 	updateDrawingInfosInData(node.contains[0],currentModel);
 	updateDrawingInfosInData(node.rightSibling,currentModel);
@@ -171,7 +173,26 @@ export function addContentInData(node,parentId,letoObjectNode){
 		return;
 	}
 	else if(node.id == (parentId)){
-		node.addContent(letoObjectNode);
+		if(!letoObjectNode.value){
+			const foundAttr = letoObjectNode.letoType.attributes.find(
+				element => ((
+					element.representation == "contained"||element.representation == "containedInOtherContainer"
+					) && (
+					element.resourceType == node.letoType.type || !element.resourceType
+					)
+				)
+			);
+			let containedAttr = {
+				name: foundAttr.variableName,
+				representation : foundAttr.representation,
+				required : foundAttr.required,
+				value : letoObjectNode
+			}
+			node.addContent(containedAttr);
+		}
+		else{
+			node.addContent(letoObjectNode);
+		}
 	}
 
 	addContentInData(node.contains[0],parentId,letoObjectNode);
@@ -189,12 +210,12 @@ export function removeContentInData(node,parentId,letoObjectNode){
 			if(letoNodeVal.id == letoObjectNode.id){
 				if(node.contains[node.contains.indexOf(letoNode)-1]){
 					node.contains[node.contains.indexOf(letoNode)-1]=(node.contains[node.contains.indexOf(letoNode)-1].value)?node.contains[node.contains.indexOf(letoNode)-1].value : node.contains[node.contains.indexOf(letoNode)-1];
-					node.contains[node.contains.indexOf(letoNode)-1].setRightSibling(null);
+					node.contains[node.contains.indexOf(letoNode)-1].rightSibling = (null);
 				}
 				let nextSibling = letoNodeVal.rightSibling;
-				letoObjectNode.setContains(letoNodeVal.getContains());
-				letoObjectNode.setOutputs(letoNodeVal.getOutputs());
-				letoObjectNode.setInputs(letoNodeVal.getInputs());
+				letoObjectNode.contains = (letoNodeVal.contains);
+				letoObjectNode.attributesOutputLinks = (letoNodeVal.attributesOutputLinks);
+				letoObjectNode.attributesInputLinks = (letoNodeVal.attributesInputLinks);
 				node.contains.splice(node.contains.indexOf(letoNode));
 
 				while (nextSibling){
@@ -259,7 +280,7 @@ export function getAttributesInData(node,currentModelId,letoObject){
 	}
 	node = (node.value) ? node.value : node;
 	if(node.id == currentModelId){
-		letoObject.attributes = node.getAttributes();
+		letoObject.attributes = node.attributes;
 	}
 	getAttributesInData(node.contains[0],currentModelId,letoObject);
 	getAttributesInData(node.rightSibling,currentModelId,letoObject);
@@ -272,7 +293,7 @@ export function fillAbleToLinkList(node,attribute,ableToLinkList){
 	node = (node.value) ? node.value : node;
 		if(node.letoType.type == attribute.resourceType){
 			let count = 0;
-			node.getLinks().outputs.forEach(link=>{
+			node.attributesOutputLinks.forEach(link=>{
 				if(link.variableName == attribute.variableName){
 					count ++;
 				}
