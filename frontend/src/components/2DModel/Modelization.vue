@@ -38,8 +38,7 @@ import {
 } from "./utils";
 import { useStore } from "vuex";
 import plugins from "src/assets/plugins/terraform/plugins";
-import LetoTypeNode from "src/components/2DModel/LetoTypeNode";
-import LetoObjectNode from "src/components/2DModel/LetoObjectNode";
+import { LetoObjectNode, LetoTypeNode } from "leto-module-client/src";
 import {
 	calcul_dimensions,
 	calcul_xy_container,
