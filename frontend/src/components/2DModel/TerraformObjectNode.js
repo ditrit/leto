@@ -9,10 +9,6 @@ export default class TerraformObjectNode extends LetoObjectNode {
 		this.parentId = parentId;
 		this.attributes = terraformType.attributes;
 		this.objects = (objects) ? objects : [];
-		this.width = 0;
-		this.height = 0;
-		this.x=0,
-		this.y=0
 	}
 
     drawSVG(svgs, svgParent, parentName, content, dragList, dataList) {
@@ -165,37 +161,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
         return document.getElementById(`${this.id}`);
     }
 
-		getAttributes(){
-			return this.attributes;
-		}
 
-    setHeight(height) {
-        this.height = height;
-    }
-
-    setWidth(width) {
-        this.width = width;
-    }
-
-    setX(x) {
-        this.x = x;
-    }
-
-    setY(y) {
-        this.y = y;
-    }
-
-    setContains(contains) {
-        this.contains = contains;
-    }
-
-    setObjects(objects) {
-        this.objects = objects;
-    }
-
-    setAttributes(attributes) {
-        this.attributes = attributes;
-    }
 
 		static getLinkAnchors(beginId,endId){
 
