@@ -1,4 +1,4 @@
-import LetoObjectNode from "./LetoObjectNode";
+import { LetoObjectNode } from "leto-module-client/src";
 import SVGinstanciate from "./svgvar.js";
 import { getModelAbsPos, getAttributesInData } from "./utils";
 const d3 = require("d3");
