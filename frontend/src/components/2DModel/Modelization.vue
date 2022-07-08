@@ -712,8 +712,8 @@ export default {
 				.select("#myDataViz")
 				.append("svg")
 				.attr("id", "root")
-				.attr("width", 2000)
-				.attr("height", 2000)
+				.attr("width", "100%")
+				.attr("height", "100vh")
 				.call(
 					d3
 						.zoom()
@@ -776,7 +776,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .context-menu {
 	position: absolute;
 	text-align: center;
@@ -797,5 +797,8 @@ a:hover {
 	padding-bottom: 7px;
 	padding-top: 7px;
 	border: 1px solid black;
+}
+#myDataViz {
+	border: 0.5px solid $primary;
 }
 </style>

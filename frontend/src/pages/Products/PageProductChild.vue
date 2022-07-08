@@ -58,8 +58,8 @@
 				</template>
 			</SideBar>
 
-			<q-page-container class="q-pa-lg">
-				<q-page :style-fn="pageSizeTweak" class="q-mt-lg">
+			<q-page-container>
+				<q-page :style-fn="pageSizeTweak">
 					<Modelization
 						v-if="modelValue === isModelMode"
 						@getTreeObjects="tree"
