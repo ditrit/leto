@@ -61,7 +61,7 @@ function getRelationsContainers(resourcesObject, containers, resource) {
     const multiple = (ro.array === undefined) ? false : ro.array;
     containers.forEach((c) => {
       if(c.name == ro.value.name) {
-        if (ro.representation == 'contained' || ro.representation == 'contain') {
+        if (ro.representation == 'contained') {
           c.contains.push({name : ro.name, required : ro.required, multiple : multiple, representation : ro.representation, value : resource});
         } else if (ro.representation == 'containedInOtherContainer') {
           c.containers.push({name : ro.name, required : ro.required, multiple : multiple, representation : ro.representation, value : resource});
@@ -192,13 +192,26 @@ function getContent(containers) {
   containers.forEach((c) => {
     c.resourcesObject.forEach((ro) => {
       const multiple = (ro.array === undefined) ? false : ro.array;
-      if (ro.representation == 'contained' || ro.representation == 'contain') {
+      if (ro.representation == 'contain') {
+        ro.representation = 'contained';
+        const newAttribute = {variableName: ro.name, resourceType: ro.value.type, representation : ro.representation, array: false, required: false};            
+        ro.value.attributes = addAttribute(ro.value.attributes, newAttribute);
         c.contains.push({name : ro.name, required : ro.required, multiple : multiple, representation : ro.representation, value : ro.value});
       }
     });
   });
 
   return containers;
+}
+
+function addAttribute(attributesArray, newAttribute) {
+  const attributes = [];
+  attributesArray.forEach(attribute => {
+    attributes.push(attribute);
+  })
+  if(!getAttribute(attributes, newAttribute)) attributes.push(newAttribute);
+  
+  return attributes;
 }
 
 function getContentInContainers(containers) {
@@ -209,13 +222,31 @@ function getContentInContainers(containers) {
           if (cn.value.name == ctn.value.name) {
             if (!c.contains.includes(cs)) {
               cs.inContainer = true;
-              c.contains.push({name : '', value : cs});
+              cn.value = c;
+              cn.representation = 'contained';
+              const newAttribute = {variableName: cn.name, resourceType: cn.value.type, representation : cn.representation, array: false, required: false};            
+              cs.attributes = addAttribute(cs.attributes, newAttribute);
+              c.contains.push({name : cs.name, value : cs});
               const index = containers.indexOf(cs);
               containers.splice(index, 1);
             }
           }
         });
       });
+    });
+  });
+
+  return containers;
+}
+
+function removeInContainers(containers) {
+  containers.forEach((container) => {
+    container.contains.forEach((content) => {
+      if (content.value.representation === 'container') {
+        content.inContainer = true;
+        const index = containers.indexOf(content.value);
+        containers.splice(index, 1);
+      }
     });
   });
 
@@ -241,14 +272,11 @@ function getResourcesInOrder(containers, blocks, orderResources) {
   let order = 0;
   const resources = [];
 
-  while (order < containers.length + blocks.length) {
+  while (order <= containers.length + blocks.length) {
     containers.forEach((container) => {
-      if (container.order == order) {
+      if (container.order == order || order > orderResources.length && !resources.includes(container)) {
         resources.push(container);
-      }
-      if (order > orderResources.length && !resources.includes(container)) {
-        resources.push(container);
-      }
+      } 
     });
     blocks.forEach((block) => {
       if (block.order == order) {
@@ -274,12 +302,7 @@ function inverseAttribute(resources) {
           resources.forEach( r => {
             if(r.type === resourceType) {
               const newAttribute = {variableName: attribute.variableName, resourceType: resource.type, representation : attribute.representation, array: attribute.array, required: attribute.required};
-              const attributes = [];
-              r.attributes.forEach(a => {
-                attributes.push(a);
-              })
-              if(!getAttribute(attributes, newAttribute)) attributes.push(newAttribute);
-              r.attributes = attributes;
+              r.attributes = addAttribute(r.attributes, newAttribute);
             }
           })
         }
@@ -380,9 +403,7 @@ export function calculAttributesObjects(datas) {
   containers = getModules(datas.modules, containers, orderResources);
   
   datas.resources.forEach((resource) => {
-    if (resource.representation != 'container') {
-      containers = getRelationsContainers(resource.resourcesObject, containers, resource);
-    }
+    containers = getRelationsContainers(resource.resourcesObject, containers, resource);
   });
   
   datas.resources = getLinksResources(datas.resources);
@@ -394,6 +415,8 @@ export function calculAttributesObjects(datas) {
   noRelations = getNoRelationsModules(noRelations, containers);
 
   containers = getContent(containers);
+
+  containers = removeInContainers(containers);
 
   containers = getContentInContainers(containers);
 
@@ -484,7 +507,7 @@ function formatDatas(container, widthMax, remove, height, contains) {
 
   const dimensions = calculDimensionContainerAttributes(contains, widthMax, remove, widthResource, height, width);
   width = dimensions.width;
-  height = dimensions.height;
+  height = dimensions.height + 10;
   
   width = (width < initialWidth && !remove) ? initialWidth : width;
   height = (height < initialHeight && !remove) ? initialHeight : height;
@@ -497,19 +520,19 @@ function calculDimensionContainerAttributes(container, widthMax, remove, widthRe
 
   container.forEach(resource => {   
     const object = (resource.value) ? resource.value : resource;
-    if (object.contains !== undefined && object.contains.length > 0) {
-      dimensions = calculDimensionContainer(object, widthMax, height, width, remove);
+    if (object.contains !== undefined && object.representation === 'container') {
+      dimensions = calculDimensionContainer(object, widthMax, height, width, remove, widthResource);
     } else {
       object.width = 0;
       object.height = 0;
       dimensions = calculDimensionResource(width, height, widthResource, 250, widthMax, 70);
     }
-    width = dimensions.width;
+    width = (dimensions.width > width) ? dimensions.width : width;
     height = dimensions.height;
     widthResource = dimensions.widthResource;
   });
 
-  return {width, height, widthResource};
+  return {width, height};
 }
 
 function calculDimensionResource(width, height, widthResource, widthMin, widthMax, heightMin) {
@@ -526,23 +549,22 @@ function calculDimensionResource(width, height, widthResource, widthMin, widthMa
   return {width, height, widthResource};
 }
 
-function calculDimensionContainer(container, widthMax, height, width, remove) {
+function calculDimensionContainer(container, widthMax, height, width, remove, widthResource) {
   let dimensions;
   
-  if (container.contains.length > 0) {
-    const object = (container.drawingObject) ? container.drawingObject : container;
-    dimensions = calcul_dimensions(object, 0, widthMax, remove, container.contains);
-    object.width = (object.width >= widthMax) ? object.width : (dimensions.width - 10);
-    object.height = dimensions.height + 10;
-  }
+  const object = (container.drawingObject) ? container.drawingObject : container;
+  dimensions = calcul_dimensions(object, 0, widthMax, remove, container.contains);
+  object.width = (object.width >= widthMax) ? object.width : (dimensions.width - 10);
+  object.height = dimensions.height + 10;
 
-  if (width + dimensions.width + 30 >= widthMax) {
+  if (width + widthResource + 30 >= widthMax) {
     width = dimensions.width + 30;
+    height += dimensions.height + 30;
   } else {
     width += dimensions.width + 30;
+    height += dimensions.height - 20;
   }
-  let widthResource = width;
-  height += dimensions.height + 40;
+  widthResource = width;
 
   return {width, height, widthResource}
 }

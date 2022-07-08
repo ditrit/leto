@@ -37,16 +37,9 @@
                 "representation" : "block",
                 "attributes" : [
                     {
-                        "variableName" : "security_groups",
-                        "resourceType" : "aws_security_group",
-                        "representation" : "inverseLink",
-                        "array" : true,
-                        "required" : false
-                    },
-                    {
                         "variableName" : "vpc_security_group_ids",
                         "resourceType" : "aws_security_group",
-                        "representation" : "inverseLink",
+                        "representation" : "link",
                         "array" : true,
                         "required" : false
                     },
