@@ -546,22 +546,24 @@ export default {
 
 		function fillDataStorage(datas,parentId,level){
 			datas.forEach(SVGData => {
-				const data = (SVGData.value) ? SVGData.value : SVGData;
+				let obj = (SVGData.value) ? SVGData.value : SVGData;
+				let data = (obj.letoType) ? obj.letoType : obj;
 				let terraformType = getLetoTypeNodeFromData(
 					terraformPanelList.value,
 					data.type
 				);
+
 				const terraformObject = new TerraformObjectNode(
 					terraformType,
-					data.name,
-					data.id,
+					obj.name,
+					obj.id,
 					parentId,
-					data.objects
+					obj.objects
 				);
-				terraformObject.height = (data.height);
-				terraformObject.width = (data.width);
-				terraformObject.x = (data.x);
-				terraformObject.y = (data.y);
+				terraformObject.height = (obj.height);
+				terraformObject.width = (obj.width);
+				terraformObject.x = (obj.x);
+				terraformObject.y = (obj.y);
 				terraformObject.attributes = (data.attributes);
 				if (SVGData.value){
 					let containedObj = JSON.parse(JSON.stringify(SVGData));
@@ -579,10 +581,10 @@ export default {
 						terraformObject
 					);
 				}
-				if(data.contains) {
+				if(obj.contains) {
           fillDataStorage(
-						data.contains,
-						data.id,
+						obj.contains,
+						obj.id,
 						level + 1
 					);
 				}
@@ -606,8 +608,13 @@ export default {
 						data.objects
 					);
 				} else {
-
-					terraformObject = data;
+					terraformObject = new TerraformObjectNode(
+						JSON.parse(JSON.stringify(data.letoType)),
+						JSON.parse(JSON.stringify(data.name)),
+						JSON.parse(JSON.stringify(data.id)),
+						parentName,
+						JSON.parse(JSON.stringify(data.objects))
+					);
 				}
 
 				createTerraformObject(
@@ -636,7 +643,7 @@ export default {
 			terraformObject.width = (object.width);
 			terraformObject.x = (object.x);
 			terraformObject.y = (object.y);
-			terraformObject.attributes = (object.attributes);
+			terraformObject.letoType.attributes = (object.attributes);
 			terraformObject.drawSVG(
 				svgs,
 				svgParent,
@@ -689,6 +696,41 @@ export default {
 						storeOutputLinkInData(rootTreeObject.value, beginId, link);
 						storeInputLinkInData(rootTreeObject.value, endId, link);
 					});
+				}
+				if (blockEnd.attributesInputLinks){
+					blockEnd.attributesInputLinks.forEach((link) => {
+						const endId = blockEnd.id;
+						const endName = blockEnd.name;
+						const endType = blockEnd.letoType.type;
+						const beginId = link.sourceId;
+						const beginName = link.sourceName;
+						const beginType = link.sourceType;
+						const anchors = TerraformObjectNode.getLinkAnchors(beginId, endId);
+						const beginAnchor = anchors[0];
+						const endAnchor = anchors[1];
+						const linkId = drawLink(
+							beginAnchor,
+							endAnchor,
+							"svg0",
+							beginId + "_to_" + endId,
+							rootTreeObject.value
+						);
+						const newLink = {
+							targetId: endId,
+							targetName: endName,
+							targetType: endType,
+							sourceId: beginId,
+							sourceName: beginName,
+							sourceType: beginType,
+							id: linkId,
+							variableName: link.variableName,
+							required: link.required,
+							multiple: link.multiple,
+							representation: link.representation,
+						};
+						storeOutputLinkInData(rootTreeObject.value, beginId, newLink);
+						storeInputLinkInData(rootTreeObject.value, endId, newLink);
+					})
 				}
 				if (blockEnd.contains) {
 					drawLines(blockEnd.contains);
