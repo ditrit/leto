@@ -164,7 +164,6 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
 
 		static getLinkAnchors(beginId,endId){
-
 			let beginPos = getModelAbsPos(document.getElementById(beginId));
 			let endPos = getModelAbsPos(document.getElementById(endId));
 			let xDiff = beginPos[0]-endPos[0];
