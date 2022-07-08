@@ -5,9 +5,9 @@ export function storeOutputLinkInData(node,currentModelId,link){
 	if (node == null){
 		 return;
 	}
-
-	else if(node.drawingObject.id == currentModelId){
-		node.addOutputLink(link);
+	node = (node.value) ? node.value : node;
+	if(node.id == currentModelId){
+		node.attributesOutputLinks.push(link);
 	}
 
 	storeOutputLinkInData(node.contains[0],currentModelId,link);
@@ -18,9 +18,9 @@ export function storeInputLinkInData(node,currentModelId,link){
 	if (node == null){
 		 return;
 	}
-
-	else if(node.drawingObject.id == currentModelId){
-		node.addInputLink(link);
+	node = (node.value) ? node.value : node;
+	if(node.id == currentModelId){
+		node.attributesInputLinks.push(link);
 	}
 
 	storeInputLinkInData(node.contains[0],currentModelId,link);
@@ -31,8 +31,10 @@ export function removeInputLinkInData(node,currentModelId,linkId){
 	if (node == null){
 		return;
 	}
-	else if(node.drawingObject.id == currentModelId){
-		node.removeInputLink(linkId);
+	node = (node.value) ? node.value : node;
+	if(node.id == currentModelId){
+		let foundLink = node.attributesInputLinks.find(element => element.id == linkId);
+		node.attributesInputLinks.splice(node.attributesInputLinks.indexOf(foundLink));
 	}
 	removeInputLinkInData(node.contains[0],currentModelId,linkId);
 	removeInputLinkInData(node.rightSibling,currentModelId,linkId);
@@ -42,54 +44,13 @@ export function removeOutputLinkInData(node,currentModelId,linkId){
 	if (node == null){
 		return;
 	}
-	else if(node.drawingObject.id == currentModelId){
-		node.removeOutputLink(linkId);
+	node = (node.value) ? node.value : node;
+	if(node.id == currentModelId){
+		let foundLink = node.attributesOutputLinks.find(element => element.id == linkId);
+		node.attributesOutputLinks.splice(node.attributesOutputLinks.indexOf(foundLink));
 	}
 	removeOutputLinkInData(node.contains[0],currentModelId,linkId);
 	removeOutputLinkInData(node.rightSibling,currentModelId,linkId);
-}
-
-export function replaceComponents(group) {
-	let i = 0;
-	let height =
-		parseFloat(group.getElementsByClassName("top")[0].getAttribute("height") *2)
-		+
-		parseFloat(group.getElementsByClassName("middle")[0].getAttribute("height"))
-
-
-		for (const prop in group.childNodes) {
-			if (group.childNodes[prop].tagName == "svg") {
-				if (
-					group.childNodes[prop].className.baseVal == "model" &&
-					group.childNodes[prop].getAttribute("id") != "svg0"
-					)
-					{
-						i++;
-
-						let width = parseFloat(group.getElementsByClassName("main")[0].getAttribute("width"))+parseFloat(group.getElementsByClassName("main")[0].getAttribute("x"));
-						let widthChild = parseFloat(group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("width"))+parseFloat(group.childNodes[prop].getElementsByClassName("main")[0].getAttribute("x"));
-
-						d3.select(group.childNodes[prop])
-						.attr("x",(width-widthChild) /2)
-						.attr("y",height)
-
-						height +=
-							parseFloat(group.childNodes[prop]
-								.getElementsByClassName("top")[0]
-								.getAttribute("height"))
-							+
-							parseFloat(group.childNodes[prop]
-								.getElementsByClassName("main")[0]
-								.getAttribute("height"))
-					}
-				}
-			}
-			if (
-				group.parentNode.className.baseVal == "model" &&
-				group.parentNode.getAttribute("id") != "svg0"
-			) {
-				replaceComponents(group.parentNode);
-			}
 }
 
 function addParentPos(parent,pos){
@@ -141,9 +102,10 @@ export function updateLinks(node,model){
 			if (node == null){
 				return;
 			}
-			if (node.drawingObject.id == model.id){
+			node = (node.value) ? node.value : node;
+			if (node.id == model.id){
 
-				node.links.outputs.forEach(link => {
+				node.attributesOutputLinks.forEach(link => {
 					let arrow = document.getElementById(link.id);
 					let beginId = model.id;
 					let endId = link.targetId
@@ -155,7 +117,7 @@ export function updateLinks(node,model){
 						.attr("y2",beginAnchorPos[1])
 				})
 
-				node.links.inputs.forEach(link => {
+				node.attributesInputLinks.forEach(link => {
 					let arrow = document.getElementById(link.id);
 					let endId = model.id;
 					let beginId = link.sourceId
@@ -188,28 +150,51 @@ export function getModelAbsPos(model){
 }
 
 export function updateDrawingInfosInData(node,currentModel){
-	if (node == null) return;
-
-	else if(node.drawingObject.id == (currentModel.getAttribute("id"))){
-		node.setX(parseFloat(currentModel.getAttribute("x")));
-		node.setY(parseFloat(currentModel.getAttribute("y")));
+	if (node == null){
+		return;
+	}
+	node = (node.value) ? node.value : node;
+	if(node.id == (currentModel.getAttribute("id"))){
+		node.x = (parseFloat(currentModel.getAttribute("x")));
+		node.y = (parseFloat(currentModel.getAttribute("y")));
 	}
 	updateDrawingInfosInData(node.contains[0],currentModel);
 	updateDrawingInfosInData(node.rightSibling,currentModel);
 }
 
 export function addContentInData(node,parentId,letoObjectNode){
+
 	if (node == null) {
 		return;
 	}
-	else if ((parentId) == "svg0"){
+	node = (node.value) ? node.value : node;
+	if ((parentId) == "svg0"){
 		node.addContent(letoObjectNode);
 		return;
 	}
-	else if(node.drawingObject.id == (parentId)){
-		letoObjectNode.setLevel(node.getLevel() + 1);
-		node.addContent(letoObjectNode);
+	else if(node.id == (parentId)){
+		if(!letoObjectNode.value){
+			const foundAttr = letoObjectNode.letoType.attributes.find(
+				element => ((
+					element.representation == "contained"||element.representation == "containedInOtherContainer"
+					) && (
+					element.resourceType == node.letoType.type || !element.resourceType
+					)
+				)
+			);
+			let containedAttr = {
+				name: foundAttr.variableName,
+				representation : foundAttr.representation,
+				required : foundAttr.required,
+				value : letoObjectNode
+			}
+			node.addContent(containedAttr);
+		}
+		else{
+			node.addContent(letoObjectNode);
+		}
 	}
+
 	addContentInData(node.contains[0],parentId,letoObjectNode);
 	addContentInData(node.rightSibling,parentId,letoObjectNode);
 }
@@ -218,19 +203,24 @@ export function removeContentInData(node,parentId,letoObjectNode){
 	if (node == null) {
 		return;
 	}
-	else if(node.drawingObject.id == (parentId)){
+	node = (node.value) ? node.value : node;
+	if(node.id == (parentId)){
 		node.contains.forEach(letoNode =>{
-			if(letoNode.drawingObject.id == letoObjectNode.drawingObject.id){
+			let letoNodeVal = (letoNode.value) ? letoNode.value : letoNode;
+			if(letoNodeVal.id == letoObjectNode.id){
 				if(node.contains[node.contains.indexOf(letoNode)-1]){
-					node.contains[node.contains.indexOf(letoNode)-1].setRightSibling(null);
+					node.contains[node.contains.indexOf(letoNode)-1]=(node.contains[node.contains.indexOf(letoNode)-1].value)?node.contains[node.contains.indexOf(letoNode)-1].value : node.contains[node.contains.indexOf(letoNode)-1];
+					node.contains[node.contains.indexOf(letoNode)-1].rightSibling = (null);
 				}
-				let nextSibling = letoNode.rightSibling;
-				letoObjectNode.setContains(letoNode.getContains());
-				letoObjectNode.setLinks(letoNode.getLinks());
+				let nextSibling = letoNodeVal.rightSibling;
+				letoObjectNode.contains = (letoNodeVal.contains);
+				letoObjectNode.attributesOutputLinks = (letoNodeVal.attributesOutputLinks);
+				letoObjectNode.attributesInputLinks = (letoNodeVal.attributesInputLinks);
 				node.contains.splice(node.contains.indexOf(letoNode));
 
 				while (nextSibling){
 					node.addContent(nextSibling);
+					nextSibling = (nextSibling.value) ? nextSibling.value : nextSibling;
 					nextSibling = nextSibling.rightSibling;
 				}
 			}
@@ -244,7 +234,7 @@ export function getLetoTypeNodeFromData(panelList,modelType){
 	let letoType;
 	panelList.forEach(element=>{
 		if (
-			element.type_name ==
+			element.type ==
 			modelType
 		) {
 			letoType = element;
@@ -256,31 +246,41 @@ export function getLetoTypeNodeFromData(panelList,modelType){
 export function getParent(node,parentId){
 	if (node == null) {
 		return;
-	} else if(node.drawingObject.id == (parentId)){
+	}
+	node = (node.value) ? node.value : node;
+	if(node.id == (parentId)){
 		return node;
 	}
 	let result = getParent(node.contains[0],parentId);
-	if(result === undefined) result = getParent(node.rightSibling,parentId);
-	else if(node.drawingObject.id !== 'svg0') result = node;
+	if(result === undefined){
+		result = getParent(node.rightSibling,parentId);
+	}
+	else if(node.id !== 'svg0'){
+		result = node;
+	}
 	return result;
 }
 
 export function getNode(node,id){
 	if (node == null) {
 		return;
-	} else if(node.drawingObject.id === id){
+	}
+	node = (node.value) ? node.value : node;
+	if(node.id === id){
 		return node;
 	}
 	let result = getNode(node.contains[0],id);
 	if(result === undefined) result = getNode(node.rightSibling,id);
 	return result;
 }
+
 export function getAttributesInData(node,currentModelId,letoObject){
 	if(node == null){
 		return;
 	}
-	else if(node.drawingObject.id == currentModelId){
-		letoObject.attributes = node.getAttributes();
+	node = (node.value) ? node.value : node;
+	if(node.id == currentModelId){
+		letoObject.attributes = node.attributes;
 	}
 	getAttributesInData(node.contains[0],currentModelId,letoObject);
 	getAttributesInData(node.rightSibling,currentModelId,letoObject);
@@ -290,15 +290,16 @@ export function fillAbleToLinkList(node,attribute,ableToLinkList){
 	if (node == null){
 		return;
 	}
-		if(node.type_name == attribute.resourceType){
+	node = (node.value) ? node.value : node;
+		if(node.letoType.type == attribute.resourceType){
 			let count = 0;
-			node.getLinks().outputs.forEach(link=>{
+			node.attributesOutputLinks.forEach(link=>{
 				if(link.variableName == attribute.variableName){
 					count ++;
 				}
 			})
 			if(count==0 || (count>0 && attribute.multiple !== undefined)){
-				ableToLinkList.push(node.drawingObject.id);
+				ableToLinkList.push(node.id);
 			}
 		}
 	fillAbleToLinkList(node.contains[0],attribute,ableToLinkList)
@@ -309,8 +310,9 @@ export function fillAbleToDropList(node,attribute,ableToDropList){
 	if (node == null){
 		return;
 	}
-	if(node.representation == "container" && (attribute.resourceType == node.type_name || attribute.resourceType == null )){
-			ableToDropList.push(node.drawingObject.id);
+	node = (node.value) ? node.value : node;
+	if(node.letoType.representation == "container" && (attribute.resourceType == node.letoType.type || attribute.resourceType == null )){
+			ableToDropList.push(node.id);
 	}
 	fillAbleToDropList(node.contains[0],attribute,ableToDropList)
 	fillAbleToDropList(node.rightSibling,attribute,ableToDropList)

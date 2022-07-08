@@ -1,41 +1,22 @@
-import LetoObjectNode from "./LetoObjectNode";
+import { LetoObjectNode } from "leto-module-client/src";
 import SVGinstanciate from "./svgvar.js";
 import { getModelAbsPos, getAttributesInData } from "./utils";
 const d3 = require("d3");
 
 export default class TerraformObjectNode extends LetoObjectNode {
-	constructor(terraformTypeNode,instance_name,level, id, parentId, objects){
-		super(terraformTypeNode, instance_name, level, id, parentId);
-		this.contains=[];
+	constructor(terraformType,instance_name, id, parentId, objects){
+		super(terraformType, instance_name, id, parentId);
 		this.parentId = parentId;
-		this.level=level;
-		this.attributes = terraformTypeNode.attributes;
-		this.type = this.type_name;
-		this.name = this.instance_name;
+		this.attributes = terraformType.attributes;
 		this.objects = (objects) ? objects : [];
-		this.representation = terraformTypeNode.representation;
-
-		this.drawingObject ={
-			width:0,
-			height:0,
-			svg:this.svg,
-			type:this.type_name,
-			name:this.instance_name,
-			logopath: this.logo_path,
-			primary_color: this.primary_color,
-			secondary_color: this.secondary_color,
-			x:0,
-			y:0,
-			id: this.id
-		}
 	}
 
-    drawSVG(svgs, svgParent, parentName, content, level, dragList, dataList) {
+    drawSVG(svgs, svgParent, parentName, content, dragList, dataList) {
 			let drag = dragList[0];
 			let dragLink = dragList[1];
 			let rootTreeObject = dataList[0];
 			let drawingLink = dataList[1];
-        let data = { logopath: this.drawingObject.logopath,  width: this.drawingObject.width, height: this.drawingObject.height, name: this.drawingObject.name, type: this.drawingObject.type, id : this.id };
+        let data = { logopath: this.letoType.logoPath,  width: this.width, height: this.height, name: this.name, type: this.letoType.type, id : this.id };
         const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
         d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
         const model = document.getElementById(`${this.id}`);
@@ -169,53 +150,20 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
         if(content) {
             svgParent.querySelector("g").appendChild(model);
-            model.setAttribute('x', this.drawingObject.x)
-            model.setAttribute('y', this.drawingObject.y)
-            model.setAttribute('level', level)
+            model.setAttribute('x', this.x)
+            model.setAttribute('y', this.y)
         } else {
             document.getElementById(parentName).querySelector("g").appendChild(model)
-            model.setAttribute('x', this.drawingObject.x)
-            model.setAttribute('y', this.drawingObject.y)
-            model.setAttribute('level', level)
+            model.setAttribute('x', this.x)
+            model.setAttribute('y', this.y)
         }
 
         return document.getElementById(`${this.id}`);
     }
 
-		getAttributes(){
-			return this.attributes;
-		}
 
-    setHeight(height) {
-        this.drawingObject.height = height;
-    }
-
-    setWidth(width) {
-        this.drawingObject.width = width;
-    }
-
-    setX(x) {
-        this.drawingObject.x = x;
-    }
-
-    setY(y) {
-        this.drawingObject.y = y;
-    }
-
-    setContains(contains) {
-        this.contains = contains;
-    }
-
-    setObjects(objects) {
-        this.objects = objects;
-    }
-	
-    setAttributes(attributes) {
-        this.attributes = attributes;
-    }
 
 		static getLinkAnchors(beginId,endId){
-
 			let beginPos = getModelAbsPos(document.getElementById(beginId));
 			let endPos = getModelAbsPos(document.getElementById(endId));
 			let xDiff = beginPos[0]-endPos[0];

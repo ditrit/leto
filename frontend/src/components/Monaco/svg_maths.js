@@ -24,7 +24,7 @@ function getContainer(resources, orderResources) {
       r.contains = [];
       r.link = [];
       r.containers = [];
-      for (let i = 0; i < orderResources.length; i++) {        
+      for (let i = 0; i < orderResources.length; i++) {
         containers = arrangeResources(containers, orderResources, i, r);
       }
       if (!containers.includes(r)) { containers.push(r); }
@@ -80,7 +80,7 @@ function getLinksResources(resources) {
     r.resourcesObject.forEach((ro) => {
       const multiple = (ro.array === undefined) ? false : ro.array;
       resources.forEach((c) => {
-        if(c.name == ro.value.name && c.type == ro.value.type) {          
+        if(c.name == ro.value.name && c.type == ro.value.type) {
           if (ro.representation == 'link') {
             researchLinks(c, ro, r, multiple);
           } else if (ro.representation == 'inverseLink') {
@@ -94,7 +94,7 @@ function getLinksResources(resources) {
   return resources;
 }
 
-function researchLinks(container, resourceObject, resource, multiple) {  
+function researchLinks(container, resourceObject, resource, multiple) {
   let find = false;
 
   if (container.link) {
@@ -314,8 +314,8 @@ function getResourcesCoord(resources, noRelations, resourceWidthMax, heightMin, 
       yCurrent = xy.y;
       if (resources[i].height > heightMax) heightMax = resources[i].height;
     }
-    if (resources[i].width > widthMax) widthMax = resources[i].width;    
-    if(coord.change) { 
+    if (resources[i].width > widthMax) widthMax = resources[i].width;
+    if(coord.change) {
       yCurrent = coord.yCurrent;
       xCurrent = coord.xCurrent;
       heightMax = coord.heightMax;
@@ -356,7 +356,7 @@ function getNoRelationsCoord(noRelations, resources, yCurrent, resourceWidthMax,
         yCurrent = yCurrent + heightMax + 75;
         xCurrent = 10;
         heightMax = 40;
-    } else if(xy.x != -1) {            
+    } else if(xy.x != -1) {
       xCurrent = xy.x;
       yCurrent = xy.y;
       if(noRelations[i].height > heightMax) heightMax = noRelations[i].height;
@@ -374,17 +374,17 @@ export function calculAttributesObjects(datas) {
   const windowWidthMax = 800;
   const resourceWidthMax = 1000;
   const orderResources = (datas.provider.length > 0) ? datas.provider[0].orderResources : [];
-  
+
   let containers = getContainer(datas.resources, orderResources);
 
   containers = getModules(datas.modules, containers, orderResources);
-  
+
   datas.resources.forEach((resource) => {
     if (resource.representation != 'container') {
       containers = getRelationsContainers(resource.resourcesObject, containers, resource);
     }
   });
-  
+
   datas.resources = getLinksResources(datas.resources);
 
   let blocks = getBlocks(datas.resources, containers, orderResources);
@@ -430,7 +430,7 @@ export function calculAttributesObjects(datas) {
   return resources;
 }
 
-function checkContainsResource(container, resource, links){  
+function checkContainsResource(container, resource, links){
   let find = false;
 
   container.contains.forEach( contain => {
@@ -454,7 +454,7 @@ function checkContainsResource(container, resource, links){
   return find;
 }
 
-function calculDimensionModuleAttributes(resources, height, width) {  
+function calculDimensionModuleAttributes(resources, height, width) {
   for (let i = 0; i < resources.length; i++) {
     if (i + 1 < resources.length && resources[i + 1].order != resources[i].order) {
       if (resources[i].representation != 'container') {
@@ -477,7 +477,7 @@ function formatDatas(container, widthMax, remove, height, contains) {
   const initialWidth = (container.width !== undefined) ? container.width : 0;
   const initialHeight = (container.height !== undefined) ? container.height - 20 : 0;
   let index = (contains.length === 1) ? contains.length - 1 : contains.length - 2;
-  let width = 0;  
+  let width = 0;
   const content = (contains.length > 0 && contains[index].value) ? contains[index].value : contains[index];
   const lastX = (content !== undefined && content.drawingObject) ? content.drawingObject.x : contains.x;
   let widthResource = (lastX != undefined) ? lastX : 0;
@@ -485,7 +485,7 @@ function formatDatas(container, widthMax, remove, height, contains) {
   const dimensions = calculDimensionContainerAttributes(contains, widthMax, remove, widthResource, height, width);
   width = dimensions.width;
   height = dimensions.height;
-  
+
   width = (width < initialWidth && !remove) ? initialWidth : width;
   height = (height < initialHeight && !remove) ? initialHeight : height;
 
@@ -495,7 +495,7 @@ function formatDatas(container, widthMax, remove, height, contains) {
 function calculDimensionContainerAttributes(container, widthMax, remove, widthResource, height, width) {
   let dimensions;
 
-  container.forEach(resource => {   
+  container.forEach(resource => {
     const object = (resource.value) ? resource.value : resource;
     if (object.contains !== undefined && object.contains.length > 0) {
       dimensions = calculDimensionContainer(object, widthMax, height, width, remove);
@@ -528,9 +528,9 @@ function calculDimensionResource(width, height, widthResource, widthMin, widthMa
 
 function calculDimensionContainer(container, widthMax, height, width, remove) {
   let dimensions;
-  
+
   if (container.contains.length > 0) {
-    const object = (container.drawingObject) ? container.drawingObject : container;
+    const object = container;
     dimensions = calcul_dimensions(object, 0, widthMax, remove, container.contains);
     object.width = (object.width >= widthMax) ? object.width : (dimensions.width - 10);
     object.height = dimensions.height + 10;
@@ -622,10 +622,10 @@ function calculCoordContainerAttributes(resourceWidthMax, container, contains) {
   let cox = 20;
   let coy = 60;
   let containerHeightMax = 0;
-  
+
   contains.forEach((content) => {
     let drawingObject = (content.value) ? content.value : content;
-    drawingObject = (content.drawingObject) ? content.drawingObject : drawingObject;
+    drawingObject = (content.drawingObject) ? content : drawingObject;
     const object = (content.value) ? content.value : content;
     const xy = calculCoordResource(drawingObject, cox, coy, container, resourceWidthMax, containerHeightMax);
     cox = xy.x;
@@ -641,7 +641,7 @@ export function calcul_xy_container(container, x, y, resourceWidthMax, contains)
   let newX = -1;
   let newY = -1;
   let resourceHeightMax = 0;
-  if (!container.inContainer) {   
+  if (!container.inContainer) {
     const xy = calculCoordContainer(container, x, y, resourceWidthMax, resourceHeightMax);
     newX = xy.x;
     newY = xy.y;
