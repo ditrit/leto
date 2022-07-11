@@ -1,5 +1,5 @@
 <template>
-	<q-header class="bg-white text-primary">
+	<q-header class="bg-white text-primary shadow-1">
 		<slot name="productHeaderContent"></slot>
 	</q-header>
 </template>

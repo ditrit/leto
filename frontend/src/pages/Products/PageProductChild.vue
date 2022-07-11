@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="bg-white">
 		<ProductHeader>
 			<template v-slot:productHeaderContent>
 				<section class="productDetails_navbar">
@@ -127,7 +127,6 @@ export default defineComponent({
 			const provider = {
 				provider: this.iactorDatas.provider,
 			};
-
 			window.localStorage.setItem("monacoSource", JSON.stringify(provider));
 		};
 		this.worker.addEventListener("message", (event) => {
@@ -184,6 +183,7 @@ export default defineComponent({
 		let editor = monaco.editor.create(this.$refs.monacoContainer, {
 			language: "hcl",
 			theme: "terraformTheme",
+			automaticLayout: true,
 		});
 		this.monacoEditor = editor;
 		this.monacoEditor.getModel().onDidChangeContent((_event) => {
@@ -393,11 +393,17 @@ export default defineComponent({
 .q-icon
   vertical-align: top
 .monaco
-  width: 100vw
-  height: 100vh
-  overflow-y: hidden
-.monaco-editor
-  width: 100vw
+  display: flex
+  width: 100%
   height: 100vh !important
-  overflow-y: hidden
+  padding-top: 30px
+  scroll-y: hidden !important
+  overflow: hidden
+  background-color: $white
+
+.monaco-editor
+  display: flex
+  width: 100%
+  // height: 100vh !important
+  // background-color: $white
 </style>
