@@ -133,7 +133,7 @@
 										<div class="col">
 											<q-uploader
 												style="max-width: 100%"
-												url="http://127.0.0.1:9203/ditrit/Gandalf/1.0.0/file/50"
+												:url="`${process.env.BASEURL}/file/50`"
 												label="Your Logo"
 												multiple
 												accept=".jpg, svg, image/*"
