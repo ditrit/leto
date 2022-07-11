@@ -58,7 +58,7 @@
 										height="70px"
 									/>
 									<q-card-section class="ellipsis">
-										<div class="text centered">
+										<div class="text-caption centered">
 											{{
 												props.row.name
 													.replace(new RegExp(`${item.name}_`, "i"), "")
