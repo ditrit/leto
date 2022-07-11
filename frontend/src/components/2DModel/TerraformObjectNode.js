@@ -7,7 +7,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
 	constructor(terraformType,instance_name, id, parentId, objects){
 		super(terraformType, instance_name, id, parentId);
 		this.parentId = parentId;
-		this.attributes = terraformType.attributes;
+		// this.attributes = terraformType.attributes;
 		this.objects = (objects) ? objects : [];
 	}
 
@@ -39,13 +39,13 @@ export default class TerraformObjectNode extends LetoObjectNode {
             menu.style.left = e.pageX-rootx + "px";
             menu.style.top = e.pageY-rooty/2 + "px";
 
-						let currentLetoObj = {
-							attributes:null,
-						}
-						getAttributesInData(rootTreeObject,this.id,currentLetoObj);
+						// let currentLetoObj = {
+						// 	attributes:null,
+						// }
+						// getAttributesInData(rootTreeObject,this.id,currentLetoObj);
 						let nLinkAttr = 0;
-						if(currentLetoObj.attributes){
-							currentLetoObj.attributes.forEach(attribute => {
+						if(this.letoType.attributes){
+							this.letoType.attributes.forEach(attribute => {
 								if(attribute.representation == "link" || attribute.representation == "inverseLink"){
 									nLinkAttr ++;
 									let listElem = document.createElement("li");

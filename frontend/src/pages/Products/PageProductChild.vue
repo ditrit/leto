@@ -83,14 +83,8 @@
 import { defineComponent, ref, onMounted } from "vue";
 import * as monaco from "monaco-editor";
 import { mapActions, mapGetters } from "vuex";
-import { hclTokensProvider } from "src/components/Monaco/hclTokensProvider";
-import { analyse_resources } from "hcl/src/parser/compiler/schema_parser.js";
-import { calculAttributesObjects } from "src/components/Monaco/svg_maths.js";
 import plugins from "src/assets/plugins/terraform/plugins";
-import {
-	toString,
-	toStringResource,
-} from "src/components/Monaco/toStringFunctions";
+import { hclTokensProvider } from "src/components/Monaco/hclTokensProvider";
 import AjaxBar from "components/UI/Progress/AjaxBar";
 import SideBar from "components/UI/Drawers/SideBar.vue";
 import PaletteMenu from "components/PaletteMenu";
@@ -118,32 +112,6 @@ export default defineComponent({
 			metadatas: {},
 			valueEditor: null,
 		};
-	},
-	created() {
-		this.worker = new Worker(
-			new URL("src/components/Monaco/iactor.js", import.meta.url)
-		);
-		this.worker.onmessage = function (event) {
-			this.iactorDatas = event.data;
-			const provider = {
-				provider: this.iactorDatas.provider,
-			};
-
-			window.localStorage.setItem("monacoSource", JSON.stringify(provider));
-		};
-		this.worker.addEventListener("message", (event) => {
-			this.getSource();
-			this.getMetaDatas();
-			this.metadatas = this.allMetadatas;
-			const data = event.data;
-			data.provider[0].orderResources = this.metadatas.provider.orderResources
-				? this.metadatas.provider.orderResources
-				: [];
-			analyse_resources(data.resources, this.metadatas.provider.resources);
-			data.resources = calculAttributesObjects(data);
-			window.localStorage.setItem("monacoSource", JSON.stringify(data));
-			this.getSource();
-		});
 	},
 	mounted() {
 		monaco.languages.register({ id: "hcl" });
@@ -217,8 +185,7 @@ export default defineComponent({
 			return this.getMonacoSource();
 		},
 		consoleClick() {
-			this.worker.postMessage(this.valueEditor);
-			this.getSource();
+			window.localStorage.setItem("monacoSource", this.valueEditor);
 		},
 		getGraph() {
 			const datas = JSON.parse(window.localStorage.getItem("monacoSource"));

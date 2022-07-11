@@ -31,7 +31,7 @@
 		"grapesjs": "^0.18.4",
 		"grapesjs-plugin-ckeditor": "0.0.10",
 		"grapesjs-preset-webpage": "^0.1.11",
-		"hcl": "github:ditrit/iactor#414a628ddb4e5b7ab761edbc0e5b1874ca64378a",
+		"hcl": "github:ditrit/iactor#2943ad1af726bd214a756ca2485e4eacde42c62f",
 		"isomorphic-git": "^1.12.1",
 		"leto-module-client": "github:ditrit/leto-module-client#0.1.0",
 		"mitt": "^3.0.0",

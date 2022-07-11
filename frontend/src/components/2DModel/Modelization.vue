@@ -44,6 +44,7 @@ import {
 	calcul_xy_container,
 } from "src/components/Monaco/svg_maths";
 import EventBus from "src/services/EventBus";
+import { TerraformParser, TerraformMetadata } from "hcl/src/index";
 
 /**
  * Makes an hexadecimal string of the specified length
@@ -69,7 +70,7 @@ export default {
 		const rootTreeObject = ref(
 			new LetoObjectNode(new LetoTypeNode("", "", "", ""), "","")
 		);
-		rootTreeObject.value.setId("svg0");
+		rootTreeObject.value.id = "svg0";
 		EventBus.on("selected:component", component => clickOnPalette(component));
 		onUnmounted(() => EventBus.off("selected:component"));
 		const drag = ref(
@@ -592,30 +593,9 @@ export default {
 
 		function drawSVGs(datas, svgParent, parentName, content, level) {
 			datas.forEach((SVGData) => {
-				let terraformType, terraformObject, data;
-				data = (SVGData.value) ? SVGData.value : SVGData;
-				if(data.fileName){
-					terraformType = getLetoTypeNodeFromData(
-						terraformPanelList.value,
-						data.type
-					);
-					terraformObject = new TerraformObjectNode(
-						terraformType,
-						data.name,
-						data.id,
-						parentName,
-						data.objects
-					);
-				} else {
-					terraformObject = new TerraformObjectNode(
-						JSON.parse(JSON.stringify(data.letoType)),
-						JSON.parse(JSON.stringify(data.name)),
-						JSON.parse(JSON.stringify(data.id)),
-						parentName,
-						JSON.parse(JSON.stringify(data.objects))
-					);
-				}
-
+				const data = (SVGData.value) ? SVGData.value : SVGData;
+				const terraformObject = {...data};
+				terraformObject.drawSVG = new TerraformObjectNode().drawSVG.bind(terraformObject);
 				createTerraformObject(
 					terraformObject,
 					data,
@@ -643,6 +623,7 @@ export default {
 			terraformObject.x = (object.x);
 			terraformObject.y = (object.y);
 			terraformObject.letoType.attributes = (object.attributes);
+			console.log(terraformObject);
 			terraformObject.drawSVG(
 				svgs,
 				svgParent,
@@ -737,9 +718,8 @@ export default {
 			});
 		}
 
-		const getDatas = async () => {
-			monacoSourceData.value = await store.getters["appMonaco/allMonacoSource"];
-			return monacoSourceData.value;
+		const getTerraformBlocks = () => {
+			return TerraformParser.parse(window.localStorage.getItem('monacoSource')).blocks;
 		};
 
 		const getSVGS = async () => {
@@ -751,24 +731,22 @@ export default {
 		};
 
 		onMounted(async () => {
-			await getDatas();
+			const blocks = getTerraformBlocks();
 			await getSVGS();
 
-			const provider = monacoSourceData.value["provider"][0].name;
-			const plugin = plugins[provider];
-
+			const plugin = plugins[blocks.find((block) => block.blockType === 'provider').name];
 			const metadatas = require(`src/assets/plugins/terraform/${plugin}/metadatas.json`);
-			metadatas.provider.resources.forEach((element) => {
-				terraformPanelList.value.push(
-					new TerraformTypeNode(
-						`logos/${element.icon}`,
-						element.resourceType,
-						"dbtf",
-						element.representation,
-						element.attributes
-					)
-				);
+			const terraformMetadata = new TerraformMetadata(metadatas);
+			const letoTypes = terraformMetadata.generate();
+			blocks.forEach((block) => {
+				block.letoType = letoTypes.find((o) => o.type === block.type) || null;
 			});
+			letoTypes.forEach((o) => {
+				o.logoPath = `logos/${o.logoPath}`;
+				o.svgShape = 'dbtf';
+				terraformPanelList.value.push(o);
+			});
+			monacoSourceData.value["resources"] = blocks.filter((block) => block.blockType === 'resource');
 
 			let svg0 = d3
 				.select("#myDataViz")
@@ -796,7 +774,9 @@ export default {
 				menu.style.display = "none";
 			});
 
+			console.log(rootTreeObject.value);
 			fillDataStorage(monacoSourceData.value["resources"], "svg0", 0);
+			console.log(rootTreeObject.value);
 			drawSVGs(monacoSourceData.value["resources"], svg, "root", false, 0);
 			drawLines(monacoSourceData.value["resources"]);
 

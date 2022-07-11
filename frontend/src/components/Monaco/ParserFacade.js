@@ -1,10 +1,10 @@
 /// <reference path="../../../node_modules/monaco-editor/monaco.d.ts" />
 
 import antlr4 from 'antlr4'
-import hclLexer from './schemas_terraform/hclLexer.js';
-import hclParser from "./schemas_terraform/hclParser.js";
+import hclLexer from 'hcl/src/antlr/terraformLexer';
+import hclParser from "hcl/src/antlr/terraformParser";
 
-class MyErrorListener extends antlr4.error.ErrorListener {    
+class MyErrorListener extends antlr4.error.ErrorListener {
     syntaxError(recognizer, offendingSymbol, line, column, msg, e) {
         console.log("ERROR " + msg);
     }
@@ -66,7 +66,7 @@ class CollectorErrorListener extends antlr4.error.ErrorListener {
     errors  = []
 
     constructor(errors) {
-        
+
         this.errors = errors
     }
 
@@ -96,7 +96,7 @@ export function validate(input) {
 
 class hclErrorStrategy extends antlr4.error.DefaultErrorStrategy {
     constructor() {
-        
+
     }
 
     reportUnwantedToken(recognizer) {
@@ -113,7 +113,7 @@ class hclErrorStrategy extends antlr4.error.DefaultErrorStrategy {
            this.reportUnwantedToken(recognizer);
            recognizer.consume();
            var matchedSymbol = recognizer.getCurrentToken();
-           this.reportMatch(recognizer); 
+           this.reportMatch(recognizer);
            return matchedSymbol;
        } else {
            return null;
