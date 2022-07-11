@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 const d3 = require("d3");
 import TerraformTypeNode from "src/components/2DModel/TerraformTypeNode";
 import TerraformObjectNode from "src/components/2DModel/TerraformObjectNode";
@@ -71,9 +71,8 @@ export default {
 			new LetoObjectNode(new LetoTypeNode("", "", "", "", ""), "", -1)
 		);
 		rootTreeObject.value.setId("svg0");
-		EventBus.on("selected:component", (component) => {
-			clickOnPalette(component);
-		});
+		EventBus.on("selected:component", component => clickOnPalette(component));
+		onUnmounted(() => EventBus.off("selected:component"));
 		const drag = ref(
 			d3
 				.drag()
@@ -764,7 +763,6 @@ export default {
 			loading,
 			store,
 			getSVGS,
-			clickOnPalette,
 			monacoSourceData,
 			zoom,
 			translateX,
