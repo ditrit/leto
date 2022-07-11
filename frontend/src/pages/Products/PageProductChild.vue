@@ -40,7 +40,7 @@
 			<AjaxBar />
 
 			<!-- Left Drawer-->
-			<SideBar side="left" class="" v-if="modelValue === isModelMode">
+			<SideBar side="left" v-if="modelValue === isModelMode">
 				<template v-slot:drawerContent>
 					<q-scroll-area class="fit">
 						<PaletteMenu id="paletteMenu" :data="paletteData"></PaletteMenu>
@@ -67,7 +67,6 @@
 
 					<div
 						@change="consoleClick"
-						@mouseover="consoleClick"
 						v-show="modelValue === isSourceMode"
 						class="monaco"
 						ref="monacoContainer"
@@ -189,6 +188,7 @@ export default defineComponent({
 		this.monacoEditor = editor;
 		this.monacoEditor.getModel().onDidChangeContent((_event) => {
 			this.onChange(editor.getValue());
+			this.consoleClick();
 		});
 	},
 	computed: {
@@ -382,20 +382,16 @@ export default defineComponent({
   padding-left: 140px
 .q-drawer
   z-index: -1 !important
-
 .action_card__item
   display: flex
   flex-direction: row
 .q-manu
   display: none !important
-
 .globalTagTree_container
   border: 1px solid $white
   padding: 8px
-
 .q-icon
   vertical-align: top
-
 .monaco
   width: 100vw
   height: 100vh
