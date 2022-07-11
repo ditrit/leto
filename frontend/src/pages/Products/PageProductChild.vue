@@ -249,6 +249,7 @@ export default defineComponent({
 			let str = "";
 
 			resources.forEach((resource) => {
+				resource = (resource.value) ? resource.value : resource;
 				str += toStringResource(resource, "resource", containers) + "\n";
 				if (resource.contains.length > 0) {
 					if (!containers) {
