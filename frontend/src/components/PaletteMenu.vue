@@ -29,7 +29,7 @@
 				header-class="text-bold bg-primary"
 				:label="item.name"
 			>
-				<q-scroll-area style="height: calc(100vh - 205px)">
+				<q-scroll-area style="height: calc(100vh - 200px)">
 					<q-table
 						grid
 						class="scroll"
