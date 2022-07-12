@@ -95,7 +95,6 @@ export default defineComponent({
 
 		const executeGit = async () => {
 			let exc = await store.dispatch("appGit/execute");
-			console.log("exc: ", exc);
 		};
 		executeGit();
 		return {

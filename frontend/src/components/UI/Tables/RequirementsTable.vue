@@ -354,7 +354,6 @@ export default {
 		const optionsWidgetSelected = ref(null);
 
 		const AddRequirement = () => {
-			console.log("opend");
 			isOpened.value = true;
 		};
 		const editedIndex = ref(null);
@@ -369,19 +368,15 @@ export default {
 				.onOk(() => {
 					deleteRow(item);
 				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+				.onCancel(() => {});
 		};
 
 		const editRow = (currentTarget) => {
 			opendDialog.value = true;
 			userObj.value = Object.values(currentTarget);
-			console.log("Edit this row");
 		};
 		const deleteRow = async (currentTarget) => {
 			try {
-				console.log("Delete this element", currentTarget);
 				$q.notify({
 					type: "positive",
 					message: "User has been successfully deleted",

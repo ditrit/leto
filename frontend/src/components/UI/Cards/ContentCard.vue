@@ -214,7 +214,6 @@ export default {
 		});
 		const addFavorite = async () => {
 			emit("emitAddFavorite", props);
-			console.log("Add to favorite");
 		};
 
 		const DeleteDomain = async (item) => {
@@ -223,9 +222,7 @@ export default {
 				await store.dispatch("appDomain/removeDomain", item.id).then(() => {
 					route.push(`/workspaces`);
 				});
-			} catch (error) {
-				console.log(error);
-			}
+			} catch (error) {}
 		};
 		const confirm = (item) => {
 			$q.dialog({
@@ -237,9 +234,7 @@ export default {
 				.onOk(() => {
 					DeleteDomain(item);
 				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+				.onCancel(() => {});
 		};
 
 		const onSubmitUpdate = async (item) => {
@@ -255,16 +250,10 @@ export default {
 			};
 			try {
 				await store.dispatch("appDomain/updateDomain", updatedDomain);
-			} catch (error) {
-				console.log(error);
-			}
+			} catch (error) {}
 		};
 
-		const onFileUpload = (event) => {
-			console.log("file name", event.files[0].name);
-			console.log("file upload number", event.files[0].__uploaded);
-			console.log("file Id", event.files[0].xhr.response);
-		};
+		const onFileUpload = (event) => {};
 
 		const onRejected = (rejectedEntries) => {
 			$q.notify({
