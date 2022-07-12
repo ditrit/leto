@@ -99,6 +99,7 @@ import useProductDetails from "src/composables/Products/useProductDetails";
 import useDomainData from "src/composables/WorkSpace/useDomainData";
 import ConfigPannel from "src/components/ConfigPannel.vue";
 import awsMetadatas from "src/assets/plugins/terraform/internal/aws/metadatas.json";
+import sgCloudPlatformMetadatas from "src/assets/plugins/terraform/sg/cloudplatform/metadatas.json";
 import ProductHeader from "src/components/UI/Headers/ProductHeader.vue";
 
 export default defineComponent({
@@ -314,7 +315,7 @@ export default defineComponent({
 				data: [],
 			},
 			{
-				name: "SG-Interne",
+				name: "Cloudplatform",
 				icon: "explore",
 				data: [],
 			},
@@ -331,6 +332,13 @@ export default defineComponent({
 
 			awsMetadatas.provider.resources.forEach((element) => {
 				paletteData[0].data.push({
+					name: element.resourceType,
+					imageUrl: `logos/${element.icon}`,
+					description: "Description",
+				});
+			});
+			sgCloudPlatformMetadatas.provider.resources.forEach((element) => {
+				paletteData[1].data.push({
 					name: element.resourceType,
 					imageUrl: `logos/${element.icon}`,
 					description: "Description",
