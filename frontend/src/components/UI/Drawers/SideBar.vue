@@ -3,7 +3,7 @@
 		v-model="isOpened"
 		bordered
 		:width="250"
-		:breakpoint="500"
+		:breakpoint="1100"
 		class="bg-grey-3"
 	>
 		<slot name="drawerContent" />
