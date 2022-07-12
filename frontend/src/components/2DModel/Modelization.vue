@@ -59,6 +59,7 @@ function randomHexString(length) {
 export default {
 	emits: ["getTreeObjects"],
 	setup(_props, { emit }) {
+		let updateDraggedOnce = true;
 		const zoom = ref(1);
 		const translateX = ref(0);
 		const translateY = ref(0);
@@ -76,7 +77,6 @@ export default {
 		const drag = ref(
 			d3
 				.drag()
-				.on("start", dragstarted)
 				.on("drag", dragged)
 				.on("end", dragended)
 		);
@@ -98,91 +98,91 @@ export default {
 			required: null,
 		});
 
-		function dragstarted() {
-			let currentModel = this.parentNode;
-			let svg = d3.select("#root");
-			let currentTfTypeNode = getLetoTypeNodeFromData(
-				terraformPanelList.value,
-				currentModel.getElementById("type").textContent.replace(/\s+/g, "")
-			);
-			let currentTfObjectNode = new TerraformObjectNode(
-				currentTfTypeNode,
-				currentModel.getElementById("name").textContent.replace(/\s+/g, ""),
-				0,
-				currentModel.id,
-				currentModel.parentNode.parentNode.id
-			);
-			currentTfObjectNode.setHeight(currentModel.getAttribute("height"));
-			currentTfObjectNode.setWidth(currentModel.getAttribute("width"));
-			let ableToDropList = [];
-			if (currentTfObjectNode.attributes) {
-				currentTfObjectNode.attributes.forEach((attribute) => {
-					if (
-						attribute.representation == "contained" ||
-						attribute.representation == "containedInOtherContainer"
-					) {
-						fillAbleToDropList(rootTreeObject.value, attribute, ableToDropList);
+		function dragged(event) {
+			if (updateDraggedOnce) {
+				let currentModel = this.parentNode;
+				let svg = d3.select("#root");
+				let currentTfTypeNode = getLetoTypeNodeFromData(
+					terraformPanelList.value,
+					currentModel.getElementById("type").textContent.replace(/\s+/g, "")
+				);
+				let currentTfObjectNode = new TerraformObjectNode(
+					currentTfTypeNode,
+					currentModel.getElementById("name").textContent.replace(/\s+/g, ""),
+					0,
+					currentModel.id,
+					currentModel.parentNode.parentNode.id
+				);
+				currentTfObjectNode.setHeight(currentModel.getAttribute("height"));
+				currentTfObjectNode.setWidth(currentModel.getAttribute("width"));
+				let ableToDropList = [];
+				if (currentTfObjectNode.attributes) {
+					currentTfObjectNode.attributes.forEach((attribute) => {
+						if (
+							attribute.representation == "contained" ||
+							attribute.representation == "containedInOtherContainer"
+						) {
+							fillAbleToDropList(rootTreeObject.value, attribute, ableToDropList);
+						}
+					});
+				}
+				if (currentModel.parentNode.getAttribute("id") != "svg0") {
+					let parent = getParent(rootTreeObject.value, currentModel.id);
+					let node = getNode(rootTreeObject.value, currentModel.id);
+					currentTfObjectNode.setObjects(node.objects);
+					removeContentInData(
+						rootTreeObject.value,
+						currentModel.parentNode.parentNode.id,
+						currentTfObjectNode
+					);
+					addContentInData(rootTreeObject.value, "svg0", currentTfObjectNode);
+					const dimensions = calcul_dimensions(
+						parent.drawingObject,
+						0,
+						1000,
+						true,
+						parent.contains
+					);
+					calcul_xy_container(
+						parent.drawingObject,
+						parent.drawingObject.x,
+						parent.drawingObject.y,
+						1000,
+						parent.contains
+					);
+					parent.drawingObject.height = dimensions.height + 20;
+					parent.drawingObject.width = dimensions.width;
+					d3.select("#" + parent.id).remove();
+					document.getElementById("svg0").appendChild(currentModel);
+					let terraformType = getLetoTypeNodeFromData(
+						terraformPanelList.value,
+						parent.type_name
+					);
+					const terraformObject = new TerraformObjectNode(
+						terraformType,
+						parent.instance_name,
+						0,
+						parent.id,
+						"svg0",
+						parent.objects
+					);
+					createTerraformObject(terraformObject, parent, svg, "root", false, 0);
+
+					let children = currentModel.parentNode.getElementsByTagName("svg");
+					for (let child in children) {
+						updateLinks(rootTreeObject.value, children[child]);
+					}
+				}
+				const groups = d3.select("#root").selectAll("svg");
+				groups.each(function () {
+					if (ableToDropList.includes(this.id)) {
+						d3.select("#" + this.id)
+							.select("#logo_frame")
+							.attr("fill", "green");
 					}
 				});
+				updateDraggedOnce = false;
 			}
-			if (currentModel.parentNode.getAttribute("id") != "svg0") {
-				let parent = getParent(rootTreeObject.value, currentModel.id);
-				let node = getNode(rootTreeObject.value, currentModel.id);
-				currentTfObjectNode.setObjects(node.objects);
-				removeContentInData(
-					rootTreeObject.value,
-					currentModel.parentNode.parentNode.id,
-					currentTfObjectNode
-				);
-				addContentInData(rootTreeObject.value, "svg0", currentTfObjectNode);
-				const dimensions = calcul_dimensions(
-					parent.drawingObject,
-					0,
-					1000,
-					true,
-					parent.contains
-				);
-				calcul_xy_container(
-					parent.drawingObject,
-					parent.drawingObject.x,
-					parent.drawingObject.y,
-					1000,
-					parent.contains
-				);
-				parent.drawingObject.height = dimensions.height + 20;
-				parent.drawingObject.width = dimensions.width;
-				d3.select("#" + parent.id).remove();
-				document.getElementById("svg0").appendChild(currentModel);
-				let terraformType = getLetoTypeNodeFromData(
-					terraformPanelList.value,
-					parent.type_name
-				);
-				const terraformObject = new TerraformObjectNode(
-					terraformType,
-					parent.instance_name,
-					0,
-					parent.id,
-					"svg0",
-					parent.objects
-				);
-				createTerraformObject(terraformObject, parent, svg, "root", false, 0);
-
-				let children = currentModel.parentNode.getElementsByTagName("svg");
-				for (let child in children) {
-					updateLinks(rootTreeObject.value, children[child]);
-				}
-			}
-			const groups = d3.select("#root").selectAll("svg");
-			groups.each(function () {
-				if (ableToDropList.includes(this.id)) {
-					d3.select("#" + this.id)
-						.select("#logo_frame")
-						.attr("fill", "green");
-				}
-			});
-		}
-
-		function dragged(event) {
 			let coord = d3.pointer(event);
 			let rootx = document.getElementById("root").getBoundingClientRect().x;
 			let rooty = document.getElementById("root").getBoundingClientRect().y;
@@ -228,6 +228,7 @@ export default {
 				currentGroup.parentNode.parentNode.id
 			);
 
+			updateDraggedOnce = true;
 			groups.each(function () {
 				if (this.getAttribute("id") != "svg0") {
 					const groupRect = this.getElementById("content");
