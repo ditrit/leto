@@ -27,115 +27,115 @@ const routes = [
 		children: [
 			{
 				path: "home",
-				component: () => PageHome,
+				component: PageHome,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "home/profile",
-				component: () => PageHomeProfile,
+				component: PageHomeProfile,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "home/products",
-				component: () => PageHomeProducts,
+				component: PageHomeProducts,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "home/workspaces",
-				component: () => PageHomeWorkspaces,
+				component: PageHomeWorkspaces,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "workspaces",
-				component: () => PageWorkspace,
+				component: PageWorkspace,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "workspaces/:id",
-				component: () => PageWorkspaceChild,
+				component: PageWorkspaceChild,
 				props: true,
 				meta: { requiresAuth: false },
 			},
 
 			{
 				path: "libraries",
-				component: () => PageLibraries,
+				component: PageLibraries,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings",
-				component: () => PageSettingsUsers,
+				component: PageSettingsUsers,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings/users",
-				component: () => PageSettingsUsers,
+				component: PageSettingsUsers,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings/roles",
-				component: () => PageSettingsRoles,
+				component: PageSettingsRoles,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings/authorizations",
-				component: () => PageSettingsAuthorizations,
+				component: PageSettingsAuthorizations,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings/requirements",
-				component: () => PageSettingsRequirements,
+				component: PageSettingsRequirements,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings/tags",
-				component: () => PageSettingsTags,
+				component: PageSettingsTags,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings/environmentstypes",
-				component: () => PageSettingsEnviType,
+				component: PageSettingsEnviType,
 				meta: { requiresAuth: false },
 			},
 			{
 				path: "settings/dashboard",
-				component: () => PageSettingsDashboard,
+				component: PageSettingsDashboard,
 				meta: { requiresAuth: false },
 			},
 		],
 	},
 	{
 		path: "/product",
-		component: () => ProductLayout,
+		component: ProductLayout,
 		children: [
 			{
 				path: "/product",
-				component: () => PageProductChild,
+				component: PageProductChild,
 			},
 			{
 				path: "/product/:id",
-				component: () => PageProductChild,
+				component: PageProductChild,
 			},
 		],
 	},
 	{
 		path: "/login",
-		component: () => LoginLayout,
+		component: LoginLayout,
 		children: [
 			{
 				path: "/login",
-				component: () => LoginPage,
+				component: LoginPage,
 			},
 			{
 				path: "/register",
-				component: () => RegisterPage,
+				component: RegisterPage,
 			},
 		],
 	},
 	{ path: "", redirect: "/login" },
 	{
 		path: "/:catchAll(.*)*",
-		component: () => Page404,
+		component: Page404,
 	},
 ];
 
