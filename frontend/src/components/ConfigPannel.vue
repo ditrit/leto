@@ -14,6 +14,7 @@
 						:rules="getRules(item)"
 						v-model.text="item.value"
 						type="text"
+						:disable="item.name === 'resourceType'"
 						>
 					</q-input>
 				</div>
@@ -23,6 +24,7 @@
 						:rules="getRules(item)"
 						v-model.textareaModel="item.value"
 						type="textarea"
+						:disable="item.name === 'resourceType'"
 						>
 					</q-input>
 				</div>
@@ -30,6 +32,7 @@
 					<q-input filled
 						:label="item.name"
 						:rules="getRules(item)"
+						:disable="item.name === 'resourceType'"
 						>
 					</q-input>
 				</div>
@@ -39,6 +42,7 @@
 						:rules="getRules(item)"
 						v-model.number="item.value"
 						type="number"
+						:disable="item.name === 'resourceType'"
 						>
 					</q-input>
 				</div>
@@ -47,6 +51,7 @@
 						:label="item.name"
 						:options="getOptions(item)"
 						v-model.select="item.value"
+						:disable="item.name === 'resourceType'"
 						>
 					</q-select>
 				</div>
