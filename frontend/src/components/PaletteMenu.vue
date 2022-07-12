@@ -62,7 +62,7 @@
 											{{
 												props.row.name
 													.replace(new RegExp(`${item.name}_`, "i"), "")
-													.replaceAll("_", "-")
+													.replaceAll("_", " ")
 											}}
 										</div>
 									</q-card-section>
