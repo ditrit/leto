@@ -85,11 +85,13 @@
 
 <script>
 import { ref } from 'vue';
+import EventBus from "src/services/EventBus"
+
 function getFakeData() {
 	return [
 		{
-			instance_name: "Fake object", 
-			resource_type: "aws_instance", 
+			instance_name: "Fake object",
+			resource_type: "aws_instance",
 			attributes: [
 				{
 					name: "description",
@@ -163,10 +165,17 @@ function getFakeData() {
 export default {
 	name: 'ConfigPannel',
 	setup() {
-		let objects = getFakeData() // TODO To delete when real data setup
-		let selected_object = ref("Fake object") // TODO Get current object in modeleur
 		const configInfos = ref({})
-		objectToConfig()
+		let objects = []
+		let selected_object = ref("Fake object")
+		EventBus.on('setObjects', (rootTreeObject) => {
+			objects = rootTreeObject;
+		});
+		EventBus.on('selectObject', (object) => {
+			configInfos.value = {};
+			selected_object.value = object.id;
+			objectToConfig()
+		});
 
 
 		function getRules(attribute) {
