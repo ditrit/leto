@@ -43,7 +43,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
 				d3.select(model.getElementById("logo_frame"))
 				.call(dragLink.value)
-				.on('click', (event) => {
+				.on('click', () => {
 					EventBus.emit('selectObject', this);
 				});
 
@@ -215,7 +215,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
     setObjects(objects) {
         this.objects = objects;
     }
-	
+
     setAttributes(attributes) {
         this.attributes = attributes;
     }
