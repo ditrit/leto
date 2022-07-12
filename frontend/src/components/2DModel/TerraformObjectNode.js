@@ -1,7 +1,8 @@
 import LetoObjectNode from "./LetoObjectNode";
 import SVGinstanciate from "./svgvar.js";
-import { getModelAbsPos, getAttributesInData } from "./utils";
+import { getModelAbsPos, getAttributesInData} from "./utils";
 const d3 = require("d3");
+import EventBus from "src/services/EventBus"
 
 export default class TerraformObjectNode extends LetoObjectNode {
 	constructor(terraformTypeNode,instance_name,level, id, parentId, objects){
@@ -40,7 +41,12 @@ export default class TerraformObjectNode extends LetoObjectNode {
         d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
         const model = document.getElementById(`${this.id}`);
 
-				d3.select(model.getElementById("logo_frame")).call(dragLink.value);
+				d3.select(model.getElementById("logo_frame"))
+				.call(dragLink.value)
+				.on('click', () => {
+					EventBus.emit('selectObject', this);
+				});
+
 
 				d3.select(model)
 					.on("contextmenu",(e) => {
@@ -209,7 +215,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
     setObjects(objects) {
         this.objects = objects;
     }
-	
+
     setAttributes(attributes) {
         this.attributes = attributes;
     }

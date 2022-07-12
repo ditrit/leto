@@ -317,9 +317,7 @@ export default {
 				.onOk(() => {
 					deleteRow(item);
 				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+				.onCancel(() => {});
 		};
 		const allUsers = async () => {
 			// fetch All Users

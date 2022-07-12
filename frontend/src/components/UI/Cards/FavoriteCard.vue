@@ -79,11 +79,9 @@ export default {
 
 		const openCard = () => {
 			emit("openCardAction", props);
-			console.log("Open Card");
 		};
 		const delteItem = () => {
 			emit("deleteItemAction", props);
-			console.log("Remove card");
 		};
 
 		const refreshProduct = async (id, updatesData) => {

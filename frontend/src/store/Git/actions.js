@@ -9,7 +9,7 @@ import * as BrowserFS from "browserfs";
 
 BrowserFS.install(window);
 BrowserFS.configure({ fs: "LocalStorage" }, (err) => {
-	if (err) return console.log(err);
+	if (err) return err;
 });
 
 window.dir = "/leto";
@@ -31,7 +31,6 @@ export const execute = ({ getters }, command) => {
 		fs: BrowserFS.BFSRequire("fs"),
 		dir: command.product.ID,
 	};
-	console.log("defaultCommandOption: ", defaultCommandOption);
 
 	if (httpCommands.includes(command.name)) {
 		defaultCommandOption.http = http;

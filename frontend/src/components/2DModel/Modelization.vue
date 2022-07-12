@@ -73,6 +73,10 @@ export default {
 		);
 		rootTreeObject.value.setId("svg0");
 		EventBus.on("selected:component", component => clickOnPalette(component));
+		EventBus.on("updateObject", ob => {
+			let currentObj = document.getElementById(ob.id);
+			currentObj.getElementById("name").getElementsByTagName("tspan")[0].innerHTML = ob.instance_name.replace(/\s+/g, "");
+		});
 		onUnmounted(() => EventBus.off("selected:component"));
 		const drag = ref(
 			d3
@@ -737,6 +741,7 @@ export default {
 			fillDataStorage(monacoSourceData.value["resources"], "svg0", 0);
 			drawSVGs(monacoSourceData.value["resources"], svg, "root", false, 0);
 			drawLines(monacoSourceData.value["resources"]);
+			EventBus.emit("setObjects", rootTreeObject.value);
 
 			d3.select("#svg0")
 				.append("svg:defs")

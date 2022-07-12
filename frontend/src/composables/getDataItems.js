@@ -12,7 +12,6 @@ const getDataItem = (path) => {
 			dataItems.value = data;
 		} catch (err) {
 			error.value = err.message;
-			console.log(error.value);
 		}
 	};
 	return { path, dataItems, error, fetchData };
