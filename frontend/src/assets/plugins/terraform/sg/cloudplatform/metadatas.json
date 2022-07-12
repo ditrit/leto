@@ -34,7 +34,7 @@
 						"widget": "inputDropbox"
 					}
 				],
-				"icon": "security_group.svg",
+				"icon": "sgcloudplatform/security_group.svg",
 				"required": false
 			},
 			{
@@ -54,7 +54,7 @@
 						"widget": "inputString"
 					}
 				],
-				"icon": "keypair.svg",
+				"icon": "sgcloudplatform/keypair.svg",
 				"required": false
 			},
 			{
@@ -74,7 +74,7 @@
 						"widget": "inputToggle"
 					}
 				],
-				"icon": "access_storage.svg",
+				"icon": "sgcloudplatform/access_storage.svg",
 				"required": false
 			},
 			{
@@ -131,7 +131,7 @@
 						"widget": "inputDropbox"
 					}
 				],
-				"icon": "security_rule.svg",
+				"icon": "sgcloudplatform/security_rule.svg",
 				"required": false
 			},
 			{
@@ -177,7 +177,7 @@
 						"required": false
 					}
 				],
-				"icon": "osfactory.svg",
+				"icon": "sgcloudplatform/osfactory.svg",
 				"required": false
 			},
 			{
@@ -246,7 +246,7 @@
 						"widget": "inputDropbox"
 					}
 				],
-				"icon": "ocs.svg",
+				"icon": "sgcloudplatform/ocs.svg",
 				"required": false
 			},
 			{
@@ -285,7 +285,7 @@
 						"required": false
 					}
 				],
-				"icon": "block_storage.svg",
+				"icon": "sgcloudplatform/block_storage.svg",
 				"required": false
 			},
 			{
@@ -305,7 +305,7 @@
 						"required": false
 					}
 				],
-				"icon": "volume_attachement.svg",
+				"icon": "sgcloudplatform/volume_attachement.svg",
 				"required": false
 			},
 			{
@@ -338,7 +338,7 @@
 						"widget": "inputDropbox"
 					}
 				],
-				"icon": "load_balancer.svg",
+				"icon": "sgcloudplatform/load_balancer.svg",
 				"required": false
 			},
 			{
@@ -366,7 +366,7 @@
 						"widget": "inputDropbox"
 					}
 				],
-				"icon": "load_balancer_vip.svg",
+				"icon": "sgcloudplatform/load_balancer_vip.svg",
 				"required": false
 			},
 			{
@@ -418,7 +418,7 @@
 						"widget": "inputDropbox"
 					}
 				],
-				"icon": "load_balancer_healthcheck.svg",
+				"icon": "sgcloudplatform/load_balancer_healthcheck.svg",
 				"required": false
 			},
 			{
@@ -503,7 +503,7 @@
 						"widget": "inputNumber"
 					}
 				],
-				"icon": "listener.svg",
+				"icon": "sgcloudplatform/listener.svg",
 				"required": false
 			},
 			{
@@ -564,7 +564,7 @@
 						"widget": "inputDropbox"
 					}
 				],
-				"icon": "load_balancer_slb_pool.svg",
+				"icon": "sgcloudplatform/load_balancer_slb_pool.svg",
 				"required": false
 			},
 			{
@@ -593,7 +593,7 @@
 						"required": true
 					}
 				],
-				"icon": "load_balancer_slb_certificate.svg",
+				"icon": "sgcloudplatform/load_balancer_slb_certificate.svg",
 				"required": false
 			},
 			{
@@ -663,7 +663,7 @@
 						"required": true
 					}
 				],
-				"icon": "trafficmanager.svg",
+				"icon": "sgcloudplatform/trafficmanager.svg",
 				"required": false
 			},
 			{
@@ -708,7 +708,7 @@
 						"widget": "inputString"
 					}
 				],
-				"icon": "trafficmanager_healthcheck.svg",
+				"icon": "sgcloudplatform/trafficmanager_healthcheck.svg",
 				"required": false
 			},
 			{
@@ -734,7 +734,7 @@
 						"widget": "inputTextArea"
 					}
 				],
-				"icon": "s3_bucket.svg",
+				"icon": "sgcloudplatform/s3_bucket.svg",
 				"required": false
 			},
 			{
@@ -807,7 +807,7 @@
 						"required": false
 					}
 				],
-				"icon": "nfs_group.svg",
+				"icon": "sgcloudplatform/nfs_group.svg",
 				"required": false
 			},
 			{
@@ -864,7 +864,7 @@
 						"required": false
 					}
 				],
-				"icon": "nfs.svg",
+				"icon": "sgcloudplatform/nfs.svg",
 				"required": false
 			},
 			{
@@ -974,7 +974,7 @@
 						"required": false
 					}
 				],
-				"icon": "postgre_cluster.svg",
+				"icon": "sgcloudplatform/postgre_cluster.svg",
 				"required": false
 			},
 			{
@@ -1014,7 +1014,7 @@
 						"widget": "inputDropbox"
 					}
 				],
-				"icon": "postgre_database.svg",
+				"icon": "sgcloudplatform/postgre_database.svg",
 				"required": false
 			},
 			{
@@ -1048,13 +1048,13 @@
 						"required": false
 					}
 				],
-				"icon": "dns_alias.svg",
+				"icon": "sgcloudplatform/dns_alias.svg",
 				"required": false
 			},
 			{
 				"resourceType": "default",
 				"representation": "block",
-				"icon": "default.svg",
+				"icon": "sgcloudplatform/default.svg",
 				"required": false
 			}
 		]
