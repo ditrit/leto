@@ -56,13 +56,9 @@ export default function useLibraryTabData(props) {
 			message: "Are you sure to delete this item?",
 			cancel: true,
 			persistent: true,
-		})
-			.onOk(() => {
-				deleteLibrary(item);
-			})
-			.onCancel(() => {
-				console.log("Canceled");
-			});
+		}).onOk(() => {
+			deleteLibrary(item);
+		});
 	};
 
 	const addNewLibrary = async () => {

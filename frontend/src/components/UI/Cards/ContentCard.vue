@@ -214,18 +214,24 @@ export default {
 		});
 		const addFavorite = async () => {
 			emit("emitAddFavorite", props);
-			console.log("Add to favorite");
 		};
 
 		const DeleteDomain = async (item) => {
 			emit("emitRemoveDomain", item);
-			try {
-				await store.dispatch("appDomain/removeDomain", item.id).then(() => {
-					route.push(`/workspaces`);
-				});
-			} catch (error) {
-				console.log(error);
-			}
+			await store.dispatch("appDomain/removeDomain", item.id).then(() => {
+				route.push(`/workspaces`);
+				try {
+					$q.notify({
+						message: "Domain was successfully deleted",
+						color: "positive",
+					});
+				} catch (error) {
+					$q.notify({
+						message: "Error while deleting domain",
+						color: "negative",
+					});
+				}
+			});
 		};
 		const confirm = (item) => {
 			$q.dialog({
@@ -233,13 +239,9 @@ export default {
 				message: "Are you sure to delete this item?",
 				cancel: true,
 				persistent: true,
-			})
-				.onOk(() => {
-					DeleteDomain(item);
-				})
-				.onCancel(() => {
-					console.log("Cancel");
-				});
+			}).onOk(() => {
+				DeleteDomain(item);
+			});
 		};
 
 		const onSubmitUpdate = async (item) => {
@@ -253,17 +255,13 @@ export default {
 				gitUrl: item.gitURL,
 				parentID: item.parentID,
 			};
+			await store.dispatch("appDomain/updateDomain", updatedDomain);
 			try {
-				await store.dispatch("appDomain/updateDomain", updatedDomain);
-			} catch (error) {
-				console.log(error);
-			}
-		};
-
-		const onFileUpload = (event) => {
-			console.log("file name", event.files[0].name);
-			console.log("file upload number", event.files[0].__uploaded);
-			console.log("file Id", event.files[0].xhr.response);
+				$q.notify({
+					message: "Domain was successfully deleted",
+					color: "positive",
+				});
+			} catch (error) {}
 		};
 
 		const onRejected = (rejectedEntries) => {
@@ -284,7 +282,6 @@ export default {
 			parentID,
 			onSubmitUpdate,
 			isOpend,
-			onFileUpload,
 			onRejected,
 			confirm,
 			addFavorite,

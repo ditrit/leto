@@ -20,7 +20,6 @@ export default function useEnvironmentsTabsData(props) {
 	const getUsersList = async () => {
 		await store.dispatch("appUsers/fetchUsers");
 		const list = computed(() => store.getters["appUsers/allUsers"]);
-		console.log("Users list: ", list.value);
 		usersList.value = list.value.map((user) => {
 			return {
 				id: user.ID,
@@ -35,12 +34,10 @@ export default function useEnvironmentsTabsData(props) {
 		});
 	};
 	getUsersList();
-	console.log("usersList.value: ", usersList.value);
 
 	const getRolesList = async () => {
 		await store.dispatch("appRoles/fetchAllRoles");
 		const roles = computed(() => store.getters["appRoles/allRoles"]);
-		console.log("Roles list: ", roles.value);
 		roleList.value = roles.value.map((role) => {
 			return {
 				id: role.ID,
@@ -63,12 +60,6 @@ export default function useEnvironmentsTabsData(props) {
 		let data = computed(() => {
 			return store.getters["appDomain/allDomaines"];
 		});
-		console.log('"data from refreshData: ": ', data.value);
-		console.log("data.value[0].Environments: ", data.value[0].Environments);
-		console.log(
-			"	route.currentRoute.value.params.id: ",
-			route.currentRoute.value.params.id
-		);
 		environmentTeam.value = data.value[0].Environments;
 	};
 
@@ -83,17 +74,12 @@ export default function useEnvironmentsTabsData(props) {
 			message: "Are you sure to delete this item?",
 			cancel: true,
 			persistent: true,
-		})
-			.onOk(() => {
-				deleteEnvironement(item);
-			})
-			.onCancel(() => {
-				console.log("Cancel");
-			});
+		}).onOk(() => {
+			deleteEnvironement(item);
+		});
 	};
 
 	const addNewEnvironment = async () => {
-		console.log("selectedParentData", selectedParentData.value);
 		let newEnvironment = {
 			domainID: route.currentRoute.value.params.id,
 			environmentTypeID: selectedParentData.value.id,
@@ -102,7 +88,6 @@ export default function useEnvironmentsTabsData(props) {
 			shortDescription: environmentShortDescription.value,
 			description: environmentDescription.value,
 		};
-		console.log("newEnvironment: ", newEnvironment);
 		try {
 			await store
 				.dispatch("appEnvironment/addEnvironment", newEnvironment)
@@ -115,8 +100,6 @@ export default function useEnvironmentsTabsData(props) {
 						message: `${environmentName.value} environment was succefuly created`,
 					});
 				});
-
-			console.log("environmentTeam from useTabs:", environmentTeam.value);
 		} catch (error) {
 			$q.notify({
 				type: "negative",
@@ -134,7 +117,6 @@ export default function useEnvironmentsTabsData(props) {
 		const allEnviTypes = computed(
 			() => store.getters["appEnviType/allEnviTypes"]
 		);
-		console.log("allEnviTypes: ", allEnviTypes.value);
 		// Get input Select options value
 
 		let dataReturned = allEnviTypes.value.map((payload) => {
@@ -149,7 +131,6 @@ export default function useEnvironmentsTabsData(props) {
 				logo: payload.Logo,
 			};
 		});
-		console.log("dataReturned from form: ", [...dataReturned]);
 
 		optionsSelections.value = [...new Set(dataReturned)].filter(
 			(item) => item != null
@@ -163,8 +144,6 @@ export default function useEnvironmentsTabsData(props) {
 			// roleID: pickedRole.value.Role.ID,
 		};
 		// await store.dispatch("appAuthorization/addAuthorization", newAuthorization )
-
-		console.log("newAuthorization: ", newAuthorization);
 	};
 	addNewAuthorization();
 

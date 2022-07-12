@@ -218,7 +218,6 @@ export default {
 
 		const favoriteItem = () => {
 			emit("favoriteProductAction", props);
-			console.log("Add product to Favorite");
 		};
 		const delteItem = () => {
 			emit("deleteProductAction", props);
@@ -262,9 +261,7 @@ export default {
 				});
 		};
 
-		const onResetUpdate = () => {
-			console.log("event: ", props.id);
-		};
+		const onResetUpdate = () => {};
 
 		const onRejected = (rejectedEntries) => {
 			$q.notify({

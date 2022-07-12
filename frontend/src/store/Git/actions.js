@@ -2,18 +2,12 @@ import git from "isomorphic-git";
 import http from "isomorphic-git/http/web";
 import * as BrowserFS from "browserfs";
 
-// console.log("git: ", git);
-// console.log("http: ", http);
-// console.log("*: ", BrowserFS);
-// git.clone("https://github.com/ditrit/leto.git");
-
 BrowserFS.install(window);
 BrowserFS.configure({ fs: "LocalStorage" }, (err) => {
-	if (err) return console.log(err);
+	if (err) return err;
 });
 
 window.dir = "/leto";
-// console.log(dir);
 
 const httpCommands = [
 	"clone",
@@ -31,7 +25,6 @@ export const execute = ({ getters }, command) => {
 		fs: BrowserFS.BFSRequire("fs"),
 		dir: command.product.ID,
 	};
-	console.log("defaultCommandOption: ", defaultCommandOption);
 
 	if (httpCommands.includes(command.name)) {
 		defaultCommandOption.http = http;
