@@ -1,303 +1,345 @@
 {
-    "provider" : {
-        "name"  : "aws",
-        "required" : true,
-        "providerType" : "ProviderDirective",
-        "orderResources" : ["aws_vpc", "aws_elb", "aws_security_group", ["aws_db_instance", "aws_instance"], "aws_route53_zone"],
-        "modules" :  {
-            "representation" : "container",
-            "source" : {
-                "required" : true
-            },
-            "resources" : {
-                "resourceType" : "ResourceDirective",
-                "required" : false,
-                "array" : true,
-                "representation" : "contained"
-            },
-            "icon" : "module.svg"
-        },
-        "resources" : [
-            {
-                "resourceType" : "aws_security_group",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "vpc_id",
-                        "resourceType" : "aws_vpc",
-                        "representation" : "link",
-                        "required" : false
-                    }
-                ],
-                "icon" : "aws_security_group.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_instance",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "security_groups",
-                        "resourceType" : "aws_security_group",
-                        "representation" : "inverseLink",
-                        "array" : true,
-                        "required" : false
-                    },
-                    {
-                        "variableName" : "vpc_security_group_ids",
-                        "resourceType" : "aws_security_group",
-                        "representation" : "inverseLink",
-                        "array" : true,
-                        "required" : false
-                    },
-                    {
-                        "variableName" : "subnet_id",
-                        "resourceType" : "aws_subnet",
-                        "representation" : "link",
-                        "required" : false
-                    }
-                ],
-                "icon" : "aws_instance.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_volume_attachment",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "device_name",
-                        "required" : true
-                    },
-                    {
-                        "variableName" : "volume_id",
-                        "resourceType" : "aws_ebs_volume",
-                        "representation" : "link",
-                        "required" : true
-                    },
-                    {
-                        "variableName" : "instance_id",
-                        "resourceType" : "aws_instance",
-                        "representation" : "link",
-                        "required" : true
-                    }
-                ],
-                "icon" : "aws_volume_attachment.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_ebs_volume",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "availability_zone",
-                        "required" : true
-                    }
-                ],
-                "icon" : "aws_ebs_volume.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_elb",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "listener",
-                        "attributes" : [
-                        {
-                            "variableName" : "instance_port",
-                            "required" : true
-                        },
-                        {
-                            "variableName" : "lb_port",
-                            "required" : true
-                        },
-                        {
-                            "variableName" : "lb_protocol",
-                            "required" : true
-                        },
-                        {
-                            "variableName" : "instance_protocol",
-                            "required" : true
-                        }
-                        ],
-                        "required" : true
-                    },
-                    {
-                        "variableName" : "subnets",
-                        "resourceType" : "aws_subnet",
-                        "representation" : "link",
-                        "array" : true,
-                        "required" : false
-                    },
-                    {
-                        "variableName" : "security_groups",
-                        "resourceType" : "aws_security_group",
-                        "representation" : "link",
-                        "array" : true,
-                        "required" : false
-                    },
-                    {
-                        "variableName" : "instances",
-                        "resourceType" : "aws_instance",
-                        "representation" : "link",
-                        "array" : true,
-                        "required" : false
-                    }
-                ],
-                "icon" : "aws_elb.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_vpc",
-                "representation" : "container",
-                "required" : false,
-                "icon" : "aws_vpc.svg"
-            },
-            {
-                "resourceType" : "aws_internet_gateway",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "vpc_id",
-                        "resourceType" : "aws_vpc",
-                        "representation" : "contained",
-                        "required" : false
-                    }
-                ],
-                "icon" : "aws_internet_gateway.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_route",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "route_table_id",
-                        "representation" : "contained",
-                        "required" : true
-                    },
-                    {
-                        "variableName" : "gateway_id",
-                        "resourceType" : "aws_internet_gateway",
-                        "representation" : "link",
-                        "required" : false
-                    }
-                ],
-                "icon" : "aws_route.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_subnet",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "vpc_id",
-                        "resourceType" : "aws_vpc",
-                        "representation" : "containedInOtherContainer",
-                        "required" : true
-                    },
-                    {
-                        "variableName" : "gateway_id",
-                        "resourceType" : "aws_internet_gateway",
-                        "representation" : "link",
-                        "required" : false
-                    }
-                ],
-                "icon" : "aws_subnet.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_db_subnet_group",
-                "representation" : "container",
-                "attributes" : [
-                    {
-                        "variableName" : "subnet_ids",
-                        "resourceType" : "aws_subnet",
-                        "representation" : "contain",
-                        "array" : true,
-                        "required" : true
-                    }
-                ],
-                "icon" : "aws_db_subnet_group.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_route53_zone",
-                "representation" : "container",
-                "attributes" : [
-                    {
-                        "variableName" : "name",
-                        "required" : true
-                    }
-                ],
-                "icon" : "aws_route53_zone.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_route53_record",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "zone_id",
-                        "resourceType" : "aws_route53_zone",
-                        "representation" : "contained",
-                        "required" : true
-                    },
-                    {
-                        "variableName" : "name",
-                        "required" : true
-                    },
-                    {
-                        "variableName" : "type",
-                        "required" : true
-                    },
-                    {
-                        "variableName" : "records",
-                        "representation" : "link",
-                        "array" : true,
-                        "required" : false
-                    }
-                ],
-                "icon" : "aws_route53_record.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_db_instance",
-                "representation" : "block",
-                "attributes" : [
-                    {
-                        "variableName" : "instance_class",
-                        "required" : true
-                    },
-                    {
-                        "variableName" : "db_subnet_group_name",
-                        "resourceType" : "aws_db_subnet_group",
-                        "representation" : "link",
-                        "required" : false
-                    },
-                    {
-                        "variableName" : "vpc_security_group_ids",
-                        "resourceType" : "aws_security_group",
-                        "representation" : "link",
-                        "array" : true,
-                        "required" : false
-                    }
-                ],
-                "icon" : "aws_db_instance.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "aws_key_pair",
-                "representation" : "block",
-                "icon" : "aws_key_pair.svg",
-                "required" : false
-            },
-            {
-                "resourceType" : "default",
-                "representation" : "block",
-                "icon" : "default.svg",
-                "required" : false
-            }
-        ]   
-    }
+  "provider": {
+    "name": "aws",
+    "required": true,
+    "providerType": "ProviderDirective",
+    "orderResources": [
+      "aws_vpc",
+      "aws_elb",
+      "aws_security_group",
+      [
+        "aws_db_instance",
+        "aws_instance"
+      ],
+      "aws_route53_zone"
+    ],
+    "modules": {
+      "representation": "container",
+      "source": {
+        "required": true
+      },
+      "resources": {
+        "resourceType": "ResourceDirective",
+        "required": false,
+        "array": true,
+        "representation": "contained"
+      },
+      "icon": "module.svg"
+    },
+    "resources": [
+      {
+        "resourceType": "aws_security_group",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "vpc_id",
+            "resourceType": "aws_vpc",
+            "representation": "link",
+            "required": false,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_security_group.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_instance",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "security_groups",
+            "resourceType": "aws_security_group",
+            "representation": "inverseLink",
+            "array": true,
+            "required": false,
+            "widget": "inputString"
+          },
+          {
+            "variableName": "vpc_security_group_ids",
+            "resourceType": "aws_security_group",
+            "representation": "inverseLink",
+            "array": true,
+            "required": false,
+            "widget": "inputString"
+          },
+          {
+            "variableName": "subnet_id",
+            "resourceType": "aws_subnet",
+            "representation": "link",
+            "required": false,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_instance.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_volume_attachment",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "device_name",
+            "required": true,
+            "widget": "inputString"
+          },
+          {
+            "variableName": "volume_id",
+            "resourceType": "aws_ebs_volume",
+            "representation": "link",
+            "required": true,
+            "widget": "inputString"
+          },
+          {
+            "variableName": "instance_id",
+            "resourceType": "aws_instance",
+            "representation": "link",
+            "required": true,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_volume_attachment.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_ebs_volume",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "availability_zone",
+            "required": true,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_ebs_volume.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_elb",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "listener",
+            "widget": "inputString",
+            "attributes": [
+              {
+                "variableName": "instance_port",
+                "required": true,
+                "widget": "inputString"
+              },
+              {
+                "variableName": "lb_port",
+                "required": true,
+                "widget": "inputString"
+              },
+              {
+                "variableName": "lb_protocol",
+                "required": true,
+                "widget": "inputString"
+              },
+              {
+                "variableName": "instance_protocol",
+                "required": true,
+                "widget": "inputString"
+              }
+            ],
+            "required": true
+          },
+          {
+            "variableName": "subnets",
+            "resourceType": "aws_subnet",
+            "representation": "link",
+            "array": true,
+            "required": false,
+            "widget": "inputString"
+          },
+          {
+            "variableName": "security_groups",
+            "resourceType": "aws_security_group",
+            "representation": "link",
+            "array": true,
+            "required": false,
+            "widget": "inputString"
+          },
+          {
+            "variableName": "instances",
+            "resourceType": "aws_instance",
+            "representation": "link",
+            "array": true,
+            "required": false,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_elb.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_vpc",
+        "representation": "container",
+        "required": false,
+        "icon": "aws_vpc.svg"
+      },
+      {
+        "resourceType": "aws_internet_gateway",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "vpc_id",
+            "resourceType": "aws_vpc",
+            "representation": "contained",
+            "required": false,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_internet_gateway.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_route",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "route_table_id",
+            "representation": "contained",
+            "required": true,
+            "widget": "inputString"
+          },
+          {
+            "variableName": "gateway_id",
+            "resourceType": "aws_internet_gateway",
+            "representation": "link",
+            "required": false,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_route.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_subnet",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "vpc_id",
+            "resourceType": "aws_vpc",
+            "representation": "containedInOtherContainer",
+            "required": true,
+            "widget": "inputString"
+          },
+          {
+            "variableName": "gateway_id",
+            "resourceType": "aws_internet_gateway",
+            "representation": "link",
+            "required": false,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_subnet.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_db_subnet_group",
+        "representation": "container",
+        "attributes": [
+          {
+            "variableName": "subnet_ids",
+            "resourceType": "aws_subnet",
+            "representation": "contained",
+            "array": true,
+            "required": true,
+            "widget": "inputTextArea"
+          }
+        ],
+        "icon": "aws_db_subnet_group.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_route53_zone",
+        "representation": "container",
+        "attributes": [
+          {
+            "variableName": "name",
+            "required": true,
+            "widget": "inputInteger"
+          }
+        ],
+        "icon": "aws_route53_zone.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_route53_record",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "zone_id",
+            "resourceType": "aws_route53_zone",
+            "representation": "contained",
+            "required": true,
+            "widget": "inputFloat"
+          },
+          {
+            "variableName": "name",
+            "required": true,
+            "widget": "inputToggle"
+          },
+          {
+            "variableName": "type",
+            "required": true,
+            "widget": "inputDropbox"
+          },
+          {
+            "variableName": "records",
+            "representation": "link",
+            "array": true,
+            "required": false,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_route53_record.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_db_instance",
+        "representation": "block",
+        "attributes": [
+          {
+            "variableName": "instance_class",
+            "required": true,
+            "widget": "inputString",
+            "options": ["a", "b", "c"]
+          },
+          {
+            "variableName": "db_subnet_group_name",
+            "resourceType": "aws_db_subnet_group",
+            "representation": "link",
+            "required": false,
+            "widget": "inputString",
+            "min": 0,
+            "max": 100
+          },
+          {
+            "variableName": "vpc_security_group_ids",
+            "resourceType": "aws_security_group",
+            "representation": "link",
+            "array": true,
+            "required": false,
+            "widget": "inputString"
+          }
+        ],
+        "icon": "aws_db_instance.svg",
+        "required": false
+      },
+      {
+        "resourceType": "aws_key_pair",
+        "representation": "block",
+        "icon": "aws_key_pair.svg",
+        "required": false
+      },
+      {
+        "resourceType": "default",
+        "representation": "block",
+        "icon": "default.svg",
+        "required": false
+      }
+    ]
+  }
 }
