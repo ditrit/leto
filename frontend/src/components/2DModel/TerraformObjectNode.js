@@ -42,7 +42,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
 
 				d3.select(model.getElementById("logo_frame")).call(dragLink.value);
 
-				d3.select(model.getElementById("logo_frame"))
+				d3.select(model)
 					.on("contextmenu",(e) => {
 						e.preventDefault();
 						const groups = d3.select('#root').selectAll('svg');
