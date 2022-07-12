@@ -117,6 +117,8 @@ export default defineComponent({
 			iactorDatas: {},
 			metadatas: {},
 			valueEditor: null,
+			defaultValue:
+				'provider "aws" {\n access_key="ABCD1234J54PXLDF4IC4WMVA"\n secret_key="28prpojfngldfgPcgiv79Q/J+8o7ksdfsTjmmE2QQBRa"\n region="eu-west-3"\n}\n ',
 		};
 	},
 	created() {
@@ -187,6 +189,7 @@ export default defineComponent({
 			automaticLayout: true,
 		});
 		this.monacoEditor = editor;
+		this.monacoEditor.getModel().setValue(this.defaultValue);
 		this.monacoEditor.getModel().onDidChangeContent((_event) => {
 			this.onChange(editor.getValue());
 			this.consoleClick();
