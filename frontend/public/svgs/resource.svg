@@ -1,13 +1,13 @@
-<svg id="N{{id}}" version="1.1" width="N{{max(width,340)+30}}" height="N{{max(height,44)+30}}"
+<svg id="N{{id}}" version="1.1" width="N{{max(width,240)+30}}" height="N{{max(height,44)+30}}"
     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <g>
         <rect id="content" x="10" y="18" width="N{{width}}" height="N{{height}}" ry="4" style="fill:none;stroke-width:1.2;stroke:#000"/>
-        <rect id="logo_frame" x="4" y="4" width="340" height="44" fill="#fff" fill-rule="evenodd" stroke="#000" stroke-linecap="round" stroke-linejoin="round" style="paint-order:stroke fill markers"/>
+        <rect id="logo_frame" x="4" y="4" width="240" height="44" fill="#fff" fill-rule="evenodd" stroke="#000" stroke-linecap="round" stroke-linejoin="round" style="paint-order:stroke fill markers"/>
 				<image id="logo" x="5" y="5" width="40" height="40" xlink:href="T{{logopath}}" />
-        <text id="name" text-align="center" style="font-family:sans-serif;font-size:16px;font-style:italic" xml:space="preserve">
+        <text id="name" text-align="center" style="font-family:sans-serif;font-size:14px;font-style:italic" xml:space="preserve">
             <tspan x="48" y="18">T{{name}}</tspan>
         </text>
-        <text id="type" text-align="center" style="font-family:sans-serif;font-size:14px;font-weight:bold" xml:space="preserve">
+        <text id="type" text-align="center" style="font-family:sans-serif;font-size:12px;font-weight:bold" xml:space="preserve">
             <tspan x="48" y="36">T{{type}}</tspan>
         </text>
     </g>
