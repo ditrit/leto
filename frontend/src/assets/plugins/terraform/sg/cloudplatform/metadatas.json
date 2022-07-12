@@ -1,0 +1,1062 @@
+{
+	"provider": {
+		"name": "cloudplatform",
+		"required": true,
+		"resources": [
+			{
+				"resourceType": "cloudplatform_compute_security_group_v2",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "description",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "ecosystem",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString",
+						"regex": "^[a-zA-Z0-9-_]+$"
+					},
+					{
+						"variableName": "tags",
+						"resourceType": "string",
+						"array": true,
+						"required": false,
+						"widget": "inputDropbox"
+					}
+				],
+				"icon": "security_group.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_compute_keypair",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "public_key",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					}
+				],
+				"icon": "keypair.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_object_storage_access_key_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "offer",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "read_only",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputToggle"
+					}
+				],
+				"icon": "access_storage.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_compute_security_rule_v2",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "description",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputTextArea"
+					},
+					{
+						"variableName": "direction",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "ether_type",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "port_range",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "protocol",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "remote_type",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "remote_value",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "security_group_id",
+						"resourceType": "cloudplatform_compute_security_group_v2",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					}
+				],
+				"icon": "security_rule.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_osfactory_image",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "image_size",
+						"resourceType": "number",
+						"required": true,
+						"widget": "inputNumber"
+					},
+					{
+						"variableName": "source",
+						"resourceType": "string",
+						"required": true,
+						"representation": "link",
+						"widget": "inputTextArea"
+					},
+					{
+						"variableName": "derivations",
+						"attributes": [
+							{
+								"variableName": "type",
+								"resourceType": "string",
+								"required": true,
+								"widget": "inputString"
+							},
+							{
+								"variableName": "url",
+								"resourceType": "string",
+								"required": true,
+								"widget": "inputTextArea",
+								"representation": "link"
+							}
+						],
+						"required": false
+					}
+				],
+				"icon": "osfactory.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_compute_instance",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "availability_zone",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputTextArea"
+					},
+					{
+						"variableName": "description",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputTextArea"
+					},
+					{
+						"variableName": "flavor_ref",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputDropbox",
+						"representation": "link"
+					},
+					{
+						"variableName": "network",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputDropbox",
+						"representation": "link"
+					},
+					{
+						"variableName": "key_name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputDropbox",
+						"representation": "link"
+					},
+					{
+						"variableName": "image_ref",
+						"resourceType": "cloudplatform_osfactory_image",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "security_groups",
+						"resourceType": "cloudplatform_compute_security_group_v2",
+						"representation": "link",
+						"array": true,
+						"required": false,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "tags",
+						"resourceType": "string",
+						"array": true,
+						"required": false,
+						"widget": "inputDropbox"
+					}
+				],
+				"icon": "ocs.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_compute_volume",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "description",
+						"resourceType": "string",
+						"required": false
+					},
+					{
+						"variableName": "size",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "volume_type",
+						"resourceType": "string",
+						"required": false
+					},
+					{
+						"variableName": "availability_zone",
+						"resourceType": "string",
+						"required": false
+					},
+					{
+						"variableName": "tags",
+						"resourceType": "string",
+						"array": true,
+						"required": false
+					}
+				],
+				"icon": "block_storage.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_compute_volume_attachement",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "server_id",
+						"resourceType": "cloudplatform_compute_instance",
+						"representation": "link",
+						"required": true
+					},
+					{
+						"variableName": "volume_id",
+						"resourceType": "cloudplatform_compute_volume",
+						"representation": "link",
+						"required": false
+					}
+				],
+				"icon": "volume_attachement.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_slb_load_balancer_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "type",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "availability_zone",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "tags",
+						"resourceType": "string",
+						"array": true,
+						"required": false,
+						"widget": "inputDropbox"
+					}
+				],
+				"icon": "load_balancer.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_slb_vip_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputTextArea"
+					},
+					{
+						"variableName": "subnet_id",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputDropbox",
+						"representation": "link"
+					},
+					{
+						"variableName": "loadbalancer_id ",
+						"resourceType": "cloudplatform_slb_load_balancer_v1",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					}
+				],
+				"icon": "load_balancer_vip.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_slb_healthcheck_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "health_check_type",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "protocol",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "port",
+						"resourceType": "number",
+						"required": true,
+						"widget": "inputNumber"
+					},
+					{
+						"variableName": "ssl_profile_id",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputDropbox",
+						"representation": "link"
+					},
+					{
+						"variableName": "http_request",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputTextArea"
+					},
+					{
+						"variableName": "loadbalancer_id ",
+						"resourceType": "cloudplatform_slb_load_balancer_v1",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					}
+				],
+				"icon": "load_balancer_healthcheck.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_slb_listener_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "vip_id",
+						"resourceType": "cloudplatform_slb_vip_v1",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "pool_id",
+						"resourceType": "cloudplatform_slb_pool_v1",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "protocol",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "ssl_profile_id",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "certificate_id",
+						"resourceType": "cloudplatform_slb_certificate_v1",
+						"representation": "link",
+						"required": false,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "loadbalancer_id ",
+						"resourceType": "cloudplatform_slb_load_balancer_v1",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "threshold",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "time_period",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "tags",
+						"resourceType": "string",
+						"array": true,
+						"required": false,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "xff",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputToggle"
+					},
+					{
+						"variableName": "port",
+						"resourceType": "number",
+						"required": false,
+						"widget": "inputNumber"
+					}
+				],
+				"icon": "listener.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_slb_pool_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "algorithm",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "persistence",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "port",
+						"resourceType": "number",
+						"required": true,
+						"widget": "inputNumber"
+					},
+					{
+						"variableName": "loadbalancer_id",
+						"resourceType": "cloudplatform_slb_load_balancer_v1",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "healthcheck_id",
+						"resourceType": "cloudplatform_slb_healthcheck_v1",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "real_server_ids",
+						"resourceType": "cloudplatform_compute_instance",
+						"representation": "link",
+						"array": true,
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "ssl_profile_id",
+						"resourceType": "cloudplatform_slb_ssl_profile",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					}
+				],
+				"icon": "load_balancer_slb_pool.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_slb_certificate_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "certificate",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "private_key",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "loadbalancer_id",
+						"resourceType": "cloudplatform_slb_load_balancer_v1",
+						"representation": "link",
+						"required": true
+					}
+				],
+				"icon": "load_balancer_slb_certificate.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_trafficmanager_service_v2",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "zone_id",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputDropbox",
+						"representation": "link"
+					},
+					{
+						"variableName": "description",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputTextArea"
+					},
+					{
+						"variableName": "healthcheck_refs",
+						"resourceType": "cloudplatform_trafficmanager_healthcheck_v2",
+						"representation": "link",
+						"array": true,
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "loadbalancer_type",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "enabled",
+						"resourceType": "string",
+						"required": false
+					},
+					{
+						"variableName": "members",
+						"attributes": [
+							{
+								"variableName": "uuid",
+								"resourceType": "cloudplatform_slb_load_balancer_v1",
+								"representation": "link",
+								"required": true,
+								"widget": "inputDropbox"
+							},
+							{
+								"variableName": "priority",
+								"resourceType": "number",
+								"required": true,
+								"widget": "inputNumber"
+							},
+							{
+								"variableName": "enabled",
+								"resourceType": "string",
+								"required": false
+							}
+						],
+						"required": true
+					}
+				],
+				"icon": "trafficmanager.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_trafficmanager_healthcheck_v2",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "zone_id",
+						"resourceType": "string",
+						"required": true,
+						"representation": "link",
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "description",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputTextArea"
+					},
+					{
+						"variableName": "port",
+						"resourceType": "number",
+						"required": true,
+						"widget": "inputNumber"
+					},
+					{
+						"variableName": "type",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "http_request",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					}
+				],
+				"icon": "trafficmanager_healthcheck.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_object_storage_bucket_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "offer",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputTextArea"
+					},
+					{
+						"variableName": "availability_zone",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputTextArea"
+					}
+				],
+				"icon": "s3_bucket.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_files_consistency_group_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "availability_zone",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": false
+					},
+					{
+						"variableName": "description",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "network",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "offer",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "geo_replication ",
+						"attributes": [
+							{
+								"variableName": "region",
+								"resourceType": "string",
+								"required": true
+							},
+							{
+								"variableName": "target_availability_zones",
+								"resourceType": "string",
+								"array": true,
+								"required": true
+							}
+						],
+						"required": false
+					},
+					{
+						"variableName": "replication",
+						"attributes": [
+							{
+								"variableName": "replication_mode",
+								"resourceType": "string",
+								"required": true
+							},
+							{
+								"variableName": "target_availability_zones",
+								"resourceType": "string",
+								"array": true,
+								"required": true
+							}
+						],
+						"required": false
+					},
+					{
+						"variableName": "tags",
+						"resourceType": "string",
+						"array": true,
+						"required": false
+					}
+				],
+				"icon": "nfs_group.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_files_filesystem_v1",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "consistency_group_id",
+						"resourceType": "cloudplatform_files_consistency_group_v1",
+						"representation": "link",
+						"required": true
+					},
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": false
+					},
+					{
+						"variableName": "description",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "size",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "nfs_clients",
+						"attributes": [
+							{
+								"variableName": "host",
+								"resourceType": "string",
+								"required": true
+							},
+							{
+								"variableName": "permission",
+								"resourceType": "string",
+								"array": true,
+								"required": true
+							},
+							{
+								"variableName": "protocol",
+								"resourceType": "string",
+								"required": true
+							}
+						],
+						"required": false
+					},
+					{
+						"variableName": "tags",
+						"resourceType": "string",
+						"array": true,
+						"required": false
+					}
+				],
+				"icon": "nfs.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_postgre_cluster",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "alias",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "storage",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "has_backup",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputToggle"
+					},
+					{
+						"variableName": "has_monitoring",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputToggle"
+					},
+					{
+						"variableName": "version",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "type",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "availability_zone",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "environment",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "network",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "virtual_machine_provider",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "lc_collate",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "volume_type",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "lc_ctype",
+						"resourceType": "string",
+						"required": false,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "replication",
+						"attributes": [
+							{
+								"variableName": "availability_zone",
+								"resourceType": "string",
+								"required": true,
+								"widget": "inputString"
+							},
+							{
+								"variableName": "network",
+								"resourceType": "string",
+								"required": false,
+								"widget": "inputString"
+							}
+						],
+						"required": false
+					},
+					{
+						"variableName": "tags",
+						"resourceType": "string",
+						"array": true,
+						"required": false
+					}
+				],
+				"icon": "postgre_cluster.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_postgre_database",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "cluster_id",
+						"resourceType": "cloudplatform_postgre_cluster",
+						"representation": "link",
+						"required": true,
+						"widget": "inputDropbox"
+					},
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "username",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "password",
+						"resourceType": "string",
+						"required": true,
+						"widget": "inputString"
+					},
+					{
+						"variableName": "extensions",
+						"resourceType": "string",
+						"array": true,
+						"required": false,
+						"widget": "inputDropbox"
+					}
+				],
+				"icon": "postgre_database.svg",
+				"required": false
+			},
+			{
+				"resourceType": "cloudplatform_dns_alias",
+				"representation": "block",
+				"attributes": [
+					{
+						"variableName": "name",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "zone_id",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "target",
+						"resourceType": "string",
+						"required": true
+					},
+					{
+						"variableName": "ttl",
+						"resourceType": "string",
+						"required": false
+					},
+					{
+						"variableName": "tags",
+						"resourceType": "string",
+						"array": true,
+						"required": false
+					}
+				],
+				"icon": "dns_alias.svg",
+				"required": false
+			},
+			{
+				"resourceType": "default",
+				"representation": "block",
+				"icon": "default.svg",
+				"required": false
+			}
+		]
+	}
+}
