@@ -18,7 +18,7 @@
 
 <script>
 import { onMounted, onUnmounted, ref } from "vue";
-const d3 = require("d3");
+import * as d3 from 'd3';
 import TerraformTypeNode from "src/components/2DModel/TerraformTypeNode";
 import TerraformObjectNode from "src/components/2DModel/TerraformObjectNode";
 import {
@@ -706,7 +706,7 @@ export default {
 			const provider = monacoSourceData.value["provider"][0].name;
 			const plugin = plugins[provider];
 
-			const metadatas = require(`src/assets/plugins/terraform/${plugin}/metadatas.json`);
+			const metadatas = await import(`src/assets/plugins/terraform/${plugin}/metadatas.json`);
 			metadatas.provider.resources.forEach((element) => {
 				terraformPanelList.value.push(
 					new TerraformTypeNode(

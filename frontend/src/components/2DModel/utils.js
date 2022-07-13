@@ -1,4 +1,4 @@
-const d3 = require("d3");
+import * as d3 from 'd3';
 import TerraformObjectNode from "./TerraformObjectNode";
 
 export function storeOutputLinkInData(node,currentModelId,link){
