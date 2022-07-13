@@ -1,6 +1,5 @@
 import SVGinstanciate from "./svgvar";
-import { replaceComponents } from "./utils";
-const d3 = require("d3");
+import * as d3 from 'd3';
 
 export default class LetoTypeNode{
 	constructor(logo_path, type_name, primary_color, secondary_color,svg){

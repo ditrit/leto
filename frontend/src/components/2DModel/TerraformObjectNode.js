@@ -1,8 +1,8 @@
 import LetoObjectNode from "./LetoObjectNode";
 import SVGinstanciate from "./svgvar.js";
 import { getModelAbsPos, getAttributesInData, removeContentInData, deleteAllStackLinks } from "./utils";
-const d3 = require("d3");
-import EventBus from "src/services/EventBus"
+import * as d3 from 'd3';
+import EventBus from "src/services/EventBus";
 
 export default class TerraformObjectNode extends LetoObjectNode {
 	constructor(terraformTypeNode,instance_name,level, id, parentId, objects){
