@@ -1,6 +1,6 @@
 import LetoObjectNode from "./LetoObjectNode";
 import SVGinstanciate from "./svgvar.js";
-import { getModelAbsPos, getAttributesInData} from "./utils";
+import { getModelAbsPos, getAttributesInData, removeContentInData, deleteAllStackLinks } from "./utils";
 const d3 = require("d3");
 import EventBus from "src/services/EventBus"
 
@@ -36,6 +36,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
 			let dragLink = dragList[1];
 			let rootTreeObject = dataList[0];
 			let drawingLink = dataList[1];
+			let dataObject = this;
         let data = { logopath: this.drawingObject.logopath,  width: this.drawingObject.width, height: this.drawingObject.height, name: this.drawingObject.name, type: this.drawingObject.type, id : this.id };
         const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
         d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);

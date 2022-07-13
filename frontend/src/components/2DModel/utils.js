@@ -315,3 +315,25 @@ export function fillAbleToDropList(node,attribute,ableToDropList){
 	fillAbleToDropList(node.contains[0],attribute,ableToDropList)
 	fillAbleToDropList(node.rightSibling,attribute,ableToDropList)
 }
+
+export function deleteAllStackLinks(rootTreeObject,letoObject){
+	letoObject.links.outputs.forEach(output => {
+		if(document.getElementById(output.id)){
+			document.getElementById(output.id).remove();
+			removeInputLinkInData(rootTreeObject,output.targetId,output.id);
+			removeOutputLinkInData(rootTreeObject,output.sourceId,output.id);
+		}
+	})
+	letoObject.links.inputs.forEach(input => {
+		if(document.getElementById(input.id)){
+			document.getElementById(input.id).remove();
+			removeInputLinkInData(rootTreeObject,input.targetId,input.id);
+			removeOutputLinkInData(rootTreeObject,input.sourceId,input.id);
+		}
+	})
+	if (letoObject.contains){
+		letoObject.contains.forEach(child => {
+			deleteAllStackLinks(rootTreeObject,child);
+		})
+	}
+}
