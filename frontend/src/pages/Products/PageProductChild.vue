@@ -101,6 +101,7 @@ import ConfigPannel from "src/components/ConfigPannel.vue";
 import awsMetadatas from "src/assets/plugins/terraform/internal/aws/metadatas.json";
 import sgCloudPlatformMetadatas from "src/assets/plugins/terraform/sg/cloudplatform/metadatas.json";
 import ProductHeader from "src/components/UI/Headers/ProductHeader.vue";
+import getDatas from 'hcl/src/plugins/terraform/index';
 
 export default defineComponent({
 	name: "PageDomainChild",
@@ -117,32 +118,10 @@ export default defineComponent({
 			iactorDatas: {},
 			metadatas: {},
 			valueEditor: null,
+			monacoSource: null,
+			defaultValue:
+				'provider "cloudplatform" {\n\tregion="eu-west-3"\n}\n ',
 		};
-	},
-	created() {
-		this.worker = new Worker(
-			new URL("src/components/Monaco/iactor.js", import.meta.url)
-		);
-		this.worker.onmessage = function (event) {
-			this.iactorDatas = event.data;
-			const provider = {
-				provider: this.iactorDatas.provider,
-			};
-			window.localStorage.setItem("monacoSource", JSON.stringify(provider));
-		};
-		this.worker.addEventListener("message", (event) => {
-			this.getSource();
-			this.getMetaDatas();
-			this.metadatas = this.allMetadatas;
-			const data = event.data;
-			data.provider[0].orderResources = this.metadatas.provider.orderResources
-				? this.metadatas.provider.orderResources
-				: [];
-			analyse_resources(data.resources, this.metadatas.provider.resources);
-			data.resources = calculAttributesObjects(data);
-			window.localStorage.setItem("monacoSource", JSON.stringify(data));
-			this.getSource();
-		});
 	},
 	mounted() {
 		monaco.languages.register({ id: "hcl" });
@@ -187,10 +166,12 @@ export default defineComponent({
 			automaticLayout: true,
 		});
 		this.monacoEditor = editor;
+		this.monacoEditor.getModel().setValue(this.defaultValue);
 		this.monacoEditor.getModel().onDidChangeContent((_event) => {
 			this.onChange(editor.getValue());
 			this.consoleClick();
 		});
+		this.consoleClick(this.defaultValue);
 	},
 	computed: {
 		...mapGetters({
@@ -204,22 +185,25 @@ export default defineComponent({
 			getMonacoSource: "appMonaco/getMonacoSource",
 			getMetaSource: "appMonaco/getMetadatas",
 		}),
-		async getMetaDatas() {
-			const provider = JSON.parse(window.localStorage.getItem("monacoSource"))
-				.provider[0].name;
+		async getMetaDatas(provider) {
 			const plugin = plugins[provider];
-			const meta = require(`src/assets/plugins/terraform/${plugin}/metadatas.json`);
-			await this.getMetaSource(meta);
+			const meta = await import(`src/assets/plugins/terraform/${plugin}/metadatas.json`);
+			return meta;
 		},
 		tree(e) {
 			this.objectsTree = e;
 		},
-		getSource() {
-			return this.getMonacoSource();
-		},
-		consoleClick() {
-			this.worker.postMessage(this.valueEditor);
-			this.getSource();
+		async consoleClick(source) {
+			this.monacoSource = getDatas(this.valueEditor || source);
+			const provider = this.monacoSource.provider[0].name;
+			this.metadatas = await this.getMetaDatas(provider);
+			this.monacoSource.provider[0].orderResources = this.metadatas.provider.orderResources
+				? this.metadatas.provider.orderResources
+				: [];
+			analyse_resources(this.monacoSource.resources, this.metadatas.provider.resources);
+			this.monacoSource.resources = calculAttributesObjects(this.monacoSource);
+			window.localStorage.setItem("monacoSource", JSON.stringify(this.monacoSource));
+			this.getMonacoSource(this.monacoSource);
 		},
 		getGraph() {
 			const datas = JSON.parse(window.localStorage.getItem("monacoSource"));
@@ -274,9 +258,10 @@ export default defineComponent({
 					"monacoSource",
 					JSON.stringify(this.objectsTree.contains)
 				);
+				this.monacoSource = this.objectsTree.contains;
 				this.setResources();
-				this.consoleClick();
 				this.getGraph();
+				this.consoleClick();
 			}
 		},
 	},
