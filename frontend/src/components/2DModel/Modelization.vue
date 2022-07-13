@@ -45,6 +45,7 @@ import {
 	calcul_xy_container,
 } from "src/components/Monaco/svg_maths";
 import EventBus from "src/services/EventBus";
+import ObjectPosition from "src/services/ObjectPosition";
 
 /**
  * Makes an hexadecimal string of the specified length
@@ -326,6 +327,7 @@ export default {
 			updateLinks(rootTreeObject.value,this.parentNode)
 			updateDrawingInfosInData(rootTreeObject.value,this.parentNode);
 			d3.selectAll(groups).select('#logo_frame').attr("fill","white");
+			ObjectPosition.save(rootTreeObject.value);
 			return;
 		}
 
@@ -754,7 +756,8 @@ export default {
 			});
 
 			fillDataStorage(monacoSourceData.value["resources"], "svg0", 0);
-			drawSVGs(monacoSourceData.value["resources"], svg, "root", false, 0);
+			ObjectPosition.hydrate(rootTreeObject.value);
+			drawSVGs(rootTreeObject.value.contains, svg, "root", false, 0);
 			drawLines(monacoSourceData.value["resources"]);
 			EventBus.emit("setObjects", rootTreeObject.value);
 
