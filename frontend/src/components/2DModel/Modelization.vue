@@ -76,6 +76,7 @@ export default {
 		EventBus.on("updateObject", ob => {
 			let currentObj = document.getElementById(ob.id);
 			currentObj.getElementById("name").getElementsByTagName("tspan")[0].innerHTML = ob.instance_name.replace(/\s+/g, "");
+			emit("getTreeObjects", rootTreeObject.value);
 		});
 		EventBus.on("selectObject", selectedLetoObj => {
 			const allSvgs = d3.select("#root").selectAll("svg");

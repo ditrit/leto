@@ -283,9 +283,11 @@ export default {
 			const objectId = selected_object.value;
 			let realObject = getSelectedObject(objects, objectId);
 			realObject.instance_name = configInfos.value.instance_name;
+			realObject.name = configInfos.value.instance_name;
 
 			EventBus.emit('updateObject', realObject, {
 				instance_name: configInfos.value.instance_name,
+				name: configInfos.value.instance_name,
 				attributes: configInfos.value.attributes.map((attr) => ({ name: attr.name, value: attr.value })),
 			});
 		}
