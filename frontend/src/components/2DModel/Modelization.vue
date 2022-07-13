@@ -529,6 +529,11 @@ export default {
 					terraformObject.instance_name + "_" + terraformObject.type_name
 				);
 
+				if(terraformObject.representation == "container") {
+					terraformObject.drawingObject.height = 130;
+					terraformObject.drawingObject.width = 290;
+				}
+
 				let drawnModel = terraformObject.drawSVG(
 					svgs,
 					svg,
