@@ -4,7 +4,7 @@
 		"required": true,
 		"resources": [
 			{
-				"resourceType": "cp_compute_security_group_v2",
+				"resourceType": "compute_security_group",
 				"representation": "block",
 				"attributes": [
 					{
@@ -38,7 +38,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_compute_keypair",
+				"resourceType": "compute_keypair",
 				"representation": "block",
 				"attributes": [
 					{
@@ -58,7 +58,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_object_storage_access_key_v1",
+				"resourceType": "object_storage_access_key",
 				"representation": "block",
 				"attributes": [
 					{
@@ -78,7 +78,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_compute_security_rule_v2",
+				"resourceType": "compute_security_rule",
 				"representation": "block",
 				"attributes": [
 					{
@@ -125,7 +125,7 @@
 					},
 					{
 						"variableName": "security_group_id",
-						"resourceType": "cp_compute_security_group_v2",
+						"resourceType": "compute_security_group",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
@@ -135,7 +135,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_osfactory_image",
+				"resourceType": "osfactory_image",
 				"representation": "block",
 				"attributes": [
 					{
@@ -181,7 +181,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_compute_instance",
+				"resourceType": "compute_instance",
 				"representation": "block",
 				"attributes": [
 					{
@@ -225,14 +225,14 @@
 					},
 					{
 						"variableName": "image_ref",
-						"resourceType": "cp_osfactory_image",
+						"resourceType": "osfactory_image",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "security_groups",
-						"resourceType": "cp_compute_security_group_v2",
+						"resourceType": "compute_security_group",
 						"representation": "link",
 						"array": true,
 						"required": false,
@@ -250,7 +250,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_compute_volume",
+				"resourceType": "compute_volume",
 				"representation": "block",
 				"attributes": [
 					{
@@ -289,18 +289,18 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_compute_volume_attachement",
+				"resourceType": "compute_volume_attachement",
 				"representation": "block",
 				"attributes": [
 					{
 						"variableName": "server_id",
-						"resourceType": "cp_compute_instance",
+						"resourceType": "compute_instance",
 						"representation": "link",
 						"required": true
 					},
 					{
 						"variableName": "volume_id",
-						"resourceType": "cp_compute_volume",
+						"resourceType": "compute_volume",
 						"representation": "link",
 						"required": false
 					}
@@ -309,7 +309,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_slb_load_balancer_v1",
+				"resourceType": "slb_load_balancer",
 				"representation": "block",
 				"attributes": [
 					{
@@ -342,7 +342,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_slb_vip_v1",
+				"resourceType": "slb_vip",
 				"representation": "block",
 				"attributes": [
 					{
@@ -360,7 +360,7 @@
 					},
 					{
 						"variableName": "loadbalancer_id ",
-						"resourceType": "cp_slb_load_balancer_v1",
+						"resourceType": "slb_load_balancer",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
@@ -370,7 +370,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_slb_healthcheck_v1",
+				"resourceType": "slb_healthcheck",
 				"representation": "block",
 				"attributes": [
 					{
@@ -412,7 +412,7 @@
 					},
 					{
 						"variableName": "loadbalancer_id ",
-						"resourceType": "cp_slb_load_balancer_v1",
+						"resourceType": "slb_load_balancer",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
@@ -422,7 +422,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_slb_listener_v1",
+				"resourceType": "slb_listener",
 				"representation": "block",
 				"attributes": [
 					{
@@ -433,14 +433,14 @@
 					},
 					{
 						"variableName": "vip_id",
-						"resourceType": "cp_slb_vip_v1",
+						"resourceType": "slb_vip",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "pool_id",
-						"resourceType": "cp_slb_pool_v1",
+						"resourceType": "slb_pool",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
@@ -459,14 +459,14 @@
 					},
 					{
 						"variableName": "certificate_id",
-						"resourceType": "cp_slb_certificate_v1",
+						"resourceType": "slb_certificate",
 						"representation": "link",
 						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "loadbalancer_id ",
-						"resourceType": "cp_slb_load_balancer_v1",
+						"resourceType": "slb_load_balancer",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
@@ -507,7 +507,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_slb_pool_v1",
+				"resourceType": "slb_pool",
 				"representation": "block",
 				"attributes": [
 					{
@@ -536,21 +536,21 @@
 					},
 					{
 						"variableName": "loadbalancer_id",
-						"resourceType": "cp_slb_load_balancer_v1",
+						"resourceType": "slb_load_balancer",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "healthcheck_id",
-						"resourceType": "cp_slb_healthcheck_v1",
+						"resourceType": "slb_healthcheck",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "real_server_ids",
-						"resourceType": "cp_compute_instance",
+						"resourceType": "compute_instance",
 						"representation": "link",
 						"array": true,
 						"required": true,
@@ -558,7 +558,7 @@
 					},
 					{
 						"variableName": "ssl_profile_id",
-						"resourceType": "cp_slb_ssl_profile",
+						"resourceType": "slb_ssl_profile",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
@@ -568,7 +568,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_slb_certificate_v1",
+				"resourceType": "slb_certificate",
 				"representation": "block",
 				"attributes": [
 					{
@@ -588,7 +588,7 @@
 					},
 					{
 						"variableName": "loadbalancer_id",
-						"resourceType": "cp_slb_load_balancer_v1",
+						"resourceType": "slb_load_balancer",
 						"representation": "link",
 						"required": true
 					}
@@ -597,7 +597,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_trafficmanager_service_v2",
+				"resourceType": "trafficmanager_service",
 				"representation": "block",
 				"attributes": [
 					{
@@ -621,7 +621,7 @@
 					},
 					{
 						"variableName": "healthcheck_refs",
-						"resourceType": "cp_trafficmanager_healthcheck_v2",
+						"resourceType": "trafficmanager_healthcheck",
 						"representation": "link",
 						"array": true,
 						"required": true,
@@ -643,7 +643,7 @@
 						"attributes": [
 							{
 								"variableName": "uuid",
-								"resourceType": "cp_slb_load_balancer_v1",
+								"resourceType": "slb_load_balancer",
 								"representation": "link",
 								"required": true,
 								"widget": "inputDropbox"
@@ -667,7 +667,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_trafficmanager_healthcheck_v2",
+				"resourceType": "trafficmanager_healthcheck",
 				"representation": "block",
 				"attributes": [
 					{
@@ -712,7 +712,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_object_storage_bucket_v1",
+				"resourceType": "object_storage_bucket",
 				"representation": "block",
 				"attributes": [
 					{
@@ -738,7 +738,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_files_consistency_group_v1",
+				"resourceType": "files_consistency_group",
 				"representation": "block",
 				"attributes": [
 					{
@@ -811,12 +811,12 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_files_filesystem_v1",
+				"resourceType": "files_filesystem",
 				"representation": "block",
 				"attributes": [
 					{
 						"variableName": "consistency_group_id",
-						"resourceType": "cp_files_consistency_group_v1",
+						"resourceType": "files_consistency_group",
 						"representation": "link",
 						"required": true
 					},
@@ -868,7 +868,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_postgre_cluster",
+				"resourceType": "postgre_cluster",
 				"representation": "block",
 				"attributes": [
 					{
@@ -978,12 +978,12 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_postgre_database",
+				"resourceType": "postgre_database",
 				"representation": "block",
 				"attributes": [
 					{
 						"variableName": "cluster_id",
-						"resourceType": "cp_postgre_cluster",
+						"resourceType": "postgre_cluster",
 						"representation": "link",
 						"required": true,
 						"widget": "inputDropbox"
@@ -1018,7 +1018,7 @@
 				"required": false
 			},
 			{
-				"resourceType": "cp_dns_alias",
+				"resourceType": "dns_alias",
 				"representation": "block",
 				"attributes": [
 					{
