@@ -77,6 +77,15 @@ export default {
 			let currentObj = document.getElementById(ob.id);
 			currentObj.getElementById("name").getElementsByTagName("tspan")[0].innerHTML = ob.instance_name.replace(/\s+/g, "");
 		});
+		EventBus.on("selectObject", selectedLetoObj => {
+			const allSvgs = d3.select("#root").selectAll("svg");
+			allSvgs.each(function() {
+				d3.select("#del_bin"+this.id).attr("display","none");
+			});
+			d3.select("#"+selectedLetoObj.id)
+			.select("#del_bin"+selectedLetoObj.id)
+			.attr("display","block");
+		});
 		onUnmounted(() => EventBus.off("selected:component"));
 		const drag = ref(
 			d3

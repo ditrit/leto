@@ -1,6 +1,6 @@
 import LetoObjectNode from "./LetoObjectNode";
 import SVGinstanciate from "./svgvar.js";
-import { getModelAbsPos, getAttributesInData} from "./utils";
+import { getModelAbsPos, getAttributesInData, removeContentInData, deleteAllStackLinks } from "./utils";
 const d3 = require("d3");
 import EventBus from "src/services/EventBus"
 
@@ -36,6 +36,7 @@ export default class TerraformObjectNode extends LetoObjectNode {
 			let dragLink = dragList[1];
 			let rootTreeObject = dataList[0];
 			let drawingLink = dataList[1];
+			let dataObject = this;
         let data = { logopath: this.drawingObject.logopath,  width: this.drawingObject.width, height: this.drawingObject.height, name: this.drawingObject.name, type: this.drawingObject.type, id : this.id };
         const svgDom = SVGinstanciate(svgs.value["dbtf"], data);
         d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
@@ -102,12 +103,30 @@ export default class TerraformObjectNode extends LetoObjectNode {
         d3.select(model)
 					.append("svg:image")
 					.attr("cursor", "move")
-					.attr("x",model.getElementById("logo_frame").getAttribute("width")-35)
-					.attr("y",10)
-					.attr("width", 30)
-					.attr("height", 30)
+					.attr("x",model.getElementById("logo_frame").getAttribute("width")-25)
+					.attr("y",20)
+					.attr("width", 25)
+					.attr("height", 25)
 					.attr("xlink:href", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAqklEQVRIieWVQQ6DIBBFX1wYvFrRy9KF7eWwi0KkiDqSIWnTl8zK+L/OfBj4JwzgQhlt8R64A0uoJzC0Elc3sYAvGHjgpmGQEsXFdNpfIDEwwFihNSFIlwFm3v0tcdQiH97dNcnTctXgNF2ObVJqy0XR5kNO6fn8ixKSZw8O5tB0yKmJrTCwEvEzfuMk54ysl10kXnZ7rbxEnq70QKktntLCUd9qTVfm9/IC8+hUYHPjvWwAAAAASUVORK5CYII=")
 					.call(drag.value);
+
+				d3.select(model)
+					.append("svg:image")
+					.attr("id","del_bin"+model.id)
+					.attr("cursor", "pointer")
+					.attr("x",model.getElementById("logo_frame").getAttribute("width")-20)
+					.attr("y",5)
+					.attr("width", 15)
+					.attr("height", 15)
+					.attr("xlink:href", 'icons/trash-delete-bin.svg')
+					.attr("display","none")
+					.on("click",function(){
+						this.parentNode.remove();
+						let parentId = (parentName == "root") ? "svg0" : parentName;
+
+						removeContentInData(rootTreeObject, parentId, dataObject);
+						deleteAllStackLinks(rootTreeObject, dataObject);
+					});
 
 				d3.select(model)
 					.append("circle")

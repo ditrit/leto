@@ -76,7 +76,7 @@ export default class LetoObjectNode{
 		let outputs = this.links.outputs;
 		outputs.forEach(link =>{
 			if(link.id == linkId){
-				outputs.splice(outputs.indexOf(link));
+				outputs.splice(outputs.indexOf(link),1);
 			}
 		})
 	}
@@ -85,7 +85,7 @@ export default class LetoObjectNode{
 		let inputs = this.links.inputs;
 		inputs.forEach(link =>{
 			if(link.id == linkId){
-				inputs.splice(inputs.indexOf(link));
+				inputs.splice(inputs.indexOf(link),1);
 			}
 		})
 	}
