@@ -154,7 +154,6 @@
 						"variableName": "source",
 						"resourceType": "string",
 						"required": true,
-						"representation": "link",
 						"widget": "inputTextArea"
 					},
 					{
@@ -170,8 +169,7 @@
 								"variableName": "url",
 								"resourceType": "string",
 								"required": true,
-								"widget": "inputTextArea",
-								"representation": "link"
+								"widget": "inputTextArea"
 							}
 						],
 						"required": false
@@ -206,22 +204,19 @@
 						"variableName": "flavor_ref",
 						"resourceType": "string",
 						"required": true,
-						"widget": "inputDropbox",
-						"representation": "link"
+						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "network",
 						"resourceType": "string",
 						"required": true,
-						"widget": "inputDropbox",
-						"representation": "link"
+						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "key_name",
 						"resourceType": "string",
 						"required": true,
-						"widget": "inputDropbox",
-						"representation": "link"
+						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "image_ref",
@@ -355,8 +350,7 @@
 						"variableName": "subnet_id",
 						"resourceType": "string",
 						"required": true,
-						"widget": "inputDropbox",
-						"representation": "link"
+						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "loadbalancer_id ",
@@ -401,8 +395,7 @@
 						"variableName": "ssl_profile_id",
 						"resourceType": "string",
 						"required": false,
-						"widget": "inputDropbox",
-						"representation": "link"
+						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "http_request",
@@ -610,8 +603,7 @@
 						"variableName": "zone_id",
 						"resourceType": "string",
 						"required": true,
-						"widget": "inputDropbox",
-						"representation": "link"
+						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "description",
@@ -680,7 +672,6 @@
 						"variableName": "zone_id",
 						"resourceType": "string",
 						"required": true,
-						"representation": "link",
 						"widget": "inputDropbox"
 					},
 					{
