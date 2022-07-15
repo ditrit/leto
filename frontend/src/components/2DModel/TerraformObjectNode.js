@@ -42,12 +42,13 @@ export default class TerraformObjectNode extends LetoObjectNode {
         d3.select(document.querySelector('body')).select("#"+parentName).node().append(svgDom.documentElement);
         const model = document.getElementById(`${this.id}`);
 
+				d3.select(model.getElementById("logo_frame"))
+				.call(dragLink.value);
+
 				d3.select(model)
-				.call(dragLink.value)
 				.on('click', () => {
 					EventBus.emit('selectObject', this);
 				});
-
 
 				d3.select(model)
 					.on("contextmenu",(e) => {
