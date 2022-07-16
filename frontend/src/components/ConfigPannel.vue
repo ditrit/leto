@@ -256,10 +256,16 @@ export default {
 			configInfos.value.instance_name = currentObject.instance_name
 			configInfos.value.resource_type = currentObject.type
 			configInfos.value.attributes = [];
+			let objsVals = {};
+
+			for (const attrVal of currentObject.objects?.value) {
+					let [name, val] = attrVal.split('=');
+					objsVals[name.trim()]=val.replaceAll('\"', '').trim();
+			};
 			if (currentObject.attributes) {
 				configInfos.value.attributes = currentObject.attributes.map((attr) => ({
 					name: attr.variableName,
-					value: attr.value,
+					value: (objsVals[attr.variableName]) ? objsVals[attr.variableName] : attr.value,
 					widget: (attr.widget) ? attr.widget : "inputString",
 					regex: (attr.regex) ? attr.regex : null,
 					required: (attr.required) ? attr.required : false,
@@ -288,6 +294,22 @@ export default {
 			let realObject = getSelectedObject(objects, objectId);
 			realObject.instance_name = configInfos.value.instance_name;
 			realObject.name = configInfos.value.instance_name;
+
+			configInfos.value.attributes.forEach((attr) =>{
+				if ((attr.options.length == 0) && !attr.resource_type && attr.value) {
+					let found = false
+					for (const i in realObject.objects.value) {
+							let [name, val] = realObject.objects.value[i].split('=');
+							if (name.trim() ==attr.name.trim()) {
+								found = true
+								realObject.objects.value[i] = `${attr.name}=\"${attr.value}\"`
+							}
+					};
+					if (!found) { // problem with store (should be done via mutations)
+						realObject.objects.value.push(`${attr.name}=\"${attr.value}\"`)
+						}
+				}
+			});
 
 			EventBus.emit('updateObject', realObject, {
 				instance_name: configInfos.value.instance_name,
