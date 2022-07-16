@@ -46,6 +46,7 @@ import {
 } from "src/components/Monaco/svg_maths";
 import EventBus from "src/services/EventBus";
 import ObjectPosition from "src/services/ObjectPosition";
+import ConsoleErrorListener from "antlr4/src/antlr4/error/ConsoleErrorListener";
 
 /**
  * Makes an hexadecimal string of the specified length
@@ -579,7 +580,12 @@ export default {
 				terraformObject.setWidth(data.width);
 				terraformObject.setX(data.x);
 				terraformObject.setY(data.y);
-				terraformObject.setAttributes(data.attributes);
+				if (data.attributes) {
+					console.log("data.attributes : ", JSON.stringify(data.attributes))
+					terraformObject.setAttributes(data.attributes);
+				} else {
+					console.log("no data.attributes")
+				}
 				addContentInData(rootTreeObject.value, parentId, terraformObject);
 				if (data.contains) {
 					fillDataStorage(data.contains, data.id, level + 1);
@@ -633,7 +639,12 @@ export default {
 			terraformObject.setWidth(object.width);
 			terraformObject.setX(object.x);
 			terraformObject.setY(object.y);
-			terraformObject.setAttributes(object.attributes);
+			if (object.attributes) {
+				console.log("object.attributes :", JSON.stringify(object.attributes))
+				terraformObject.setAttributes(object.attributes);
+			} else {
+				console.log("no object.attributes")
+			}
 			terraformObject.drawSVG(
 				svgs,
 				svgParent,

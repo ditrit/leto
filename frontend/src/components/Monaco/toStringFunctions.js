@@ -40,7 +40,6 @@ function toStringObjects(objects, resource) {
             res += `  ${object}\n`;
         }
 	})
-	console.log("objects : ", res )
 	return res;
 }
 
@@ -67,14 +66,7 @@ function toStringLinks(links, output, objects) {
     }
 		let found = false;
 
-		for (let object of objects) {
-			if (object.split('=')[0]?.trim() == link.variableName?.trim()) {
-				found = true
-			}
-		}
-		if (!found) {
-			res += ele
-		}
+		res += ele
 	})
 	return res;
 }
