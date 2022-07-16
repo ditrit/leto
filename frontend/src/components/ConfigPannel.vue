@@ -5,11 +5,14 @@
 			@submit="configToObject"
 			@reset="objectToConfig"
 			class="q-gutter-md">
-			<div id="name"><q-input filled label="Name" v-model.text="configInfos.instance_name" type="text"></q-input></div>
-			<q-input filled readonly label="Ressource type" v-model.text="configInfos.resource_type" ></q-input>
-			<div class="col-auto" v-for="item in configInfos.attributes" :key="item.name">
+ 		  <q-scroll-area style="height: calc(100vh - 200px)">
+			<div id="name"><q-input flat label="Name" v-model.text="configInfos.instance_name" type="text"></q-input></div>
+			<q-input flat readonly label="Ressource type" v-model.text="configInfos.resource_type" ></q-input>
+			<div class="col q-col-gutter-y-md"
+						v-for="item in configInfos.attributes"
+						:key="item.name">
 				<div v-if="item.widget === 'inputString'">
-					<q-input filled
+					<q-input flat
 						:label="item.name"
 						:rules="getRules(item)"
 						v-model.text="item.value"
@@ -19,7 +22,7 @@
 					</q-input>
 				</div>
 				<div v-if="item.widget === 'inputTextArea'">
-					<q-input filled
+					<q-input flat
 						:label="item.name"
 						:rules="getRules(item)"
 						v-model.textareaModel="item.value"
@@ -29,7 +32,7 @@
 					</q-input>
 				</div>
 				<div v-if="item.widget === 'inputFloat'">
-					<q-input filled
+					<q-input flat
 						:label="item.name"
 						:rules="getRules(item)"
 						:disable="item.name === 'resourceType'"
@@ -37,7 +40,7 @@
 					</q-input>
 				</div>
 				<div v-if="item.widget === 'inputInteger'">
-					<q-input filled
+					<q-input flat
 						:label="item.name"
 						:rules="getRules(item)"
 						v-model.number="item.value"
@@ -47,7 +50,7 @@
 					</q-input>
 				</div>
 				<div v-if="item.widget === 'inputDropbox'">
-					<q-select filled
+					<q-select flat
 						:label="item.name"
 						:options="getOptions(item)"
 						v-model.select="item.value"
@@ -56,7 +59,7 @@
 					</q-select>
 				</div>
 				<div v-if="item.widget === 'inputToggle'">
-					<q-toggle filled
+					<q-toggle flat
 						:label="item.name"
 						v-model="item.value"
 						>
@@ -77,10 +80,11 @@
 					</q-input>
 				</div> -->
 			</div>
+			</q-scroll-area>
 			<div>
         		<q-btn label="Submit" type="submit" color="primary"/>
-        		<q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
-      		</div>
+        		<q-btn outline label="Reset" type="reset" color="primary" class="q-ml-sm" />
+   		</div>
 		</q-form>
 	</div>
 </template>

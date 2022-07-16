@@ -581,10 +581,8 @@ export default {
 				terraformObject.setX(data.x);
 				terraformObject.setY(data.y);
 				if (data.attributes) {
-					console.log("data.attributes : ", JSON.stringify(data.attributes))
 					terraformObject.setAttributes(data.attributes);
 				} else {
-					console.log("no data.attributes")
 				}
 				addContentInData(rootTreeObject.value, parentId, terraformObject);
 				if (data.contains) {
@@ -640,10 +638,8 @@ export default {
 			terraformObject.setX(object.x);
 			terraformObject.setY(object.y);
 			if (object.attributes) {
-				console.log("object.attributes :", JSON.stringify(object.attributes))
 				terraformObject.setAttributes(object.attributes);
 			} else {
-				console.log("no object.attributes")
 			}
 			terraformObject.drawSVG(
 				svgs,
