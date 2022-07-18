@@ -1,7 +1,7 @@
 {
 	"provider": {
 		"name": "cloudplatform",
-		"required": true,
+		"required": false,
 		"resources": [
 			{
 				"resourceType": "compute_security_group",
@@ -22,7 +22,7 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString",
 						"regex": "^[a-zA-Z0-9-_]+$"
 					},
@@ -44,13 +44,13 @@
 					{
 						"variableName": "public_key",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					}
 				],
@@ -64,13 +64,13 @@
 					{
 						"variableName": "offer",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "read_only",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputToggle"
 					}
 				],
@@ -84,13 +84,13 @@
 					{
 						"variableName": "description",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputTextArea"
 					},
 					{
 						"variableName": "direction",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
@@ -108,26 +108,26 @@
 					{
 						"variableName": "protocol",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "remote_type",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "remote_value",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "security_group_id",
 						"resourceType": "compute_security_group",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					}
 				],
@@ -141,19 +141,19 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "image_size",
 						"resourceType": "number",
-						"required": true,
+						"required": false,
 						"widget": "inputNumber"
 					},
 					{
 						"variableName": "source",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputTextArea"
 					},
 					{
@@ -162,13 +162,13 @@
 							{
 								"variableName": "type",
 								"resourceType": "string",
-								"required": true,
+								"required": false,
 								"widget": "inputString"
 							},
 							{
 								"variableName": "url",
 								"resourceType": "string",
-								"required": true,
+								"required": false,
 								"widget": "inputTextArea"
 							}
 						],
@@ -185,7 +185,7 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
@@ -203,26 +203,26 @@
 					{
 						"variableName": "flavor_ref",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "network",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "key_name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "image_ref",
 						"resourceType": "osfactory_image",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
@@ -251,7 +251,7 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "description",
@@ -261,7 +261,7 @@
 					{
 						"variableName": "size",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "volume_type",
@@ -291,7 +291,7 @@
 						"variableName": "server_id",
 						"resourceType": "compute_instance",
 						"representation": "link",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "volume_id",
@@ -310,19 +310,19 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "type",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "availability_zone",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
@@ -343,20 +343,20 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputTextArea"
 					},
 					{
 						"variableName": "subnet_id",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "loadbalancer_id ",
 						"resourceType": "slb_load_balancer",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					}
 				],
@@ -370,25 +370,25 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "health_check_type",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "protocol",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "port",
 						"resourceType": "number",
-						"required": true,
+						"required": false,
 						"widget": "inputNumber"
 					},
 					{
@@ -407,7 +407,7 @@
 						"variableName": "loadbalancer_id ",
 						"resourceType": "slb_load_balancer",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					}
 				],
@@ -421,27 +421,27 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "vip_id",
 						"resourceType": "slb_vip",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "pool_id",
 						"resourceType": "slb_pool",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "protocol",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
@@ -461,7 +461,7 @@
 						"variableName": "loadbalancer_id ",
 						"resourceType": "slb_load_balancer",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
@@ -506,39 +506,39 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "algorithm",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "persistence",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "port",
 						"resourceType": "number",
-						"required": true,
+						"required": false,
 						"widget": "inputNumber"
 					},
 					{
 						"variableName": "loadbalancer_id",
 						"resourceType": "slb_load_balancer",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "healthcheck_id",
 						"resourceType": "slb_healthcheck",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
@@ -546,14 +546,14 @@
 						"resourceType": "compute_instance",
 						"representation": "link",
 						"array": true,
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "ssl_profile_id",
 						"resourceType": "slb_ssl_profile",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					}
 				],
@@ -567,23 +567,23 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "certificate",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "private_key",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "loadbalancer_id",
 						"resourceType": "slb_load_balancer",
 						"representation": "link",
-						"required": true
+						"required": false
 					}
 				],
 				"icon": "sgcloudplatform/load_balancer_slb_certificate.svg",
@@ -596,19 +596,19 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "zone_id",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "description",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputTextArea"
 					},
 					{
@@ -616,13 +616,13 @@
 						"resourceType": "trafficmanager_healthcheck",
 						"representation": "link",
 						"array": true,
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "loadbalancer_type",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
@@ -637,13 +637,13 @@
 								"variableName": "uuid",
 								"resourceType": "slb_load_balancer",
 								"representation": "link",
-								"required": true,
+								"required": false,
 								"widget": "inputDropbox"
 							},
 							{
 								"variableName": "priority",
 								"resourceType": "number",
-								"required": true,
+								"required": false,
 								"widget": "inputNumber"
 							},
 							{
@@ -652,7 +652,7 @@
 								"required": false
 							}
 						],
-						"required": true
+						"required": false
 					}
 				],
 				"icon": "sgcloudplatform/trafficmanager.svg",
@@ -665,31 +665,31 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "zone_id",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "description",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputTextArea"
 					},
 					{
 						"variableName": "port",
 						"resourceType": "number",
-						"required": true,
+						"required": false,
 						"widget": "inputNumber"
 					},
 					{
 						"variableName": "type",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
@@ -709,13 +709,13 @@
 					{
 						"variableName": "offer",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputTextArea"
 					},
 					{
@@ -735,7 +735,7 @@
 					{
 						"variableName": "availability_zone",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "name",
@@ -745,17 +745,17 @@
 					{
 						"variableName": "description",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "network",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "offer",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "geo_replication ",
@@ -763,13 +763,13 @@
 							{
 								"variableName": "region",
 								"resourceType": "string",
-								"required": true
+								"required": false
 							},
 							{
 								"variableName": "target_availability_zones",
 								"resourceType": "string",
 								"array": true,
-								"required": true
+								"required": false
 							}
 						],
 						"required": false
@@ -780,13 +780,13 @@
 							{
 								"variableName": "replication_mode",
 								"resourceType": "string",
-								"required": true
+								"required": false
 							},
 							{
 								"variableName": "target_availability_zones",
 								"resourceType": "string",
 								"array": true,
-								"required": true
+								"required": false
 							}
 						],
 						"required": false
@@ -809,7 +809,7 @@
 						"variableName": "consistency_group_id",
 						"resourceType": "files_consistency_group",
 						"representation": "link",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "name",
@@ -819,12 +819,12 @@
 					{
 						"variableName": "description",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "size",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "nfs_clients",
@@ -832,18 +832,18 @@
 							{
 								"variableName": "host",
 								"resourceType": "string",
-								"required": true
+								"required": false
 							},
 							{
 								"variableName": "permission",
 								"resourceType": "string",
 								"array": true,
-								"required": true
+								"required": false
 							},
 							{
 								"variableName": "protocol",
 								"resourceType": "string",
-								"required": true
+								"required": false
 							}
 						],
 						"required": false
@@ -865,25 +865,25 @@
 					{
 						"variableName": "alias",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "storage",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "has_backup",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputToggle"
 					},
 					{
 						"variableName": "has_monitoring",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputToggle"
 					},
 					{
@@ -895,25 +895,25 @@
 					{
 						"variableName": "type",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "availability_zone",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "environment",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "network",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
@@ -946,7 +946,7 @@
 							{
 								"variableName": "availability_zone",
 								"resourceType": "string",
-								"required": true,
+								"required": false,
 								"widget": "inputString"
 							},
 							{
@@ -976,25 +976,25 @@
 						"variableName": "cluster_id",
 						"resourceType": "postgre_cluster",
 						"representation": "link",
-						"required": true,
+						"required": false,
 						"widget": "inputDropbox"
 					},
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "username",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
 						"variableName": "password",
 						"resourceType": "string",
-						"required": true,
+						"required": false,
 						"widget": "inputString"
 					},
 					{
@@ -1015,17 +1015,17 @@
 					{
 						"variableName": "name",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "zone_id",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "target",
 						"resourceType": "string",
-						"required": true
+						"required": false
 					},
 					{
 						"variableName": "ttl",

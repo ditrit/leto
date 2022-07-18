@@ -300,9 +300,12 @@ export default {
 					let found = false
 					for (const i in realObject.objects.value) {
 							let [name, val] = realObject.objects.value[i].split('=');
+							let oldval = val.replaceAll('\"','')							
 							if (name.trim() ==attr.name.trim()) {
 								found = true
-								realObject.objects.value[i] = `${attr.name}=\"${attr.value}\"`
+								if (oldval.trim() != attr.value.trim) {
+									realObject.objects.value[i] = `${attr.name}=\"${attr.value}\"`
+								}
 							}
 					};
 					if (!found) { // problem with store (should be done via mutations)
