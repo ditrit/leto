@@ -22,7 +22,7 @@
 		"express": "^4.17.2",
 		"isomorphic-git": "^1.12.1",
 		"json-bigint": "^1.0.0",
-		"json-server": "^0.16.3",
+		"json-server": "^0.17.1",
 		"monaco-editor": "^0.25.2",
 		"multer": "^1.4.4",
 		"quasar": "^2.0.0",
